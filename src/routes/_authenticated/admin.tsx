@@ -63,7 +63,7 @@ function AdminContent() {
         <StatCard icon={<Wallet size={18} />} label="Pending payouts" value="—" />
       </section>
 
-      <section className="mt-8 grid gap-3 sm:grid-cols-2">
+      <section className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <Link
           to="/admin/users"
           className="group flex items-center justify-between rounded-4xl border border-border bg-surface p-6 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
@@ -94,6 +94,25 @@ function AdminContent() {
             <h2 className="mt-4 text-lg font-bold text-foreground">Commission Engine</h2>
             <p className="mt-1 text-xs text-muted-foreground">
               Configure slabs, review transactions, audit the ledger.
+            </p>
+          </div>
+          <ArrowRight
+            size={20}
+            className="text-muted-foreground transition-transform group-hover:translate-x-1"
+          />
+        </Link>
+
+        <Link
+          to="/admin/withdrawals"
+          className="group flex items-center justify-between rounded-4xl border border-border bg-surface p-6 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
+        >
+          <div>
+            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-leaf/15 text-leaf">
+              <Wallet size={20} />
+            </div>
+            <h2 className="mt-4 text-lg font-bold text-foreground">Withdrawals</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Approve, process and settle payout requests.
             </p>
           </div>
           <ArrowRight

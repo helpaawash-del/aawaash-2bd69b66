@@ -181,6 +181,7 @@ export type Database = {
           status: string
           transaction_id: string | null
           user_id: string | null
+          withdrawal_id: string | null
         }
         Insert: {
           created_at?: string
@@ -195,6 +196,7 @@ export type Database = {
           status?: string
           transaction_id?: string | null
           user_id?: string | null
+          withdrawal_id?: string | null
         }
         Update: {
           created_at?: string
@@ -209,6 +211,7 @@ export type Database = {
           status?: string
           transaction_id?: string | null
           user_id?: string | null
+          withdrawal_id?: string | null
         }
         Relationships: [
           {
@@ -230,6 +233,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_ledger_withdrawal_id_fkey"
+            columns: ["withdrawal_id"]
+            isOneToOne: false
+            referencedRelation: "withdrawals"
             referencedColumns: ["id"]
           },
         ]
@@ -1156,8 +1166,12 @@ export type Database = {
           is_active: boolean
           is_deleted: boolean
           last_login_at: string | null
+          last_settlement_at: string | null
+          lifetime_withdrawals: number
+          locked_balance: number
           login_id: string
           mobile_number: string
+          pending_balance: number
           referral_count: number
           status: Database["public"]["Enums"]["account_status"]
           team_id: string | null
@@ -1178,8 +1192,12 @@ export type Database = {
           is_active?: boolean
           is_deleted?: boolean
           last_login_at?: string | null
+          last_settlement_at?: string | null
+          lifetime_withdrawals?: number
+          locked_balance?: number
           login_id: string
           mobile_number: string
+          pending_balance?: number
           referral_count?: number
           status?: Database["public"]["Enums"]["account_status"]
           team_id?: string | null
@@ -1200,8 +1218,12 @@ export type Database = {
           is_active?: boolean
           is_deleted?: boolean
           last_login_at?: string | null
+          last_settlement_at?: string | null
+          lifetime_withdrawals?: number
+          locked_balance?: number
           login_id?: string
           mobile_number?: string
+          pending_balance?: number
           referral_count?: number
           status?: Database["public"]["Enums"]["account_status"]
           team_id?: string | null
@@ -2019,36 +2041,85 @@ export type Database = {
       }
       withdrawals: {
         Row: {
+          admin_notes: string | null
           amount: number
+          approved_at: string | null
+          approved_by: string | null
+          bank_account_number: string | null
+          bank_branch: string | null
+          bank_holder: string | null
+          bank_ifsc: string | null
+          bank_name: string | null
+          completed_at: string | null
           id: string
           note: string | null
           processed_at: string | null
+          reference_number: string | null
+          rejection_reason: string | null
+          remarks: string | null
           requested_at: string
           status: string
           team_id: string | null
+          updated_at: string
+          upi_id: string | null
           user_id: string
         }
         Insert: {
+          admin_notes?: string | null
           amount: number
+          approved_at?: string | null
+          approved_by?: string | null
+          bank_account_number?: string | null
+          bank_branch?: string | null
+          bank_holder?: string | null
+          bank_ifsc?: string | null
+          bank_name?: string | null
+          completed_at?: string | null
           id?: string
           note?: string | null
           processed_at?: string | null
+          reference_number?: string | null
+          rejection_reason?: string | null
+          remarks?: string | null
           requested_at?: string
           status?: string
           team_id?: string | null
+          updated_at?: string
+          upi_id?: string | null
           user_id: string
         }
         Update: {
+          admin_notes?: string | null
           amount?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          bank_account_number?: string | null
+          bank_branch?: string | null
+          bank_holder?: string | null
+          bank_ifsc?: string | null
+          bank_name?: string | null
+          completed_at?: string | null
           id?: string
           note?: string | null
           processed_at?: string | null
+          reference_number?: string | null
+          rejection_reason?: string | null
+          remarks?: string | null
           requested_at?: string
           status?: string
           team_id?: string | null
+          updated_at?: string
+          upi_id?: string | null
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "withdrawals_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "withdrawals_team_id_fkey"
             columns: ["team_id"]
@@ -2147,6 +2218,40 @@ export type Database = {
       submit_sale_for_approval: {
         Args: { p_sale_id: string }
         Returns: undefined
+      }
+      wallet_approve_withdrawal: {
+        Args: { p_id: string; p_notes?: string }
+        Returns: undefined
+      }
+      wallet_cancel_withdrawal: {
+        Args: { p_id: string; p_reason?: string }
+        Returns: undefined
+      }
+      wallet_complete_withdrawal: {
+        Args: { p_id: string; p_notes?: string }
+        Returns: undefined
+      }
+      wallet_is_within_withdrawal_window: { Args: never; Returns: boolean }
+      wallet_mark_processing: {
+        Args: { p_id: string; p_notes?: string }
+        Returns: undefined
+      }
+      wallet_reject_withdrawal: {
+        Args: { p_id: string; p_reason: string }
+        Returns: undefined
+      }
+      wallet_request_withdrawal: {
+        Args: {
+          p_amount: number
+          p_bank_account_number: string
+          p_bank_branch?: string
+          p_bank_holder: string
+          p_bank_ifsc: string
+          p_bank_name: string
+          p_remarks?: string
+          p_upi_id?: string
+        }
+        Returns: string
       }
     }
     Enums: {
