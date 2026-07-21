@@ -59,6 +59,7 @@ import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authe
 import { Route as ApiPublicHooksSystemMaintenanceRouteImport } from './routes/api/public/hooks/system-maintenance'
 import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
 import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
+import { Route as AuthenticatedAdminTeamLeadersNewRouteImport } from './routes/_authenticated/admin.team-leaders.new'
 import { Route as AuthenticatedAdminProjectsNewRouteImport } from './routes/_authenticated/admin.projects.new'
 import { Route as AuthenticatedAdminProjectsIdRouteImport } from './routes/_authenticated/admin.projects.$id'
 
@@ -345,6 +346,12 @@ const AuthenticatedLeaderMembersIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedLeaderMembersRoute,
   } as any)
+const AuthenticatedAdminTeamLeadersNewRoute =
+  AuthenticatedAdminTeamLeadersNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedAdminTeamLeadersRoute,
+  } as any)
 const AuthenticatedAdminProjectsNewRoute =
   AuthenticatedAdminProjectsNewRouteImport.update({
     id: '/new',
@@ -377,7 +384,7 @@ export interface FileRoutesByFullPath {
   '/admin/profile': typeof AuthenticatedAdminProfileRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRouteWithChildren
   '/admin/system': typeof AuthenticatedAdminSystemRoute
-  '/admin/team-leaders': typeof AuthenticatedAdminTeamLeadersRoute
+  '/admin/team-leaders': typeof AuthenticatedAdminTeamLeadersRouteWithChildren
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/commissions/$id': typeof AuthenticatedCommissionsIdRoute
@@ -407,6 +414,7 @@ export interface FileRoutesByFullPath {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/admin/projects/new': typeof AuthenticatedAdminProjectsNewRoute
+  '/admin/team-leaders/new': typeof AuthenticatedAdminTeamLeadersNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
   '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
@@ -430,7 +438,7 @@ export interface FileRoutesByTo {
   '/admin/profile': typeof AuthenticatedAdminProfileRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRouteWithChildren
   '/admin/system': typeof AuthenticatedAdminSystemRoute
-  '/admin/team-leaders': typeof AuthenticatedAdminTeamLeadersRoute
+  '/admin/team-leaders': typeof AuthenticatedAdminTeamLeadersRouteWithChildren
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/commissions/$id': typeof AuthenticatedCommissionsIdRoute
@@ -460,6 +468,7 @@ export interface FileRoutesByTo {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/admin/projects/new': typeof AuthenticatedAdminProjectsNewRoute
+  '/admin/team-leaders/new': typeof AuthenticatedAdminTeamLeadersNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
   '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
@@ -485,7 +494,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/profile': typeof AuthenticatedAdminProfileRoute
   '/_authenticated/admin/projects': typeof AuthenticatedAdminProjectsRouteWithChildren
   '/_authenticated/admin/system': typeof AuthenticatedAdminSystemRoute
-  '/_authenticated/admin/team-leaders': typeof AuthenticatedAdminTeamLeadersRoute
+  '/_authenticated/admin/team-leaders': typeof AuthenticatedAdminTeamLeadersRouteWithChildren
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/_authenticated/commissions/$id': typeof AuthenticatedCommissionsIdRoute
@@ -515,6 +524,7 @@ export interface FileRoutesById {
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/_authenticated/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/_authenticated/admin/projects/new': typeof AuthenticatedAdminProjectsNewRoute
+  '/_authenticated/admin/team-leaders/new': typeof AuthenticatedAdminTeamLeadersNewRoute
   '/_authenticated/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/_authenticated/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
   '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
@@ -570,6 +580,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/admin/projects/$id'
     | '/admin/projects/new'
+    | '/admin/team-leaders/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
     | '/api/public/hooks/system-maintenance'
@@ -623,6 +634,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/admin/projects/$id'
     | '/admin/projects/new'
+    | '/admin/team-leaders/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
     | '/api/public/hooks/system-maintenance'
@@ -677,6 +689,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales-workflow/new'
     | '/_authenticated/admin/projects/$id'
     | '/_authenticated/admin/projects/new'
+    | '/_authenticated/admin/team-leaders/new'
     | '/_authenticated/leader/members/$id'
     | '/_authenticated/member/sales/$id'
     | '/api/public/hooks/system-maintenance'
@@ -1044,6 +1057,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLeaderMembersIdRouteImport
       parentRoute: typeof AuthenticatedLeaderMembersRoute
     }
+    '/_authenticated/admin/team-leaders/new': {
+      id: '/_authenticated/admin/team-leaders/new'
+      path: '/new'
+      fullPath: '/admin/team-leaders/new'
+      preLoaderRoute: typeof AuthenticatedAdminTeamLeadersNewRouteImport
+      parentRoute: typeof AuthenticatedAdminTeamLeadersRoute
+    }
     '/_authenticated/admin/projects/new': {
       id: '/_authenticated/admin/projects/new'
       path: '/new'
@@ -1077,6 +1097,21 @@ const AuthenticatedAdminProjectsRouteWithChildren =
     AuthenticatedAdminProjectsRouteChildren,
   )
 
+interface AuthenticatedAdminTeamLeadersRouteChildren {
+  AuthenticatedAdminTeamLeadersNewRoute: typeof AuthenticatedAdminTeamLeadersNewRoute
+}
+
+const AuthenticatedAdminTeamLeadersRouteChildren: AuthenticatedAdminTeamLeadersRouteChildren =
+  {
+    AuthenticatedAdminTeamLeadersNewRoute:
+      AuthenticatedAdminTeamLeadersNewRoute,
+  }
+
+const AuthenticatedAdminTeamLeadersRouteWithChildren =
+  AuthenticatedAdminTeamLeadersRoute._addFileChildren(
+    AuthenticatedAdminTeamLeadersRouteChildren,
+  )
+
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAnalyticsRoute: typeof AuthenticatedAdminAnalyticsRoute
   AuthenticatedAdminCommissionsRoute: typeof AuthenticatedAdminCommissionsRoute
@@ -1084,7 +1119,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminProfileRoute: typeof AuthenticatedAdminProfileRoute
   AuthenticatedAdminProjectsRoute: typeof AuthenticatedAdminProjectsRouteWithChildren
   AuthenticatedAdminSystemRoute: typeof AuthenticatedAdminSystemRoute
-  AuthenticatedAdminTeamLeadersRoute: typeof AuthenticatedAdminTeamLeadersRoute
+  AuthenticatedAdminTeamLeadersRoute: typeof AuthenticatedAdminTeamLeadersRouteWithChildren
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
 }
@@ -1096,7 +1131,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminProfileRoute: AuthenticatedAdminProfileRoute,
   AuthenticatedAdminProjectsRoute: AuthenticatedAdminProjectsRouteWithChildren,
   AuthenticatedAdminSystemRoute: AuthenticatedAdminSystemRoute,
-  AuthenticatedAdminTeamLeadersRoute: AuthenticatedAdminTeamLeadersRoute,
+  AuthenticatedAdminTeamLeadersRoute:
+    AuthenticatedAdminTeamLeadersRouteWithChildren,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
 }
