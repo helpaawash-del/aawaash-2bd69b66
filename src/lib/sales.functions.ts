@@ -350,6 +350,34 @@ export const listSales = createServerFn({ method: "GET" })
     };
   });
 
+/* Convenience: list available flats + projects for the draft wizard */
+export const listAvailableFlats = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ project_id: z.string().uuid().optional() }).parse(d ?? {}),
+  )
+  .handler(async ({ data, context }) => {
+    const [{ data: projects }, flatsRes] = await Promise.all([
+      context.supabase
+        .from("projects")
+        .select("id, name, slug, location, available_flats, total_flats")
+        .eq("is_deleted", false)
+        .order("name", { ascending: true }),
+      (async () => {
+        let q = context.supabase
+          .from("flats")
+          .select("id, unit_code, project_id, building_id, floor_id, area_sqft, bedrooms, configuration, facing, price, status")
+          .eq("status", "available")
+          .order("unit_code", { ascending: true })
+          .limit(500);
+        if (data.project_id) q = q.eq("project_id", data.project_id);
+        return q;
+      })(),
+    ]);
+    if (flatsRes.error) throw new Error(flatsRes.error.message);
+    return { projects: projects ?? [], flats: flatsRes.data ?? [] };
+  });
+
 export const getSale = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => idSchema.parse(d))
