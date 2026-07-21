@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Building2, Users, Wallet, Coins, ShieldCheck, ArrowRight, BarChart3 } from "lucide-react";
+import { Building2, Users, Wallet, Coins, ShieldCheck, ArrowRight, BarChart3, Activity } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { DashboardShell } from "@/components/aawash/DashboardShell";
