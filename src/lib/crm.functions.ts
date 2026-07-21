@@ -309,7 +309,7 @@ export const getCustomer = createServerFn({ method: "POST" })
         customer.preferred_project_id
           ? context.supabase
               .from("projects")
-              .select("id, name, slug, city")
+              .select("id, name, slug, location")
               .eq("id", customer.preferred_project_id)
               .maybeSingle()
           : Promise.resolve({ data: null }),
