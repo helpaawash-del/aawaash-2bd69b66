@@ -19,7 +19,7 @@ import {
 import { Download, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { SectionCard, formatINR } from "@/components/aawash/dashboard-kit";
 
-const PALETTE = ["hsl(var(--primary))", "hsl(var(--gold))", "hsl(var(--leaf))", "hsl(var(--destructive))", "hsl(var(--muted-foreground))"];
+const PALETTE = ["var(--primary)", "var(--gold)", "var(--leaf)", "var(--destructive)", "var(--muted-foreground)"];
 
 export type DateRange = { from: string; to: string };
 
@@ -92,18 +92,18 @@ export function AreaTrendChart({ data, xKey = "date", yKey = "value", title }: {
           <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
             <defs>
               <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey={xKey} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} />
-            <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} width={48} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis dataKey={xKey} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickLine={false} axisLine={false} />
+            <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickLine={false} axisLine={false} width={48} />
             <Tooltip
-              contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--surface))" }}
+              contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--surface)" }}
               formatter={(v: number) => formatINR(v, { compact: true })}
             />
-            <Area type="monotone" dataKey={yKey} stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#areaGrad)" />
+            <Area type="monotone" dataKey={yKey} stroke="var(--primary)" strokeWidth={2} fill="url(#areaGrad)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -117,14 +117,14 @@ export function BarCompareChart({ data, xKey = "name", yKey = "value", title }: 
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey={xKey} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} interval={0} angle={-15} textAnchor="end" height={44} />
-            <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} width={48} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis dataKey={xKey} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickLine={false} axisLine={false} interval={0} angle={-15} textAnchor="end" height={44} />
+            <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickLine={false} axisLine={false} width={48} />
             <Tooltip
-              contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--surface))" }}
+              contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--surface)" }}
               formatter={(v: number) => formatINR(v, { compact: true })}
             />
-            <Bar dataKey={yKey} fill="hsl(var(--primary))" radius={[8, 8, 0, 0]} />
+            <Bar dataKey={yKey} fill="var(--primary)" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -138,10 +138,10 @@ export function LineDualChart({ data, xKey = "date", series, title }: { data: Ar
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey={xKey} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} />
-            <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} width={48} />
-            <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--surface))" }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis dataKey={xKey} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickLine={false} axisLine={false} />
+            <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickLine={false} axisLine={false} width={48} />
+            <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--surface)" }} />
             {series.map((s, i) => (
               <Line key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color || PALETTE[i % PALETTE.length]} strokeWidth={2} dot={false} />
             ))}
@@ -165,7 +165,7 @@ export function DonutBreakdown({ data, title }: { data: Array<{ name: string; va
                   <Cell key={i} fill={PALETTE[i % PALETTE.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(v: number) => formatINR(v, { compact: true })} contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--surface))" }} />
+              <Tooltip formatter={(v: number) => formatINR(v, { compact: true })} contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--surface)" }} />
             </PieChart>
           </ResponsiveContainer>
         </div>
