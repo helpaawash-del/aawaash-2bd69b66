@@ -1,12 +1,24 @@
 import { useState } from "react";
-import { LogOut } from "lucide-react";
+import { LogOut, Loader2 } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AmbientBackground } from "./AmbientBackground";
 import { BrandMark } from "./BrandMark";
 import type { AawashProfile } from "@/hooks/useSession";
 import { roleLabel } from "@/lib/auth";
 import type { AppRole } from "@/lib/auth";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 /**
  * Premium mobile-first shell used by every role-specific dashboard.
@@ -22,11 +34,14 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const [signingOut, setSigningOut] = useState(false);
 
   async function handleSignOut() {
     setSigningOut(true);
     try {
+      await qc.cancelQueries();
+      qc.clear();
       await supabase.auth.signOut();
     } finally {
       navigate({ to: "/auth", replace: true });
@@ -62,14 +77,40 @@ export function DashboardShell({
                 </span>
               </div>
             </div>
-            <button
-              onClick={handleSignOut}
-              disabled={signingOut}
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-border bg-surface text-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
-              aria-label="Sign out"
-            >
-              <LogOut size={18} />
-            </button>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  disabled={signingOut}
+                  className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-border bg-surface text-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
+                  aria-label="Sign out"
+                >
+                  {signingOut ? (
+                    <Loader2 size={18} className="animate-spin" />
+                  ) : (
+                    <LogOut size={18} />
+                  )}
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="rounded-3xl">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Sign out of Aawash?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Your session will end and you'll be returned to the sign-in
+                    screen. You can sign back in anytime with your Login ID.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="rounded-2xl">Stay signed in</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleSignOut}
+                    className="rounded-2xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Sign out
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </header>
 

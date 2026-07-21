@@ -1,8 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Building2, Users, Wallet, TrendingUp, ShieldCheck } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { Building2, Users, Wallet, TrendingUp, ShieldCheck, ArrowRight } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { DashboardShell } from "@/components/aawash/DashboardShell";
+import { listAllUsers, listTeamsWithLeaders } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminHome,
@@ -19,6 +22,20 @@ function AdminHome() {
 
 function AdminContent() {
   const { profile } = useSession();
+  const listUsers = useServerFn(listAllUsers);
+  const listTeams = useServerFn(listTeamsWithLeaders);
+  const { data: users } = useQuery({
+    queryKey: ["admin", "all-users"],
+    queryFn: () => listUsers(),
+  });
+  const { data: teams } = useQuery({
+    queryKey: ["admin", "teams-with-leaders"],
+    queryFn: () => listTeams(),
+  });
+
+  const leaders = (users ?? []).filter((u) => u.role === "team_leader").length;
+  const members = (users ?? []).filter((u) => u.role === "member").length;
+  const teamsWithLeaders = (teams ?? []).filter((t) => t.leader).length;
 
   return (
     <DashboardShell role="super_admin" profile={profile}>
@@ -32,27 +49,50 @@ function AdminContent() {
         </h1>
         <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
           Every team, project, sale and withdrawal across Aawash lives here.
-          Full management surfaces roll out in the next parts.
         </p>
       </section>
 
-      <section className="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard icon={<Building2 size={18} />} label="Active projects" value="0" />
-        <StatCard icon={<TrendingUp size={18} />} label="Sales volume" value="—" accent="gold" />
-        <StatCard icon={<Users size={18} />} label="Team members" value="0" />
+      <section className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatCard icon={<Users size={18} />} label="Team Leaders" value={String(leaders)} />
+        <StatCard icon={<Users size={18} />} label="Members" value={String(members)} accent="gold" />
+        <StatCard
+          icon={<Building2 size={18} />}
+          label="Teams assigned"
+          value={`${teamsWithLeaders}/${teams?.length ?? 0}`}
+        />
         <StatCard icon={<Wallet size={18} />} label="Pending payouts" value="—" />
       </section>
 
-      <section className="mt-10 rounded-4xl border border-border bg-surface p-6 shadow-[var(--shadow-soft)] sm:p-8">
-        <h2 className="text-lg font-bold text-foreground sm:text-xl">Coming next</h2>
-        <ul className="mt-4 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-          <li>Team Leader & Member management</li>
-          <li>Projects, buildings & flat inventory</li>
-          <li>Sales tracking & commission engine</li>
-          <li>Withdrawals with approval workflow</li>
-          <li>Referrals & tip persons</li>
-          <li>Full audit logs & reporting</li>
-        </ul>
+      <section className="mt-8 grid gap-3 sm:grid-cols-2">
+        <Link
+          to="/admin/users"
+          className="group flex items-center justify-between rounded-4xl border border-border bg-surface p-6 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
+        >
+          <div>
+            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
+              <Users size={20} />
+            </div>
+            <h2 className="mt-4 text-lg font-bold text-foreground">Team Leaders & Members</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Create accounts, reset passwords, and manage status.
+            </p>
+          </div>
+          <ArrowRight
+            size={20}
+            className="text-muted-foreground transition-transform group-hover:translate-x-1"
+          />
+        </Link>
+
+        <div className="rounded-4xl border border-border bg-surface p-6 shadow-[var(--shadow-soft)]">
+          <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gold/15 text-gold-foreground">
+            <TrendingUp size={20} />
+          </div>
+          <h2 className="mt-4 text-lg font-bold text-foreground">More surfaces incoming</h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Projects, sales, commissions, referrals, withdrawals, and audit
+            reports arrive in the next parts.
+          </p>
+        </div>
       </section>
     </DashboardShell>
   );
