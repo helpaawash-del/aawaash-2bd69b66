@@ -164,6 +164,348 @@ export type Database = {
           },
         ]
       }
+      customer_meetings: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          followup_at: string | null
+          id: string
+          location: string | null
+          meeting_type: Database["public"]["Enums"]["meeting_type"]
+          outcome: string | null
+          project_id: string | null
+          remarks: string | null
+          reminder_at: string | null
+          scheduled_at: string
+          status: Database["public"]["Enums"]["meeting_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          followup_at?: string | null
+          id?: string
+          location?: string | null
+          meeting_type?: Database["public"]["Enums"]["meeting_type"]
+          outcome?: string | null
+          project_id?: string | null
+          remarks?: string | null
+          reminder_at?: string | null
+          scheduled_at: string
+          status?: Database["public"]["Enums"]["meeting_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          followup_at?: string | null
+          id?: string
+          location?: string | null
+          meeting_type?: Database["public"]["Enums"]["meeting_type"]
+          outcome?: string | null
+          project_id?: string | null
+          remarks?: string | null
+          reminder_at?: string | null
+          scheduled_at?: string
+          status?: Database["public"]["Enums"]["meeting_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_meetings_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_meetings_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_meetings_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_notes: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string
+          customer_id: string
+          id: string
+          is_pinned: boolean
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          created_at?: string
+          customer_id: string
+          id?: string
+          is_pinned?: boolean
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string
+          customer_id?: string
+          id?: string
+          is_pinned?: boolean
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_notes_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_notes_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_timeline: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          customer_id: string
+          detail: string | null
+          event: string
+          id: string
+          metadata: Json
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          customer_id: string
+          detail?: string | null
+          event: string
+          id?: string
+          metadata?: Json
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          customer_id?: string
+          detail?: string | null
+          event?: string
+          id?: string
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_timeline_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_timeline_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          address: string | null
+          alt_mobile_number: string | null
+          assigned_leader_id: string | null
+          assigned_member_id: string | null
+          budget_max: number | null
+          budget_min: number | null
+          city: string | null
+          company: string | null
+          country: string | null
+          created_at: string
+          created_by: string | null
+          customer_code: string
+          email: string | null
+          expected_purchase_date: string | null
+          full_name: string
+          id: string
+          is_archived: boolean
+          last_contact_at: string | null
+          lead_source: string | null
+          meeting_count: number
+          meta: Json
+          mobile_number: string
+          monthly_income: number | null
+          next_followup_at: string | null
+          notes: string | null
+          occupation: string | null
+          pin_code: string | null
+          preferred_area: string | null
+          preferred_config: string | null
+          preferred_flat_id: string | null
+          preferred_project_id: string | null
+          priority: Database["public"]["Enums"]["customer_priority"]
+          purchase_probability: number | null
+          state: string | null
+          status: Database["public"]["Enums"]["customer_status"]
+          tags: string[]
+          team_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          address?: string | null
+          alt_mobile_number?: string | null
+          assigned_leader_id?: string | null
+          assigned_member_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          city?: string | null
+          company?: string | null
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_code?: string
+          email?: string | null
+          expected_purchase_date?: string | null
+          full_name: string
+          id?: string
+          is_archived?: boolean
+          last_contact_at?: string | null
+          lead_source?: string | null
+          meeting_count?: number
+          meta?: Json
+          mobile_number: string
+          monthly_income?: number | null
+          next_followup_at?: string | null
+          notes?: string | null
+          occupation?: string | null
+          pin_code?: string | null
+          preferred_area?: string | null
+          preferred_config?: string | null
+          preferred_flat_id?: string | null
+          preferred_project_id?: string | null
+          priority?: Database["public"]["Enums"]["customer_priority"]
+          purchase_probability?: number | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["customer_status"]
+          tags?: string[]
+          team_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          address?: string | null
+          alt_mobile_number?: string | null
+          assigned_leader_id?: string | null
+          assigned_member_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          city?: string | null
+          company?: string | null
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_code?: string
+          email?: string | null
+          expected_purchase_date?: string | null
+          full_name?: string
+          id?: string
+          is_archived?: boolean
+          last_contact_at?: string | null
+          lead_source?: string | null
+          meeting_count?: number
+          meta?: Json
+          mobile_number?: string
+          monthly_income?: number | null
+          next_followup_at?: string | null
+          notes?: string | null
+          occupation?: string | null
+          pin_code?: string | null
+          preferred_area?: string | null
+          preferred_config?: string | null
+          preferred_flat_id?: string | null
+          preferred_project_id?: string | null
+          priority?: Database["public"]["Enums"]["customer_priority"]
+          purchase_probability?: number | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["customer_status"]
+          tags?: string[]
+          team_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_assigned_leader_id_fkey"
+            columns: ["assigned_leader_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_assigned_member_id_fkey"
+            columns: ["assigned_member_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_preferred_flat_id_fkey"
+            columns: ["preferred_flat_id"]
+            isOneToOne: false
+            referencedRelation: "flats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_preferred_project_id_fkey"
+            columns: ["preferred_project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       flat_locks: {
         Row: {
           created_at: string
@@ -1034,6 +1376,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_team_leader_of: { Args: { _team_id: string }; Returns: boolean }
+      my_team_id: { Args: never; Returns: string }
       recompute_project_flat_counts: {
         Args: { p_project_id: string }
         Returns: undefined
@@ -1042,6 +1386,35 @@ export type Database = {
     Enums: {
       account_status: "active" | "suspended" | "pending"
       app_role: "super_admin" | "team_leader" | "member"
+      customer_priority: "low" | "normal" | "high" | "vip"
+      customer_status:
+        | "new_lead"
+        | "contacted"
+        | "meeting_scheduled"
+        | "meeting_completed"
+        | "interested"
+        | "flat_selected"
+        | "price_discussion"
+        | "documentation"
+        | "booking_amount"
+        | "booking_confirmed"
+        | "agreement"
+        | "registration"
+        | "sale_completed"
+        | "commission_generated"
+        | "closed"
+        | "not_interested"
+        | "on_hold"
+        | "cancelled"
+        | "lost"
+        | "future_followup"
+      meeting_status:
+        | "scheduled"
+        | "completed"
+        | "cancelled"
+        | "missed"
+        | "rescheduled"
+      meeting_type: "call" | "in_person" | "site_visit" | "virtual" | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1171,6 +1544,37 @@ export const Constants = {
     Enums: {
       account_status: ["active", "suspended", "pending"],
       app_role: ["super_admin", "team_leader", "member"],
+      customer_priority: ["low", "normal", "high", "vip"],
+      customer_status: [
+        "new_lead",
+        "contacted",
+        "meeting_scheduled",
+        "meeting_completed",
+        "interested",
+        "flat_selected",
+        "price_discussion",
+        "documentation",
+        "booking_amount",
+        "booking_confirmed",
+        "agreement",
+        "registration",
+        "sale_completed",
+        "commission_generated",
+        "closed",
+        "not_interested",
+        "on_hold",
+        "cancelled",
+        "lost",
+        "future_followup",
+      ],
+      meeting_status: [
+        "scheduled",
+        "completed",
+        "cancelled",
+        "missed",
+        "rescheduled",
+      ],
+      meeting_type: ["call", "in_person", "site_visit", "virtual", "other"],
     },
   },
 } as const

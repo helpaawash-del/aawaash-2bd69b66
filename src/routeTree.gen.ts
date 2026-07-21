@@ -19,6 +19,7 @@ import { Route as ErrorKindRouteImport } from './routes/error.$kind'
 import { Route as AuthenticatedMemberRouteImport } from './routes/_authenticated/member'
 import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated/leader'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedMemberWithdrawalsRouteImport } from './routes/_authenticated/member.withdrawals'
 import { Route as AuthenticatedMemberWalletRouteImport } from './routes/_authenticated/member.wallet'
@@ -37,6 +38,9 @@ import { Route as AuthenticatedLeaderProfileRouteImport } from './routes/_authen
 import { Route as AuthenticatedLeaderNotificationsRouteImport } from './routes/_authenticated/leader.notifications'
 import { Route as AuthenticatedLeaderMembersRouteImport } from './routes/_authenticated/leader.members'
 import { Route as AuthenticatedLeaderLeaderboardRouteImport } from './routes/_authenticated/leader.leaderboard'
+import { Route as AuthenticatedCrmNewRouteImport } from './routes/_authenticated/crm.new'
+import { Route as AuthenticatedCrmFollowupsRouteImport } from './routes/_authenticated/crm.followups'
+import { Route as AuthenticatedCrmIdRouteImport } from './routes/_authenticated/crm.$id'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
 import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
@@ -88,6 +92,11 @@ const AuthenticatedLeaderRoute = AuthenticatedLeaderRouteImport.update({
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCrmRoute = AuthenticatedCrmRouteImport.update({
+  id: '/crm',
+  path: '/crm',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -196,6 +205,22 @@ const AuthenticatedLeaderLeaderboardRoute =
     path: '/leaderboard',
     getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
+const AuthenticatedCrmNewRoute = AuthenticatedCrmNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedCrmRoute,
+} as any)
+const AuthenticatedCrmFollowupsRoute =
+  AuthenticatedCrmFollowupsRouteImport.update({
+    id: '/followups',
+    path: '/followups',
+    getParentRoute: () => AuthenticatedCrmRoute,
+  } as any)
+const AuthenticatedCrmIdRoute = AuthenticatedCrmIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedCrmRoute,
+} as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -220,12 +245,16 @@ export interface FileRoutesByFullPath {
   '/projects': typeof ProjectsRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/crm': typeof AuthenticatedCrmRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/crm/$id': typeof AuthenticatedCrmIdRoute
+  '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
+  '/crm/new': typeof AuthenticatedCrmNewRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
   '/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
   '/leader/notifications': typeof AuthenticatedLeaderNotificationsRoute
@@ -252,12 +281,16 @@ export interface FileRoutesByTo {
   '/projects': typeof ProjectsRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/crm': typeof AuthenticatedCrmRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/crm/$id': typeof AuthenticatedCrmIdRoute
+  '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
+  '/crm/new': typeof AuthenticatedCrmNewRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
   '/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
   '/leader/notifications': typeof AuthenticatedLeaderNotificationsRoute
@@ -286,12 +319,16 @@ export interface FileRoutesById {
   '/projects': typeof ProjectsRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/crm': typeof AuthenticatedCrmRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/_authenticated/member': typeof AuthenticatedMemberRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/crm/$id': typeof AuthenticatedCrmIdRoute
+  '/_authenticated/crm/followups': typeof AuthenticatedCrmFollowupsRoute
+  '/_authenticated/crm/new': typeof AuthenticatedCrmNewRoute
   '/_authenticated/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
   '/_authenticated/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
   '/_authenticated/leader/notifications': typeof AuthenticatedLeaderNotificationsRoute
@@ -320,12 +357,16 @@ export interface FileRouteTypes {
     | '/projects'
     | '/unauthorized'
     | '/admin'
+    | '/crm'
     | '/dashboard'
     | '/leader'
     | '/member'
     | '/error/$kind'
     | '/projects/$slug'
     | '/admin/users'
+    | '/crm/$id'
+    | '/crm/followups'
+    | '/crm/new'
     | '/leader/leaderboard'
     | '/leader/members'
     | '/leader/notifications'
@@ -352,12 +393,16 @@ export interface FileRouteTypes {
     | '/projects'
     | '/unauthorized'
     | '/admin'
+    | '/crm'
     | '/dashboard'
     | '/leader'
     | '/member'
     | '/error/$kind'
     | '/projects/$slug'
     | '/admin/users'
+    | '/crm/$id'
+    | '/crm/followups'
+    | '/crm/new'
     | '/leader/leaderboard'
     | '/leader/members'
     | '/leader/notifications'
@@ -385,12 +430,16 @@ export interface FileRouteTypes {
     | '/projects'
     | '/unauthorized'
     | '/_authenticated/admin'
+    | '/_authenticated/crm'
     | '/_authenticated/dashboard'
     | '/_authenticated/leader'
     | '/_authenticated/member'
     | '/error/$kind'
     | '/projects/$slug'
     | '/_authenticated/admin/users'
+    | '/_authenticated/crm/$id'
+    | '/_authenticated/crm/followups'
+    | '/_authenticated/crm/new'
     | '/_authenticated/leader/leaderboard'
     | '/_authenticated/leader/members'
     | '/_authenticated/leader/notifications'
@@ -491,6 +540,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/crm': {
+      id: '/_authenticated/crm'
+      path: '/crm'
+      fullPath: '/crm'
+      preLoaderRoute: typeof AuthenticatedCrmRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin': {
@@ -619,6 +675,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLeaderLeaderboardRouteImport
       parentRoute: typeof AuthenticatedLeaderRoute
     }
+    '/_authenticated/crm/new': {
+      id: '/_authenticated/crm/new'
+      path: '/new'
+      fullPath: '/crm/new'
+      preLoaderRoute: typeof AuthenticatedCrmNewRouteImport
+      parentRoute: typeof AuthenticatedCrmRoute
+    }
+    '/_authenticated/crm/followups': {
+      id: '/_authenticated/crm/followups'
+      path: '/followups'
+      fullPath: '/crm/followups'
+      preLoaderRoute: typeof AuthenticatedCrmFollowupsRouteImport
+      parentRoute: typeof AuthenticatedCrmRoute
+    }
+    '/_authenticated/crm/$id': {
+      id: '/_authenticated/crm/$id'
+      path: '/$id'
+      fullPath: '/crm/$id'
+      preLoaderRoute: typeof AuthenticatedCrmIdRouteImport
+      parentRoute: typeof AuthenticatedCrmRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/users'
@@ -653,6 +730,21 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedCrmRouteChildren {
+  AuthenticatedCrmIdRoute: typeof AuthenticatedCrmIdRoute
+  AuthenticatedCrmFollowupsRoute: typeof AuthenticatedCrmFollowupsRoute
+  AuthenticatedCrmNewRoute: typeof AuthenticatedCrmNewRoute
+}
+
+const AuthenticatedCrmRouteChildren: AuthenticatedCrmRouteChildren = {
+  AuthenticatedCrmIdRoute: AuthenticatedCrmIdRoute,
+  AuthenticatedCrmFollowupsRoute: AuthenticatedCrmFollowupsRoute,
+  AuthenticatedCrmNewRoute: AuthenticatedCrmNewRoute,
+}
+
+const AuthenticatedCrmRouteWithChildren =
+  AuthenticatedCrmRoute._addFileChildren(AuthenticatedCrmRouteChildren)
 
 interface AuthenticatedLeaderMembersRouteChildren {
   AuthenticatedLeaderMembersIdRoute: typeof AuthenticatedLeaderMembersIdRoute
@@ -736,6 +828,7 @@ const AuthenticatedMemberRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedCrmRoute: typeof AuthenticatedCrmRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderRoute: typeof AuthenticatedLeaderRouteWithChildren
   AuthenticatedMemberRoute: typeof AuthenticatedMemberRouteWithChildren
@@ -743,6 +836,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedCrmRoute: AuthenticatedCrmRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderRoute: AuthenticatedLeaderRouteWithChildren,
   AuthenticatedMemberRoute: AuthenticatedMemberRouteWithChildren,
