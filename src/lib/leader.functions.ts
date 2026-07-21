@@ -360,7 +360,7 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ context, data }) => {
-    const patch: Record<string, unknown> = {};
+    const patch: { email?: string; avatar_url?: string } = {};
     if (data.email) patch.email = data.email;
     if (data.avatar_url) patch.avatar_url = data.avatar_url;
     if (Object.keys(patch).length === 0) return { ok: true as const };
