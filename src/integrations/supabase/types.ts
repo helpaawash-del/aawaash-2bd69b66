@@ -277,13 +277,108 @@ export type Database = {
         }
         Relationships: []
       }
+      referrals: {
+        Row: {
+          address: string | null
+          alt_mobile: string | null
+          created_at: string
+          customer_name: string
+          expected_timeline: string | null
+          id: string
+          interested_project: string | null
+          meeting_notes: string | null
+          meeting_status: string
+          member_id: string
+          mobile_number: string
+          potential_commission: number
+          preferred_budget: number | null
+          preferred_flat: string | null
+          project_id: string | null
+          purchase_status: string
+          remarks: string | null
+          status: string
+          team_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          alt_mobile?: string | null
+          created_at?: string
+          customer_name: string
+          expected_timeline?: string | null
+          id?: string
+          interested_project?: string | null
+          meeting_notes?: string | null
+          meeting_status?: string
+          member_id: string
+          mobile_number: string
+          potential_commission?: number
+          preferred_budget?: number | null
+          preferred_flat?: string | null
+          project_id?: string | null
+          purchase_status?: string
+          remarks?: string | null
+          status?: string
+          team_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          alt_mobile?: string | null
+          created_at?: string
+          customer_name?: string
+          expected_timeline?: string | null
+          id?: string
+          interested_project?: string | null
+          meeting_notes?: string | null
+          meeting_status?: string
+          member_id?: string
+          mobile_number?: string
+          potential_commission?: number
+          preferred_budget?: number | null
+          preferred_flat?: string | null
+          project_id?: string | null
+          purchase_status?: string
+          remarks?: string | null
+          status?: string
+          team_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sales: {
         Row: {
           buyer_mobile: string | null
           buyer_name: string
+          contact_visible: boolean
           created_at: string
+          customer_status: string
           deal_value: number
           id: string
+          notes: string | null
+          payment_status: string
           project_id: string | null
           sale_date: string
           seller_id: string | null
@@ -294,9 +389,13 @@ export type Database = {
         Insert: {
           buyer_mobile?: string | null
           buyer_name: string
+          contact_visible?: boolean
           created_at?: string
+          customer_status?: string
           deal_value?: number
           id?: string
+          notes?: string | null
+          payment_status?: string
           project_id?: string | null
           sale_date?: string
           seller_id?: string | null
@@ -307,9 +406,13 @@ export type Database = {
         Update: {
           buyer_mobile?: string | null
           buyer_name?: string
+          contact_visible?: boolean
           created_at?: string
+          customer_status?: string
           deal_value?: number
           id?: string
+          notes?: string | null
+          payment_status?: string
           project_id?: string | null
           sale_date?: string
           seller_id?: string | null
@@ -387,6 +490,82 @@ export type Database = {
             columns: ["leader_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tip_persons: {
+        Row: {
+          created_at: string
+          customer_contact: string | null
+          customer_name: string
+          id: string
+          interested_project: string | null
+          member_id: string
+          notes: string | null
+          project_id: string | null
+          relationship: string | null
+          status: string
+          team_id: string | null
+          tip_address: string | null
+          tip_mobile: string
+          tip_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_contact?: string | null
+          customer_name: string
+          id?: string
+          interested_project?: string | null
+          member_id: string
+          notes?: string | null
+          project_id?: string | null
+          relationship?: string | null
+          status?: string
+          team_id?: string | null
+          tip_address?: string | null
+          tip_mobile: string
+          tip_name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_contact?: string | null
+          customer_name?: string
+          id?: string
+          interested_project?: string | null
+          member_id?: string
+          notes?: string | null
+          project_id?: string | null
+          relationship?: string | null
+          status?: string
+          team_id?: string | null
+          tip_address?: string | null
+          tip_mobile?: string
+          tip_name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tip_persons_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tip_persons_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tip_persons_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
             referencedColumns: ["id"]
           },
         ]
