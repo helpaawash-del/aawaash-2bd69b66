@@ -45,6 +45,7 @@ import { Route as AuthenticatedCrmNewRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedCrmFollowupsRouteImport } from './routes/_authenticated/crm.followups'
 import { Route as AuthenticatedCrmIdRouteImport } from './routes/_authenticated/crm.$id'
 import { Route as AuthenticatedCommissionsIdRouteImport } from './routes/_authenticated/commissions.$id'
+import { Route as AuthenticatedAdminWithdrawalsRouteImport } from './routes/_authenticated/admin.withdrawals'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminCommissionsRouteImport } from './routes/_authenticated/admin.commissions'
 import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
@@ -250,6 +251,12 @@ const AuthenticatedCommissionsIdRoute =
     path: '/commissions/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminWithdrawalsRoute =
+  AuthenticatedAdminWithdrawalsRouteImport.update({
+    id: '/withdrawals',
+    path: '/withdrawals',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -289,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/commissions/$id': typeof AuthenticatedCommissionsIdRoute
   '/crm/$id': typeof AuthenticatedCrmIdRoute
   '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
@@ -330,6 +338,7 @@ export interface FileRoutesByTo {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/commissions/$id': typeof AuthenticatedCommissionsIdRoute
   '/crm/$id': typeof AuthenticatedCrmIdRoute
   '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
@@ -373,6 +382,7 @@ export interface FileRoutesById {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/_authenticated/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/_authenticated/commissions/$id': typeof AuthenticatedCommissionsIdRoute
   '/_authenticated/crm/$id': typeof AuthenticatedCrmIdRoute
   '/_authenticated/crm/followups': typeof AuthenticatedCrmFollowupsRoute
@@ -416,6 +426,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/admin/commissions'
     | '/admin/users'
+    | '/admin/withdrawals'
     | '/commissions/$id'
     | '/crm/$id'
     | '/crm/followups'
@@ -457,6 +468,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/admin/commissions'
     | '/admin/users'
+    | '/admin/withdrawals'
     | '/commissions/$id'
     | '/crm/$id'
     | '/crm/followups'
@@ -499,6 +511,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/_authenticated/admin/commissions'
     | '/_authenticated/admin/users'
+    | '/_authenticated/admin/withdrawals'
     | '/_authenticated/commissions/$id'
     | '/_authenticated/crm/$id'
     | '/_authenticated/crm/followups'
@@ -789,6 +802,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCommissionsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/withdrawals': {
+      id: '/_authenticated/admin/withdrawals'
+      path: '/withdrawals'
+      fullPath: '/admin/withdrawals'
+      preLoaderRoute: typeof AuthenticatedAdminWithdrawalsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/users'
@@ -823,11 +843,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCommissionsRoute: typeof AuthenticatedAdminCommissionsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCommissionsRoute: AuthenticatedAdminCommissionsRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
