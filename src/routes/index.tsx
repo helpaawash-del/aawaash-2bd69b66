@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import {
   ArrowRight,
   Building2,
@@ -10,12 +11,24 @@ import {
 } from "lucide-react";
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
 import { BrandMark } from "@/components/aawash/BrandMark";
+import { useSession } from "@/hooks/useSession";
+import { homePathForRole } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   component: Welcome,
 });
 
 function Welcome() {
+  const navigate = useNavigate();
+  const { loading, user, role } = useSession();
+
+  // Signed-in users go straight to their role home.
+  useEffect(() => {
+    if (!loading && user) {
+      navigate({ to: homePathForRole(role), replace: true });
+    }
+  }, [loading, user, role, navigate]);
+
   return (
     <div className="relative min-h-screen">
       <AmbientBackground />
@@ -54,21 +67,18 @@ function Welcome() {
 
           <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:items-center">
             <Link
-              to="/"
+              to="/auth"
               className="group inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] active:translate-y-0"
             >
-              Enter dashboard
+              Sign in
               <ArrowRight
                 size={16}
                 className="transition-transform duration-300 group-hover:translate-x-0.5"
               />
             </Link>
-            <Link
-              to="/"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-6 text-sm font-semibold text-foreground shadow-[var(--shadow-soft)] transition-all duration-300 hover:border-primary/30 hover:bg-primary-soft"
-            >
-              Explore projects
-            </Link>
+            <span className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-6 text-sm font-semibold text-muted-foreground shadow-[var(--shadow-soft)]">
+              Invite only · No public sign-up
+            </span>
           </div>
         </section>
 
