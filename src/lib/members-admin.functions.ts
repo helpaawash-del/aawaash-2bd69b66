@@ -481,8 +481,8 @@ export const getMemberDetail = createServerFn({ method: "GET" })
         .select("id, action, entity_type, entity_id, metadata, new_value, created_at, actor_id")
         .eq("entity_id", profile.id)
         .order("created_at", { ascending: false })
-        .limit: (50 as never) as never,
-    ] as const);
+        .limit(50),
+    ]);
 
     // Aggregates
     const approved = (sales ?? []).filter((s) => s.approval_status === "approved");
