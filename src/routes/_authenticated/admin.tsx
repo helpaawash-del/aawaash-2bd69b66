@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Building2, Users, Wallet, TrendingUp, ShieldCheck, ArrowRight } from "lucide-react";
+import { Building2, Users, Wallet, Coins, ShieldCheck, ArrowRight } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { DashboardShell } from "@/components/aawash/DashboardShell";
@@ -83,16 +83,24 @@ function AdminContent() {
           />
         </Link>
 
-        <div className="rounded-4xl border border-border bg-surface p-6 shadow-[var(--shadow-soft)]">
-          <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gold/15 text-gold-foreground">
-            <TrendingUp size={20} />
+        <Link
+          to="/admin/commissions"
+          className="group flex items-center justify-between rounded-4xl border border-border bg-surface p-6 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
+        >
+          <div>
+            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gold/15 text-gold-foreground">
+              <Coins size={20} />
+            </div>
+            <h2 className="mt-4 text-lg font-bold text-foreground">Commission Engine</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Configure slabs, review transactions, audit the ledger.
+            </p>
           </div>
-          <h2 className="mt-4 text-lg font-bold text-foreground">More surfaces incoming</h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Projects, sales, commissions, referrals, withdrawals, and audit
-            reports arrive in the next parts.
-          </p>
-        </div>
+          <ArrowRight
+            size={20}
+            className="text-muted-foreground transition-transform group-hover:translate-x-1"
+          />
+        </Link>
       </section>
     </DashboardShell>
   );

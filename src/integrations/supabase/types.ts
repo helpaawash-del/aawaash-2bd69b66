@@ -109,36 +109,430 @@ export type Database = {
           },
         ]
       }
+      commission_audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          from_value: Json | null
+          id: string
+          reason: string | null
+          sale_id: string | null
+          to_value: Json | null
+          transaction_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          from_value?: Json | null
+          id?: string
+          reason?: string | null
+          sale_id?: string | null
+          to_value?: Json | null
+          transaction_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          from_value?: Json | null
+          id?: string
+          reason?: string | null
+          sale_id?: string | null
+          to_value?: Json | null
+          transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_audit_log_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_audit_log_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_audit_log_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "commission_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commission_ledger: {
+        Row: {
+          created_at: string
+          credit: number
+          debit: number
+          id: string
+          ref_number: string
+          remarks: string | null
+          running_balance: number
+          sale_id: string | null
+          source: string
+          status: string
+          transaction_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          credit?: number
+          debit?: number
+          id?: string
+          ref_number: string
+          remarks?: string | null
+          running_balance?: number
+          sale_id?: string | null
+          source: string
+          status?: string
+          transaction_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          credit?: number
+          debit?: number
+          id?: string
+          ref_number?: string
+          remarks?: string | null
+          running_balance?: number
+          sale_id?: string | null
+          source?: string
+          status?: string
+          transaction_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_ledger_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_ledger_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "commission_transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_ledger_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commission_settings: {
+        Row: {
+          bonus_threshold: number
+          id: number
+          member_share_pct: number
+          tip_share_pct: number
+          updated_at: string
+        }
+        Insert: {
+          bonus_threshold?: number
+          id?: number
+          member_share_pct?: number
+          tip_share_pct?: number
+          updated_at?: string
+        }
+        Update: {
+          bonus_threshold?: number
+          id?: number
+          member_share_pct?: number
+          tip_share_pct?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      commission_slabs: {
+        Row: {
+          active: boolean
+          bonus_enabled: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          label: string
+          max_amount: number | null
+          min_amount: number
+          percent: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          bonus_enabled?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label: string
+          max_amount?: number | null
+          min_amount: number
+          percent: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          bonus_enabled?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label?: string
+          max_amount?: number | null
+          min_amount?: number
+          percent?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_slabs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commission_transactions: {
+        Row: {
+          approval_status: string
+          approved_by: string | null
+          bonus_amount: number
+          bonus_flag: boolean
+          created_at: string
+          customer_id: string | null
+          extras: Json
+          flat_id: string | null
+          generated_by: string | null
+          id: string
+          leader_gross: number
+          leader_id: string | null
+          member_amount: number
+          member_id: string | null
+          net_leader: number
+          project_id: string | null
+          reversal_reason: string | null
+          reversed_at: string | null
+          sale_amount: number
+          sale_id: string
+          settlement_status: string
+          slab_id: string | null
+          slab_pct: number
+          status: string
+          team_id: string | null
+          tip_amount: number
+          tip_person_id: string | null
+          txn_number: string
+          updated_at: string
+          wallet_status: string
+          withdrawal_status: string
+        }
+        Insert: {
+          approval_status?: string
+          approved_by?: string | null
+          bonus_amount?: number
+          bonus_flag?: boolean
+          created_at?: string
+          customer_id?: string | null
+          extras?: Json
+          flat_id?: string | null
+          generated_by?: string | null
+          id?: string
+          leader_gross?: number
+          leader_id?: string | null
+          member_amount?: number
+          member_id?: string | null
+          net_leader?: number
+          project_id?: string | null
+          reversal_reason?: string | null
+          reversed_at?: string | null
+          sale_amount: number
+          sale_id: string
+          settlement_status?: string
+          slab_id?: string | null
+          slab_pct: number
+          status?: string
+          team_id?: string | null
+          tip_amount?: number
+          tip_person_id?: string | null
+          txn_number: string
+          updated_at?: string
+          wallet_status?: string
+          withdrawal_status?: string
+        }
+        Update: {
+          approval_status?: string
+          approved_by?: string | null
+          bonus_amount?: number
+          bonus_flag?: boolean
+          created_at?: string
+          customer_id?: string | null
+          extras?: Json
+          flat_id?: string | null
+          generated_by?: string | null
+          id?: string
+          leader_gross?: number
+          leader_id?: string | null
+          member_amount?: number
+          member_id?: string | null
+          net_leader?: number
+          project_id?: string | null
+          reversal_reason?: string | null
+          reversed_at?: string | null
+          sale_amount?: number
+          sale_id?: string
+          settlement_status?: string
+          slab_id?: string | null
+          slab_pct?: number
+          status?: string
+          team_id?: string | null
+          tip_amount?: number
+          tip_person_id?: string | null
+          txn_number?: string
+          updated_at?: string
+          wallet_status?: string
+          withdrawal_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_transactions_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_flat_id_fkey"
+            columns: ["flat_id"]
+            isOneToOne: false
+            referencedRelation: "flats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_generated_by_fkey"
+            columns: ["generated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_leader_id_fkey"
+            columns: ["leader_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: true
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_slab_id_fkey"
+            columns: ["slab_id"]
+            isOneToOne: false
+            referencedRelation: "commission_slabs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_transactions_tip_person_id_fkey"
+            columns: ["tip_person_id"]
+            isOneToOne: false
+            referencedRelation: "tip_persons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commissions: {
         Row: {
           amount: number
           created_at: string
           id: string
+          recipient_kind: string | null
           sale_id: string | null
           status: string
           team_id: string | null
           tier: number
+          tip_person_id: string | null
+          transaction_id: string | null
+          updated_at: string
           user_id: string
+          wallet_status: string
         }
         Insert: {
           amount?: number
           created_at?: string
           id?: string
+          recipient_kind?: string | null
           sale_id?: string | null
           status?: string
           team_id?: string | null
           tier?: number
+          tip_person_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string
           user_id: string
+          wallet_status?: string
         }
         Update: {
           amount?: number
           created_at?: string
           id?: string
+          recipient_kind?: string | null
           sale_id?: string | null
           status?: string
           team_id?: string | null
           tier?: number
+          tip_person_id?: string | null
+          transaction_id?: string | null
+          updated_at?: string
           user_id?: string
+          wallet_status?: string
         }
         Relationships: [
           {
@@ -153,6 +547,20 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_tip_person_id_fkey"
+            columns: ["tip_person_id"]
+            isOneToOne: false
+            referencedRelation: "tip_persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "commission_transactions"
             referencedColumns: ["id"]
           },
           {
@@ -1685,6 +2093,14 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["app_role"]
       }
+      generate_commissions_for_sale: {
+        Args: { p_sale_id: string }
+        Returns: string
+      }
+      grant_manual_bonus: {
+        Args: { p_amount: number; p_reason: string; p_txn_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1694,11 +2110,37 @@ export type Database = {
       }
       is_team_leader_of: { Args: { _team_id: string }; Returns: boolean }
       my_team_id: { Args: never; Returns: string }
+      pick_commission_slab: {
+        Args: { p_amount: number }
+        Returns: {
+          active: boolean
+          bonus_enabled: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          label: string
+          max_amount: number | null
+          min_amount: number
+          percent: number
+          sort_order: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "commission_slabs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       recompute_project_flat_counts: {
         Args: { p_project_id: string }
         Returns: undefined
       }
       reject_sale: {
+        Args: { p_reason: string; p_sale_id: string }
+        Returns: undefined
+      }
+      reverse_commissions_for_sale: {
         Args: { p_reason: string; p_sale_id: string }
         Returns: undefined
       }
