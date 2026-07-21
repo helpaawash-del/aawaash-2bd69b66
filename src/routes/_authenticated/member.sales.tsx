@@ -197,7 +197,7 @@ function SalesContent() {
 }
 
 function StatusPill({ label, kind }: { label: string; kind: "status" | "payment" }) {
-  const map =
+  const map: Record<string, string> =
     kind === "status"
       ? {
           confirmed: "bg-success/15 text-success",
@@ -209,7 +209,7 @@ function StatusPill({ label, kind }: { label: string; kind: "status" | "payment"
           partial: "bg-warning/15 text-warning",
           pending: "bg-muted text-muted-foreground",
         };
-  const cls = (map as Record<string, string>)[label] || "bg-muted text-muted-foreground";
+  const cls = map[label] || "bg-muted text-muted-foreground";
   return (
     <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${cls}`}>
       {label}
