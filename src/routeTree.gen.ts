@@ -44,7 +44,9 @@ import { Route as AuthenticatedLeaderLeaderboardRouteImport } from './routes/_au
 import { Route as AuthenticatedCrmNewRouteImport } from './routes/_authenticated/crm.new'
 import { Route as AuthenticatedCrmFollowupsRouteImport } from './routes/_authenticated/crm.followups'
 import { Route as AuthenticatedCrmIdRouteImport } from './routes/_authenticated/crm.$id'
+import { Route as AuthenticatedCommissionsIdRouteImport } from './routes/_authenticated/commissions.$id'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminCommissionsRouteImport } from './routes/_authenticated/admin.commissions'
 import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
 import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
 
@@ -242,11 +244,23 @@ const AuthenticatedCrmIdRoute = AuthenticatedCrmIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AuthenticatedCrmRoute,
 } as any)
+const AuthenticatedCommissionsIdRoute =
+  AuthenticatedCommissionsIdRouteImport.update({
+    id: '/commissions/$id',
+    path: '/commissions/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminCommissionsRoute =
+  AuthenticatedAdminCommissionsRouteImport.update({
+    id: '/commissions',
+    path: '/commissions',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedMemberSalesIdRoute =
   AuthenticatedMemberSalesIdRouteImport.update({
     id: '/$id',
@@ -273,7 +287,9 @@ export interface FileRoutesByFullPath {
   '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/commissions/$id': typeof AuthenticatedCommissionsIdRoute
   '/crm/$id': typeof AuthenticatedCrmIdRoute
   '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
   '/crm/new': typeof AuthenticatedCrmNewRoute
@@ -312,7 +328,9 @@ export interface FileRoutesByTo {
   '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/commissions/$id': typeof AuthenticatedCommissionsIdRoute
   '/crm/$id': typeof AuthenticatedCrmIdRoute
   '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
   '/crm/new': typeof AuthenticatedCrmNewRoute
@@ -353,7 +371,9 @@ export interface FileRoutesById {
   '/_authenticated/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/_authenticated/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/commissions/$id': typeof AuthenticatedCommissionsIdRoute
   '/_authenticated/crm/$id': typeof AuthenticatedCrmIdRoute
   '/_authenticated/crm/followups': typeof AuthenticatedCrmFollowupsRoute
   '/_authenticated/crm/new': typeof AuthenticatedCrmNewRoute
@@ -394,7 +414,9 @@ export interface FileRouteTypes {
     | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
+    | '/admin/commissions'
     | '/admin/users'
+    | '/commissions/$id'
     | '/crm/$id'
     | '/crm/followups'
     | '/crm/new'
@@ -433,7 +455,9 @@ export interface FileRouteTypes {
     | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
+    | '/admin/commissions'
     | '/admin/users'
+    | '/commissions/$id'
     | '/crm/$id'
     | '/crm/followups'
     | '/crm/new'
@@ -473,7 +497,9 @@ export interface FileRouteTypes {
     | '/_authenticated/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
+    | '/_authenticated/admin/commissions'
     | '/_authenticated/admin/users'
+    | '/_authenticated/commissions/$id'
     | '/_authenticated/crm/$id'
     | '/_authenticated/crm/followups'
     | '/_authenticated/crm/new'
@@ -756,11 +782,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCrmIdRouteImport
       parentRoute: typeof AuthenticatedCrmRoute
     }
+    '/_authenticated/commissions/$id': {
+      id: '/_authenticated/commissions/$id'
+      path: '/commissions/$id'
+      fullPath: '/commissions/$id'
+      preLoaderRoute: typeof AuthenticatedCommissionsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/commissions': {
+      id: '/_authenticated/admin/commissions'
+      path: '/commissions'
+      fullPath: '/admin/commissions'
+      preLoaderRoute: typeof AuthenticatedAdminCommissionsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/member/sales/$id': {
@@ -781,10 +821,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminCommissionsRoute: typeof AuthenticatedAdminCommissionsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminCommissionsRoute: AuthenticatedAdminCommissionsRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
 }
 
@@ -909,6 +951,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLeaderRoute: typeof AuthenticatedLeaderRouteWithChildren
   AuthenticatedMemberRoute: typeof AuthenticatedMemberRouteWithChildren
   AuthenticatedSalesWorkflowRoute: typeof AuthenticatedSalesWorkflowRouteWithChildren
+  AuthenticatedCommissionsIdRoute: typeof AuthenticatedCommissionsIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -918,6 +961,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedLeaderRoute: AuthenticatedLeaderRouteWithChildren,
   AuthenticatedMemberRoute: AuthenticatedMemberRouteWithChildren,
   AuthenticatedSalesWorkflowRoute: AuthenticatedSalesWorkflowRouteWithChildren,
+  AuthenticatedCommissionsIdRoute: AuthenticatedCommissionsIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
