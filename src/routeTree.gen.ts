@@ -22,6 +22,7 @@ import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedSalesWorkflowNewRouteImport } from './routes/_authenticated/sales-workflow.new'
 import { Route as AuthenticatedMemberWithdrawalsRouteImport } from './routes/_authenticated/member.withdrawals'
 import { Route as AuthenticatedMemberWalletRouteImport } from './routes/_authenticated/member.wallet'
 import { Route as AuthenticatedMemberTipsRouteImport } from './routes/_authenticated/member.tips'
@@ -111,6 +112,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSalesWorkflowNewRoute =
+  AuthenticatedSalesWorkflowNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedSalesWorkflowRoute,
+  } as any)
 const AuthenticatedMemberWithdrawalsRoute =
   AuthenticatedMemberWithdrawalsRouteImport.update({
     id: '/withdrawals',
@@ -256,7 +263,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRouteWithChildren
-  '/sales-workflow': typeof AuthenticatedSalesWorkflowRoute
+  '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -280,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/member/tips': typeof AuthenticatedMemberTipsRoute
   '/member/wallet': typeof AuthenticatedMemberWalletRoute
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
+  '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
 }
@@ -293,7 +301,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRouteWithChildren
-  '/sales-workflow': typeof AuthenticatedSalesWorkflowRoute
+  '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -317,6 +325,7 @@ export interface FileRoutesByTo {
   '/member/tips': typeof AuthenticatedMemberTipsRoute
   '/member/wallet': typeof AuthenticatedMemberWalletRoute
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
+  '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
 }
@@ -332,7 +341,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/_authenticated/member': typeof AuthenticatedMemberRouteWithChildren
-  '/_authenticated/sales-workflow': typeof AuthenticatedSalesWorkflowRoute
+  '/_authenticated/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -356,6 +365,7 @@ export interface FileRoutesById {
   '/_authenticated/member/tips': typeof AuthenticatedMemberTipsRoute
   '/_authenticated/member/wallet': typeof AuthenticatedMemberWalletRoute
   '/_authenticated/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
+  '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/_authenticated/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/_authenticated/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
 }
@@ -395,6 +405,7 @@ export interface FileRouteTypes {
     | '/member/tips'
     | '/member/wallet'
     | '/member/withdrawals'
+    | '/sales-workflow/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -432,6 +443,7 @@ export interface FileRouteTypes {
     | '/member/tips'
     | '/member/wallet'
     | '/member/withdrawals'
+    | '/sales-workflow/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
   id:
@@ -470,6 +482,7 @@ export interface FileRouteTypes {
     | '/_authenticated/member/tips'
     | '/_authenticated/member/wallet'
     | '/_authenticated/member/withdrawals'
+    | '/_authenticated/sales-workflow/new'
     | '/_authenticated/leader/members/$id'
     | '/_authenticated/member/sales/$id'
   fileRoutesById: FileRoutesById
@@ -575,6 +588,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales-workflow/new': {
+      id: '/_authenticated/sales-workflow/new'
+      path: '/new'
+      fullPath: '/sales-workflow/new'
+      preLoaderRoute: typeof AuthenticatedSalesWorkflowNewRouteImport
+      parentRoute: typeof AuthenticatedSalesWorkflowRoute
     }
     '/_authenticated/member/withdrawals': {
       id: '/_authenticated/member/withdrawals'
@@ -846,13 +866,27 @@ const AuthenticatedMemberRouteChildren: AuthenticatedMemberRouteChildren = {
 const AuthenticatedMemberRouteWithChildren =
   AuthenticatedMemberRoute._addFileChildren(AuthenticatedMemberRouteChildren)
 
+interface AuthenticatedSalesWorkflowRouteChildren {
+  AuthenticatedSalesWorkflowNewRoute: typeof AuthenticatedSalesWorkflowNewRoute
+}
+
+const AuthenticatedSalesWorkflowRouteChildren: AuthenticatedSalesWorkflowRouteChildren =
+  {
+    AuthenticatedSalesWorkflowNewRoute: AuthenticatedSalesWorkflowNewRoute,
+  }
+
+const AuthenticatedSalesWorkflowRouteWithChildren =
+  AuthenticatedSalesWorkflowRoute._addFileChildren(
+    AuthenticatedSalesWorkflowRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedCrmRoute: typeof AuthenticatedCrmRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderRoute: typeof AuthenticatedLeaderRouteWithChildren
   AuthenticatedMemberRoute: typeof AuthenticatedMemberRouteWithChildren
-  AuthenticatedSalesWorkflowRoute: typeof AuthenticatedSalesWorkflowRoute
+  AuthenticatedSalesWorkflowRoute: typeof AuthenticatedSalesWorkflowRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -861,7 +895,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderRoute: AuthenticatedLeaderRouteWithChildren,
   AuthenticatedMemberRoute: AuthenticatedMemberRouteWithChildren,
-  AuthenticatedSalesWorkflowRoute: AuthenticatedSalesWorkflowRoute,
+  AuthenticatedSalesWorkflowRoute: AuthenticatedSalesWorkflowRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
