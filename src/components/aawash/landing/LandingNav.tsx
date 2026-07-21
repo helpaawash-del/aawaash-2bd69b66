@@ -4,12 +4,12 @@ import { Menu, X } from "lucide-react";
 import { BrandMark } from "@/components/aawash/BrandMark";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-const NAV_ITEMS = [
-  { label: "Home", href: "#home" },
-  { label: "Projects", href: "#projects" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+const NAV_ITEMS: { label: string; href: string; route?: boolean }[] = [
+  { label: "Home", href: "/", route: true },
+  { label: "Projects", href: "/projects", route: true },
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export function LandingNav() {
@@ -57,7 +57,7 @@ export function LandingNav() {
             Login
           </Link>
           <a
-            href="#projects"
+            href="/projects"
             className="hidden h-10 items-center rounded-2xl bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all hover:-translate-y-0.5 sm:inline-flex"
           >
             Explore
@@ -111,7 +111,7 @@ export function LandingNav() {
                     Login
                   </Link>
                   <a
-                    href="#projects"
+                    href="/projects"
                     onClick={() => setOpen(false)}
                     className="inline-flex h-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]"
                   >
