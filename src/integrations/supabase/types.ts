@@ -1889,6 +1889,87 @@ export type Database = {
           },
         ]
       }
+      system_job_runs: {
+        Row: {
+          duration_ms: number | null
+          error: string | null
+          finished_at: string | null
+          id: string
+          job_name: string
+          result: Json | null
+          started_at: string
+          status: string
+        }
+        Insert: {
+          duration_ms?: number | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          job_name: string
+          result?: Json | null
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          duration_ms?: number | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          job_name?: string
+          result?: Json | null
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      system_settings: {
+        Row: {
+          company_address: string | null
+          company_email: string | null
+          company_name: string
+          company_phone: string | null
+          created_at: string
+          extra: Json
+          id: number
+          maintenance_message: string | null
+          maintenance_mode: boolean
+          notifications_enabled: boolean
+          theme: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          company_address?: string | null
+          company_email?: string | null
+          company_name?: string
+          company_phone?: string | null
+          created_at?: string
+          extra?: Json
+          id?: number
+          maintenance_message?: string | null
+          maintenance_mode?: boolean
+          notifications_enabled?: boolean
+          theme?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          company_address?: string | null
+          company_email?: string | null
+          company_name?: string
+          company_phone?: string | null
+          created_at?: string
+          extra?: Json
+          id?: number
+          maintenance_message?: string | null
+          maintenance_mode?: boolean
+          notifications_enabled?: boolean
+          theme?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       teams: {
         Row: {
           created_at: string
@@ -2219,6 +2300,10 @@ export type Database = {
         Args: { p_sale_id: string }
         Returns: undefined
       }
+      system_cleanup_expired_locks: { Args: never; Returns: Json }
+      system_get_health: { Args: never; Returns: Json }
+      system_run_integrity_checks: { Args: never; Returns: Json }
+      system_run_maintenance: { Args: never; Returns: Json }
       wallet_approve_withdrawal: {
         Args: { p_id: string; p_notes?: string }
         Returns: undefined
