@@ -65,6 +65,7 @@ import { Route as AuthenticatedAdminTeamLeadersIdRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminProjectsNewRouteImport } from './routes/_authenticated/admin.projects.new'
 import { Route as AuthenticatedAdminProjectsIdRouteImport } from './routes/_authenticated/admin.projects.$id'
 import { Route as AuthenticatedAdminMembersNewRouteImport } from './routes/_authenticated/admin.members.new'
+import { Route as AuthenticatedAdminMembersIdRouteImport } from './routes/_authenticated/admin.members.$id'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -385,6 +386,12 @@ const AuthenticatedAdminMembersNewRoute =
     path: '/new',
     getParentRoute: () => AuthenticatedAdminMembersRoute,
   } as any)
+const AuthenticatedAdminMembersIdRoute =
+  AuthenticatedAdminMembersIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAdminMembersRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -434,6 +441,7 @@ export interface FileRoutesByFullPath {
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
+  '/admin/members/$id': typeof AuthenticatedAdminMembersIdRoute
   '/admin/members/new': typeof AuthenticatedAdminMembersNewRoute
   '/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/admin/projects/new': typeof AuthenticatedAdminProjectsNewRoute
@@ -491,6 +499,7 @@ export interface FileRoutesByTo {
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
+  '/admin/members/$id': typeof AuthenticatedAdminMembersIdRoute
   '/admin/members/new': typeof AuthenticatedAdminMembersNewRoute
   '/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/admin/projects/new': typeof AuthenticatedAdminProjectsNewRoute
@@ -550,6 +559,7 @@ export interface FileRoutesById {
   '/_authenticated/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/_authenticated/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
+  '/_authenticated/admin/members/$id': typeof AuthenticatedAdminMembersIdRoute
   '/_authenticated/admin/members/new': typeof AuthenticatedAdminMembersNewRoute
   '/_authenticated/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/_authenticated/admin/projects/new': typeof AuthenticatedAdminProjectsNewRoute
@@ -609,6 +619,7 @@ export interface FileRouteTypes {
     | '/member/withdrawals'
     | '/sales-workflow/$id'
     | '/sales-workflow/new'
+    | '/admin/members/$id'
     | '/admin/members/new'
     | '/admin/projects/$id'
     | '/admin/projects/new'
@@ -666,6 +677,7 @@ export interface FileRouteTypes {
     | '/member/withdrawals'
     | '/sales-workflow/$id'
     | '/sales-workflow/new'
+    | '/admin/members/$id'
     | '/admin/members/new'
     | '/admin/projects/$id'
     | '/admin/projects/new'
@@ -724,6 +736,7 @@ export interface FileRouteTypes {
     | '/_authenticated/member/withdrawals'
     | '/_authenticated/sales-workflow/$id'
     | '/_authenticated/sales-workflow/new'
+    | '/_authenticated/admin/members/$id'
     | '/_authenticated/admin/members/new'
     | '/_authenticated/admin/projects/$id'
     | '/_authenticated/admin/projects/new'
@@ -1138,15 +1151,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMembersNewRouteImport
       parentRoute: typeof AuthenticatedAdminMembersRoute
     }
+    '/_authenticated/admin/members/$id': {
+      id: '/_authenticated/admin/members/$id'
+      path: '/$id'
+      fullPath: '/admin/members/$id'
+      preLoaderRoute: typeof AuthenticatedAdminMembersIdRouteImport
+      parentRoute: typeof AuthenticatedAdminMembersRoute
+    }
   }
 }
 
 interface AuthenticatedAdminMembersRouteChildren {
+  AuthenticatedAdminMembersIdRoute: typeof AuthenticatedAdminMembersIdRoute
   AuthenticatedAdminMembersNewRoute: typeof AuthenticatedAdminMembersNewRoute
 }
 
 const AuthenticatedAdminMembersRouteChildren: AuthenticatedAdminMembersRouteChildren =
   {
+    AuthenticatedAdminMembersIdRoute: AuthenticatedAdminMembersIdRoute,
     AuthenticatedAdminMembersNewRoute: AuthenticatedAdminMembersNewRoute,
   }
 
