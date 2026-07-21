@@ -129,7 +129,7 @@ export const approveSale = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.rpc("approve_sale", {
       p_sale_id: data.id,
-      p_notes: data.notes || null,
+      p_notes: data.notes || undefined,
     });
     if (error) throw new Error(error.message);
     return { ok: true as const };
