@@ -56,7 +56,8 @@ const NAV: NavGroup[] = [
   {
     label: "People",
     items: [
-      { to: "/admin/users", label: "Leaders & Members", icon: Users, prefix: "/admin/users" },
+      { to: "/admin/team-leaders", label: "Team Leaders", icon: UserCog, prefix: "/admin/team-leaders" },
+      { to: "/admin/users", label: "Users Directory", icon: Users, prefix: "/admin/users" },
     ],
   },
   {

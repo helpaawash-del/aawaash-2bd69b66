@@ -1156,6 +1156,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
           avatar_url: string | null
           created_at: string
           created_by: string | null
@@ -1165,6 +1166,7 @@ export type Database = {
           id: string
           is_active: boolean
           is_deleted: boolean
+          joining_date: string | null
           last_login_at: string | null
           last_settlement_at: string | null
           lifetime_withdrawals: number
@@ -1173,6 +1175,7 @@ export type Database = {
           mobile_number: string
           pending_balance: number
           referral_count: number
+          remarks: string | null
           status: Database["public"]["Enums"]["account_status"]
           team_id: string | null
           total_earnings: number
@@ -1182,6 +1185,7 @@ export type Database = {
           wallet_balance: number
         }
         Insert: {
+          address?: string | null
           avatar_url?: string | null
           created_at?: string
           created_by?: string | null
@@ -1191,6 +1195,7 @@ export type Database = {
           id: string
           is_active?: boolean
           is_deleted?: boolean
+          joining_date?: string | null
           last_login_at?: string | null
           last_settlement_at?: string | null
           lifetime_withdrawals?: number
@@ -1199,6 +1204,7 @@ export type Database = {
           mobile_number: string
           pending_balance?: number
           referral_count?: number
+          remarks?: string | null
           status?: Database["public"]["Enums"]["account_status"]
           team_id?: string | null
           total_earnings?: number
@@ -1208,6 +1214,7 @@ export type Database = {
           wallet_balance?: number
         }
         Update: {
+          address?: string | null
           avatar_url?: string | null
           created_at?: string
           created_by?: string | null
@@ -1217,6 +1224,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           is_deleted?: boolean
+          joining_date?: string | null
           last_login_at?: string | null
           last_settlement_at?: string | null
           lifetime_withdrawals?: number
@@ -1225,6 +1233,7 @@ export type Database = {
           mobile_number?: string
           pending_balance?: number
           referral_count?: number
+          remarks?: string | null
           status?: Database["public"]["Enums"]["account_status"]
           team_id?: string | null
           total_earnings?: number
