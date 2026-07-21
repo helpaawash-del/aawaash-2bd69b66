@@ -18,6 +18,16 @@ import { Route as AuthenticatedMemberRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated/leader'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedMemberWithdrawalsRouteImport } from './routes/_authenticated/member.withdrawals'
+import { Route as AuthenticatedMemberWalletRouteImport } from './routes/_authenticated/member.wallet'
+import { Route as AuthenticatedMemberTipsRouteImport } from './routes/_authenticated/member.tips'
+import { Route as AuthenticatedMemberSettingsRouteImport } from './routes/_authenticated/member.settings'
+import { Route as AuthenticatedMemberSalesRouteImport } from './routes/_authenticated/member.sales'
+import { Route as AuthenticatedMemberReferralsRouteImport } from './routes/_authenticated/member.referrals'
+import { Route as AuthenticatedMemberProfileRouteImport } from './routes/_authenticated/member.profile'
+import { Route as AuthenticatedMemberNotificationsRouteImport } from './routes/_authenticated/member.notifications'
+import { Route as AuthenticatedMemberLeaderboardRouteImport } from './routes/_authenticated/member.leaderboard'
+import { Route as AuthenticatedMemberCommissionRouteImport } from './routes/_authenticated/member.commission'
 import { Route as AuthenticatedLeaderWithdrawalsRouteImport } from './routes/_authenticated/leader.withdrawals'
 import { Route as AuthenticatedLeaderSettingsRouteImport } from './routes/_authenticated/leader.settings'
 import { Route as AuthenticatedLeaderProjectsRouteImport } from './routes/_authenticated/leader.projects'
@@ -26,6 +36,7 @@ import { Route as AuthenticatedLeaderNotificationsRouteImport } from './routes/_
 import { Route as AuthenticatedLeaderMembersRouteImport } from './routes/_authenticated/leader.members'
 import { Route as AuthenticatedLeaderLeaderboardRouteImport } from './routes/_authenticated/leader.leaderboard'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
 import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -72,6 +83,65 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMemberWithdrawalsRoute =
+  AuthenticatedMemberWithdrawalsRouteImport.update({
+    id: '/withdrawals',
+    path: '/withdrawals',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
+const AuthenticatedMemberWalletRoute =
+  AuthenticatedMemberWalletRouteImport.update({
+    id: '/wallet',
+    path: '/wallet',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
+const AuthenticatedMemberTipsRoute = AuthenticatedMemberTipsRouteImport.update({
+  id: '/tips',
+  path: '/tips',
+  getParentRoute: () => AuthenticatedMemberRoute,
+} as any)
+const AuthenticatedMemberSettingsRoute =
+  AuthenticatedMemberSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
+const AuthenticatedMemberSalesRoute =
+  AuthenticatedMemberSalesRouteImport.update({
+    id: '/sales',
+    path: '/sales',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
+const AuthenticatedMemberReferralsRoute =
+  AuthenticatedMemberReferralsRouteImport.update({
+    id: '/referrals',
+    path: '/referrals',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
+const AuthenticatedMemberProfileRoute =
+  AuthenticatedMemberProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
+const AuthenticatedMemberNotificationsRoute =
+  AuthenticatedMemberNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
+const AuthenticatedMemberLeaderboardRoute =
+  AuthenticatedMemberLeaderboardRouteImport.update({
+    id: '/leaderboard',
+    path: '/leaderboard',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
+const AuthenticatedMemberCommissionRoute =
+  AuthenticatedMemberCommissionRouteImport.update({
+    id: '/commission',
+    path: '/commission',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
 const AuthenticatedLeaderWithdrawalsRoute =
   AuthenticatedLeaderWithdrawalsRouteImport.update({
     id: '/withdrawals',
@@ -119,6 +189,12 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedMemberSalesIdRoute =
+  AuthenticatedMemberSalesIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedMemberSalesRoute,
+  } as any)
 const AuthenticatedLeaderMembersIdRoute =
   AuthenticatedLeaderMembersIdRouteImport.update({
     id: '/$id',
@@ -133,7 +209,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
-  '/member': typeof AuthenticatedMemberRoute
+  '/member': typeof AuthenticatedMemberRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
@@ -143,7 +219,18 @@ export interface FileRoutesByFullPath {
   '/leader/projects': typeof AuthenticatedLeaderProjectsRoute
   '/leader/settings': typeof AuthenticatedLeaderSettingsRoute
   '/leader/withdrawals': typeof AuthenticatedLeaderWithdrawalsRoute
+  '/member/commission': typeof AuthenticatedMemberCommissionRoute
+  '/member/leaderboard': typeof AuthenticatedMemberLeaderboardRoute
+  '/member/notifications': typeof AuthenticatedMemberNotificationsRoute
+  '/member/profile': typeof AuthenticatedMemberProfileRoute
+  '/member/referrals': typeof AuthenticatedMemberReferralsRoute
+  '/member/sales': typeof AuthenticatedMemberSalesRouteWithChildren
+  '/member/settings': typeof AuthenticatedMemberSettingsRoute
+  '/member/tips': typeof AuthenticatedMemberTipsRoute
+  '/member/wallet': typeof AuthenticatedMemberWalletRoute
+  '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
+  '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -152,7 +239,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
-  '/member': typeof AuthenticatedMemberRoute
+  '/member': typeof AuthenticatedMemberRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
@@ -162,7 +249,18 @@ export interface FileRoutesByTo {
   '/leader/projects': typeof AuthenticatedLeaderProjectsRoute
   '/leader/settings': typeof AuthenticatedLeaderSettingsRoute
   '/leader/withdrawals': typeof AuthenticatedLeaderWithdrawalsRoute
+  '/member/commission': typeof AuthenticatedMemberCommissionRoute
+  '/member/leaderboard': typeof AuthenticatedMemberLeaderboardRoute
+  '/member/notifications': typeof AuthenticatedMemberNotificationsRoute
+  '/member/profile': typeof AuthenticatedMemberProfileRoute
+  '/member/referrals': typeof AuthenticatedMemberReferralsRoute
+  '/member/sales': typeof AuthenticatedMemberSalesRouteWithChildren
+  '/member/settings': typeof AuthenticatedMemberSettingsRoute
+  '/member/tips': typeof AuthenticatedMemberTipsRoute
+  '/member/wallet': typeof AuthenticatedMemberWalletRoute
+  '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
+  '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -173,7 +271,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leader': typeof AuthenticatedLeaderRouteWithChildren
-  '/_authenticated/member': typeof AuthenticatedMemberRoute
+  '/_authenticated/member': typeof AuthenticatedMemberRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
@@ -183,7 +281,18 @@ export interface FileRoutesById {
   '/_authenticated/leader/projects': typeof AuthenticatedLeaderProjectsRoute
   '/_authenticated/leader/settings': typeof AuthenticatedLeaderSettingsRoute
   '/_authenticated/leader/withdrawals': typeof AuthenticatedLeaderWithdrawalsRoute
+  '/_authenticated/member/commission': typeof AuthenticatedMemberCommissionRoute
+  '/_authenticated/member/leaderboard': typeof AuthenticatedMemberLeaderboardRoute
+  '/_authenticated/member/notifications': typeof AuthenticatedMemberNotificationsRoute
+  '/_authenticated/member/profile': typeof AuthenticatedMemberProfileRoute
+  '/_authenticated/member/referrals': typeof AuthenticatedMemberReferralsRoute
+  '/_authenticated/member/sales': typeof AuthenticatedMemberSalesRouteWithChildren
+  '/_authenticated/member/settings': typeof AuthenticatedMemberSettingsRoute
+  '/_authenticated/member/tips': typeof AuthenticatedMemberTipsRoute
+  '/_authenticated/member/wallet': typeof AuthenticatedMemberWalletRoute
+  '/_authenticated/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/_authenticated/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
+  '/_authenticated/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -204,7 +313,18 @@ export interface FileRouteTypes {
     | '/leader/projects'
     | '/leader/settings'
     | '/leader/withdrawals'
+    | '/member/commission'
+    | '/member/leaderboard'
+    | '/member/notifications'
+    | '/member/profile'
+    | '/member/referrals'
+    | '/member/sales'
+    | '/member/settings'
+    | '/member/tips'
+    | '/member/wallet'
+    | '/member/withdrawals'
     | '/leader/members/$id'
+    | '/member/sales/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -223,7 +343,18 @@ export interface FileRouteTypes {
     | '/leader/projects'
     | '/leader/settings'
     | '/leader/withdrawals'
+    | '/member/commission'
+    | '/member/leaderboard'
+    | '/member/notifications'
+    | '/member/profile'
+    | '/member/referrals'
+    | '/member/sales'
+    | '/member/settings'
+    | '/member/tips'
+    | '/member/wallet'
+    | '/member/withdrawals'
     | '/leader/members/$id'
+    | '/member/sales/$id'
   id:
     | '__root__'
     | '/'
@@ -243,7 +374,18 @@ export interface FileRouteTypes {
     | '/_authenticated/leader/projects'
     | '/_authenticated/leader/settings'
     | '/_authenticated/leader/withdrawals'
+    | '/_authenticated/member/commission'
+    | '/_authenticated/member/leaderboard'
+    | '/_authenticated/member/notifications'
+    | '/_authenticated/member/profile'
+    | '/_authenticated/member/referrals'
+    | '/_authenticated/member/sales'
+    | '/_authenticated/member/settings'
+    | '/_authenticated/member/tips'
+    | '/_authenticated/member/wallet'
+    | '/_authenticated/member/withdrawals'
     | '/_authenticated/leader/members/$id'
+    | '/_authenticated/member/sales/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -319,6 +461,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/member/withdrawals': {
+      id: '/_authenticated/member/withdrawals'
+      path: '/withdrawals'
+      fullPath: '/member/withdrawals'
+      preLoaderRoute: typeof AuthenticatedMemberWithdrawalsRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/member/wallet': {
+      id: '/_authenticated/member/wallet'
+      path: '/wallet'
+      fullPath: '/member/wallet'
+      preLoaderRoute: typeof AuthenticatedMemberWalletRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/member/tips': {
+      id: '/_authenticated/member/tips'
+      path: '/tips'
+      fullPath: '/member/tips'
+      preLoaderRoute: typeof AuthenticatedMemberTipsRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/member/settings': {
+      id: '/_authenticated/member/settings'
+      path: '/settings'
+      fullPath: '/member/settings'
+      preLoaderRoute: typeof AuthenticatedMemberSettingsRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/member/sales': {
+      id: '/_authenticated/member/sales'
+      path: '/sales'
+      fullPath: '/member/sales'
+      preLoaderRoute: typeof AuthenticatedMemberSalesRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/member/referrals': {
+      id: '/_authenticated/member/referrals'
+      path: '/referrals'
+      fullPath: '/member/referrals'
+      preLoaderRoute: typeof AuthenticatedMemberReferralsRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/member/profile': {
+      id: '/_authenticated/member/profile'
+      path: '/profile'
+      fullPath: '/member/profile'
+      preLoaderRoute: typeof AuthenticatedMemberProfileRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/member/notifications': {
+      id: '/_authenticated/member/notifications'
+      path: '/notifications'
+      fullPath: '/member/notifications'
+      preLoaderRoute: typeof AuthenticatedMemberNotificationsRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/member/leaderboard': {
+      id: '/_authenticated/member/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/member/leaderboard'
+      preLoaderRoute: typeof AuthenticatedMemberLeaderboardRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/member/commission': {
+      id: '/_authenticated/member/commission'
+      path: '/commission'
+      fullPath: '/member/commission'
+      preLoaderRoute: typeof AuthenticatedMemberCommissionRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
     '/_authenticated/leader/withdrawals': {
       id: '/_authenticated/leader/withdrawals'
       path: '/withdrawals'
@@ -374,6 +586,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/users'
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/member/sales/$id': {
+      id: '/_authenticated/member/sales/$id'
+      path: '/$id'
+      fullPath: '/member/sales/$id'
+      preLoaderRoute: typeof AuthenticatedMemberSalesIdRouteImport
+      parentRoute: typeof AuthenticatedMemberSalesRoute
     }
     '/_authenticated/leader/members/$id': {
       id: '/_authenticated/leader/members/$id'
@@ -433,18 +652,61 @@ const AuthenticatedLeaderRouteChildren: AuthenticatedLeaderRouteChildren = {
 const AuthenticatedLeaderRouteWithChildren =
   AuthenticatedLeaderRoute._addFileChildren(AuthenticatedLeaderRouteChildren)
 
+interface AuthenticatedMemberSalesRouteChildren {
+  AuthenticatedMemberSalesIdRoute: typeof AuthenticatedMemberSalesIdRoute
+}
+
+const AuthenticatedMemberSalesRouteChildren: AuthenticatedMemberSalesRouteChildren =
+  {
+    AuthenticatedMemberSalesIdRoute: AuthenticatedMemberSalesIdRoute,
+  }
+
+const AuthenticatedMemberSalesRouteWithChildren =
+  AuthenticatedMemberSalesRoute._addFileChildren(
+    AuthenticatedMemberSalesRouteChildren,
+  )
+
+interface AuthenticatedMemberRouteChildren {
+  AuthenticatedMemberCommissionRoute: typeof AuthenticatedMemberCommissionRoute
+  AuthenticatedMemberLeaderboardRoute: typeof AuthenticatedMemberLeaderboardRoute
+  AuthenticatedMemberNotificationsRoute: typeof AuthenticatedMemberNotificationsRoute
+  AuthenticatedMemberProfileRoute: typeof AuthenticatedMemberProfileRoute
+  AuthenticatedMemberReferralsRoute: typeof AuthenticatedMemberReferralsRoute
+  AuthenticatedMemberSalesRoute: typeof AuthenticatedMemberSalesRouteWithChildren
+  AuthenticatedMemberSettingsRoute: typeof AuthenticatedMemberSettingsRoute
+  AuthenticatedMemberTipsRoute: typeof AuthenticatedMemberTipsRoute
+  AuthenticatedMemberWalletRoute: typeof AuthenticatedMemberWalletRoute
+  AuthenticatedMemberWithdrawalsRoute: typeof AuthenticatedMemberWithdrawalsRoute
+}
+
+const AuthenticatedMemberRouteChildren: AuthenticatedMemberRouteChildren = {
+  AuthenticatedMemberCommissionRoute: AuthenticatedMemberCommissionRoute,
+  AuthenticatedMemberLeaderboardRoute: AuthenticatedMemberLeaderboardRoute,
+  AuthenticatedMemberNotificationsRoute: AuthenticatedMemberNotificationsRoute,
+  AuthenticatedMemberProfileRoute: AuthenticatedMemberProfileRoute,
+  AuthenticatedMemberReferralsRoute: AuthenticatedMemberReferralsRoute,
+  AuthenticatedMemberSalesRoute: AuthenticatedMemberSalesRouteWithChildren,
+  AuthenticatedMemberSettingsRoute: AuthenticatedMemberSettingsRoute,
+  AuthenticatedMemberTipsRoute: AuthenticatedMemberTipsRoute,
+  AuthenticatedMemberWalletRoute: AuthenticatedMemberWalletRoute,
+  AuthenticatedMemberWithdrawalsRoute: AuthenticatedMemberWithdrawalsRoute,
+}
+
+const AuthenticatedMemberRouteWithChildren =
+  AuthenticatedMemberRoute._addFileChildren(AuthenticatedMemberRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderRoute: typeof AuthenticatedLeaderRouteWithChildren
-  AuthenticatedMemberRoute: typeof AuthenticatedMemberRoute
+  AuthenticatedMemberRoute: typeof AuthenticatedMemberRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderRoute: AuthenticatedLeaderRouteWithChildren,
-  AuthenticatedMemberRoute: AuthenticatedMemberRoute,
+  AuthenticatedMemberRoute: AuthenticatedMemberRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =

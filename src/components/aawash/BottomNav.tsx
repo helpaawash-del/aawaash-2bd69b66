@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Users, Bell, User, Building2, LayoutDashboard, Wallet, Trophy } from "lucide-react";
+import { Home, Users, Bell, User, Building2, LayoutDashboard, TrendingUp, UserPlus } from "lucide-react";
 import type { AppRole } from "@/lib/auth";
 
 /**
@@ -73,10 +73,10 @@ function itemsForRole(role: AppRole): NavItem[] {
   }
   return [
     { label: "Home", icon: Home, to: "/member" },
-    { label: "Projects", icon: Building2, to: "/leader/projects" },
-    { label: "Wallet", icon: Wallet, to: "/leader/withdrawals" },
-    { label: "Rank", icon: Trophy, to: "/leader/leaderboard" },
-    { label: "Profile", icon: User, to: "/leader/profile" },
+    { label: "Sales", icon: TrendingUp, to: "/member/sales", activePrefix: "/member/sales" },
+    { label: "Referral", icon: UserPlus, to: "/member/referrals", activePrefix: "/member/referrals" },
+    { label: "Alerts", icon: Bell, to: "/member/notifications" },
+    { label: "Profile", icon: User, to: "/member/profile" },
   ];
 }
 
