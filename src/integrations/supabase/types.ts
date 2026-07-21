@@ -56,6 +56,99 @@ export type Database = {
         }
         Relationships: []
       }
+      commissions: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          sale_id: string | null
+          status: string
+          team_id: string | null
+          tier: number
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          sale_id?: string | null
+          status?: string
+          team_id?: string | null
+          tier?: number
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          sale_id?: string | null
+          status?: string
+          team_id?: string | null
+          tier?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          kind: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          kind?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          kind?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -126,6 +219,121 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "profiles_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          created_at: string
+          description: string | null
+          hero_hue: string
+          id: string
+          is_deleted: boolean
+          location: string
+          name: string
+          price_from: number
+          slug: string
+          sold_units: number
+          status: string
+          tag: string | null
+          total_units: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          hero_hue?: string
+          id?: string
+          is_deleted?: boolean
+          location: string
+          name: string
+          price_from?: number
+          slug: string
+          sold_units?: number
+          status?: string
+          tag?: string | null
+          total_units?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          hero_hue?: string
+          id?: string
+          is_deleted?: boolean
+          location?: string
+          name?: string
+          price_from?: number
+          slug?: string
+          sold_units?: number
+          status?: string
+          tag?: string | null
+          total_units?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          buyer_mobile: string | null
+          buyer_name: string
+          created_at: string
+          deal_value: number
+          id: string
+          project_id: string | null
+          sale_date: string
+          seller_id: string | null
+          status: string
+          team_id: string | null
+          unit_label: string | null
+        }
+        Insert: {
+          buyer_mobile?: string | null
+          buyer_name: string
+          created_at?: string
+          deal_value?: number
+          id?: string
+          project_id?: string | null
+          sale_date?: string
+          seller_id?: string | null
+          status?: string
+          team_id?: string | null
+          unit_label?: string | null
+        }
+        Update: {
+          buyer_mobile?: string | null
+          buyer_name?: string
+          created_at?: string
+          deal_value?: number
+          id?: string
+          project_id?: string | null
+          sale_date?: string
+          seller_id?: string | null
+          status?: string
+          team_id?: string | null
+          unit_label?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_team_id_fkey"
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "teams"
@@ -206,6 +414,54 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      withdrawals: {
+        Row: {
+          amount: number
+          id: string
+          note: string | null
+          processed_at: string | null
+          requested_at: string
+          status: string
+          team_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          id?: string
+          note?: string | null
+          processed_at?: string | null
+          requested_at?: string
+          status?: string
+          team_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          id?: string
+          note?: string | null
+          processed_at?: string | null
+          requested_at?: string
+          status?: string
+          team_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "withdrawals_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "withdrawals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
