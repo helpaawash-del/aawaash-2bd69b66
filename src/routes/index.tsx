@@ -37,7 +37,7 @@ function SplashGate() {
       <AmbientBackground />
       <div className="grid min-h-screen place-items-center px-6">
         <div className="flex flex-col items-center gap-6">
-          <div className="animate-float-slow">
+          <div className="animate-float">
             <BrandMark size="lg" />
           </div>
           <div className="flex items-center gap-3">
