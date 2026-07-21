@@ -1086,59 +1086,356 @@ export type Database = {
           },
         ]
       }
+      sale_audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_role: string | null
+          created_at: string
+          from_value: Json | null
+          id: string
+          reason: string | null
+          sale_id: string
+          to_value: Json | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_role?: string | null
+          created_at?: string
+          from_value?: Json | null
+          id?: string
+          reason?: string | null
+          sale_id: string
+          to_value?: Json | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_role?: string | null
+          created_at?: string
+          from_value?: Json | null
+          id?: string
+          reason?: string | null
+          sale_id?: string
+          to_value?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sale_audit_log_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sale_audit_log_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sale_documents: {
+        Row: {
+          created_at: string
+          file_url: string | null
+          id: string
+          kind: string
+          label: string | null
+          notes: string | null
+          sale_id: string
+          status: string
+          updated_at: string
+          uploaded_by: string | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          kind: string
+          label?: string | null
+          notes?: string | null
+          sale_id: string
+          status?: string
+          updated_at?: string
+          uploaded_by?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          kind?: string
+          label?: string | null
+          notes?: string | null
+          sale_id?: string
+          status?: string
+          updated_at?: string
+          uploaded_by?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sale_documents_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sale_documents_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sale_documents_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sale_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          method: string | null
+          notes: string | null
+          receipt_url: string | null
+          received_on: string
+          recorded_by: string | null
+          reference: string | null
+          sale_id: string
+          stage: string
+          updated_at: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          method?: string | null
+          notes?: string | null
+          receipt_url?: string | null
+          received_on?: string
+          recorded_by?: string | null
+          reference?: string | null
+          sale_id: string
+          stage: string
+          updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          method?: string | null
+          notes?: string | null
+          receipt_url?: string | null
+          received_on?: string
+          recorded_by?: string | null
+          reference?: string | null
+          sale_id?: string
+          stage?: string
+          updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sale_payments_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sale_payments_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sale_payments_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sales: {
         Row: {
+          agreement_date: string | null
+          approval_at: string | null
+          approval_status: string
+          approved_by: string | null
+          booking_amount: number
+          booking_date: string | null
+          building_id: string | null
           buyer_mobile: string | null
           buyer_name: string
+          cancellation_reason: string | null
           contact_visible: boolean
           created_at: string
+          created_by: string | null
+          customer_id: string | null
           customer_status: string
           deal_value: number
+          extra: Json
+          flat_id: string | null
+          floor_id: string | null
           id: string
+          leader_id: string | null
           notes: string | null
           payment_status: string
           project_id: string | null
+          registration_date: string | null
+          remaining_amount: number
           sale_date: string
+          sale_number: string | null
+          sale_status: string
           seller_id: string | null
           status: string
           team_id: string | null
           unit_label: string | null
+          updated_at: string
         }
         Insert: {
+          agreement_date?: string | null
+          approval_at?: string | null
+          approval_status?: string
+          approved_by?: string | null
+          booking_amount?: number
+          booking_date?: string | null
+          building_id?: string | null
           buyer_mobile?: string | null
           buyer_name: string
+          cancellation_reason?: string | null
           contact_visible?: boolean
           created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
           customer_status?: string
           deal_value?: number
+          extra?: Json
+          flat_id?: string | null
+          floor_id?: string | null
           id?: string
+          leader_id?: string | null
           notes?: string | null
           payment_status?: string
           project_id?: string | null
+          registration_date?: string | null
+          remaining_amount?: number
           sale_date?: string
+          sale_number?: string | null
+          sale_status?: string
           seller_id?: string | null
           status?: string
           team_id?: string | null
           unit_label?: string | null
+          updated_at?: string
         }
         Update: {
+          agreement_date?: string | null
+          approval_at?: string | null
+          approval_status?: string
+          approved_by?: string | null
+          booking_amount?: number
+          booking_date?: string | null
+          building_id?: string | null
           buyer_mobile?: string | null
           buyer_name?: string
+          cancellation_reason?: string | null
           contact_visible?: boolean
           created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
           customer_status?: string
           deal_value?: number
+          extra?: Json
+          flat_id?: string | null
+          floor_id?: string | null
           id?: string
+          leader_id?: string | null
           notes?: string | null
           payment_status?: string
           project_id?: string | null
+          registration_date?: string | null
+          remaining_amount?: number
           sale_date?: string
+          sale_number?: string | null
+          sale_status?: string
           seller_id?: string | null
           status?: string
           team_id?: string | null
           unit_label?: string | null
+          updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "sales_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_flat_id_fkey"
+            columns: ["flat_id"]
+            isOneToOne: false
+            referencedRelation: "flats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_floor_id_fkey"
+            columns: ["floor_id"]
+            isOneToOne: false
+            referencedRelation: "floors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_leader_id_fkey"
+            columns: ["leader_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "sales_project_id_fkey"
             columns: ["project_id"]
@@ -1365,6 +1662,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      approve_sale: {
+        Args: { p_notes?: string; p_sale_id: string }
+        Returns: undefined
+      }
+      cancel_sale: {
+        Args: { p_reason: string; p_sale_id: string }
+        Returns: undefined
+      }
+      create_draft_sale: {
+        Args: {
+          p_booking_amount: number
+          p_customer_id: string
+          p_flat_id: string
+          p_lock_minutes?: number
+          p_notes?: string
+          p_sale_amount: number
+        }
+        Returns: string
+      }
       current_user_role: {
         Args: never
         Returns: Database["public"]["Enums"]["app_role"]
@@ -1380,6 +1696,14 @@ export type Database = {
       my_team_id: { Args: never; Returns: string }
       recompute_project_flat_counts: {
         Args: { p_project_id: string }
+        Returns: undefined
+      }
+      reject_sale: {
+        Args: { p_reason: string; p_sale_id: string }
+        Returns: undefined
+      }
+      submit_sale_for_approval: {
+        Args: { p_sale_id: string }
         Returns: undefined
       }
     }
