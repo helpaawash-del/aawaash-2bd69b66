@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
+import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
 import { Route as ErrorKindRouteImport } from './routes/error.$kind'
 import { Route as AuthenticatedMemberRouteImport } from './routes/_authenticated/member'
 import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated/leader'
@@ -44,6 +46,11 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
   path: '/unauthorized',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -57,6 +64,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ProjectsRoute,
 } as any)
 const ErrorKindRoute = ErrorKindRouteImport.update({
   id: '/error/$kind',
@@ -205,12 +217,14 @@ const AuthenticatedLeaderMembersIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/projects': typeof ProjectsRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
   '/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
@@ -235,12 +249,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/projects': typeof ProjectsRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
   '/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
@@ -267,12 +283,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/projects': typeof ProjectsRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/_authenticated/member': typeof AuthenticatedMemberRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
   '/_authenticated/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
@@ -299,12 +317,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/projects'
     | '/unauthorized'
     | '/admin'
     | '/dashboard'
     | '/leader'
     | '/member'
     | '/error/$kind'
+    | '/projects/$slug'
     | '/admin/users'
     | '/leader/leaderboard'
     | '/leader/members'
@@ -329,12 +349,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/projects'
     | '/unauthorized'
     | '/admin'
     | '/dashboard'
     | '/leader'
     | '/member'
     | '/error/$kind'
+    | '/projects/$slug'
     | '/admin/users'
     | '/leader/leaderboard'
     | '/leader/members'
@@ -360,12 +382,14 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/projects'
     | '/unauthorized'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/leader'
     | '/_authenticated/member'
     | '/error/$kind'
+    | '/projects/$slug'
     | '/_authenticated/admin/users'
     | '/_authenticated/leader/leaderboard'
     | '/_authenticated/leader/members'
@@ -392,6 +416,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ProjectsRoute: typeof ProjectsRouteWithChildren
   UnauthorizedRoute: typeof UnauthorizedRoute
   ErrorKindRoute: typeof ErrorKindRoute
 }
@@ -403,6 +428,13 @@ declare module '@tanstack/react-router' {
       path: '/unauthorized'
       fullPath: '/unauthorized'
       preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -425,6 +457,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/projects/$slug': {
+      id: '/projects/$slug'
+      path: '/$slug'
+      fullPath: '/projects/$slug'
+      preLoaderRoute: typeof ProjectsSlugRouteImport
+      parentRoute: typeof ProjectsRoute
     }
     '/error/$kind': {
       id: '/error/$kind'
@@ -712,10 +751,23 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ProjectsRouteChildren {
+  ProjectsSlugRoute: typeof ProjectsSlugRoute
+}
+
+const ProjectsRouteChildren: ProjectsRouteChildren = {
+  ProjectsSlugRoute: ProjectsSlugRoute,
+}
+
+const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
+  ProjectsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ProjectsRoute: ProjectsRouteWithChildren,
   UnauthorizedRoute: UnauthorizedRoute,
   ErrorKindRoute: ErrorKindRoute,
 }
