@@ -26,7 +26,6 @@ import { Reveal } from "@/components/aawash/landing/Reveal";
 import { formatINR, SkeletonBlock } from "@/components/aawash/dashboard-kit";
 import { FlatInventoryBoard } from "@/components/aawash/projects/FlatInventoryBoard";
 import { getPublicProject } from "@/lib/projects.functions";
-import { getPublicProject } from "@/lib/projects.functions";
 
 const STATUS_LABELS: Record<string, string> = {
   planning: "Planning",
