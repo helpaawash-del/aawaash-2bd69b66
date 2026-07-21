@@ -49,8 +49,10 @@ import { Route as AuthenticatedCrmIdRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedCommissionsIdRouteImport } from './routes/_authenticated/commissions.$id'
 import { Route as AuthenticatedAdminWithdrawalsRouteImport } from './routes/_authenticated/admin.withdrawals'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminSystemRouteImport } from './routes/_authenticated/admin.system'
 import { Route as AuthenticatedAdminCommissionsRouteImport } from './routes/_authenticated/admin.commissions'
 import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin.analytics'
+import { Route as ApiPublicHooksSystemMaintenanceRouteImport } from './routes/api/public/hooks/system-maintenance'
 import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
 import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
 
@@ -277,6 +279,12 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminSystemRoute =
+  AuthenticatedAdminSystemRouteImport.update({
+    id: '/system',
+    path: '/system',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCommissionsRoute =
   AuthenticatedAdminCommissionsRouteImport.update({
     id: '/commissions',
@@ -288,6 +296,12 @@ const AuthenticatedAdminAnalyticsRoute =
     id: '/analytics',
     path: '/analytics',
     getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const ApiPublicHooksSystemMaintenanceRoute =
+  ApiPublicHooksSystemMaintenanceRouteImport.update({
+    id: '/api/public/hooks/system-maintenance',
+    path: '/api/public/hooks/system-maintenance',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const AuthenticatedMemberSalesIdRoute =
   AuthenticatedMemberSalesIdRouteImport.update({
@@ -317,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
+  '/admin/system': typeof AuthenticatedAdminSystemRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/commissions/$id': typeof AuthenticatedCommissionsIdRoute
@@ -346,6 +361,7 @@ export interface FileRoutesByFullPath {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
+  '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -362,6 +378,7 @@ export interface FileRoutesByTo {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
+  '/admin/system': typeof AuthenticatedAdminSystemRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/commissions/$id': typeof AuthenticatedCommissionsIdRoute
@@ -391,6 +408,7 @@ export interface FileRoutesByTo {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
+  '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -409,6 +427,7 @@ export interface FileRoutesById {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
+  '/_authenticated/admin/system': typeof AuthenticatedAdminSystemRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/_authenticated/commissions/$id': typeof AuthenticatedCommissionsIdRoute
@@ -438,6 +457,7 @@ export interface FileRoutesById {
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/_authenticated/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/_authenticated/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
+  '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -456,6 +476,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/admin/analytics'
     | '/admin/commissions'
+    | '/admin/system'
     | '/admin/users'
     | '/admin/withdrawals'
     | '/commissions/$id'
@@ -485,6 +506,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
+    | '/api/public/hooks/system-maintenance'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -501,6 +523,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/admin/analytics'
     | '/admin/commissions'
+    | '/admin/system'
     | '/admin/users'
     | '/admin/withdrawals'
     | '/commissions/$id'
@@ -530,6 +553,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
+    | '/api/public/hooks/system-maintenance'
   id:
     | '__root__'
     | '/'
@@ -547,6 +571,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/commissions'
+    | '/_authenticated/admin/system'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/withdrawals'
     | '/_authenticated/commissions/$id'
@@ -576,6 +601,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales-workflow/new'
     | '/_authenticated/leader/members/$id'
     | '/_authenticated/member/sales/$id'
+    | '/api/public/hooks/system-maintenance'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -585,6 +611,7 @@ export interface RootRouteChildren {
   ProjectsRoute: typeof ProjectsRouteWithChildren
   UnauthorizedRoute: typeof UnauthorizedRoute
   ErrorKindRoute: typeof ErrorKindRoute
+  ApiPublicHooksSystemMaintenanceRoute: typeof ApiPublicHooksSystemMaintenanceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -869,6 +896,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/system': {
+      id: '/_authenticated/admin/system'
+      path: '/system'
+      fullPath: '/admin/system'
+      preLoaderRoute: typeof AuthenticatedAdminSystemRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/commissions': {
       id: '/_authenticated/admin/commissions'
       path: '/commissions'
@@ -882,6 +916,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/analytics'
       preLoaderRoute: typeof AuthenticatedAdminAnalyticsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/api/public/hooks/system-maintenance': {
+      id: '/api/public/hooks/system-maintenance'
+      path: '/api/public/hooks/system-maintenance'
+      fullPath: '/api/public/hooks/system-maintenance'
+      preLoaderRoute: typeof ApiPublicHooksSystemMaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/member/sales/$id': {
       id: '/_authenticated/member/sales/$id'
@@ -903,6 +944,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAnalyticsRoute: typeof AuthenticatedAdminAnalyticsRoute
   AuthenticatedAdminCommissionsRoute: typeof AuthenticatedAdminCommissionsRoute
+  AuthenticatedAdminSystemRoute: typeof AuthenticatedAdminSystemRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
 }
@@ -910,6 +952,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAnalyticsRoute: AuthenticatedAdminAnalyticsRoute,
   AuthenticatedAdminCommissionsRoute: AuthenticatedAdminCommissionsRoute,
+  AuthenticatedAdminSystemRoute: AuthenticatedAdminSystemRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
 }
@@ -1074,6 +1117,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRouteWithChildren,
   UnauthorizedRoute: UnauthorizedRoute,
   ErrorKindRoute: ErrorKindRoute,
+  ApiPublicHooksSystemMaintenanceRoute: ApiPublicHooksSystemMaintenanceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
