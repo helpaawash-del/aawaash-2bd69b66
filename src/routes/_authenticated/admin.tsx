@@ -139,6 +139,25 @@ function AdminContent() {
             className="text-muted-foreground transition-transform group-hover:translate-x-1"
           />
         </Link>
+
+        <Link
+          to="/admin/system"
+          className="group flex items-center justify-between rounded-4xl border border-border bg-surface p-6 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
+        >
+          <div>
+            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-leaf/15 text-leaf">
+              <Activity size={20} />
+            </div>
+            <h2 className="mt-4 text-lg font-bold text-foreground">System Health</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Integrity checks, maintenance jobs, activity feed and global settings.
+            </p>
+          </div>
+          <ArrowRight
+            size={20}
+            className="text-muted-foreground transition-transform group-hover:translate-x-1"
+          />
+        </Link>
       </section>
     </DashboardShell>
   );

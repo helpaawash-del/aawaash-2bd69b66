@@ -52,6 +52,7 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminSystemRouteImport } from './routes/_authenticated/admin.system'
 import { Route as AuthenticatedAdminCommissionsRouteImport } from './routes/_authenticated/admin.commissions'
 import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin.analytics'
+import { Route as ApiPublicHooksSystemMaintenanceRouteImport } from './routes/api/public/hooks/system-maintenance'
 import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
 import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
 
@@ -296,6 +297,12 @@ const AuthenticatedAdminAnalyticsRoute =
     path: '/analytics',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const ApiPublicHooksSystemMaintenanceRoute =
+  ApiPublicHooksSystemMaintenanceRouteImport.update({
+    id: '/api/public/hooks/system-maintenance',
+    path: '/api/public/hooks/system-maintenance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedMemberSalesIdRoute =
   AuthenticatedMemberSalesIdRouteImport.update({
     id: '/$id',
@@ -354,6 +361,7 @@ export interface FileRoutesByFullPath {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
+  '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -400,6 +408,7 @@ export interface FileRoutesByTo {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
+  '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -448,6 +457,7 @@ export interface FileRoutesById {
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/_authenticated/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/_authenticated/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
+  '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -496,6 +506,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
+    | '/api/public/hooks/system-maintenance'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -542,6 +553,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
+    | '/api/public/hooks/system-maintenance'
   id:
     | '__root__'
     | '/'
@@ -589,6 +601,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales-workflow/new'
     | '/_authenticated/leader/members/$id'
     | '/_authenticated/member/sales/$id'
+    | '/api/public/hooks/system-maintenance'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -598,6 +611,7 @@ export interface RootRouteChildren {
   ProjectsRoute: typeof ProjectsRouteWithChildren
   UnauthorizedRoute: typeof UnauthorizedRoute
   ErrorKindRoute: typeof ErrorKindRoute
+  ApiPublicHooksSystemMaintenanceRoute: typeof ApiPublicHooksSystemMaintenanceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -903,6 +917,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAnalyticsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/public/hooks/system-maintenance': {
+      id: '/api/public/hooks/system-maintenance'
+      path: '/api/public/hooks/system-maintenance'
+      fullPath: '/api/public/hooks/system-maintenance'
+      preLoaderRoute: typeof ApiPublicHooksSystemMaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/member/sales/$id': {
       id: '/_authenticated/member/sales/$id'
       path: '/$id'
@@ -1096,6 +1117,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRouteWithChildren,
   UnauthorizedRoute: UnauthorizedRoute,
   ErrorKindRoute: ErrorKindRoute,
+  ApiPublicHooksSystemMaintenanceRoute: ApiPublicHooksSystemMaintenanceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
