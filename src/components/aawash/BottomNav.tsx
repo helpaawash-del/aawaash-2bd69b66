@@ -45,34 +45,39 @@ export function BottomNav({ role }: { role: AppRole }) {
   );
 }
 
-function itemsForRole(role: AppRole) {
+type NavItem = {
+  label: string;
+  icon: typeof Home;
+  to: string;
+  activePrefix?: string;
+};
+
+function itemsForRole(role: AppRole): NavItem[] {
   if (role === "team_leader") {
     return [
-      { label: "Home", icon: Home, to: "/leader" as const },
-      { label: "Members", icon: Users, to: "/leader/members" as const, activePrefix: "/leader/members" },
-      { label: "Projects", icon: Building2, to: "/leader/projects" as const },
-      { label: "Alerts", icon: Bell, to: "/leader/notifications" as const },
-      { label: "Profile", icon: User, to: "/leader/profile" as const },
+      { label: "Home", icon: Home, to: "/leader" },
+      { label: "Members", icon: Users, to: "/leader/members", activePrefix: "/leader/members" },
+      { label: "Projects", icon: Building2, to: "/leader/projects" },
+      { label: "Alerts", icon: Bell, to: "/leader/notifications" },
+      { label: "Profile", icon: User, to: "/leader/profile" },
     ];
   }
   if (role === "super_admin") {
     return [
-      { label: "Home", icon: Home, to: "/admin" as const },
-      { label: "Users", icon: Users, to: "/admin/users" as const, activePrefix: "/admin/users" },
-      { label: "Projects", icon: Building2, to: "/leader/projects" as const },
-      { label: "Alerts", icon: Bell, to: "/leader/notifications" as const },
-      { label: "Profile", icon: User, to: "/leader/profile" as const },
+      { label: "Home", icon: Home, to: "/admin" },
+      { label: "Users", icon: Users, to: "/admin/users", activePrefix: "/admin/users" },
+      { label: "Projects", icon: Building2, to: "/leader/projects" },
+      { label: "Alerts", icon: Bell, to: "/leader/notifications" },
+      { label: "Profile", icon: User, to: "/leader/profile" },
     ];
   }
-  // member
   return [
-    { label: "Home", icon: Home, to: "/member" as const },
-    { label: "Projects", icon: Building2, to: "/leader/projects" as const },
-    { label: "Wallet", icon: Wallet, to: "/leader/withdrawals" as const },
-    { label: "Rank", icon: Trophy, to: "/leader/leaderboard" as const },
-    { label: "Profile", icon: User, to: "/leader/profile" as const },
+    { label: "Home", icon: Home, to: "/member" },
+    { label: "Projects", icon: Building2, to: "/leader/projects" },
+    { label: "Wallet", icon: Wallet, to: "/leader/withdrawals" },
+    { label: "Rank", icon: Trophy, to: "/leader/leaderboard" },
+    { label: "Profile", icon: User, to: "/leader/profile" },
   ];
 }
 
-// Re-export a sensible fallback in case a role slips through.
 export const _DashboardIcon = LayoutDashboard;
