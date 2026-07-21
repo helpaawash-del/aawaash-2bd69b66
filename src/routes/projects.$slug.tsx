@@ -3,21 +3,28 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
+  Bus,
   Building2,
   CalendarCheck2,
   CalendarClock,
   Camera,
+  Check,
   ExternalLink,
   Home,
+  Hospital,
   Layers,
   MapPin,
+  School,
+  ShoppingBag,
   Sparkles,
+  Train,
   Video,
 } from "lucide-react";
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
 import { LandingNav } from "@/components/aawash/landing/LandingNav";
 import { Reveal } from "@/components/aawash/landing/Reveal";
 import { formatINR, SkeletonBlock } from "@/components/aawash/dashboard-kit";
+import { FlatInventoryBoard } from "@/components/aawash/projects/FlatInventoryBoard";
 import { getPublicProject } from "@/lib/projects.functions";
 
 const STATUS_LABELS: Record<string, string> = {
@@ -283,6 +290,56 @@ function ProjectDetailPage() {
               </Reveal>
             </section>
 
+            {/* Amenities */}
+            {(project.amenities?.length ?? 0) > 0 && (
+              <section className="mt-6">
+                <Reveal>
+                  <div className="glass-card rounded-3xl p-6 shadow-[var(--shadow-soft)]">
+                    <h2 className="text-lg font-bold text-foreground">Amenities</h2>
+                    <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                      {(project.amenities ?? []).map((a: string) => (
+                        <div
+                          key={a}
+                          className="flex items-center gap-2 rounded-2xl border border-border bg-surface/60 px-3 py-2.5 text-xs font-semibold text-foreground"
+                        >
+                          <span className="grid h-6 w-6 place-items-center rounded-full bg-primary-soft text-primary">
+                            <Check size={12} />
+                          </span>
+                          {a}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </Reveal>
+              </section>
+            )}
+
+            {/* Flat availability (booking-style grid) */}
+            <section className="mt-6">
+              <Reveal>
+                <FlatInventoryBoard slug={slug} projectName={project.name} />
+              </Reveal>
+            </section>
+
+            {/* Nearby places */}
+            <section className="mt-6">
+              <Reveal>
+                <div className="glass-card rounded-3xl p-6 shadow-[var(--shadow-soft)]">
+                  <h2 className="inline-flex items-center gap-2 text-lg font-bold text-foreground">
+                    <MapPin size={16} /> Nearby Places
+                  </h2>
+                  <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+                    <NearbyTile icon={<School size={16} />} label="Schools" note="Within 2 km" />
+                    <NearbyTile icon={<Hospital size={16} />} label="Hospitals" note="5–10 min drive" />
+                    <NearbyTile icon={<ShoppingBag size={16} />} label="Markets" note="Nearby" />
+                    <NearbyTile icon={<Train size={16} />} label="Railway" note="Well connected" />
+                    <NearbyTile icon={<Bus size={16} />} label="Public Transit" note="Frequent" />
+                  </div>
+                </div>
+              </Reveal>
+            </section>
+
+
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/auth"
@@ -421,6 +478,26 @@ function MediaTile({
       </div>
       <div className="mt-2 text-xs font-semibold text-foreground">{label}</div>
       <div className="text-[10px] text-muted-foreground">{count} items</div>
+    </div>
+  );
+}
+
+function NearbyTile({
+  icon,
+  label,
+  note,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  note: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-surface/60 p-4">
+      <div className="grid h-9 w-9 place-items-center rounded-full bg-primary-soft text-primary">
+        {icon}
+      </div>
+      <div className="mt-2 text-xs font-semibold text-foreground">{label}</div>
+      <div className="text-[10px] text-muted-foreground">{note}</div>
     </div>
   );
 }
