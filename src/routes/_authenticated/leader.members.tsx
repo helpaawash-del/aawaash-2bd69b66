@@ -50,8 +50,10 @@ function MembersContent() {
     );
   }, [data, q]);
 
-  const active = (data ?? []).filter((m) => m.status === "active").length;
-  const topPerformer = (data ?? []).reduce<null | (typeof data)[0]>(
+  const list = data ?? [];
+  const active = list.filter((m) => m.status === "active").length;
+  type MemberItem = (typeof list)[number];
+  const topPerformer = list.reduce<MemberItem | null>(
     (best, m) => (best === null || Number(m.total_sales) > Number(best.total_sales) ? m : best),
     null,
   );
