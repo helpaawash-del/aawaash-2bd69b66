@@ -282,7 +282,7 @@ export const adminResetPassword = createServerFn({ method: "POST" })
 
 const statusSchema = z.object({
   userId: z.string().uuid(),
-  status: z.enum(["active", "inactive", "suspended", "deleted"]),
+  action: z.enum(["activate", "suspend", "delete"]),
 });
 
 export const setUserStatus = createServerFn({ method: "POST" })
@@ -291,26 +291,30 @@ export const setUserStatus = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const status: "active" | "suspended" = data.action === "activate" ? "active" : "suspended";
+    const isActive = data.action === "activate";
+    const isDeleted = data.action === "delete";
+
     const { error } = await supabaseAdmin
       .from("profiles")
       .update({
-        status: data.status,
-        is_active: data.status === "active",
-        is_deleted: data.status === "deleted",
+        status,
+        is_active: isActive,
+        is_deleted: isDeleted,
         updated_by: context.userId,
       })
       .eq("id", data.userId);
     if (error) throw new Error(error.message);
 
-    // Also ban/unban at the Auth layer so inactive/suspended/deleted users
-    // cannot sign in even if they somehow have valid credentials.
+    // Also ban/unban at the Auth layer so suspended/deleted users cannot sign in.
     await supabaseAdmin.auth.admin.updateUserById(data.userId, {
-      ban_duration: data.status === "active" ? "none" : "876000h", // ~100 years
+      ban_duration: isActive ? "none" : "876000h", // ~100 years
     });
 
     await supabaseAdmin.from("audit_logs").insert({
       actor_id: context.userId,
-      action: `status_${data.status}`,
+      action: `status_${data.action}`,
       entity_type: "profile",
       entity_id: data.userId,
     });
