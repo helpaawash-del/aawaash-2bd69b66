@@ -69,19 +69,20 @@ export const getAdminOverview = createServerFn({ method: "GET" })
       supabase.from("user_roles").select("*", { count: "exact", head: true }).eq("role", "member"),
       supabase.from("sales").select("*", { count: "exact", head: true }).gte("created_at", todayStart.toISOString()),
       supabase.from("sales").select("*", { count: "exact", head: true }).gte("created_at", monthStart.toISOString()),
-      supabase.from("sales").select("sale_price").eq("status", "approved"),
+      supabase.from("sales").select("deal_value").eq("sale_status", "approved"),
       supabase.from("profiles").select("wallet_balance"),
       supabase
         .from("audit_logs")
-        .select("id, action, entity_type, entity_id, actor_id, created_at, metadata")
+        .select("id, action, entity_type, entity_id, actor_id, created_at")
         .order("created_at", { ascending: false })
         .limit(20),
     ]);
 
     const revenue_total = (revenue.data ?? []).reduce(
-      (sum, r: { sale_price: number | null }) => sum + Number(r.sale_price ?? 0),
+      (sum, r: { deal_value: number | null }) => sum + Number(r.deal_value ?? 0),
       0,
     );
+
     const wallet_available_total = (wallet.data ?? []).reduce(
       (sum, r: { wallet_balance: number | null }) => sum + Number(r.wallet_balance ?? 0),
       0,
