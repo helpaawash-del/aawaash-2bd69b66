@@ -67,21 +67,18 @@ function Welcome() {
 
           <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:items-center">
             <Link
-              to="/"
+              to="/auth"
               className="group inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] active:translate-y-0"
             >
-              Enter dashboard
+              Sign in
               <ArrowRight
                 size={16}
                 className="transition-transform duration-300 group-hover:translate-x-0.5"
               />
             </Link>
-            <Link
-              to="/"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-6 text-sm font-semibold text-foreground shadow-[var(--shadow-soft)] transition-all duration-300 hover:border-primary/30 hover:bg-primary-soft"
-            >
-              Explore projects
-            </Link>
+            <span className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-6 text-sm font-semibold text-muted-foreground shadow-[var(--shadow-soft)]">
+              Invite only · No public sign-up
+            </span>
           </div>
         </section>
 
