@@ -48,7 +48,7 @@ const NAV: NavGroup[] = [
   {
     label: "Business",
     items: [
-      { to: "/projects", label: "Projects", icon: Building2, prefix: "/projects" },
+      { to: "/admin/projects", label: "Projects", icon: Building2, prefix: "/admin/projects" },
       { to: "/crm", label: "CRM & Customers", icon: ClipboardList, prefix: "/crm" },
       { to: "/sales-workflow", label: "Sales", icon: Home, prefix: "/sales-workflow" },
     ],
