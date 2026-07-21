@@ -95,7 +95,7 @@ function ProjectsPage() {
   useEffect(() => {
     const t = setTimeout(() => {
       if ((qLocal || "") !== (search.q || "")) {
-        navigate({ search: (prev) => ({ ...prev, q: qLocal || undefined }), replace: true });
+        navigate({ search: (prev: Search) => ({ ...prev, q: qLocal || undefined }), replace: true });
       }
     }, 220);
     return () => clearTimeout(t);
@@ -213,7 +213,7 @@ function ProjectsPage() {
                 value={search.sort ?? "priority"}
                 onChange={(e) =>
                   navigate({
-                    search: (prev) => ({
+                    search: (prev: Search) => ({
                       ...prev,
                       sort: e.target.value as NonNullable<ProjectFilters["sort"]>,
                     }),
@@ -238,7 +238,7 @@ function ProjectsPage() {
                 value={search.type ?? ""}
                 onChange={(v) =>
                   navigate({
-                    search: (prev) => ({ ...prev, type: v || undefined }),
+                    search: (prev: Search) => ({ ...prev, type: v || undefined }),
                     replace: true,
                   })
                 }
@@ -249,7 +249,7 @@ function ProjectsPage() {
                 value={search.status ?? ""}
                 onChange={(v) =>
                   navigate({
-                    search: (prev) => ({ ...prev, status: v || undefined }),
+                    search: (prev: Search) => ({ ...prev, status: v || undefined }),
                     replace: true,
                   })
                 }
@@ -260,7 +260,7 @@ function ProjectsPage() {
                 value={search.avail ?? "any"}
                 onChange={(v) =>
                   navigate({
-                    search: (prev) => ({
+                    search: (prev: Search) => ({
                       ...prev,
                       avail: (v as Search["avail"]) || undefined,
                     }),
