@@ -36,14 +36,14 @@ export type AdminKpi = {
     entity_id: string | null;
     actor_id: string | null;
     created_at: string;
-    metadata: unknown;
   }>;
   generated_at: string;
 };
 
 export const getAdminOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<AdminKpi> => {
+  .handler(async ({ context }) => {
+
     await assertAdmin(context);
     const supabase = context.supabase;
 
