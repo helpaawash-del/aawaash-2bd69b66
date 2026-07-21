@@ -105,7 +105,7 @@ export const createDraftSale = createServerFn({ method: "POST" })
       p_flat_id: data.flat_id,
       p_sale_amount: data.sale_amount,
       p_booking_amount: data.booking_amount ?? 0,
-      p_notes: data.notes || null,
+      p_notes: data.notes || undefined,
       p_lock_minutes: data.lock_minutes ?? 1440,
     });
     if (error) throw new Error(error.message);
