@@ -78,20 +78,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#ffffff" },
-      { title: "Aawash — Premium Real Estate Sales Platform" },
+      { title: "Aawash — Premium Real Estate, Reimagined" },
       {
         name: "description",
         content:
-          "Aawash is a premium real estate sales ecosystem for team leaders and members to track projects, commissions, sales, and earnings in one elegant dashboard.",
+          "Aawash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team.",
       },
-      { property: "og:title", content: "Aawash — Premium Real Estate Sales Platform" },
+      { property: "og:title", content: "Aawash — Premium Real Estate, Reimagined" },
       {
         property: "og:description",
         content:
-          "Track projects, commissions, and earnings across your real estate team in one elegant, mobile-first dashboard.",
+          "Aawash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Aawash — Premium Real Estate, Reimagined" },
+      { name: "twitter:description", content: "Aawash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8be3fd40-a3b0-49ae-adac-d910f3f63864/id-preview-1776682c--b6eaed25-010a-45b0-9244-82743247de4f.lovable.app-1784616993889.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8be3fd40-a3b0-49ae-adac-d910f3f63864/id-preview-1776682c--b6eaed25-010a-45b0-9244-82743247de4f.lovable.app-1784616993889.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

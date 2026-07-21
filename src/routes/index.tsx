@@ -49,7 +49,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Curated luxury projects, transparent commissions, and a beautiful mobile-first dashboard for real estate teams.",
+          "Aawash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team.",
       },
     ],
   }),
