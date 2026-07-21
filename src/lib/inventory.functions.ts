@@ -45,7 +45,7 @@ export type PublicFlat = {
   status: FlatStatus;
   booking_status: string;
   construction_stage: string | null;
-  gallery: unknown;
+  gallery: string[] | null;
   floor_plan_url: string | null;
 };
 
