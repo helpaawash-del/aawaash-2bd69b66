@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import {
   ArrowRight,
   Building2,
@@ -10,12 +11,24 @@ import {
 } from "lucide-react";
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
 import { BrandMark } from "@/components/aawash/BrandMark";
+import { useSession } from "@/hooks/useSession";
+import { homePathForRole } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   component: Welcome,
 });
 
 function Welcome() {
+  const navigate = useNavigate();
+  const { loading, user, role } = useSession();
+
+  // Signed-in users go straight to their role home.
+  useEffect(() => {
+    if (!loading && user) {
+      navigate({ to: homePathForRole(role), replace: true });
+    }
+  }, [loading, user, role, navigate]);
+
   return (
     <div className="relative min-h-screen">
       <AmbientBackground />
