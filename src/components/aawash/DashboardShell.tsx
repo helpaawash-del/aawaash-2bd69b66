@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AmbientBackground } from "./AmbientBackground";
 import { BrandMark } from "./BrandMark";
+import { BottomNav } from "./BottomNav";
 import type { AawashProfile } from "@/hooks/useSession";
 import { roleLabel } from "@/lib/auth";
 import type { AppRole } from "@/lib/auth";
@@ -60,7 +61,7 @@ export function DashboardShell({
     <div className="relative min-h-screen">
       <AmbientBackground />
 
-      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-16 pt-6 sm:max-w-lg md:max-w-3xl md:px-8 lg:max-w-6xl lg:px-12">
+      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-28 pt-6 sm:max-w-lg md:max-w-3xl md:px-8 md:pb-16 lg:max-w-6xl lg:px-12">
         <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
           <BrandMark size="md" />
           <div className="flex shrink-0 items-center gap-2">
@@ -116,6 +117,7 @@ export function DashboardShell({
 
         <main className="mt-8 flex-1">{children}</main>
       </div>
+      <BottomNav role={role} />
     </div>
   );
 }
