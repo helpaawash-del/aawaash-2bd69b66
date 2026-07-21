@@ -234,3 +234,47 @@
 @utility animate-shimmer {
   animation: aawash-shimmer 3s ease-in-out infinite;
 }
+
+/* Thin, elegant scrollbar (desktop only — hidden on touch/mobile) */
+@media (pointer: fine) {
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--primary) 40%, transparent);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--primary) 30%, transparent) transparent;
+  }
+}
+@media (pointer: coarse) {
+  *::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
+}
+
+@keyframes aawash-ripple {
+  from { transform: scale(0); opacity: 0.4; }
+  to { transform: scale(2.4); opacity: 0; }
+}
+@utility animate-ripple {
+  animation: aawash-ripple 0.6s ease-out forwards;
+}
+
+@keyframes aawash-fade-up {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@utility animate-fade-up {
+  animation: aawash-fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
