@@ -222,7 +222,7 @@ export const getCommissionTransaction = createServerFn({ method: "GET" })
         txn.tip_person_id
           ? context.supabase
               .from("tip_persons")
-              .select("id, tip_name, tip_contact")
+              .select("id, tip_name, tip_mobile")
               .eq("id", txn.tip_person_id)
               .maybeSingle()
           : Promise.resolve({ data: null }),
