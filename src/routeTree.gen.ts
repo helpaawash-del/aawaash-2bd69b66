@@ -23,6 +23,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedSalesWorkflowNewRouteImport } from './routes/_authenticated/sales-workflow.new'
+import { Route as AuthenticatedSalesWorkflowIdRouteImport } from './routes/_authenticated/sales-workflow.$id'
 import { Route as AuthenticatedMemberWithdrawalsRouteImport } from './routes/_authenticated/member.withdrawals'
 import { Route as AuthenticatedMemberWalletRouteImport } from './routes/_authenticated/member.wallet'
 import { Route as AuthenticatedMemberTipsRouteImport } from './routes/_authenticated/member.tips'
@@ -116,6 +117,12 @@ const AuthenticatedSalesWorkflowNewRoute =
   AuthenticatedSalesWorkflowNewRouteImport.update({
     id: '/new',
     path: '/new',
+    getParentRoute: () => AuthenticatedSalesWorkflowRoute,
+  } as any)
+const AuthenticatedSalesWorkflowIdRoute =
+  AuthenticatedSalesWorkflowIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
     getParentRoute: () => AuthenticatedSalesWorkflowRoute,
   } as any)
 const AuthenticatedMemberWithdrawalsRoute =
@@ -287,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/member/tips': typeof AuthenticatedMemberTipsRoute
   '/member/wallet': typeof AuthenticatedMemberWalletRoute
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
+  '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
@@ -325,6 +333,7 @@ export interface FileRoutesByTo {
   '/member/tips': typeof AuthenticatedMemberTipsRoute
   '/member/wallet': typeof AuthenticatedMemberWalletRoute
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
+  '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
@@ -365,6 +374,7 @@ export interface FileRoutesById {
   '/_authenticated/member/tips': typeof AuthenticatedMemberTipsRoute
   '/_authenticated/member/wallet': typeof AuthenticatedMemberWalletRoute
   '/_authenticated/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
+  '/_authenticated/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/_authenticated/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/_authenticated/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
@@ -405,6 +415,7 @@ export interface FileRouteTypes {
     | '/member/tips'
     | '/member/wallet'
     | '/member/withdrawals'
+    | '/sales-workflow/$id'
     | '/sales-workflow/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
@@ -443,6 +454,7 @@ export interface FileRouteTypes {
     | '/member/tips'
     | '/member/wallet'
     | '/member/withdrawals'
+    | '/sales-workflow/$id'
     | '/sales-workflow/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
@@ -482,6 +494,7 @@ export interface FileRouteTypes {
     | '/_authenticated/member/tips'
     | '/_authenticated/member/wallet'
     | '/_authenticated/member/withdrawals'
+    | '/_authenticated/sales-workflow/$id'
     | '/_authenticated/sales-workflow/new'
     | '/_authenticated/leader/members/$id'
     | '/_authenticated/member/sales/$id'
@@ -594,6 +607,13 @@ declare module '@tanstack/react-router' {
       path: '/new'
       fullPath: '/sales-workflow/new'
       preLoaderRoute: typeof AuthenticatedSalesWorkflowNewRouteImport
+      parentRoute: typeof AuthenticatedSalesWorkflowRoute
+    }
+    '/_authenticated/sales-workflow/$id': {
+      id: '/_authenticated/sales-workflow/$id'
+      path: '/$id'
+      fullPath: '/sales-workflow/$id'
+      preLoaderRoute: typeof AuthenticatedSalesWorkflowIdRouteImport
       parentRoute: typeof AuthenticatedSalesWorkflowRoute
     }
     '/_authenticated/member/withdrawals': {
@@ -867,11 +887,13 @@ const AuthenticatedMemberRouteWithChildren =
   AuthenticatedMemberRoute._addFileChildren(AuthenticatedMemberRouteChildren)
 
 interface AuthenticatedSalesWorkflowRouteChildren {
+  AuthenticatedSalesWorkflowIdRoute: typeof AuthenticatedSalesWorkflowIdRoute
   AuthenticatedSalesWorkflowNewRoute: typeof AuthenticatedSalesWorkflowNewRoute
 }
 
 const AuthenticatedSalesWorkflowRouteChildren: AuthenticatedSalesWorkflowRouteChildren =
   {
+    AuthenticatedSalesWorkflowIdRoute: AuthenticatedSalesWorkflowIdRoute,
     AuthenticatedSalesWorkflowNewRoute: AuthenticatedSalesWorkflowNewRoute,
   }
 
