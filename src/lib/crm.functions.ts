@@ -185,7 +185,8 @@ export const updateCustomer = createServerFn({ method: "POST" })
       else patch[k] = v;
     }
 
-    const { error } = await context.supabase.from("customers").update(patch).eq("id", id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await context.supabase.from("customers").update(patch as any).eq("id", id);
     if (error) throw new Error(error.message);
 
     if (rest.status && rest.status !== prior.status) {
