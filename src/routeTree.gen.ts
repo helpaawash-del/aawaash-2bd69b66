@@ -18,7 +18,15 @@ import { Route as AuthenticatedMemberRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated/leader'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedLeaderWithdrawalsRouteImport } from './routes/_authenticated/leader.withdrawals'
+import { Route as AuthenticatedLeaderSettingsRouteImport } from './routes/_authenticated/leader.settings'
+import { Route as AuthenticatedLeaderProjectsRouteImport } from './routes/_authenticated/leader.projects'
+import { Route as AuthenticatedLeaderProfileRouteImport } from './routes/_authenticated/leader.profile'
+import { Route as AuthenticatedLeaderNotificationsRouteImport } from './routes/_authenticated/leader.notifications'
+import { Route as AuthenticatedLeaderMembersRouteImport } from './routes/_authenticated/leader.members'
+import { Route as AuthenticatedLeaderLeaderboardRouteImport } from './routes/_authenticated/leader.leaderboard'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -64,11 +72,59 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedLeaderWithdrawalsRoute =
+  AuthenticatedLeaderWithdrawalsRouteImport.update({
+    id: '/withdrawals',
+    path: '/withdrawals',
+    getParentRoute: () => AuthenticatedLeaderRoute,
+  } as any)
+const AuthenticatedLeaderSettingsRoute =
+  AuthenticatedLeaderSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedLeaderRoute,
+  } as any)
+const AuthenticatedLeaderProjectsRoute =
+  AuthenticatedLeaderProjectsRouteImport.update({
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => AuthenticatedLeaderRoute,
+  } as any)
+const AuthenticatedLeaderProfileRoute =
+  AuthenticatedLeaderProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedLeaderRoute,
+  } as any)
+const AuthenticatedLeaderNotificationsRoute =
+  AuthenticatedLeaderNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedLeaderRoute,
+  } as any)
+const AuthenticatedLeaderMembersRoute =
+  AuthenticatedLeaderMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedLeaderRoute,
+  } as any)
+const AuthenticatedLeaderLeaderboardRoute =
+  AuthenticatedLeaderLeaderboardRouteImport.update({
+    id: '/leaderboard',
+    path: '/leaderboard',
+    getParentRoute: () => AuthenticatedLeaderRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedLeaderMembersIdRoute =
+  AuthenticatedLeaderMembersIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedLeaderMembersRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -76,10 +132,18 @@ export interface FileRoutesByFullPath {
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/leader': typeof AuthenticatedLeaderRoute
+  '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRoute
   '/error/$kind': typeof ErrorKindRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
+  '/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
+  '/leader/notifications': typeof AuthenticatedLeaderNotificationsRoute
+  '/leader/profile': typeof AuthenticatedLeaderProfileRoute
+  '/leader/projects': typeof AuthenticatedLeaderProjectsRoute
+  '/leader/settings': typeof AuthenticatedLeaderSettingsRoute
+  '/leader/withdrawals': typeof AuthenticatedLeaderWithdrawalsRoute
+  '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -87,10 +151,18 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/leader': typeof AuthenticatedLeaderRoute
+  '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRoute
   '/error/$kind': typeof ErrorKindRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
+  '/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
+  '/leader/notifications': typeof AuthenticatedLeaderNotificationsRoute
+  '/leader/profile': typeof AuthenticatedLeaderProfileRoute
+  '/leader/projects': typeof AuthenticatedLeaderProjectsRoute
+  '/leader/settings': typeof AuthenticatedLeaderSettingsRoute
+  '/leader/withdrawals': typeof AuthenticatedLeaderWithdrawalsRoute
+  '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -100,10 +172,18 @@ export interface FileRoutesById {
   '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/leader': typeof AuthenticatedLeaderRoute
+  '/_authenticated/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/_authenticated/member': typeof AuthenticatedMemberRoute
   '/error/$kind': typeof ErrorKindRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
+  '/_authenticated/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
+  '/_authenticated/leader/notifications': typeof AuthenticatedLeaderNotificationsRoute
+  '/_authenticated/leader/profile': typeof AuthenticatedLeaderProfileRoute
+  '/_authenticated/leader/projects': typeof AuthenticatedLeaderProjectsRoute
+  '/_authenticated/leader/settings': typeof AuthenticatedLeaderSettingsRoute
+  '/_authenticated/leader/withdrawals': typeof AuthenticatedLeaderWithdrawalsRoute
+  '/_authenticated/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +197,14 @@ export interface FileRouteTypes {
     | '/member'
     | '/error/$kind'
     | '/admin/users'
+    | '/leader/leaderboard'
+    | '/leader/members'
+    | '/leader/notifications'
+    | '/leader/profile'
+    | '/leader/projects'
+    | '/leader/settings'
+    | '/leader/withdrawals'
+    | '/leader/members/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +216,14 @@ export interface FileRouteTypes {
     | '/member'
     | '/error/$kind'
     | '/admin/users'
+    | '/leader/leaderboard'
+    | '/leader/members'
+    | '/leader/notifications'
+    | '/leader/profile'
+    | '/leader/projects'
+    | '/leader/settings'
+    | '/leader/withdrawals'
+    | '/leader/members/$id'
   id:
     | '__root__'
     | '/'
@@ -140,6 +236,14 @@ export interface FileRouteTypes {
     | '/_authenticated/member'
     | '/error/$kind'
     | '/_authenticated/admin/users'
+    | '/_authenticated/leader/leaderboard'
+    | '/_authenticated/leader/members'
+    | '/_authenticated/leader/notifications'
+    | '/_authenticated/leader/profile'
+    | '/_authenticated/leader/projects'
+    | '/_authenticated/leader/settings'
+    | '/_authenticated/leader/withdrawals'
+    | '/_authenticated/leader/members/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -215,12 +319,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/leader/withdrawals': {
+      id: '/_authenticated/leader/withdrawals'
+      path: '/withdrawals'
+      fullPath: '/leader/withdrawals'
+      preLoaderRoute: typeof AuthenticatedLeaderWithdrawalsRouteImport
+      parentRoute: typeof AuthenticatedLeaderRoute
+    }
+    '/_authenticated/leader/settings': {
+      id: '/_authenticated/leader/settings'
+      path: '/settings'
+      fullPath: '/leader/settings'
+      preLoaderRoute: typeof AuthenticatedLeaderSettingsRouteImport
+      parentRoute: typeof AuthenticatedLeaderRoute
+    }
+    '/_authenticated/leader/projects': {
+      id: '/_authenticated/leader/projects'
+      path: '/projects'
+      fullPath: '/leader/projects'
+      preLoaderRoute: typeof AuthenticatedLeaderProjectsRouteImport
+      parentRoute: typeof AuthenticatedLeaderRoute
+    }
+    '/_authenticated/leader/profile': {
+      id: '/_authenticated/leader/profile'
+      path: '/profile'
+      fullPath: '/leader/profile'
+      preLoaderRoute: typeof AuthenticatedLeaderProfileRouteImport
+      parentRoute: typeof AuthenticatedLeaderRoute
+    }
+    '/_authenticated/leader/notifications': {
+      id: '/_authenticated/leader/notifications'
+      path: '/notifications'
+      fullPath: '/leader/notifications'
+      preLoaderRoute: typeof AuthenticatedLeaderNotificationsRouteImport
+      parentRoute: typeof AuthenticatedLeaderRoute
+    }
+    '/_authenticated/leader/members': {
+      id: '/_authenticated/leader/members'
+      path: '/members'
+      fullPath: '/leader/members'
+      preLoaderRoute: typeof AuthenticatedLeaderMembersRouteImport
+      parentRoute: typeof AuthenticatedLeaderRoute
+    }
+    '/_authenticated/leader/leaderboard': {
+      id: '/_authenticated/leader/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leader/leaderboard'
+      preLoaderRoute: typeof AuthenticatedLeaderLeaderboardRouteImport
+      parentRoute: typeof AuthenticatedLeaderRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/leader/members/$id': {
+      id: '/_authenticated/leader/members/$id'
+      path: '/$id'
+      fullPath: '/leader/members/$id'
+      preLoaderRoute: typeof AuthenticatedLeaderMembersIdRouteImport
+      parentRoute: typeof AuthenticatedLeaderMembersRoute
     }
   }
 }
@@ -236,17 +396,54 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedLeaderMembersRouteChildren {
+  AuthenticatedLeaderMembersIdRoute: typeof AuthenticatedLeaderMembersIdRoute
+}
+
+const AuthenticatedLeaderMembersRouteChildren: AuthenticatedLeaderMembersRouteChildren =
+  {
+    AuthenticatedLeaderMembersIdRoute: AuthenticatedLeaderMembersIdRoute,
+  }
+
+const AuthenticatedLeaderMembersRouteWithChildren =
+  AuthenticatedLeaderMembersRoute._addFileChildren(
+    AuthenticatedLeaderMembersRouteChildren,
+  )
+
+interface AuthenticatedLeaderRouteChildren {
+  AuthenticatedLeaderLeaderboardRoute: typeof AuthenticatedLeaderLeaderboardRoute
+  AuthenticatedLeaderMembersRoute: typeof AuthenticatedLeaderMembersRouteWithChildren
+  AuthenticatedLeaderNotificationsRoute: typeof AuthenticatedLeaderNotificationsRoute
+  AuthenticatedLeaderProfileRoute: typeof AuthenticatedLeaderProfileRoute
+  AuthenticatedLeaderProjectsRoute: typeof AuthenticatedLeaderProjectsRoute
+  AuthenticatedLeaderSettingsRoute: typeof AuthenticatedLeaderSettingsRoute
+  AuthenticatedLeaderWithdrawalsRoute: typeof AuthenticatedLeaderWithdrawalsRoute
+}
+
+const AuthenticatedLeaderRouteChildren: AuthenticatedLeaderRouteChildren = {
+  AuthenticatedLeaderLeaderboardRoute: AuthenticatedLeaderLeaderboardRoute,
+  AuthenticatedLeaderMembersRoute: AuthenticatedLeaderMembersRouteWithChildren,
+  AuthenticatedLeaderNotificationsRoute: AuthenticatedLeaderNotificationsRoute,
+  AuthenticatedLeaderProfileRoute: AuthenticatedLeaderProfileRoute,
+  AuthenticatedLeaderProjectsRoute: AuthenticatedLeaderProjectsRoute,
+  AuthenticatedLeaderSettingsRoute: AuthenticatedLeaderSettingsRoute,
+  AuthenticatedLeaderWithdrawalsRoute: AuthenticatedLeaderWithdrawalsRoute,
+}
+
+const AuthenticatedLeaderRouteWithChildren =
+  AuthenticatedLeaderRoute._addFileChildren(AuthenticatedLeaderRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedLeaderRoute: typeof AuthenticatedLeaderRoute
+  AuthenticatedLeaderRoute: typeof AuthenticatedLeaderRouteWithChildren
   AuthenticatedMemberRoute: typeof AuthenticatedMemberRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedLeaderRoute: AuthenticatedLeaderRoute,
+  AuthenticatedLeaderRoute: AuthenticatedLeaderRouteWithChildren,
   AuthenticatedMemberRoute: AuthenticatedMemberRoute,
 }
 
