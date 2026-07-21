@@ -131,9 +131,10 @@ export const globalAdminSearch = createServerFn({ method: "POST" })
         .limit(6),
       context.supabase
         .from("sales")
-        .select("id, sale_code, status, customer_name")
-        .or(`sale_code.ilike.${like},customer_name.ilike.${like}`)
+        .select("id, sale_number, sale_status, buyer_name")
+        .or(`sale_number.ilike.${like},buyer_name.ilike.${like}`)
         .limit(6),
+
       context.supabase
         .from("profiles")
         .select("id, full_name, login_id, mobile_number")
