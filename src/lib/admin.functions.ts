@@ -291,13 +291,15 @@ export const setUserStatus = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: Record<string, unknown> = {
-      status: data.status,
-      is_active: data.status === "active",
-      is_deleted: data.status === "deleted",
-      updated_by: context.userId,
-    };
-    const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", data.userId);
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({
+        status: data.status,
+        is_active: data.status === "active",
+        is_deleted: data.status === "deleted",
+        updated_by: context.userId,
+      })
+      .eq("id", data.userId);
     if (error) throw new Error(error.message);
 
     // Also ban/unban at the Auth layer so inactive/suspended/deleted users
