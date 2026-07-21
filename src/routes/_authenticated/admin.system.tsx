@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
-import { DashboardShell } from "@/components/aawash/DashboardShell";
+import { AdminShell as DashboardShell } from "@/components/aawash/admin/AdminShell";
 import {
   SectionCard,
   StatCard,
