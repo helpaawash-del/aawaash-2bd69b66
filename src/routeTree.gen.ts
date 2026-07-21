@@ -60,6 +60,7 @@ import { Route as ApiPublicHooksSystemMaintenanceRouteImport } from './routes/ap
 import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
 import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
 import { Route as AuthenticatedAdminTeamLeadersNewRouteImport } from './routes/_authenticated/admin.team-leaders.new'
+import { Route as AuthenticatedAdminTeamLeadersIdRouteImport } from './routes/_authenticated/admin.team-leaders.$id'
 import { Route as AuthenticatedAdminProjectsNewRouteImport } from './routes/_authenticated/admin.projects.new'
 import { Route as AuthenticatedAdminProjectsIdRouteImport } from './routes/_authenticated/admin.projects.$id'
 
@@ -352,6 +353,12 @@ const AuthenticatedAdminTeamLeadersNewRoute =
     path: '/new',
     getParentRoute: () => AuthenticatedAdminTeamLeadersRoute,
   } as any)
+const AuthenticatedAdminTeamLeadersIdRoute =
+  AuthenticatedAdminTeamLeadersIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAdminTeamLeadersRoute,
+  } as any)
 const AuthenticatedAdminProjectsNewRoute =
   AuthenticatedAdminProjectsNewRouteImport.update({
     id: '/new',
@@ -414,6 +421,7 @@ export interface FileRoutesByFullPath {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/admin/projects/new': typeof AuthenticatedAdminProjectsNewRoute
+  '/admin/team-leaders/$id': typeof AuthenticatedAdminTeamLeadersIdRoute
   '/admin/team-leaders/new': typeof AuthenticatedAdminTeamLeadersNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
@@ -468,6 +476,7 @@ export interface FileRoutesByTo {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/admin/projects/new': typeof AuthenticatedAdminProjectsNewRoute
+  '/admin/team-leaders/$id': typeof AuthenticatedAdminTeamLeadersIdRoute
   '/admin/team-leaders/new': typeof AuthenticatedAdminTeamLeadersNewRoute
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
@@ -524,6 +533,7 @@ export interface FileRoutesById {
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/_authenticated/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/_authenticated/admin/projects/new': typeof AuthenticatedAdminProjectsNewRoute
+  '/_authenticated/admin/team-leaders/$id': typeof AuthenticatedAdminTeamLeadersIdRoute
   '/_authenticated/admin/team-leaders/new': typeof AuthenticatedAdminTeamLeadersNewRoute
   '/_authenticated/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/_authenticated/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
@@ -580,6 +590,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/admin/projects/$id'
     | '/admin/projects/new'
+    | '/admin/team-leaders/$id'
     | '/admin/team-leaders/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
@@ -634,6 +645,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/admin/projects/$id'
     | '/admin/projects/new'
+    | '/admin/team-leaders/$id'
     | '/admin/team-leaders/new'
     | '/leader/members/$id'
     | '/member/sales/$id'
@@ -689,6 +701,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales-workflow/new'
     | '/_authenticated/admin/projects/$id'
     | '/_authenticated/admin/projects/new'
+    | '/_authenticated/admin/team-leaders/$id'
     | '/_authenticated/admin/team-leaders/new'
     | '/_authenticated/leader/members/$id'
     | '/_authenticated/member/sales/$id'
@@ -1064,6 +1077,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminTeamLeadersNewRouteImport
       parentRoute: typeof AuthenticatedAdminTeamLeadersRoute
     }
+    '/_authenticated/admin/team-leaders/$id': {
+      id: '/_authenticated/admin/team-leaders/$id'
+      path: '/$id'
+      fullPath: '/admin/team-leaders/$id'
+      preLoaderRoute: typeof AuthenticatedAdminTeamLeadersIdRouteImport
+      parentRoute: typeof AuthenticatedAdminTeamLeadersRoute
+    }
     '/_authenticated/admin/projects/new': {
       id: '/_authenticated/admin/projects/new'
       path: '/new'
@@ -1098,11 +1118,13 @@ const AuthenticatedAdminProjectsRouteWithChildren =
   )
 
 interface AuthenticatedAdminTeamLeadersRouteChildren {
+  AuthenticatedAdminTeamLeadersIdRoute: typeof AuthenticatedAdminTeamLeadersIdRoute
   AuthenticatedAdminTeamLeadersNewRoute: typeof AuthenticatedAdminTeamLeadersNewRoute
 }
 
 const AuthenticatedAdminTeamLeadersRouteChildren: AuthenticatedAdminTeamLeadersRouteChildren =
   {
+    AuthenticatedAdminTeamLeadersIdRoute: AuthenticatedAdminTeamLeadersIdRoute,
     AuthenticatedAdminTeamLeadersNewRoute:
       AuthenticatedAdminTeamLeadersNewRoute,
   }
