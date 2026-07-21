@@ -236,7 +236,7 @@ export const listCustomers = createServerFn({ method: "POST" })
 
     if (scope === "mine") q = q.eq("assigned_member_id", context.userId);
 
-    if (data.status && data.status !== "all") q = q.eq("status", data.status);
+    if (data.status && data.status !== "all") q = q.eq("status", data.status as (typeof CUSTOMER_STATUSES)[number]);
 
     if (data.search && data.search.trim()) {
       const s = data.search.trim();
