@@ -17,7 +17,6 @@ import {
   Mail,
   MapPinned,
   Send,
-  ChevronDown,
   CheckCircle2,
 } from "lucide-react";
 
