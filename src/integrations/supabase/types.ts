@@ -14,16 +14,219 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          new_value: Json | null
+          previous_value: Json | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          new_value?: Json | null
+          previous_value?: Json | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          new_value?: Json | null
+          previous_value?: Json | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          created_by: string | null
+          display_code: string
+          email: string | null
+          full_name: string
+          id: string
+          is_active: boolean
+          is_deleted: boolean
+          last_login_at: string | null
+          login_id: string
+          mobile_number: string
+          referral_count: number
+          status: Database["public"]["Enums"]["account_status"]
+          team_id: string | null
+          total_earnings: number
+          total_sales: number
+          updated_at: string
+          updated_by: string | null
+          wallet_balance: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_code?: string
+          email?: string | null
+          full_name?: string
+          id: string
+          is_active?: boolean
+          is_deleted?: boolean
+          last_login_at?: string | null
+          login_id: string
+          mobile_number: string
+          referral_count?: number
+          status?: Database["public"]["Enums"]["account_status"]
+          team_id?: string | null
+          total_earnings?: number
+          total_sales?: number
+          updated_at?: string
+          updated_by?: string | null
+          wallet_balance?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_code?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          is_deleted?: boolean
+          last_login_at?: string | null
+          login_id?: string
+          mobile_number?: string
+          referral_count?: number
+          status?: Database["public"]["Enums"]["account_status"]
+          team_id?: string | null
+          total_earnings?: number
+          total_sales?: number
+          updated_at?: string
+          updated_by?: string | null
+          wallet_balance?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teams: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_deleted: boolean
+          leader_id: string | null
+          letter: string
+          name: string
+          status: Database["public"]["Enums"]["account_status"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_deleted?: boolean
+          leader_id?: string | null
+          letter: string
+          name: string
+          status?: Database["public"]["Enums"]["account_status"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_deleted?: boolean
+          leader_id?: string | null
+          letter?: string
+          name?: string
+          status?: Database["public"]["Enums"]["account_status"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teams_leader_id_fkey"
+            columns: ["leader_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          granted_by: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      current_user_role: {
+        Args: never
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      account_status: "active" | "suspended" | "pending"
+      app_role: "super_admin" | "team_leader" | "member"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +353,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      account_status: ["active", "suspended", "pending"],
+      app_role: ["super_admin", "team_leader", "member"],
+    },
   },
 } as const
