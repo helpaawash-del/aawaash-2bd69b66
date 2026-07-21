@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Users, Bell, User, Building2, LayoutDashboard, Wallet, Trophy } from "lucide-react";
+import { Home, Users, Bell, User, Building2, LayoutDashboard, Wallet, Trophy, TrendingUp, UserPlus } from "lucide-react";
 import type { AppRole } from "@/lib/auth";
 
 /**
