@@ -481,3 +481,23 @@ function MediaTile({
     </div>
   );
 }
+
+function NearbyTile({
+  icon,
+  label,
+  note,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  note: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-surface/60 p-4">
+      <div className="grid h-9 w-9 place-items-center rounded-full bg-primary-soft text-primary">
+        {icon}
+      </div>
+      <div className="mt-2 text-xs font-semibold text-foreground">{label}</div>
+      <div className="text-[10px] text-muted-foreground">{note}</div>
+    </div>
+  );
+}
