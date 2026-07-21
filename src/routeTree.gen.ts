@@ -16,6 +16,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
 import { Route as ErrorKindRouteImport } from './routes/error.$kind'
+import { Route as AuthenticatedSalesWorkflowRouteImport } from './routes/_authenticated/sales-workflow'
 import { Route as AuthenticatedMemberRouteImport } from './routes/_authenticated/member'
 import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated/leader'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -79,6 +80,12 @@ const ErrorKindRoute = ErrorKindRouteImport.update({
   path: '/error/$kind',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSalesWorkflowRoute =
+  AuthenticatedSalesWorkflowRouteImport.update({
+    id: '/sales-workflow',
+    path: '/sales-workflow',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMemberRoute = AuthenticatedMemberRouteImport.update({
   id: '/member',
   path: '/member',
@@ -249,6 +256,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRouteWithChildren
+  '/sales-workflow': typeof AuthenticatedSalesWorkflowRoute
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -285,6 +293,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/member': typeof AuthenticatedMemberRouteWithChildren
+  '/sales-workflow': typeof AuthenticatedSalesWorkflowRoute
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -323,6 +332,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/_authenticated/member': typeof AuthenticatedMemberRouteWithChildren
+  '/_authenticated/sales-workflow': typeof AuthenticatedSalesWorkflowRoute
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -361,6 +371,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/leader'
     | '/member'
+    | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
     | '/admin/users'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/leader'
     | '/member'
+    | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
     | '/admin/users'
@@ -434,6 +446,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/leader'
     | '/_authenticated/member'
+    | '/_authenticated/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
     | '/_authenticated/admin/users'
@@ -520,6 +533,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/error/$kind'
       preLoaderRoute: typeof ErrorKindRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/sales-workflow': {
+      id: '/_authenticated/sales-workflow'
+      path: '/sales-workflow'
+      fullPath: '/sales-workflow'
+      preLoaderRoute: typeof AuthenticatedSalesWorkflowRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/member': {
       id: '/_authenticated/member'
@@ -832,6 +852,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderRoute: typeof AuthenticatedLeaderRouteWithChildren
   AuthenticatedMemberRoute: typeof AuthenticatedMemberRouteWithChildren
+  AuthenticatedSalesWorkflowRoute: typeof AuthenticatedSalesWorkflowRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -840,6 +861,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderRoute: AuthenticatedLeaderRouteWithChildren,
   AuthenticatedMemberRoute: AuthenticatedMemberRouteWithChildren,
+  AuthenticatedSalesWorkflowRoute: AuthenticatedSalesWorkflowRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
