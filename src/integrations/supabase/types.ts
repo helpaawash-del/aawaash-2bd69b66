@@ -226,54 +226,182 @@ export type Database = {
           },
         ]
       }
-      projects: {
+      project_favorites: {
         Row: {
           created_at: string
-          description: string | null
-          hero_hue: string
           id: string
-          is_deleted: boolean
-          location: string
-          name: string
-          price_from: number
-          slug: string
-          sold_units: number
-          status: string
-          tag: string | null
-          total_units: number
-          updated_at: string
+          project_id: string
+          user_id: string
         }
         Insert: {
           created_at?: string
-          description?: string | null
-          hero_hue?: string
           id?: string
-          is_deleted?: boolean
-          location: string
-          name: string
-          price_from?: number
-          slug: string
-          sold_units?: number
-          status?: string
-          tag?: string | null
-          total_units?: number
-          updated_at?: string
+          project_id: string
+          user_id: string
         }
         Update: {
           created_at?: string
+          id?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_favorites_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          address: string | null
+          area_max: number | null
+          area_min: number | null
+          available_flats: number
+          completion_percent: number
+          construction_status: string
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          display_priority: number
+          extra: Json
+          floor_plan_count: number
+          gallery_count: number
+          google_map_url: string | null
+          hero_banner_url: string | null
+          hero_hue: string
+          id: string
+          is_deleted: boolean
+          latitude: number | null
+          launch_date: string | null
+          location: string
+          logo_url: string | null
+          longitude: number | null
+          model_count: number
+          name: string
+          possession_date: string | null
+          price_from: number
+          price_max: number | null
+          price_min: number | null
+          project_type: string
+          reserved_flats: number
+          seo_description: string | null
+          seo_title: string | null
+          short_description: string | null
+          slug: string
+          sold_flats: number
+          sold_units: number
+          status: string
+          tag: string | null
+          thumbnail_url: string | null
+          total_buildings: number
+          total_flats: number
+          total_floors: number
+          total_units: number
+          updated_at: string
+          video_count: number
+          visibility: string
+        }
+        Insert: {
+          address?: string | null
+          area_max?: number | null
+          area_min?: number | null
+          available_flats?: number
+          completion_percent?: number
+          construction_status?: string
+          cover_url?: string | null
+          created_at?: string
           description?: string | null
+          display_priority?: number
+          extra?: Json
+          floor_plan_count?: number
+          gallery_count?: number
+          google_map_url?: string | null
+          hero_banner_url?: string | null
           hero_hue?: string
           id?: string
           is_deleted?: boolean
-          location?: string
-          name?: string
+          latitude?: number | null
+          launch_date?: string | null
+          location: string
+          logo_url?: string | null
+          longitude?: number | null
+          model_count?: number
+          name: string
+          possession_date?: string | null
           price_from?: number
-          slug?: string
+          price_max?: number | null
+          price_min?: number | null
+          project_type?: string
+          reserved_flats?: number
+          seo_description?: string | null
+          seo_title?: string | null
+          short_description?: string | null
+          slug: string
+          sold_flats?: number
           sold_units?: number
           status?: string
           tag?: string | null
+          thumbnail_url?: string | null
+          total_buildings?: number
+          total_flats?: number
+          total_floors?: number
           total_units?: number
           updated_at?: string
+          video_count?: number
+          visibility?: string
+        }
+        Update: {
+          address?: string | null
+          area_max?: number | null
+          area_min?: number | null
+          available_flats?: number
+          completion_percent?: number
+          construction_status?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          display_priority?: number
+          extra?: Json
+          floor_plan_count?: number
+          gallery_count?: number
+          google_map_url?: string | null
+          hero_banner_url?: string | null
+          hero_hue?: string
+          id?: string
+          is_deleted?: boolean
+          latitude?: number | null
+          launch_date?: string | null
+          location?: string
+          logo_url?: string | null
+          longitude?: number | null
+          model_count?: number
+          name?: string
+          possession_date?: string | null
+          price_from?: number
+          price_max?: number | null
+          price_min?: number | null
+          project_type?: string
+          reserved_flats?: number
+          seo_description?: string | null
+          seo_title?: string | null
+          short_description?: string | null
+          slug?: string
+          sold_flats?: number
+          sold_units?: number
+          status?: string
+          tag?: string | null
+          thumbnail_url?: string | null
+          total_buildings?: number
+          total_flats?: number
+          total_floors?: number
+          total_units?: number
+          updated_at?: string
+          video_count?: number
+          visibility?: string
         }
         Relationships: []
       }
