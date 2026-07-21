@@ -1,4 +1,4 @@
-import type { customer_status_enum } from "@/integrations/supabase/types";
+// Status metadata for the CRM customer lifecycle.
 
 type StatusMeta = { label: string; tone: string };
 
@@ -32,6 +32,3 @@ export function priorityStyle(p: string | null | undefined): { label: string; cl
   if (p === "high") return { label: "Hot", className: "bg-destructive/15 text-destructive" };
   return null;
 }
-
-// Re-export enum reference to keep type imports concise even when unused at runtime.
-export type CustomerStatusEnum = customer_status_enum;
