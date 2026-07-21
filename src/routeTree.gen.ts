@@ -40,6 +40,7 @@ import { Route as AuthenticatedLeaderMembersRouteImport } from './routes/_authen
 import { Route as AuthenticatedLeaderLeaderboardRouteImport } from './routes/_authenticated/leader.leaderboard'
 import { Route as AuthenticatedCrmNewRouteImport } from './routes/_authenticated/crm.new'
 import { Route as AuthenticatedCrmFollowupsRouteImport } from './routes/_authenticated/crm.followups'
+import { Route as AuthenticatedCrmIdRouteImport } from './routes/_authenticated/crm.$id'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
 import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
@@ -215,6 +216,11 @@ const AuthenticatedCrmFollowupsRoute =
     path: '/followups',
     getParentRoute: () => AuthenticatedCrmRoute,
   } as any)
+const AuthenticatedCrmIdRoute = AuthenticatedCrmIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedCrmRoute,
+} as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -246,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/crm/$id': typeof AuthenticatedCrmIdRoute
   '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
   '/crm/new': typeof AuthenticatedCrmNewRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
@@ -281,6 +288,7 @@ export interface FileRoutesByTo {
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/crm/$id': typeof AuthenticatedCrmIdRoute
   '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
   '/crm/new': typeof AuthenticatedCrmNewRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
@@ -318,6 +326,7 @@ export interface FileRoutesById {
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/crm/$id': typeof AuthenticatedCrmIdRoute
   '/_authenticated/crm/followups': typeof AuthenticatedCrmFollowupsRoute
   '/_authenticated/crm/new': typeof AuthenticatedCrmNewRoute
   '/_authenticated/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
     | '/error/$kind'
     | '/projects/$slug'
     | '/admin/users'
+    | '/crm/$id'
     | '/crm/followups'
     | '/crm/new'
     | '/leader/leaderboard'
@@ -390,6 +400,7 @@ export interface FileRouteTypes {
     | '/error/$kind'
     | '/projects/$slug'
     | '/admin/users'
+    | '/crm/$id'
     | '/crm/followups'
     | '/crm/new'
     | '/leader/leaderboard'
@@ -426,6 +437,7 @@ export interface FileRouteTypes {
     | '/error/$kind'
     | '/projects/$slug'
     | '/_authenticated/admin/users'
+    | '/_authenticated/crm/$id'
     | '/_authenticated/crm/followups'
     | '/_authenticated/crm/new'
     | '/_authenticated/leader/leaderboard'
@@ -677,6 +689,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCrmFollowupsRouteImport
       parentRoute: typeof AuthenticatedCrmRoute
     }
+    '/_authenticated/crm/$id': {
+      id: '/_authenticated/crm/$id'
+      path: '/$id'
+      fullPath: '/crm/$id'
+      preLoaderRoute: typeof AuthenticatedCrmIdRouteImport
+      parentRoute: typeof AuthenticatedCrmRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/users'
@@ -713,11 +732,13 @@ const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedCrmRouteChildren {
+  AuthenticatedCrmIdRoute: typeof AuthenticatedCrmIdRoute
   AuthenticatedCrmFollowupsRoute: typeof AuthenticatedCrmFollowupsRoute
   AuthenticatedCrmNewRoute: typeof AuthenticatedCrmNewRoute
 }
 
 const AuthenticatedCrmRouteChildren: AuthenticatedCrmRouteChildren = {
+  AuthenticatedCrmIdRoute: AuthenticatedCrmIdRoute,
   AuthenticatedCrmFollowupsRoute: AuthenticatedCrmFollowupsRoute,
   AuthenticatedCrmNewRoute: AuthenticatedCrmNewRoute,
 }
