@@ -56,6 +56,59 @@ export type Database = {
         }
         Relationships: []
       }
+      buildings: {
+        Row: {
+          code: string
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          extra: Json
+          id: string
+          name: string
+          ordering: number
+          project_id: string
+          total_flats: number
+          total_floors: number
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          extra?: Json
+          id?: string
+          name: string
+          ordering?: number
+          project_id: string
+          total_flats?: number
+          total_floors?: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          extra?: Json
+          id?: string
+          name?: string
+          ordering?: number
+          project_id?: string
+          total_flats?: number
+          total_floors?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buildings_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commissions: {
         Row: {
           amount: number
@@ -107,6 +160,198 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flat_locks: {
+        Row: {
+          created_at: string
+          expires_at: string
+          flat_id: string
+          id: string
+          locked_by: string | null
+          reason: string | null
+          released: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          flat_id: string
+          id?: string
+          locked_by?: string | null
+          reason?: string | null
+          released?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          flat_id?: string
+          id?: string
+          locked_by?: string | null
+          reason?: string | null
+          released?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flat_locks_flat_id_fkey"
+            columns: ["flat_id"]
+            isOneToOne: false
+            referencedRelation: "flats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flats: {
+        Row: {
+          admin_notes: string | null
+          area_sqft: number | null
+          balconies: number
+          bathrooms: number
+          bedrooms: number
+          booking_status: string
+          building_id: string
+          configuration: string | null
+          construction_stage: string | null
+          created_at: string
+          extra: Json
+          facing: string | null
+          floor_id: string
+          floor_plan_url: string | null
+          gallery: Json
+          id: string
+          price: number | null
+          project_id: string
+          status: string
+          unit_code: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          area_sqft?: number | null
+          balconies?: number
+          bathrooms?: number
+          bedrooms?: number
+          booking_status?: string
+          building_id: string
+          configuration?: string | null
+          construction_stage?: string | null
+          created_at?: string
+          extra?: Json
+          facing?: string | null
+          floor_id: string
+          floor_plan_url?: string | null
+          gallery?: Json
+          id?: string
+          price?: number | null
+          project_id: string
+          status?: string
+          unit_code: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          area_sqft?: number | null
+          balconies?: number
+          bathrooms?: number
+          bedrooms?: number
+          booking_status?: string
+          building_id?: string
+          configuration?: string | null
+          construction_stage?: string | null
+          created_at?: string
+          extra?: Json
+          facing?: string | null
+          floor_id?: string
+          floor_plan_url?: string | null
+          gallery?: Json
+          id?: string
+          price?: number | null
+          project_id?: string
+          status?: string
+          unit_code?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flats_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flats_floor_id_fkey"
+            columns: ["floor_id"]
+            isOneToOne: false
+            referencedRelation: "floors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flats_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      floors: {
+        Row: {
+          building_id: string
+          created_at: string
+          extra: Json
+          floor_plan_url: string | null
+          id: string
+          name: string | null
+          number: number
+          ordering: number
+          project_id: string
+          total_flats: number
+          updated_at: string
+        }
+        Insert: {
+          building_id: string
+          created_at?: string
+          extra?: Json
+          floor_plan_url?: string | null
+          id?: string
+          name?: string | null
+          number: number
+          ordering?: number
+          project_id: string
+          total_flats?: number
+          updated_at?: string
+        }
+        Update: {
+          building_id?: string
+          created_at?: string
+          extra?: Json
+          floor_plan_url?: string | null
+          id?: string
+          name?: string | null
+          number?: number
+          ordering?: number
+          project_id?: string
+          total_flats?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "floors_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "floors_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
             referencedColumns: ["id"]
           },
         ]
@@ -258,6 +503,7 @@ export type Database = {
       projects: {
         Row: {
           address: string | null
+          amenities: string[]
           area_max: number | null
           area_min: number | null
           available_flats: number
@@ -307,6 +553,7 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          amenities?: string[]
           area_max?: number | null
           area_min?: number | null
           available_flats?: number
@@ -356,6 +603,7 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          amenities?: string[]
           area_max?: number | null
           area_min?: number | null
           available_flats?: number
@@ -785,6 +1033,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      recompute_project_flat_counts: {
+        Args: { p_project_id: string }
+        Returns: undefined
       }
     }
     Enums: {
