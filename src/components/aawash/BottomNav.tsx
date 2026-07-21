@@ -73,10 +73,10 @@ function itemsForRole(role: AppRole): NavItem[] {
   }
   return [
     { label: "Home", icon: Home, to: "/member" },
-    { label: "Projects", icon: Building2, to: "/leader/projects" },
-    { label: "Wallet", icon: Wallet, to: "/leader/withdrawals" },
-    { label: "Rank", icon: Trophy, to: "/leader/leaderboard" },
-    { label: "Profile", icon: User, to: "/leader/profile" },
+    { label: "Sales", icon: TrendingUp, to: "/member/sales", activePrefix: "/member/sales" },
+    { label: "Referral", icon: UserPlus, to: "/member/referrals", activePrefix: "/member/referrals" },
+    { label: "Alerts", icon: Bell, to: "/member/notifications" },
+    { label: "Profile", icon: User, to: "/member/profile" },
   ];
 }
 
