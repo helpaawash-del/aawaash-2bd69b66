@@ -61,18 +61,20 @@ export const runIntegrityChecks = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { data, error } = await context.supabase.rpc("system_run_integrity_checks");
     if (error) throw new Error(error.message);
-    return data as {
-      generated_at: string;
-      flat_count_issues: unknown[];
-      wallet_balance_issues: unknown[];
-      commission_math_issues: unknown[];
-      summary: {
-        flat_count_issues: number;
-        wallet_balance_issues: number;
-        commission_math_issues: number;
-      };
-    };
+    return data as IntegrityReport;
   });
+
+export type IntegrityReport = {
+  generated_at: string;
+  flat_count_issues: Array<Record<string, string | number | null>>;
+  wallet_balance_issues: Array<Record<string, string | number | null>>;
+  commission_math_issues: Array<Record<string, string | number | null>>;
+  summary: {
+    flat_count_issues: number;
+    wallet_balance_issues: number;
+    commission_math_issues: number;
+  };
+};
 
 export const runMaintenance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -80,7 +82,7 @@ export const runMaintenance = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { data, error } = await context.supabase.rpc("system_run_maintenance");
     if (error) throw new Error(error.message);
-    return data as Record<string, unknown>;
+    return data as { cleanup?: { locks_released: number; flats_freed: number }; notifications_purged?: number };
   });
 
 export const listJobRuns = createServerFn({ method: "GET" })
