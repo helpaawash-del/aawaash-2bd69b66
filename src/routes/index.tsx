@@ -671,10 +671,7 @@ function FAQ() {
                   className="border-b border-border last:border-b-0"
                 >
                   <AccordionTrigger className="px-3 py-4 text-left text-sm font-semibold text-foreground hover:no-underline sm:text-base">
-                    <span className="flex items-center gap-3">
-                      <ChevronDown size={0} className="hidden" />
-                      {f.q}
-                    </span>
+                    {f.q}
                   </AccordionTrigger>
                   <AccordionContent className="px-3 pb-4 text-sm leading-relaxed text-muted-foreground">
                     {f.a}
