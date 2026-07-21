@@ -57,7 +57,7 @@ export function LandingNav() {
             Login
           </Link>
           <a
-            href="#projects"
+            href="/projects"
             className="hidden h-10 items-center rounded-2xl bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all hover:-translate-y-0.5 sm:inline-flex"
           >
             Explore
@@ -111,7 +111,7 @@ export function LandingNav() {
                     Login
                   </Link>
                   <a
-                    href="#projects"
+                    href="/projects"
                     onClick={() => setOpen(false)}
                     className="inline-flex h-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]"
                   >
