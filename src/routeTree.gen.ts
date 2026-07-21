@@ -34,6 +34,7 @@ import { Route as AuthenticatedMemberProfileRouteImport } from './routes/_authen
 import { Route as AuthenticatedMemberNotificationsRouteImport } from './routes/_authenticated/member.notifications'
 import { Route as AuthenticatedMemberLeaderboardRouteImport } from './routes/_authenticated/member.leaderboard'
 import { Route as AuthenticatedMemberCommissionRouteImport } from './routes/_authenticated/member.commission'
+import { Route as AuthenticatedMemberAnalyticsRouteImport } from './routes/_authenticated/member.analytics'
 import { Route as AuthenticatedLeaderWithdrawalsRouteImport } from './routes/_authenticated/leader.withdrawals'
 import { Route as AuthenticatedLeaderSettingsRouteImport } from './routes/_authenticated/leader.settings'
 import { Route as AuthenticatedLeaderProjectsRouteImport } from './routes/_authenticated/leader.projects'
@@ -41,6 +42,7 @@ import { Route as AuthenticatedLeaderProfileRouteImport } from './routes/_authen
 import { Route as AuthenticatedLeaderNotificationsRouteImport } from './routes/_authenticated/leader.notifications'
 import { Route as AuthenticatedLeaderMembersRouteImport } from './routes/_authenticated/leader.members'
 import { Route as AuthenticatedLeaderLeaderboardRouteImport } from './routes/_authenticated/leader.leaderboard'
+import { Route as AuthenticatedLeaderAnalyticsRouteImport } from './routes/_authenticated/leader.analytics'
 import { Route as AuthenticatedCrmNewRouteImport } from './routes/_authenticated/crm.new'
 import { Route as AuthenticatedCrmFollowupsRouteImport } from './routes/_authenticated/crm.followups'
 import { Route as AuthenticatedCrmIdRouteImport } from './routes/_authenticated/crm.$id'
@@ -48,6 +50,7 @@ import { Route as AuthenticatedCommissionsIdRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminWithdrawalsRouteImport } from './routes/_authenticated/admin.withdrawals'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminCommissionsRouteImport } from './routes/_authenticated/admin.commissions'
+import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin.analytics'
 import { Route as AuthenticatedMemberSalesIdRouteImport } from './routes/_authenticated/member.sales.$id'
 import { Route as AuthenticatedLeaderMembersIdRouteImport } from './routes/_authenticated/leader.members.$id'
 
@@ -187,6 +190,12 @@ const AuthenticatedMemberCommissionRoute =
     path: '/commission',
     getParentRoute: () => AuthenticatedMemberRoute,
   } as any)
+const AuthenticatedMemberAnalyticsRoute =
+  AuthenticatedMemberAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
 const AuthenticatedLeaderWithdrawalsRoute =
   AuthenticatedLeaderWithdrawalsRouteImport.update({
     id: '/withdrawals',
@@ -229,6 +238,12 @@ const AuthenticatedLeaderLeaderboardRoute =
     path: '/leaderboard',
     getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
+const AuthenticatedLeaderAnalyticsRoute =
+  AuthenticatedLeaderAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedLeaderRoute,
+  } as any)
 const AuthenticatedCrmNewRoute = AuthenticatedCrmNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -268,6 +283,12 @@ const AuthenticatedAdminCommissionsRoute =
     path: '/commissions',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAnalyticsRoute =
+  AuthenticatedAdminAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedMemberSalesIdRoute =
   AuthenticatedMemberSalesIdRouteImport.update({
     id: '/$id',
@@ -294,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
@@ -301,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/crm/$id': typeof AuthenticatedCrmIdRoute
   '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
   '/crm/new': typeof AuthenticatedCrmNewRoute
+  '/leader/analytics': typeof AuthenticatedLeaderAnalyticsRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
   '/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
   '/leader/notifications': typeof AuthenticatedLeaderNotificationsRoute
@@ -308,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/leader/projects': typeof AuthenticatedLeaderProjectsRoute
   '/leader/settings': typeof AuthenticatedLeaderSettingsRoute
   '/leader/withdrawals': typeof AuthenticatedLeaderWithdrawalsRoute
+  '/member/analytics': typeof AuthenticatedMemberAnalyticsRoute
   '/member/commission': typeof AuthenticatedMemberCommissionRoute
   '/member/leaderboard': typeof AuthenticatedMemberLeaderboardRoute
   '/member/notifications': typeof AuthenticatedMemberNotificationsRoute
@@ -336,6 +360,7 @@ export interface FileRoutesByTo {
   '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
@@ -343,6 +368,7 @@ export interface FileRoutesByTo {
   '/crm/$id': typeof AuthenticatedCrmIdRoute
   '/crm/followups': typeof AuthenticatedCrmFollowupsRoute
   '/crm/new': typeof AuthenticatedCrmNewRoute
+  '/leader/analytics': typeof AuthenticatedLeaderAnalyticsRoute
   '/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
   '/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
   '/leader/notifications': typeof AuthenticatedLeaderNotificationsRoute
@@ -350,6 +376,7 @@ export interface FileRoutesByTo {
   '/leader/projects': typeof AuthenticatedLeaderProjectsRoute
   '/leader/settings': typeof AuthenticatedLeaderSettingsRoute
   '/leader/withdrawals': typeof AuthenticatedLeaderWithdrawalsRoute
+  '/member/analytics': typeof AuthenticatedMemberAnalyticsRoute
   '/member/commission': typeof AuthenticatedMemberCommissionRoute
   '/member/leaderboard': typeof AuthenticatedMemberLeaderboardRoute
   '/member/notifications': typeof AuthenticatedMemberNotificationsRoute
@@ -380,6 +407,7 @@ export interface FileRoutesById {
   '/_authenticated/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
@@ -387,6 +415,7 @@ export interface FileRoutesById {
   '/_authenticated/crm/$id': typeof AuthenticatedCrmIdRoute
   '/_authenticated/crm/followups': typeof AuthenticatedCrmFollowupsRoute
   '/_authenticated/crm/new': typeof AuthenticatedCrmNewRoute
+  '/_authenticated/leader/analytics': typeof AuthenticatedLeaderAnalyticsRoute
   '/_authenticated/leader/leaderboard': typeof AuthenticatedLeaderLeaderboardRoute
   '/_authenticated/leader/members': typeof AuthenticatedLeaderMembersRouteWithChildren
   '/_authenticated/leader/notifications': typeof AuthenticatedLeaderNotificationsRoute
@@ -394,6 +423,7 @@ export interface FileRoutesById {
   '/_authenticated/leader/projects': typeof AuthenticatedLeaderProjectsRoute
   '/_authenticated/leader/settings': typeof AuthenticatedLeaderSettingsRoute
   '/_authenticated/leader/withdrawals': typeof AuthenticatedLeaderWithdrawalsRoute
+  '/_authenticated/member/analytics': typeof AuthenticatedMemberAnalyticsRoute
   '/_authenticated/member/commission': typeof AuthenticatedMemberCommissionRoute
   '/_authenticated/member/leaderboard': typeof AuthenticatedMemberLeaderboardRoute
   '/_authenticated/member/notifications': typeof AuthenticatedMemberNotificationsRoute
@@ -424,6 +454,7 @@ export interface FileRouteTypes {
     | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
+    | '/admin/analytics'
     | '/admin/commissions'
     | '/admin/users'
     | '/admin/withdrawals'
@@ -431,6 +462,7 @@ export interface FileRouteTypes {
     | '/crm/$id'
     | '/crm/followups'
     | '/crm/new'
+    | '/leader/analytics'
     | '/leader/leaderboard'
     | '/leader/members'
     | '/leader/notifications'
@@ -438,6 +470,7 @@ export interface FileRouteTypes {
     | '/leader/projects'
     | '/leader/settings'
     | '/leader/withdrawals'
+    | '/member/analytics'
     | '/member/commission'
     | '/member/leaderboard'
     | '/member/notifications'
@@ -466,6 +499,7 @@ export interface FileRouteTypes {
     | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
+    | '/admin/analytics'
     | '/admin/commissions'
     | '/admin/users'
     | '/admin/withdrawals'
@@ -473,6 +507,7 @@ export interface FileRouteTypes {
     | '/crm/$id'
     | '/crm/followups'
     | '/crm/new'
+    | '/leader/analytics'
     | '/leader/leaderboard'
     | '/leader/members'
     | '/leader/notifications'
@@ -480,6 +515,7 @@ export interface FileRouteTypes {
     | '/leader/projects'
     | '/leader/settings'
     | '/leader/withdrawals'
+    | '/member/analytics'
     | '/member/commission'
     | '/member/leaderboard'
     | '/member/notifications'
@@ -509,6 +545,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
+    | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/commissions'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/withdrawals'
@@ -516,6 +553,7 @@ export interface FileRouteTypes {
     | '/_authenticated/crm/$id'
     | '/_authenticated/crm/followups'
     | '/_authenticated/crm/new'
+    | '/_authenticated/leader/analytics'
     | '/_authenticated/leader/leaderboard'
     | '/_authenticated/leader/members'
     | '/_authenticated/leader/notifications'
@@ -523,6 +561,7 @@ export interface FileRouteTypes {
     | '/_authenticated/leader/projects'
     | '/_authenticated/leader/settings'
     | '/_authenticated/leader/withdrawals'
+    | '/_authenticated/member/analytics'
     | '/_authenticated/member/commission'
     | '/_authenticated/member/leaderboard'
     | '/_authenticated/member/notifications'
@@ -725,6 +764,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMemberCommissionRouteImport
       parentRoute: typeof AuthenticatedMemberRoute
     }
+    '/_authenticated/member/analytics': {
+      id: '/_authenticated/member/analytics'
+      path: '/analytics'
+      fullPath: '/member/analytics'
+      preLoaderRoute: typeof AuthenticatedMemberAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
     '/_authenticated/leader/withdrawals': {
       id: '/_authenticated/leader/withdrawals'
       path: '/withdrawals'
@@ -772,6 +818,13 @@ declare module '@tanstack/react-router' {
       path: '/leaderboard'
       fullPath: '/leader/leaderboard'
       preLoaderRoute: typeof AuthenticatedLeaderLeaderboardRouteImport
+      parentRoute: typeof AuthenticatedLeaderRoute
+    }
+    '/_authenticated/leader/analytics': {
+      id: '/_authenticated/leader/analytics'
+      path: '/analytics'
+      fullPath: '/leader/analytics'
+      preLoaderRoute: typeof AuthenticatedLeaderAnalyticsRouteImport
       parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/crm/new': {
@@ -823,6 +876,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCommissionsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/analytics': {
+      id: '/_authenticated/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AuthenticatedAdminAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/member/sales/$id': {
       id: '/_authenticated/member/sales/$id'
       path: '/$id'
@@ -841,12 +901,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAnalyticsRoute: typeof AuthenticatedAdminAnalyticsRoute
   AuthenticatedAdminCommissionsRoute: typeof AuthenticatedAdminCommissionsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAnalyticsRoute: AuthenticatedAdminAnalyticsRoute,
   AuthenticatedAdminCommissionsRoute: AuthenticatedAdminCommissionsRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
@@ -885,6 +947,7 @@ const AuthenticatedLeaderMembersRouteWithChildren =
   )
 
 interface AuthenticatedLeaderRouteChildren {
+  AuthenticatedLeaderAnalyticsRoute: typeof AuthenticatedLeaderAnalyticsRoute
   AuthenticatedLeaderLeaderboardRoute: typeof AuthenticatedLeaderLeaderboardRoute
   AuthenticatedLeaderMembersRoute: typeof AuthenticatedLeaderMembersRouteWithChildren
   AuthenticatedLeaderNotificationsRoute: typeof AuthenticatedLeaderNotificationsRoute
@@ -895,6 +958,7 @@ interface AuthenticatedLeaderRouteChildren {
 }
 
 const AuthenticatedLeaderRouteChildren: AuthenticatedLeaderRouteChildren = {
+  AuthenticatedLeaderAnalyticsRoute: AuthenticatedLeaderAnalyticsRoute,
   AuthenticatedLeaderLeaderboardRoute: AuthenticatedLeaderLeaderboardRoute,
   AuthenticatedLeaderMembersRoute: AuthenticatedLeaderMembersRouteWithChildren,
   AuthenticatedLeaderNotificationsRoute: AuthenticatedLeaderNotificationsRoute,
@@ -922,6 +986,7 @@ const AuthenticatedMemberSalesRouteWithChildren =
   )
 
 interface AuthenticatedMemberRouteChildren {
+  AuthenticatedMemberAnalyticsRoute: typeof AuthenticatedMemberAnalyticsRoute
   AuthenticatedMemberCommissionRoute: typeof AuthenticatedMemberCommissionRoute
   AuthenticatedMemberLeaderboardRoute: typeof AuthenticatedMemberLeaderboardRoute
   AuthenticatedMemberNotificationsRoute: typeof AuthenticatedMemberNotificationsRoute
@@ -935,6 +1000,7 @@ interface AuthenticatedMemberRouteChildren {
 }
 
 const AuthenticatedMemberRouteChildren: AuthenticatedMemberRouteChildren = {
+  AuthenticatedMemberAnalyticsRoute: AuthenticatedMemberAnalyticsRoute,
   AuthenticatedMemberCommissionRoute: AuthenticatedMemberCommissionRoute,
   AuthenticatedMemberLeaderboardRoute: AuthenticatedMemberLeaderboardRoute,
   AuthenticatedMemberNotificationsRoute: AuthenticatedMemberNotificationsRoute,
