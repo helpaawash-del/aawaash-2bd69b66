@@ -188,7 +188,7 @@ export const updateSaleDraft = createServerFn({ method: "POST" })
     if (data.registration_date !== undefined) patch.registration_date = data.registration_date;
     if (data.notes !== undefined) patch.notes = data.notes;
     if (Object.keys(patch).length === 0) return { ok: true as const };
-    const { error } = await context.supabase.from("sales").update(patch).eq("id", data.id);
+    const { error } = await context.supabase.from("sales").update(patch as never).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true as const };
   });
