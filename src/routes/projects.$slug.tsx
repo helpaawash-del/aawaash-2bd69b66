@@ -3,21 +3,29 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
+  Bus,
   Building2,
   CalendarCheck2,
   CalendarClock,
   Camera,
+  Check,
   ExternalLink,
   Home,
+  Hospital,
   Layers,
   MapPin,
+  School,
+  ShoppingBag,
   Sparkles,
+  Train,
   Video,
 } from "lucide-react";
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
 import { LandingNav } from "@/components/aawash/landing/LandingNav";
 import { Reveal } from "@/components/aawash/landing/Reveal";
 import { formatINR, SkeletonBlock } from "@/components/aawash/dashboard-kit";
+import { FlatInventoryBoard } from "@/components/aawash/projects/FlatInventoryBoard";
+import { getPublicProject } from "@/lib/projects.functions";
 import { getPublicProject } from "@/lib/projects.functions";
 
 const STATUS_LABELS: Record<string, string> = {
