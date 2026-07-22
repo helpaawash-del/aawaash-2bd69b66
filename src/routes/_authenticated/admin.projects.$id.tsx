@@ -816,9 +816,19 @@ function MediaTab({ project, onSaved }: { project: Record<string, unknown>; onSa
         </div>
       </Section>
 
+      <Section title="3D Model & Immersive Media">
+        <div className="grid gap-4 md:grid-cols-2">
+          <MediaField label="3D Tour URL (Matterport / Sketchfab / GLB)" name="three_d_tour_url" value={p.three_d_tour_url} />
+          <MediaField label="Virtual Walkthrough (YouTube / Vimeo)" name="virtual_walkthrough_url" value={p.virtual_walkthrough_url} />
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          Paste a public URL to a Matterport tour, Sketchfab embed, hosted <code>.glb</code> file, or a video walkthrough.
+        </p>
+      </Section>
+
       <p className="rounded-2xl border border-dashed border-border bg-background p-4 text-xs text-muted-foreground">
-        Rich media galleries (multiple images, brochures, videos, master plan, 3D tours) can be pasted as public URLs above.
-        Cloud storage upload with drag-and-drop reorder is coming next — the schema and design tokens are already in place.
+        Rich media galleries (multiple images, brochures, master plans) can be pasted as public URLs above.
+        Drag-and-drop uploads with reorder are managed from the Media Library.
       </p>
 
       {error && <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm font-medium text-rose-700">{error}</div>}
