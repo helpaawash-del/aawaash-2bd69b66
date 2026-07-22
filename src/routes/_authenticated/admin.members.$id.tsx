@@ -28,6 +28,7 @@ import {
   updateMember,
   changeMemberTeam,
   listAllMembers,
+  deleteTipPerson,
 } from "@/lib/members-admin.functions";
 import { adminResetPassword, setUserStatus } from "@/lib/admin.functions";
 
