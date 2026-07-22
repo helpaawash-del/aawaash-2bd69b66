@@ -69,6 +69,11 @@ import { Route as AuthenticatedAdminProjectsIdRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminMembersNewRouteImport } from './routes/_authenticated/admin.members.new'
 import { Route as AuthenticatedAdminMembersIdRouteImport } from './routes/_authenticated/admin.members.$id'
 import { Route as AuthenticatedAdminCustomersIdRouteImport } from './routes/_authenticated/admin.customers.$id'
+import { Route as AuthenticatedAdminCmsPagesRouteImport } from './routes/_authenticated/admin.cms.pages'
+import { Route as AuthenticatedAdminCmsMediaRouteImport } from './routes/_authenticated/admin.cms.media'
+import { Route as AuthenticatedAdminCmsGlobalRouteImport } from './routes/_authenticated/admin.cms.global'
+import { Route as AuthenticatedAdminCmsBrandRouteImport } from './routes/_authenticated/admin.cms.brand'
+import { Route as AuthenticatedAdminCmsPagesIdRouteImport } from './routes/_authenticated/admin.cms.pages.$id'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -413,6 +418,36 @@ const AuthenticatedAdminCustomersIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedAdminCustomersRoute,
   } as any)
+const AuthenticatedAdminCmsPagesRoute =
+  AuthenticatedAdminCmsPagesRouteImport.update({
+    id: '/cms/pages',
+    path: '/cms/pages',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCmsMediaRoute =
+  AuthenticatedAdminCmsMediaRouteImport.update({
+    id: '/cms/media',
+    path: '/cms/media',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCmsGlobalRoute =
+  AuthenticatedAdminCmsGlobalRouteImport.update({
+    id: '/cms/global',
+    path: '/cms/global',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCmsBrandRoute =
+  AuthenticatedAdminCmsBrandRouteImport.update({
+    id: '/cms/brand',
+    path: '/cms/brand',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCmsPagesIdRoute =
+  AuthenticatedAdminCmsPagesIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAdminCmsPagesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -464,6 +499,10 @@ export interface FileRoutesByFullPath {
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
+  '/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
+  '/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
+  '/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
+  '/admin/cms/pages': typeof AuthenticatedAdminCmsPagesRouteWithChildren
   '/admin/customers/$id': typeof AuthenticatedAdminCustomersIdRoute
   '/admin/members/$id': typeof AuthenticatedAdminMembersIdRoute
   '/admin/members/new': typeof AuthenticatedAdminMembersNewRoute
@@ -474,6 +513,7 @@ export interface FileRoutesByFullPath {
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
   '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
+  '/admin/cms/pages/$id': typeof AuthenticatedAdminCmsPagesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -525,6 +565,10 @@ export interface FileRoutesByTo {
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
+  '/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
+  '/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
+  '/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
+  '/admin/cms/pages': typeof AuthenticatedAdminCmsPagesRouteWithChildren
   '/admin/customers/$id': typeof AuthenticatedAdminCustomersIdRoute
   '/admin/members/$id': typeof AuthenticatedAdminMembersIdRoute
   '/admin/members/new': typeof AuthenticatedAdminMembersNewRoute
@@ -535,6 +579,7 @@ export interface FileRoutesByTo {
   '/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
   '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
+  '/admin/cms/pages/$id': typeof AuthenticatedAdminCmsPagesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -588,6 +633,10 @@ export interface FileRoutesById {
   '/_authenticated/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/_authenticated/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
+  '/_authenticated/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
+  '/_authenticated/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
+  '/_authenticated/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
+  '/_authenticated/admin/cms/pages': typeof AuthenticatedAdminCmsPagesRouteWithChildren
   '/_authenticated/admin/customers/$id': typeof AuthenticatedAdminCustomersIdRoute
   '/_authenticated/admin/members/$id': typeof AuthenticatedAdminMembersIdRoute
   '/_authenticated/admin/members/new': typeof AuthenticatedAdminMembersNewRoute
@@ -598,6 +647,7 @@ export interface FileRoutesById {
   '/_authenticated/leader/members/$id': typeof AuthenticatedLeaderMembersIdRoute
   '/_authenticated/member/sales/$id': typeof AuthenticatedMemberSalesIdRoute
   '/api/public/hooks/system-maintenance': typeof ApiPublicHooksSystemMaintenanceRoute
+  '/_authenticated/admin/cms/pages/$id': typeof AuthenticatedAdminCmsPagesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -651,6 +701,10 @@ export interface FileRouteTypes {
     | '/member/withdrawals'
     | '/sales-workflow/$id'
     | '/sales-workflow/new'
+    | '/admin/cms/brand'
+    | '/admin/cms/global'
+    | '/admin/cms/media'
+    | '/admin/cms/pages'
     | '/admin/customers/$id'
     | '/admin/members/$id'
     | '/admin/members/new'
@@ -661,6 +715,7 @@ export interface FileRouteTypes {
     | '/leader/members/$id'
     | '/member/sales/$id'
     | '/api/public/hooks/system-maintenance'
+    | '/admin/cms/pages/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -712,6 +767,10 @@ export interface FileRouteTypes {
     | '/member/withdrawals'
     | '/sales-workflow/$id'
     | '/sales-workflow/new'
+    | '/admin/cms/brand'
+    | '/admin/cms/global'
+    | '/admin/cms/media'
+    | '/admin/cms/pages'
     | '/admin/customers/$id'
     | '/admin/members/$id'
     | '/admin/members/new'
@@ -722,6 +781,7 @@ export interface FileRouteTypes {
     | '/leader/members/$id'
     | '/member/sales/$id'
     | '/api/public/hooks/system-maintenance'
+    | '/admin/cms/pages/$id'
   id:
     | '__root__'
     | '/'
@@ -774,6 +834,10 @@ export interface FileRouteTypes {
     | '/_authenticated/member/withdrawals'
     | '/_authenticated/sales-workflow/$id'
     | '/_authenticated/sales-workflow/new'
+    | '/_authenticated/admin/cms/brand'
+    | '/_authenticated/admin/cms/global'
+    | '/_authenticated/admin/cms/media'
+    | '/_authenticated/admin/cms/pages'
     | '/_authenticated/admin/customers/$id'
     | '/_authenticated/admin/members/$id'
     | '/_authenticated/admin/members/new'
@@ -784,6 +848,7 @@ export interface FileRouteTypes {
     | '/_authenticated/leader/members/$id'
     | '/_authenticated/member/sales/$id'
     | '/api/public/hooks/system-maintenance'
+    | '/_authenticated/admin/cms/pages/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1218,6 +1283,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCustomersIdRouteImport
       parentRoute: typeof AuthenticatedAdminCustomersRoute
     }
+    '/_authenticated/admin/cms/pages': {
+      id: '/_authenticated/admin/cms/pages'
+      path: '/cms/pages'
+      fullPath: '/admin/cms/pages'
+      preLoaderRoute: typeof AuthenticatedAdminCmsPagesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/cms/media': {
+      id: '/_authenticated/admin/cms/media'
+      path: '/cms/media'
+      fullPath: '/admin/cms/media'
+      preLoaderRoute: typeof AuthenticatedAdminCmsMediaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/cms/global': {
+      id: '/_authenticated/admin/cms/global'
+      path: '/cms/global'
+      fullPath: '/admin/cms/global'
+      preLoaderRoute: typeof AuthenticatedAdminCmsGlobalRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/cms/brand': {
+      id: '/_authenticated/admin/cms/brand'
+      path: '/cms/brand'
+      fullPath: '/admin/cms/brand'
+      preLoaderRoute: typeof AuthenticatedAdminCmsBrandRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/cms/pages/$id': {
+      id: '/_authenticated/admin/cms/pages/$id'
+      path: '/$id'
+      fullPath: '/admin/cms/pages/$id'
+      preLoaderRoute: typeof AuthenticatedAdminCmsPagesIdRouteImport
+      parentRoute: typeof AuthenticatedAdminCmsPagesRoute
+    }
   }
 }
 
@@ -1284,6 +1384,20 @@ const AuthenticatedAdminTeamLeadersRouteWithChildren =
     AuthenticatedAdminTeamLeadersRouteChildren,
   )
 
+interface AuthenticatedAdminCmsPagesRouteChildren {
+  AuthenticatedAdminCmsPagesIdRoute: typeof AuthenticatedAdminCmsPagesIdRoute
+}
+
+const AuthenticatedAdminCmsPagesRouteChildren: AuthenticatedAdminCmsPagesRouteChildren =
+  {
+    AuthenticatedAdminCmsPagesIdRoute: AuthenticatedAdminCmsPagesIdRoute,
+  }
+
+const AuthenticatedAdminCmsPagesRouteWithChildren =
+  AuthenticatedAdminCmsPagesRoute._addFileChildren(
+    AuthenticatedAdminCmsPagesRouteChildren,
+  )
+
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAnalyticsRoute: typeof AuthenticatedAdminAnalyticsRoute
   AuthenticatedAdminCommissionsRoute: typeof AuthenticatedAdminCommissionsRoute
@@ -1297,6 +1411,10 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminTeamLeadersRoute: typeof AuthenticatedAdminTeamLeadersRouteWithChildren
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
+  AuthenticatedAdminCmsBrandRoute: typeof AuthenticatedAdminCmsBrandRoute
+  AuthenticatedAdminCmsGlobalRoute: typeof AuthenticatedAdminCmsGlobalRoute
+  AuthenticatedAdminCmsMediaRoute: typeof AuthenticatedAdminCmsMediaRoute
+  AuthenticatedAdminCmsPagesRoute: typeof AuthenticatedAdminCmsPagesRouteWithChildren
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
@@ -1314,6 +1432,10 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminTeamLeadersRouteWithChildren,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
+  AuthenticatedAdminCmsBrandRoute: AuthenticatedAdminCmsBrandRoute,
+  AuthenticatedAdminCmsGlobalRoute: AuthenticatedAdminCmsGlobalRoute,
+  AuthenticatedAdminCmsMediaRoute: AuthenticatedAdminCmsMediaRoute,
+  AuthenticatedAdminCmsPagesRoute: AuthenticatedAdminCmsPagesRouteWithChildren,
 }
 
 const AuthenticatedAdminRouteWithChildren =

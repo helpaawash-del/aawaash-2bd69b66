@@ -109,6 +109,254 @@ export type Database = {
           },
         ]
       }
+      cms_audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          after: Json | null
+          before: Json | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          after?: Json | null
+          before?: Json | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          after?: Json | null
+          before?: Json | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      cms_brand_settings: {
+        Row: {
+          colors: Json
+          favicon_url: string | null
+          fonts: Json
+          gradients: Json
+          id: number
+          logo_dark_url: string | null
+          logo_url: string | null
+          radii: Json
+          shadows: Json
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          colors?: Json
+          favicon_url?: string | null
+          fonts?: Json
+          gradients?: Json
+          id?: number
+          logo_dark_url?: string | null
+          logo_url?: string | null
+          radii?: Json
+          shadows?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          colors?: Json
+          favicon_url?: string | null
+          fonts?: Json
+          gradients?: Json
+          id?: number
+          logo_dark_url?: string | null
+          logo_url?: string | null
+          radii?: Json
+          shadows?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      cms_global_content: {
+        Row: {
+          category: string | null
+          key: string
+          label: string | null
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          category?: string | null
+          key: string
+          label?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Update: {
+          category?: string | null
+          key?: string
+          label?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
+      cms_media: {
+        Row: {
+          alt: string | null
+          category: string | null
+          created_at: string
+          filename: string
+          id: string
+          is_public: boolean
+          kind: string
+          mime: string | null
+          size: number | null
+          storage_path: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          alt?: string | null
+          category?: string | null
+          created_at?: string
+          filename: string
+          id?: string
+          is_public?: boolean
+          kind?: string
+          mime?: string | null
+          size?: number | null
+          storage_path: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          alt?: string | null
+          category?: string | null
+          created_at?: string
+          filename?: string
+          id?: string
+          is_public?: boolean
+          kind?: string
+          mime?: string | null
+          size?: number | null
+          storage_path?: string
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
+      cms_page_versions: {
+        Row: {
+          blocks: Json
+          created_at: string
+          created_by: string | null
+          id: string
+          note: string | null
+          page_id: string
+          seo: Json
+          version_number: number
+        }
+        Insert: {
+          blocks?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          page_id: string
+          seo?: Json
+          version_number: number
+        }
+        Update: {
+          blocks?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          page_id?: string
+          seo?: Json
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_page_versions_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "cms_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_pages: {
+        Row: {
+          canonical_url: string | null
+          created_at: string
+          created_by: string | null
+          current_version_id: string | null
+          id: string
+          og_image: string | null
+          published_version_id: string | null
+          seo_description: string | null
+          seo_keywords: string | null
+          seo_title: string | null
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+          visibility: string
+          visible_from: string | null
+          visible_until: string | null
+        }
+        Insert: {
+          canonical_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          current_version_id?: string | null
+          id?: string
+          og_image?: string | null
+          published_version_id?: string | null
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_title?: string | null
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+          visibility?: string
+          visible_from?: string | null
+          visible_until?: string | null
+        }
+        Update: {
+          canonical_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          current_version_id?: string | null
+          id?: string
+          og_image?: string | null
+          published_version_id?: string | null
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_title?: string | null
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+          visibility?: string
+          visible_from?: string | null
+          visible_until?: string | null
+        }
+        Relationships: []
+      }
       commission_audit_log: {
         Row: {
           action: string
@@ -2365,6 +2613,18 @@ export type Database = {
       cancel_sale: {
         Args: { p_reason: string; p_sale_id: string }
         Returns: undefined
+      }
+      cms_publish_page: {
+        Args: { _note: string; _page_id: string }
+        Returns: string
+      }
+      cms_rollback_page: {
+        Args: { _page_id: string; _version_id: string }
+        Returns: string
+      }
+      cms_save_draft: {
+        Args: { _blocks: Json; _note: string; _page_id: string; _seo: Json }
+        Returns: string
       }
       create_draft_sale: {
         Args: {
