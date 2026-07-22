@@ -172,6 +172,13 @@ function Content() {
           </div>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => exportCsv(filtered)}
+              disabled={filtered.length === 0}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-foreground disabled:opacity-50"
+            >
+              <Download size={14} /> Export CSV ({filtered.length})
+            </button>
+            <button
               onClick={() => setShowTags(true)}
               className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-foreground"
             >
