@@ -150,6 +150,7 @@ function Content() {
       qc.invalidateQueries({ queryKey: ["admin", "customers"] });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Merge failed");
+    }
   }
 
   function exportCsv(rows: typeof filtered) {
@@ -170,7 +171,7 @@ function Content() {
       r.next_followup_at ?? "", r.last_contact_at ?? "",
       r.team_letter ? `${r.team_letter} · ${r.team_name ?? ""}` : "",
       r.leader_name ?? "", r.member_name ?? "",
-      Array.isArray(r.tags) ? r.tags.join(" | ") : "",
+      Array.isArray((r as { tags?: unknown }).tags) ? ((r as { tags: string[] }).tags).join(" | ") : "",
       r.created_at, r.is_archived ? "yes" : "no",
     ].map(esc).join(","));
     const csv = [headers.join(","), ...body].join("\n");
@@ -181,7 +182,6 @@ function Content() {
     a.download = `customers-${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-  }
   }
 
   return (
