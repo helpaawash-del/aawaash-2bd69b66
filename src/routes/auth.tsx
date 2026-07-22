@@ -53,138 +53,130 @@ function SkylineScene() {
     >
       <defs>
         <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.99 0.005 155)" />
-          <stop offset="55%" stopColor="oklch(0.97 0.02 155)" />
-          <stop offset="100%" stopColor="oklch(0.93 0.05 155)" />
+          <stop offset="0%" stopColor="oklch(0.995 0.003 155)" />
+          <stop offset="60%" stopColor="oklch(0.985 0.008 155)" />
+          <stop offset="100%" stopColor="oklch(0.97 0.02 155)" />
         </linearGradient>
         <linearGradient id="tower" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.86 0.04 155)" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="oklch(0.72 0.09 155)" stopOpacity="0.95" />
+          <stop offset="0%" stopColor="oklch(0.94 0.02 155)" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="oklch(0.86 0.06 155)" stopOpacity="0.6" />
         </linearGradient>
         <linearGradient id="towerDeep" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.7 0.09 155)" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="oklch(0.55 0.13 155)" />
+          <stop offset="0%" stopColor="oklch(0.9 0.04 155)" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="oklch(0.78 0.09 155)" stopOpacity="0.6" />
         </linearGradient>
         <linearGradient id="glassPane" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.98 0.02 155)" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="oklch(0.85 0.08 155)" stopOpacity="0.4" />
+          <stop offset="0%" stopColor="oklch(0.99 0.01 155)" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="oklch(0.88 0.06 155)" stopOpacity="0.22" />
         </linearGradient>
         <radialGradient id="sun" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="oklch(0.95 0.09 90)" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="oklch(0.95 0.09 90)" stopOpacity="0" />
+          <stop offset="0%" stopColor="oklch(0.96 0.06 90)" stopOpacity="0.28" />
+          <stop offset="100%" stopColor="oklch(0.96 0.06 90)" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id="ground" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.94 0.04 155)" />
-          <stop offset="100%" stopColor="oklch(0.86 0.08 148)" />
-        </linearGradient>
+        <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+          <path d="M 60 0 L 0 0 0 60" fill="none" stroke="oklch(0.58 0.135 155)" strokeWidth="0.5" opacity="0.08" />
+        </pattern>
       </defs>
 
       {/* Sky */}
       <rect width="1200" height="700" fill="url(#sky)" />
+      {/* Subtle blueprint grid — very low visibility */}
+      <rect width="1200" height="700" fill="url(#grid)" />
 
       {/* Sun halo */}
-      <circle cx="900" cy="200" r="220" fill="url(#sun)" />
-      <circle cx="900" cy="200" r="46" fill="oklch(0.97 0.05 90)" opacity="0.7" />
+      <circle cx="900" cy="200" r="240" fill="url(#sun)" />
 
-      {/* Distant hills */}
-      <path
-        d="M0,470 C160,420 260,460 380,440 C520,415 620,455 760,435 C900,415 1020,455 1200,430 L1200,700 L0,700 Z"
-        fill="oklch(0.93 0.03 155)"
-        opacity="0.8"
-      />
-
-      {/* Background trees */}
-      {[80, 220, 990, 1120].map((x, i) => (
-        <g key={`bg-tree-${i}`} transform={`translate(${x} 450)`}>
-          <ellipse cx="0" cy="-24" rx="26" ry="34" fill="oklch(0.74 0.11 148)" opacity="0.55" />
-          <rect x="-3" y="0" width="6" height="18" fill="oklch(0.55 0.07 60)" opacity="0.6" />
-        </g>
-      ))}
-
-      {/* Skyline — back layer */}
-      <g opacity="0.6">
-        <rect x="60" y="330" width="90" height="200" fill="url(#tower)" rx="4" />
-        <rect x="170" y="290" width="70" height="240" fill="url(#tower)" rx="4" />
-        <rect x="260" y="350" width="110" height="180" fill="url(#tower)" rx="4" />
-        <rect x="820" y="310" width="80" height="220" fill="url(#tower)" rx="4" />
-        <rect x="920" y="270" width="95" height="260" fill="url(#tower)" rx="4" />
-        <rect x="1035" y="340" width="80" height="190" fill="url(#tower)" rx="4" />
+      {/* Distant skyline — back layer */}
+      <g opacity="0.4">
+        <rect x="60" y="360" width="90" height="200" fill="url(#tower)" rx="4" />
+        <rect x="170" y="320" width="70" height="240" fill="url(#tower)" rx="4" />
+        <rect x="260" y="380" width="110" height="180" fill="url(#tower)" rx="4" />
+        <rect x="820" y="340" width="80" height="220" fill="url(#tower)" rx="4" />
+        <rect x="920" y="300" width="95" height="260" fill="url(#tower)" rx="4" />
+        <rect x="1035" y="370" width="80" height="190" fill="url(#tower)" rx="4" />
       </g>
 
-      {/* Skyline — mid layer with windows */}
-      <g>
-        {/* Iconic tower */}
-        <rect x="540" y="180" width="120" height="360" fill="url(#towerDeep)" rx="6" />
-        <rect x="556" y="140" width="88" height="50" fill="url(#towerDeep)" rx="4" />
-        <rect x="592" y="90" width="16" height="60" fill="oklch(0.55 0.13 155)" />
-        <rect x="597" y="60" width="6" height="35" fill="oklch(0.78 0.12 85)" />
-        {/* Glass panels */}
+      {/* Mid layer — signature tower + neighbours */}
+      <g opacity="0.55">
+        <rect x="540" y="200" width="120" height="360" fill="url(#towerDeep)" rx="6" />
+        <rect x="556" y="160" width="88" height="50" fill="url(#towerDeep)" rx="4" />
+        <rect x="592" y="110" width="16" height="58" fill="oklch(0.78 0.09 155)" opacity="0.6" />
+        <rect x="597" y="80" width="6" height="34" fill="oklch(0.78 0.12 85)" opacity="0.6" />
         {Array.from({ length: 14 }).map((_, r) =>
           Array.from({ length: 5 }).map((_, c) => (
             <rect
               key={`p-${r}-${c}`}
               x={548 + c * 22}
-              y={196 + r * 24}
+              y={216 + r * 24}
               width="18"
               height="18"
               fill="url(#glassPane)"
-              opacity={0.55 + ((r + c) % 3) * 0.12}
+              opacity={0.35 + ((r + c) % 3) * 0.08}
               rx="2"
             />
           )),
         )}
 
-        {/* Left tower */}
-        <rect x="390" y="260" width="90" height="280" fill="url(#tower)" rx="6" />
+        <rect x="390" y="280" width="90" height="280" fill="url(#tower)" rx="6" />
         {Array.from({ length: 11 }).map((_, r) =>
           Array.from({ length: 4 }).map((_, c) => (
             <rect
               key={`l-${r}-${c}`}
               x={398 + c * 20}
-              y={272 + r * 22}
+              y={292 + r * 22}
               width="16"
               height="14"
               fill="url(#glassPane)"
-              opacity={0.55 + ((r * c) % 3) * 0.14}
+              opacity={0.35 + ((r * c) % 3) * 0.08}
               rx="2"
             />
           )),
         )}
 
-        {/* Right tower */}
-        <rect x="700" y="230" width="100" height="310" fill="url(#tower)" rx="6" />
-        <rect x="716" y="200" width="68" height="34" fill="url(#tower)" rx="4" />
+        <rect x="700" y="250" width="100" height="310" fill="url(#tower)" rx="6" />
+        <rect x="716" y="220" width="68" height="34" fill="url(#tower)" rx="4" />
         {Array.from({ length: 12 }).map((_, r) =>
           Array.from({ length: 4 }).map((_, c) => (
             <rect
               key={`r-${r}-${c}`}
               x={710 + c * 22}
-              y={242 + r * 22}
+              y={262 + r * 22}
               width="18"
               height="14"
               fill="url(#glassPane)"
-              opacity={0.6 + ((r + c) % 2) * 0.18}
+              opacity={0.4 + ((r + c) % 2) * 0.1}
               rx="2"
             />
           )),
         )}
       </g>
 
-      {/* Ground */}
-      <rect x="0" y="530" width="1200" height="170" fill="url(#ground)" />
+      {/* Faint horizontal ground line — no trees, no path */}
+      <line x1="0" y1="560" x2="1200" y2="560" stroke="oklch(0.58 0.135 155)" strokeWidth="0.5" opacity="0.15" />
 
-      {/* Foreground trees */}
-      {[40, 340, 480, 680, 860, 1050, 1160].map((x, i) => (
-        <g key={`fg-tree-${i}`} transform={`translate(${x} 540)`}>
-          <ellipse cx="0" cy="-30" rx="30" ry="40" fill="oklch(0.62 0.14 148)" opacity="0.85" />
-          <ellipse cx="-14" cy="-20" rx="18" ry="24" fill="oklch(0.7 0.14 148)" opacity="0.7" />
-          <ellipse cx="14" cy="-24" rx="16" ry="22" fill="oklch(0.68 0.14 148)" opacity="0.65" />
-          <rect x="-3" y="0" width="6" height="24" fill="oklch(0.5 0.07 60)" />
+      {/* Floating apartment icons — very low visibility */}
+      <g opacity="0.09" fill="oklch(0.58 0.135 155)">
+        <g transform="translate(140 140)">
+          <rect x="0" y="0" width="46" height="60" rx="4" />
+          <rect x="8" y="10" width="8" height="8" fill="oklch(0.99 0 0)" />
+          <rect x="20" y="10" width="8" height="8" fill="oklch(0.99 0 0)" />
+          <rect x="32" y="10" width="8" height="8" fill="oklch(0.99 0 0)" />
+          <rect x="8" y="24" width="8" height="8" fill="oklch(0.99 0 0)" />
+          <rect x="20" y="24" width="8" height="8" fill="oklch(0.99 0 0)" />
+          <rect x="32" y="24" width="8" height="8" fill="oklch(0.99 0 0)" />
         </g>
-      ))}
-
-      {/* Path */}
-      <path d="M0,690 Q600,610 1200,690" fill="none" stroke="oklch(0.85 0.02 150)" strokeWidth="6" opacity="0.6" />
+        <g transform="translate(1020 380)">
+          <polygon points="0,20 24,0 48,20 48,60 0,60" />
+          <rect x="18" y="34" width="12" height="26" fill="oklch(0.99 0 0)" />
+        </g>
+        <g transform="translate(80 480)">
+          <rect x="0" y="0" width="34" height="50" rx="3" />
+          <rect x="6" y="8" width="6" height="6" fill="oklch(0.99 0 0)" />
+          <rect x="16" y="8" width="6" height="6" fill="oklch(0.99 0 0)" />
+          <rect x="6" y="20" width="6" height="6" fill="oklch(0.99 0 0)" />
+          <rect x="16" y="20" width="6" height="6" fill="oklch(0.99 0 0)" />
+        </g>
+      </g>
     </svg>
   );
 }
