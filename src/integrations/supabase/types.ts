@@ -2875,6 +2875,7 @@ export type Database = {
         Args: { _asset_id: string; _context: string; _ref_id: string }
         Returns: undefined
       }
+      can_access_customer: { Args: { _customer_id: string }; Returns: boolean }
       cancel_sale: {
         Args: { p_reason: string; p_sale_id: string }
         Returns: undefined
