@@ -242,12 +242,12 @@ function Kpi({
 
 function QuickActionPanel() {
   const actions = [
-    { to: "/admin/users", icon: Users, label: "Create user", tint: "primary" as const },
-    { to: "/projects", icon: Building2, label: "Projects", tint: "leaf" as const },
-    { to: "/crm/new", icon: Plus, label: "Add customer", tint: "gold" as const },
+    { to: "/admin/team-leaders/new", icon: ShieldCheck, label: "Create Team Leader", tint: "primary" as const },
+    { to: "/admin/members/new", icon: Users, label: "Create Member", tint: "leaf" as const },
+    { to: "/admin/projects/new", icon: Building2, label: "New Project", tint: "gold" as const },
     { to: "/sales-workflow", icon: TrendingUp, label: "Approve sale", tint: "primary" as const },
     { to: "/admin/withdrawals", icon: Wallet, label: "Approve payout", tint: "leaf" as const },
-    { to: "/admin/analytics", icon: BarChart3, label: "View reports", tint: "gold" as const },
+    { to: "/admin/reports", icon: BarChart3, label: "View reports", tint: "gold" as const },
     { to: "/admin/commissions", icon: Coins, label: "Commissions", tint: "primary" as const },
     { to: "/admin/system", icon: Activity, label: "System health", tint: "leaf" as const },
   ];
