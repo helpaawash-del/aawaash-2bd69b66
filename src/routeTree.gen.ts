@@ -22,6 +22,7 @@ import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedSalesWorkflowNewRouteImport } from './routes/_authenticated/sales-workflow.new'
 import { Route as AuthenticatedSalesWorkflowIdRouteImport } from './routes/_authenticated/sales-workflow.$id'
 import { Route as AuthenticatedMemberWithdrawalsRouteImport } from './routes/_authenticated/member.withdrawals'
@@ -141,6 +142,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
+  id: '/api/public/health',
+  path: '/api/public/health',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedSalesWorkflowNewRoute =
   AuthenticatedSalesWorkflowNewRouteImport.update({
@@ -514,6 +520,7 @@ export interface FileRoutesByFullPath {
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
   '/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
   '/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
@@ -582,6 +589,7 @@ export interface FileRoutesByTo {
   '/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
   '/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
   '/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
@@ -652,6 +660,7 @@ export interface FileRoutesById {
   '/_authenticated/member/withdrawals': typeof AuthenticatedMemberWithdrawalsRoute
   '/_authenticated/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/_authenticated/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
   '/_authenticated/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
   '/_authenticated/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
@@ -722,6 +731,7 @@ export interface FileRouteTypes {
     | '/member/withdrawals'
     | '/sales-workflow/$id'
     | '/sales-workflow/new'
+    | '/api/public/health'
     | '/admin/cms/brand'
     | '/admin/cms/global'
     | '/admin/cms/media'
@@ -790,6 +800,7 @@ export interface FileRouteTypes {
     | '/member/withdrawals'
     | '/sales-workflow/$id'
     | '/sales-workflow/new'
+    | '/api/public/health'
     | '/admin/cms/brand'
     | '/admin/cms/global'
     | '/admin/cms/media'
@@ -859,6 +870,7 @@ export interface FileRouteTypes {
     | '/_authenticated/member/withdrawals'
     | '/_authenticated/sales-workflow/$id'
     | '/_authenticated/sales-workflow/new'
+    | '/api/public/health'
     | '/_authenticated/admin/cms/brand'
     | '/_authenticated/admin/cms/global'
     | '/_authenticated/admin/cms/media'
@@ -883,6 +895,7 @@ export interface RootRouteChildren {
   ProjectsRoute: typeof ProjectsRouteWithChildren
   UnauthorizedRoute: typeof UnauthorizedRoute
   ErrorKindRoute: typeof ErrorKindRoute
+  ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicHooksSystemMaintenanceRoute: typeof ApiPublicHooksSystemMaintenanceRoute
 }
 
@@ -978,6 +991,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/public/health': {
+      id: '/api/public/health'
+      path: '/api/public/health'
+      fullPath: '/api/public/health'
+      preLoaderRoute: typeof ApiPublicHealthRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/sales-workflow/new': {
       id: '/_authenticated/sales-workflow/new'
@@ -1641,8 +1661,19 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRouteWithChildren,
   UnauthorizedRoute: UnauthorizedRoute,
   ErrorKindRoute: ErrorKindRoute,
+  ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicHooksSystemMaintenanceRoute: ApiPublicHooksSystemMaintenanceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
