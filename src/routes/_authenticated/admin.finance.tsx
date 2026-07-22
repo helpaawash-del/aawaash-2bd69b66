@@ -75,8 +75,8 @@ function Content() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link to="/admin/commissions" className="pill-btn"><Coins className="h-4 w-4" /> Commissions</Link>
-              <Link to="/admin/withdrawals" className="pill-btn"><Wallet className="h-4 w-4" /> Withdrawals</Link>
+              <Link to="/admin/commissions" className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-1.5 text-sm font-semibold hover:bg-muted"><Coins className="h-4 w-4" /> Commissions</Link>
+              <Link to="/admin/withdrawals" className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-1.5 text-sm font-semibold hover:bg-muted"><Wallet className="h-4 w-4" /> Withdrawals</Link>
             </div>
           </div>
         </header>
@@ -354,7 +354,7 @@ function LedgerTab() {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search ref, source or remarks" className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3 text-sm" />
         </div>
-        <button onClick={() => exportCSV("ledger", list.data ?? [])} className="pill-btn"><Download className="h-4 w-4" /> CSV</button>
+        <button onClick={() => exportCSV("ledger", list.data ?? [])} className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-1.5 text-sm font-semibold hover:bg-muted"><Download className="h-4 w-4" /> CSV</button>
       </div>
       {list.isLoading ? <SkeletonBlock /> : !list.data?.length ? <EmptyState icon={null} title="Empty ledger" body="No entries match." /> : (
         <div className="max-h-[600px] overflow-auto rounded-xl border border-border">
