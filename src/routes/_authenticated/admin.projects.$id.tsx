@@ -33,6 +33,8 @@ import {
 } from "@/lib/project-admin.functions";
 import { getProjectInventory } from "@/lib/inventory.functions";
 import { formatINR } from "@/components/aawash/dashboard-kit";
+import { canEdit, type Role } from "@/lib/permissions";
+import { ImageUploadField, ImageGalleryUploader, Model3DUploadField } from "@/components/aawash/admin/MediaUploaders";
 
 export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
   component: EditProjectPage,
