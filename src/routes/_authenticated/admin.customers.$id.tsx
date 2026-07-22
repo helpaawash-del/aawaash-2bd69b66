@@ -742,7 +742,7 @@ function NotesTab({
             )}
             <span>{new Date(n.created_at).toLocaleString()}</span>
           </div>
-          <div className="mt-1 whitespace-pre-wrap text-sm text-foreground">{n.body}</div>
+          <div className="mt-1 whitespace-pre-wrap text-sm text-foreground">{n.content}</div>
         </div>
       ))}
     </div>
