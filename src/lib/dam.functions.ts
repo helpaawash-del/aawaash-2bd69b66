@@ -70,7 +70,7 @@ export const damDashboard = createServerFn({ method: "GET" })
       );
     };
     return {
-      stats: (stats as Record<string, unknown>) ?? {},
+      stats: (stats as Json) ?? {},
       recent: await sign(recent),
       unused: await sign(unused),
     };
@@ -243,7 +243,7 @@ export const damGetAsset = createServerFn({ method: "POST" })
       asset: { ...row, signed_url: s?.signedUrl ?? null } as DamAssetRow,
       versions: versionsSigned,
       usage: (usage ?? []) as Array<{ id: string; context: string; ref_id: string | null; ref_label: string | null; ref_url: string | null; created_at: string }>,
-      audit: (audit ?? []) as Array<{ id: string; action: string; actor: string | null; meta: Record<string, unknown>; created_at: string }>,
+      audit: (audit ?? []) as Array<{ id: string; action: string; actor: string | null; meta: Json; created_at: string }>,
     };
   });
 
@@ -334,7 +334,7 @@ export const damUpdateAsset = createServerFn({ method: "POST" })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await context.supabase.from("assets").update({ ...patch, updated_by: context.userId } as any).eq("id", id);
     if (res.error) throw new Error(res.error.message);
-    await context.supabase.from("asset_audit_log").insert({ asset_id: id, action: "updated", actor: context.userId, meta: patch as Record<string, unknown> });
+    await context.supabase.from("asset_audit_log").insert({ asset_id: id, action: "updated", actor: context.userId, meta: patch as Json });
     return { ok: true };
   });
 
@@ -424,7 +424,7 @@ export const damRecentAudit = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     await assertAdmin(context.supabase, context.userId);
     const { data } = await context.supabase.from("asset_audit_log").select("*").order("created_at", { ascending: false }).limit(40);
-    return (data ?? []) as Array<{ id: string; asset_id: string | null; folder_id: string | null; action: string; actor: string | null; meta: Record<string, unknown>; created_at: string }>;
+    return (data ?? []) as Array<{ id: string; asset_id: string | null; folder_id: string | null; action: string; actor: string | null; meta: Json; created_at: string }>;
   });
 
 /* ----------------- Signed URL fetch (single) ----------------- */
