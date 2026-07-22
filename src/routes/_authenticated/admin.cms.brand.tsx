@@ -47,7 +47,7 @@ function Content() {
     onSuccess: () => { toast.success("Brand saved"); qc.invalidateQueries({ queryKey: ["cms-brand"] }); },
   });
 
-  if (q.isLoading) return <AdminShell profile={profile}><div className="p-6"><SkeletonBlock lines={10} /></div></AdminShell>;
+  if (q.isLoading) return <AdminShell profile={profile}><div className="p-6"><SkeletonBlock className="h-40" /></div></AdminShell>;
 
   return (
     <AdminShell profile={profile}>

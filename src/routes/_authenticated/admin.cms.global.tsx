@@ -28,7 +28,7 @@ function Content() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  if (q.isLoading) return <AdminShell profile={profile}><div className="p-6"><SkeletonBlock lines={12} /></div></AdminShell>;
+  if (q.isLoading) return <AdminShell profile={profile}><div className="p-6"><SkeletonBlock className="h-40" /></div></AdminShell>;
 
   return (
     <AdminShell profile={profile}>

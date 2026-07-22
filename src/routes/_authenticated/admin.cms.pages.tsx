@@ -89,7 +89,7 @@ function Content() {
           </div>
 
           {list.isLoading ? (
-            <SkeletonBlock lines={6} />
+            <SkeletonBlock className="h-40" />
           ) : (list.data ?? []).length === 0 ? (
             <EmptyState title="No pages yet" description="Create your first CMS page." />
           ) : (

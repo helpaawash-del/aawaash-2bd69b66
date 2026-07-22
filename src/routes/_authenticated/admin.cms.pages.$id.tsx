@@ -99,7 +99,7 @@ function Content() {
     setBlocks((p) => p.map((b) => b.id === selected.id ? { ...b, props: { ...(b.props ?? {}), ...patch } } : b));
   }
 
-  if (q.isLoading) return <AdminShell profile={profile}><div className="p-6"><SkeletonBlock lines={12} /></div></AdminShell>;
+  if (q.isLoading) return <AdminShell profile={profile}><div className="p-6"><SkeletonBlock className="h-40" /></div></AdminShell>;
   if (!q.data) return <AdminShell profile={profile}><div className="p-6">Page not found.</div></AdminShell>;
 
   const page = q.data.page;

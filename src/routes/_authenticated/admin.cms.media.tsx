@@ -88,7 +88,7 @@ function Content() {
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search filename or alt…" className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3 text-sm" />
           </div>
-          {list.isLoading ? <SkeletonBlock lines={6} /> : (list.data ?? []).length === 0 ? (
+          {list.isLoading ? <SkeletonBlock className="h-40" /> : (list.data ?? []).length === 0 ? (
             <EmptyState title="No media" description="Upload your first file." />
           ) : (
             <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
