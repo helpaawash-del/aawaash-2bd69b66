@@ -14,6 +14,278 @@ export type Database = {
   }
   public: {
     Tables: {
+      asset_audit_log: {
+        Row: {
+          action: string
+          actor: string | null
+          asset_id: string | null
+          created_at: string
+          folder_id: string | null
+          id: string
+          meta: Json
+        }
+        Insert: {
+          action: string
+          actor?: string | null
+          asset_id?: string | null
+          created_at?: string
+          folder_id?: string | null
+          id?: string
+          meta?: Json
+        }
+        Update: {
+          action?: string
+          actor?: string | null
+          asset_id?: string | null
+          created_at?: string
+          folder_id?: string | null
+          id?: string
+          meta?: Json
+        }
+        Relationships: []
+      }
+      asset_folders: {
+        Row: {
+          color: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          is_favorite: boolean
+          is_pinned: boolean
+          name: string
+          parent_id: string | null
+          path: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_favorite?: boolean
+          is_pinned?: boolean
+          name: string
+          parent_id?: string | null
+          path: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_favorite?: boolean
+          is_pinned?: boolean
+          name?: string
+          parent_id?: string | null
+          path?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_folders_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "asset_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_usage: {
+        Row: {
+          asset_id: string
+          context: string
+          created_at: string
+          id: string
+          ref_id: string | null
+          ref_label: string | null
+          ref_url: string | null
+        }
+        Insert: {
+          asset_id: string
+          context: string
+          created_at?: string
+          id?: string
+          ref_id?: string | null
+          ref_label?: string | null
+          ref_url?: string | null
+        }
+        Update: {
+          asset_id?: string
+          context?: string
+          created_at?: string
+          id?: string
+          ref_id?: string | null
+          ref_label?: string | null
+          ref_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_usage_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_versions: {
+        Row: {
+          asset_id: string
+          created_at: string
+          duration_seconds: number | null
+          height: number | null
+          id: string
+          mime: string | null
+          note: string | null
+          size: number | null
+          storage_path: string
+          uploaded_by: string | null
+          version_number: number
+          width: number | null
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string
+          duration_seconds?: number | null
+          height?: number | null
+          id?: string
+          mime?: string | null
+          note?: string | null
+          size?: number | null
+          storage_path: string
+          uploaded_by?: string | null
+          version_number: number
+          width?: number | null
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string
+          duration_seconds?: number | null
+          height?: number | null
+          id?: string
+          mime?: string | null
+          note?: string | null
+          size?: number | null
+          storage_path?: string
+          uploaded_by?: string | null
+          version_number?: number
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_versions_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assets: {
+        Row: {
+          alt: string | null
+          asset_code: string
+          caption: string | null
+          category: string | null
+          checksum: string | null
+          created_at: string
+          current_version: number
+          deleted_at: string | null
+          description: string | null
+          download_count: number
+          duration_seconds: number | null
+          filename: string
+          folder_id: string | null
+          height: number | null
+          id: string
+          is_public: boolean
+          kind: string
+          mime: string | null
+          original_name: string
+          size: number | null
+          status: string
+          storage_path: string
+          tags: string[]
+          updated_at: string
+          updated_by: string | null
+          uploaded_by: string | null
+          usage_count: number
+          width: number | null
+        }
+        Insert: {
+          alt?: string | null
+          asset_code: string
+          caption?: string | null
+          category?: string | null
+          checksum?: string | null
+          created_at?: string
+          current_version?: number
+          deleted_at?: string | null
+          description?: string | null
+          download_count?: number
+          duration_seconds?: number | null
+          filename: string
+          folder_id?: string | null
+          height?: number | null
+          id?: string
+          is_public?: boolean
+          kind?: string
+          mime?: string | null
+          original_name: string
+          size?: number | null
+          status?: string
+          storage_path: string
+          tags?: string[]
+          updated_at?: string
+          updated_by?: string | null
+          uploaded_by?: string | null
+          usage_count?: number
+          width?: number | null
+        }
+        Update: {
+          alt?: string | null
+          asset_code?: string
+          caption?: string | null
+          category?: string | null
+          checksum?: string | null
+          created_at?: string
+          current_version?: number
+          deleted_at?: string | null
+          description?: string | null
+          download_count?: number
+          duration_seconds?: number | null
+          filename?: string
+          folder_id?: string | null
+          height?: number | null
+          id?: string
+          is_public?: boolean
+          kind?: string
+          mime?: string | null
+          original_name?: string
+          size?: number | null
+          status?: string
+          storage_path?: string
+          tags?: string[]
+          updated_at?: string
+          updated_by?: string | null
+          uploaded_by?: string | null
+          usage_count?: number
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assets_folder_fk"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "asset_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
@@ -208,48 +480,6 @@ export type Database = {
           updated_at?: string
           updated_by?: string | null
           value?: Json
-        }
-        Relationships: []
-      }
-      cms_media: {
-        Row: {
-          alt: string | null
-          category: string | null
-          created_at: string
-          filename: string
-          id: string
-          is_public: boolean
-          kind: string
-          mime: string | null
-          size: number | null
-          storage_path: string
-          uploaded_by: string | null
-        }
-        Insert: {
-          alt?: string | null
-          category?: string | null
-          created_at?: string
-          filename: string
-          id?: string
-          is_public?: boolean
-          kind?: string
-          mime?: string | null
-          size?: number | null
-          storage_path: string
-          uploaded_by?: string | null
-        }
-        Update: {
-          alt?: string | null
-          category?: string | null
-          created_at?: string
-          filename?: string
-          id?: string
-          is_public?: boolean
-          kind?: string
-          mime?: string | null
-          size?: number | null
-          storage_path?: string
-          uploaded_by?: string | null
         }
         Relationships: []
       }
@@ -2608,6 +2838,41 @@ export type Database = {
       }
       approve_sale: {
         Args: { p_notes?: string; p_sale_id: string }
+        Returns: undefined
+      }
+      asset_dashboard_stats: { Args: never; Returns: Json }
+      asset_recompute_usage: { Args: { _asset_id: string }; Returns: number }
+      asset_register_usage: {
+        Args: {
+          _asset_id: string
+          _context: string
+          _ref_id: string
+          _ref_label: string
+          _ref_url: string
+        }
+        Returns: undefined
+      }
+      asset_replace: {
+        Args: {
+          _asset_id: string
+          _duration: number
+          _height: number
+          _mime: string
+          _note: string
+          _size: number
+          _storage_path: string
+          _width: number
+        }
+        Returns: number
+      }
+      asset_restore: { Args: { _asset_id: string }; Returns: undefined }
+      asset_rollback: {
+        Args: { _asset_id: string; _version_id: string }
+        Returns: undefined
+      }
+      asset_soft_delete: { Args: { _asset_id: string }; Returns: undefined }
+      asset_unregister_usage: {
+        Args: { _asset_id: string; _context: string; _ref_id: string }
         Returns: undefined
       }
       cancel_sale: {

@@ -297,25 +297,39 @@ export const cmsUpdateGlobal = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-/* ---------------- Media ---------------- */
+/* ---------------- Media (legacy shim → assets table) ---------------- */
+
+type LegacyMediaRow = {
+  id: string;
+  storage_path: string;
+  filename: string;
+  kind: string;
+  alt: string | null;
+  size: number | null;
+  mime: string | null;
+  category: string | null;
+  is_public: boolean;
+  uploaded_by: string | null;
+  created_at: string;
+  signed_url: string | null;
+};
 
 export const cmsListMedia = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ search: z.string().optional(), kind: z.string().optional() }).parse(d ?? {}))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data, context }): Promise<LegacyMediaRow[]> => {
     await assertAdmin(context.supabase, context.userId);
-    let q = context.supabase.from("cms_media").select("*").order("created_at", { ascending: false }).limit(200);
+    let q = context.supabase.from("assets").select("*").eq("status", "active").order("created_at", { ascending: false }).limit(200);
     if (data.kind && data.kind !== "all") q = q.eq("kind", data.kind);
     if (data.search) q = q.or(`filename.ilike.%${data.search}%,alt.ilike.%${data.search}%`);
     const { data: rows } = await q;
-    // sign URLs
-    const signed = await Promise.all(
-      (rows ?? []).map(async (r) => {
+    const list = (rows ?? []) as unknown as Array<Omit<LegacyMediaRow, "signed_url">>;
+    return Promise.all(
+      list.map(async (r) => {
         const { data: s } = await context.supabase.storage.from("cms-media").createSignedUrl(r.storage_path, 3600);
         return { ...r, signed_url: s?.signedUrl ?? null };
       }),
     );
-    return signed;
   });
 
 export const cmsCreateMediaUploadUrl = createServerFn({ method: "POST" })
@@ -344,15 +358,12 @@ export const cmsRegisterMedia = createServerFn({ method: "POST" })
       category: z.string().optional(),
     }).parse(d),
   )
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data, context }): Promise<{ id: string }> => {
     await assertAdmin(context.supabase, context.userId);
-    const { data: row, error } = await context.supabase
-      .from("cms_media")
-      .insert({ ...data, uploaded_by: context.userId })
-      .select()
-      .single();
-    if (error) throw error;
-    return row;
+    const payload = { ...data, original_name: data.filename, uploaded_by: context.userId } as unknown as never;
+    const res = await context.supabase.from("assets").insert(payload).select("id").single();
+    if (res.error) throw new Error(res.error.message);
+    return { id: (res.data as { id: string }).id };
   });
 
 export const cmsDeleteMedia = createServerFn({ method: "POST" })
@@ -360,9 +371,10 @@ export const cmsDeleteMedia = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase, context.userId);
-    const { data: row } = await context.supabase.from("cms_media").select("storage_path").eq("id", data.id).maybeSingle();
-    if (row) await context.supabase.storage.from("cms-media").remove([row.storage_path]);
-    await context.supabase.from("cms_media").delete().eq("id", data.id);
+    const { data: row } = await context.supabase.from("assets").select("storage_path").eq("id", data.id).maybeSingle();
+    const path = (row as { storage_path?: string } | null)?.storage_path;
+    if (path) await context.supabase.storage.from("cms-media").remove([path]);
+    await context.supabase.from("assets").delete().eq("id", data.id);
     return { ok: true };
   });
 
