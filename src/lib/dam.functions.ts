@@ -397,11 +397,11 @@ export const damReplaceAsset = createServerFn({ method: "POST" })
     const { data: v, error } = await context.supabase.rpc("asset_replace", {
       _asset_id: data.id,
       _storage_path: data.storage_path,
-      _size: data.size ?? null,
-      _mime: data.mime ?? null,
-      _width: data.width ?? null,
-      _height: data.height ?? null,
-      _duration: data.duration_seconds ?? null,
+      _size: (data.size ?? null) as unknown as number,
+      _mime: (data.mime ?? null) as unknown as string,
+      _width: (data.width ?? null) as unknown as number,
+      _height: (data.height ?? null) as unknown as number,
+      _duration: (data.duration_seconds ?? null) as unknown as number,
       _note: data.note ?? "",
     });
     if (error) throw new Error(error.message);
