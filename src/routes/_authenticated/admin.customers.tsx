@@ -150,7 +150,38 @@ function Content() {
       qc.invalidateQueries({ queryKey: ["admin", "customers"] });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Merge failed");
-    }
+  }
+
+  function exportCsv(rows: typeof filtered) {
+    if (rows.length === 0) return;
+    const headers = [
+      "code","name","mobile","email","city","state","status","priority",
+      "lead_source","budget_min","budget_max","next_followup_at","last_contact_at",
+      "team","leader","member","tags","created_at","archived",
+    ];
+    const esc = (v: unknown) => {
+      const s = v == null ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const body = rows.map((r) => [
+      r.customer_code, r.full_name, r.mobile_number, r.email ?? "", r.city ?? "",
+      r.state ?? "", r.status, r.priority ?? "", r.lead_source ?? "",
+      r.budget_min ?? "", r.budget_max ?? "",
+      r.next_followup_at ?? "", r.last_contact_at ?? "",
+      r.team_letter ? `${r.team_letter} · ${r.team_name ?? ""}` : "",
+      r.leader_name ?? "", r.member_name ?? "",
+      Array.isArray(r.tags) ? r.tags.join(" | ") : "",
+      r.created_at, r.is_archived ? "yes" : "no",
+    ].map(esc).join(","));
+    const csv = [headers.join(","), ...body].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `customers-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
   }
 
   return (
