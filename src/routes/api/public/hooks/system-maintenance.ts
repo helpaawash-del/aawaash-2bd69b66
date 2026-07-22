@@ -13,12 +13,19 @@ export const Route = createFileRoute("/api/public/hooks/system-maintenance")({
         const apikey =
           request.headers.get("apikey") ||
           request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+        const providedSecret = request.headers.get("x-maintenance-secret");
 
-        const expected =
+        const expectedApiKey =
           process.env.SUPABASE_PUBLISHABLE_KEY ||
           process.env.SUPABASE_ANON_KEY;
+        const expectedSecret = process.env.SYSTEM_MAINTENANCE_SECRET;
 
-        if (!apikey || !expected || apikey !== expected) {
+        // Constant-time-ish check: require BOTH the shared apikey and the
+        // dedicated maintenance secret (defense in depth against leaked apikey).
+        const apiKeyOk = !!apikey && !!expectedApiKey && apikey === expectedApiKey;
+        const secretOk = !!expectedSecret && !!providedSecret && providedSecret === expectedSecret;
+
+        if (!apiKeyOk || !secretOk) {
           return new Response(JSON.stringify({ error: "Unauthorized" }), {
             status: 401,
             headers: { "content-type": "application/json" },
