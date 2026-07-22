@@ -162,6 +162,7 @@ export const createCustomer = createServerFn({ method: "POST" })
 const updateSchema = customerCoreSchema.partial().extend({
   id: z.string().uuid(),
   status: z.enum(CUSTOMER_STATUSES).optional(),
+  is_archived: z.boolean().optional(),
 });
 
 export const updateCustomer = createServerFn({ method: "POST" })
