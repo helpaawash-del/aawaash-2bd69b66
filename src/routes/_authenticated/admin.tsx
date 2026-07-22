@@ -243,7 +243,7 @@ function QuickActionPanel() {
   const actions = [
     { to: "/admin/team-leaders/new", icon: ShieldCheck, label: "Create Team Leader", tint: "primary" as const },
     { to: "/admin/members/new", icon: Users, label: "Create Member", tint: "leaf" as const },
-    { to: "/admin/team-leaders", icon: Users, label: "Manage Leaders", tint: "primary" as const },
+    { to: "/admin/team-leaders", icon: Users, label: "Team Leaders", tint: "primary" as const },
     { to: "/admin/members", icon: Users, label: "Manage Members", tint: "leaf" as const },
     { to: "/admin/projects", icon: Building2, label: "Projects", tint: "gold" as const },
     { to: "/admin/projects/new", icon: Building2, label: "New Project", tint: "gold" as const },

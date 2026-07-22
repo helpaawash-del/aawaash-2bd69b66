@@ -22,6 +22,7 @@ import {
   BadgeCheck,
   Activity,
   Circle,
+  Trash2,
 } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
@@ -63,7 +64,7 @@ function Content() {
   const [editing, setEditing] = useState(false);
   const [actionMsg, setActionMsg] = useState<string | null>(null);
   const [actionErr, setActionErr] = useState<string | null>(null);
-  const [busy, setBusy] = useState<"reset" | "suspend" | "activate" | null>(null);
+  const [busy, setBusy] = useState<"reset" | "suspend" | "activate" | "delete" | null>(null);
 
   async function onResetPassword() {
     setActionErr(null); setActionMsg(null);
@@ -91,6 +92,19 @@ function Content() {
     } catch (e) {
       setActionErr(e instanceof Error ? e.message : "Status change failed");
     } finally { setBusy(null); }
+  }
+
+  async function onDelete() {
+    setActionErr(null); setActionMsg(null);
+    if (!window.confirm("Delete this Team Leader? This bans their account and archives the profile. This cannot be undone from the UI.")) return;
+    setBusy("delete");
+    try {
+      await statusFn({ data: { userId: id, action: "delete" } });
+      navigate({ to: "/admin/team-leaders" });
+    } catch (e) {
+      setActionErr(e instanceof Error ? e.message : "Delete failed");
+      setBusy(null);
+    }
   }
 
   if (isLoading || !data) {
@@ -205,6 +219,15 @@ function Content() {
               className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-[var(--shadow-soft)]"
             >
               <Pencil size={14} /> Edit profile
+            </button>
+            <button
+              type="button"
+              onClick={onDelete}
+              disabled={busy !== null}
+              className="inline-flex items-center gap-2 rounded-full border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-700 disabled:opacity-60"
+            >
+              {busy === "delete" ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+              Delete
             </button>
           </div>
         </div>
