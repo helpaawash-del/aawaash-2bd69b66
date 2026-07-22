@@ -91,7 +91,7 @@ function Content() {
           {list.isLoading ? (
             <SkeletonBlock className="h-40" />
           ) : (list.data ?? []).length === 0 ? (
-            <EmptyState title="No pages yet" description="Create your first CMS page." />
+            <EmptyState icon={<Sparkles className="h-6 w-6" />} title="No pages yet" body="Create your first CMS page." />
           ) : (
             <div className="overflow-hidden rounded-2xl border border-border">
               <table className="w-full text-sm">

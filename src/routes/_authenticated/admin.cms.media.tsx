@@ -89,7 +89,7 @@ function Content() {
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search filename or alt…" className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3 text-sm" />
           </div>
           {list.isLoading ? <SkeletonBlock className="h-40" /> : (list.data ?? []).length === 0 ? (
-            <EmptyState title="No media" description="Upload your first file." />
+            <EmptyState icon={<ImageIcon className="h-6 w-6" />} title="No media" body="Upload your first file." />
           ) : (
             <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {(list.data ?? []).map((m) => (
