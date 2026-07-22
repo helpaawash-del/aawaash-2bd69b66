@@ -11,7 +11,6 @@ import {
   Activity,
   ShieldCheck,
   ArrowRight,
-  Plus,
   ClipboardList,
   TrendingUp,
   Sparkles,
