@@ -700,8 +700,8 @@ function MeetingsTab({
       {meetings.map((m) => (
         <div key={m.id} className="p-4">
           <div className="flex items-center gap-2">
-            <div className="text-sm font-bold text-foreground">
-              {m.title ?? m.meeting_type ?? "Meeting"}
+            <div className="text-sm font-bold text-foreground capitalize">
+              {m.meeting_type.replace("_", " ")}
             </div>
             <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
               {m.status}
@@ -711,7 +711,7 @@ function MeetingsTab({
             {new Date(m.scheduled_at).toLocaleString()}
             {m.location ? ` · ${m.location}` : ""}
           </div>
-          {m.notes && <div className="mt-2 text-xs text-foreground">{m.notes}</div>}
+          {m.remarks && <div className="mt-2 text-xs text-foreground">{m.remarks}</div>}
         </div>
       ))}
     </div>
