@@ -36,7 +36,7 @@ import {
   adminGetDocumentUrl,
   adminDeleteDocument,
 } from "@/lib/customers-admin.functions";
-import { updateCustomer } from "@/lib/crm.functions";
+import { updateCustomer, addNote, scheduleMeeting, updateMeetingStatus } from "@/lib/crm.functions";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/admin/customers/$id")({
@@ -256,8 +256,8 @@ function Content() {
       {tab === "overview" && <OverviewTab data={data} />}
       {tab === "sales" && <SalesTab data={data} />}
       {tab === "documents" && <DocumentsTab customerId={c.id} documents={data.documents} onChange={invalidate} />}
-      {tab === "meetings" && <MeetingsTab meetings={data.meetings} />}
-      {tab === "notes" && <NotesTab notes={data.notes} />}
+      {tab === "meetings" && <MeetingsTab customerId={c.id} meetings={data.meetings} onChanged={invalidate} />}
+      {tab === "notes" && <NotesTab customerId={c.id} notes={data.notes} onChanged={invalidate} />}
       {tab === "timeline" && <TimelineTab timeline={data.timeline} />}
     </AdminShell>
   );
@@ -684,67 +684,200 @@ function UploadCard({
 }
 
 function MeetingsTab({
+  customerId,
   meetings,
+  onChanged,
 }: {
+  customerId: string;
   meetings: Awaited<ReturnType<typeof adminGetCustomerDetail>>["meetings"];
+  onChanged: () => void;
 }) {
-  if (meetings.length === 0) {
-    return (
-      <div className="glass-card rounded-3xl p-10 text-center text-sm text-muted-foreground">
-        <Calendar className="mx-auto mb-3" size={22} /> No meetings scheduled
-      </div>
-    );
+  const schedule = useServerFn(scheduleMeeting);
+  const setStatus = useServerFn(updateMeetingStatus);
+  const [open, setOpen] = useState(false);
+  const [type, setType] = useState<"site_visit" | "call" | "in_person" | "virtual" | "other">("site_visit");
+  const [when, setWhen] = useState("");
+  const [location, setLocation] = useState("");
+  const [remarks, setRemarks] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function save() {
+    if (!when) return toast.error("Pick a date & time");
+    setBusy(true);
+    try {
+      await schedule({
+        data: {
+          customer_id: customerId,
+          scheduled_at: new Date(when).toISOString(),
+          meeting_type: type,
+          location: location || undefined,
+          remarks: remarks || undefined,
+        },
+      });
+      toast.success("Meeting scheduled");
+      setOpen(false); setWhen(""); setLocation(""); setRemarks("");
+      onChanged();
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Failed");
+    } finally { setBusy(false); }
   }
+
+  async function transition(id: string, status: "completed" | "cancelled" | "missed") {
+    try {
+      await setStatus({ data: { id, status } });
+      toast.success(`Marked ${status}`);
+      onChanged();
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Failed");
+    }
+  }
+
   return (
-    <div className="glass-card divide-y divide-border overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
-      {meetings.map((m) => (
-        <div key={m.id} className="p-4">
-          <div className="flex items-center gap-2">
-            <div className="text-sm font-bold text-foreground capitalize">
-              {m.meeting_type.replace("_", " ")}
-            </div>
-            <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
-              {m.status}
-            </span>
+    <div className="space-y-3">
+      <div className="flex justify-end">
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground"
+        >
+          <Calendar size={12} /> {open ? "Close" : "Schedule meeting"}
+        </button>
+      </div>
+      {open && (
+        <div className="glass-card space-y-2 rounded-2xl p-4 shadow-[var(--shadow-soft)]">
+          <div className="grid gap-2 sm:grid-cols-2">
+            <select value={type} onChange={(e) => setType(e.target.value as typeof type)}
+              className="rounded-xl border border-border bg-surface px-3 py-2 text-sm">
+              <option value="site_visit">Site visit</option>
+              <option value="call">Call</option>
+              <option value="in_person">In person</option>
+              <option value="virtual">Virtual</option>
+              <option value="other">Other</option>
+            </select>
+            <input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)}
+              className="rounded-xl border border-border bg-surface px-3 py-2 text-sm" />
           </div>
-          <div className="mt-0.5 text-[11px] text-muted-foreground">
-            {new Date(m.scheduled_at).toLocaleString()}
-            {m.location ? ` · ${m.location}` : ""}
+          <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location (optional)"
+            className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm" />
+          <textarea value={remarks} onChange={(e) => setRemarks(e.target.value)} placeholder="Remarks"
+            rows={3} className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm" />
+          <div className="flex justify-end">
+            <button onClick={save} disabled={busy}
+              className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground disabled:opacity-60">
+              {busy ? "Saving…" : "Save meeting"}
+            </button>
           </div>
-          {m.remarks && <div className="mt-2 text-xs text-foreground">{m.remarks}</div>}
         </div>
-      ))}
+      )}
+      {meetings.length === 0 ? (
+        <div className="glass-card rounded-3xl p-10 text-center text-sm text-muted-foreground">
+          <Calendar className="mx-auto mb-3" size={22} /> No meetings scheduled
+        </div>
+      ) : (
+        <div className="glass-card divide-y divide-border overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
+          {meetings.map((m) => (
+            <div key={m.id} className="p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="text-sm font-bold text-foreground capitalize">
+                  {m.meeting_type.replace("_", " ")}
+                </div>
+                <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                  {m.status}
+                </span>
+                {m.status === "scheduled" && (
+                  <div className="ml-auto flex gap-1">
+                    <button onClick={() => transition(m.id, "completed")}
+                      className="rounded-full bg-primary-soft px-2 py-1 text-[10px] font-semibold text-primary">
+                      Complete
+                    </button>
+                    <button onClick={() => transition(m.id, "cancelled")}
+                      className="rounded-full border border-border bg-surface px-2 py-1 text-[10px] font-semibold text-foreground">
+                      Cancel
+                    </button>
+                    <button onClick={() => transition(m.id, "missed")}
+                      className="rounded-full border border-border bg-surface px-2 py-1 text-[10px] font-semibold text-foreground">
+                      Missed
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="mt-0.5 text-[11px] text-muted-foreground">
+                {new Date(m.scheduled_at).toLocaleString()}
+                {m.location ? ` · ${m.location}` : ""}
+              </div>
+              {m.remarks && <div className="mt-2 text-xs text-foreground">{m.remarks}</div>}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 function NotesTab({
+  customerId,
   notes,
+  onChanged,
 }: {
+  customerId: string;
   notes: Awaited<ReturnType<typeof adminGetCustomerDetail>>["notes"];
+  onChanged: () => void;
 }) {
-  if (notes.length === 0) {
-    return (
-      <div className="glass-card rounded-3xl p-10 text-center text-sm text-muted-foreground">
-        <StickyNote className="mx-auto mb-3" size={22} /> No notes yet
-      </div>
-    );
+  const addFn = useServerFn(addNote);
+  const [content, setContent] = useState("");
+  const [pin, setPin] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  async function submit() {
+    const text = content.trim();
+    if (text.length < 1) return;
+    setBusy(true);
+    try {
+      await addFn({ data: { customer_id: customerId, content: text, is_pinned: pin } });
+      toast.success("Note added");
+      setContent(""); setPin(false);
+      onChanged();
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Failed");
+    } finally { setBusy(false); }
   }
+
   return (
-    <div className="space-y-2">
-      {notes.map((n) => (
-        <div key={n.id} className="glass-card rounded-2xl p-4 shadow-[var(--shadow-soft)]">
-          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-            {n.is_pinned && (
-              <span className="rounded-full bg-gold/20 px-2 py-0.5 font-semibold text-gold-foreground">
-                pinned
-              </span>
-            )}
-            <span>{new Date(n.created_at).toLocaleString()}</span>
-          </div>
-          <div className="mt-1 whitespace-pre-wrap text-sm text-foreground">{n.content}</div>
+    <div className="space-y-3">
+      <div className="glass-card space-y-2 rounded-2xl p-4 shadow-[var(--shadow-soft)]">
+        <textarea value={content} onChange={(e) => setContent(e.target.value)}
+          placeholder="Add a note about this customer…" rows={3} maxLength={2000}
+          className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary" />
+        <div className="flex items-center justify-between">
+          <label className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+            <input type="checkbox" checked={pin} onChange={(e) => setPin(e.target.checked)} /> Pin note
+          </label>
+          <button onClick={submit} disabled={busy || content.trim().length === 0}
+            className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground disabled:opacity-60">
+            {busy ? "Saving…" : "Add note"}
+          </button>
         </div>
-      ))}
+      </div>
+      {notes.length === 0 ? (
+        <div className="glass-card rounded-3xl p-10 text-center text-sm text-muted-foreground">
+          <StickyNote className="mx-auto mb-3" size={22} /> No notes yet
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {notes.map((n) => (
+            <div key={n.id} className="glass-card rounded-2xl p-4 shadow-[var(--shadow-soft)]">
+              <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                {n.is_pinned && (
+                  <span className="rounded-full bg-gold/20 px-2 py-0.5 font-semibold text-gold-foreground">
+                    pinned
+                  </span>
+                )}
+                <span>{new Date(n.created_at).toLocaleString()}</span>
+              </div>
+              <div className="mt-1 whitespace-pre-wrap text-sm text-foreground">{n.content}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -16,6 +16,7 @@ import {
   Plus,
   Trash2,
   X,
+  Download,
 } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
@@ -152,6 +153,37 @@ function Content() {
     }
   }
 
+  function exportCsv(rows: typeof filtered) {
+    if (rows.length === 0) return;
+    const headers = [
+      "code","name","mobile","email","city","state","status","priority",
+      "lead_source","budget_min","budget_max","next_followup_at","last_contact_at",
+      "team","leader","member","tags","created_at","archived",
+    ];
+    const esc = (v: unknown) => {
+      const s = v == null ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const body = rows.map((r) => [
+      r.customer_code, r.full_name, r.mobile_number, r.email ?? "", r.city ?? "",
+      r.state ?? "", r.status, r.priority ?? "", r.lead_source ?? "",
+      r.budget_min ?? "", r.budget_max ?? "",
+      r.next_followup_at ?? "", r.last_contact_at ?? "",
+      r.team_letter ? `${r.team_letter} · ${r.team_name ?? ""}` : "",
+      r.leader_name ?? "", r.member_name ?? "",
+      Array.isArray((r as { tags?: unknown }).tags) ? ((r as { tags: string[] }).tags).join(" | ") : "",
+      r.created_at, r.is_archived ? "yes" : "no",
+    ].map(esc).join(","));
+    const csv = [headers.join(","), ...body].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `customers-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <AdminShell profile={profile}>
       <section className="mb-8">
@@ -170,6 +202,13 @@ function Content() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => exportCsv(filtered)}
+              disabled={filtered.length === 0}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-foreground disabled:opacity-50"
+            >
+              <Download size={14} /> Export CSV ({filtered.length})
+            </button>
             <button
               onClick={() => setShowTags(true)}
               className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-foreground"
