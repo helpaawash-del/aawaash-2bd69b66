@@ -684,12 +684,65 @@ const STATUS_STYLES: Record<string, string> = {
 
 /* ==================== INVENTORY (visual grid) ==================== */
 
+const CYCLE: Record<string, "available" | "reserved" | "sold"> = {
+  available: "reserved",
+  reserved: "sold",
+  sold: "available",
+  blocked: "available",
+  not_released: "available",
+};
+
 function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) {
+  const qc = useQueryClient();
   const invFn = useServerFn(getProjectInventory);
+  const upsertFlat = useServerFn(adminUpsertFlatFull);
   const { data: inv, isLoading } = useQuery({
     queryKey: ["admin", "inv-view", projectId],
     queryFn: () => invFn({ data: { slug } }),
   });
+  const [pendingId, setPendingId] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function cycleFlat(fl: {
+    id: string; unit_code: string; building_id: string; floor_id: string;
+    bedrooms: number; bathrooms: number; balconies: number;
+    area_sqft: number | null; configuration: string | null; facing: string | null;
+    price: number | null; status: string; floor_plan_url: string | null;
+  }) {
+    if (pendingId) return;
+    const next = CYCLE[fl.status] ?? "available";
+    setPendingId(fl.id);
+    setErr(null);
+    try {
+      await upsertFlat({ data: {
+        id: fl.id,
+        project_id: projectId,
+        building_id: fl.building_id,
+        floor_id: fl.floor_id,
+        unit_code: fl.unit_code,
+        configuration: fl.configuration,
+        bedrooms: fl.bedrooms,
+        bathrooms: fl.bathrooms,
+        balconies: fl.balconies,
+        area_sqft: fl.area_sqft,
+        facing: fl.facing,
+        price: fl.price,
+        status: next,
+        floor_plan_url: fl.floor_plan_url,
+      } as never });
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["admin", "inv-view", projectId] }),
+        qc.invalidateQueries({ queryKey: ["admin", "project-inv", projectId] }),
+        qc.invalidateQueries({ queryKey: ["admin", "project", projectId] }),
+        qc.invalidateQueries({ queryKey: ["project-inventory", slug] }),
+        qc.invalidateQueries({ queryKey: ["public-project", slug] }),
+      ]);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Status update failed");
+    } finally {
+      setPendingId(null);
+    }
+  }
 
   if (isLoading) return <div className="h-40 animate-pulse rounded-3xl bg-muted/40" />;
   if (!inv) {
@@ -714,6 +767,22 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
 
   return (
     <div className="space-y-6">
+      <div className="glass-card flex flex-wrap items-center gap-3 rounded-2xl px-4 py-3 text-xs text-muted-foreground">
+        <span className="font-semibold text-foreground">Click any flat to cycle its status:</span>
+        <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full bg-emerald-500" /> Available</span>
+        <span>→</span>
+        <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full bg-amber-500" /> Reserved</span>
+        <span>→</span>
+        <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full bg-rose-500" /> Sold</span>
+        <span>→ Available</span>
+      </div>
+
+      {err && (
+        <div className="rounded-2xl border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-700">
+          {err}
+        </div>
+      )}
+
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <StatChip label="Total" value={total} tone="primary" />
         <StatChip label="Available" value={counts.available} tone="emerald" />
@@ -740,12 +809,25 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
                       <Layers size={12} /> Floor {f.number}{f.name ? ` · ${f.name}` : ""}
                     </div>
                     <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
-                      {fFlats.map((fl) => (
-                        <div key={fl.id} className={`rounded-lg border p-1.5 text-center ${STATUS_STYLES[fl.status] ?? "border-border"}`}>
-                          <div className="text-[11px] font-bold text-foreground">{fl.unit_code}</div>
-                          <div className="text-[9px] text-muted-foreground">{fl.area_sqft ? `${fl.area_sqft}sf` : ""}</div>
-                        </div>
-                      ))}
+                      {fFlats.map((fl) => {
+                        const isPending = pendingId === fl.id;
+                        const nextLabel = CYCLE[fl.status] ?? "available";
+                        return (
+                          <button
+                            key={fl.id}
+                            type="button"
+                            onClick={() => cycleFlat(fl)}
+                            disabled={isPending}
+                            title={`${fl.unit_code} · ${fl.status} → click to set ${nextLabel}`}
+                            className={`group relative rounded-lg border p-1.5 text-center transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60 ${STATUS_STYLES[fl.status] ?? "border-border"}`}
+                          >
+                            <div className="text-[11px] font-bold text-foreground">{fl.unit_code}</div>
+                            <div className="text-[9px] text-muted-foreground">
+                              {isPending ? "Saving…" : fl.status}
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 );
@@ -757,6 +839,7 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
     </div>
   );
 }
+
 
 function StatChip({ label, value, tone }: { label: string; value: number; tone: "primary" | "emerald" | "amber" | "rose" | "slate" }) {
   const tones: Record<string, string> = {

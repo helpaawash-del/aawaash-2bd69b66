@@ -27,6 +27,7 @@ import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { getTeamLeaderDetail, updateTeamLeader } from "@/lib/team-leaders.functions";
+import { adminResetPassword, setUserStatus } from "@/lib/admin.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders/$id")({
@@ -50,6 +51,8 @@ function Content() {
   const navigate = useNavigate();
   const detailFn = useServerFn(getTeamLeaderDetail);
   const updateFn = useServerFn(updateTeamLeader);
+  const resetFn = useServerFn(adminResetPassword);
+  const statusFn = useServerFn(setUserStatus);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin", "team-leader", id],
@@ -58,6 +61,37 @@ function Content() {
 
   const [tab, setTab] = useState<Tab>("overview");
   const [editing, setEditing] = useState(false);
+  const [actionMsg, setActionMsg] = useState<string | null>(null);
+  const [actionErr, setActionErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState<"reset" | "suspend" | "activate" | null>(null);
+
+  async function onResetPassword() {
+    setActionErr(null); setActionMsg(null);
+    const pw = window.prompt("New temporary password (min 8 chars):");
+    if (!pw) return;
+    if (pw.length < 8) { setActionErr("Password must be at least 8 characters."); return; }
+    setBusy("reset");
+    try {
+      await resetFn({ data: { userId: id, password: pw } });
+      setActionMsg("Password reset. Share it securely with the team leader.");
+    } catch (e) {
+      setActionErr(e instanceof Error ? e.message : "Password reset failed");
+    } finally { setBusy(null); }
+  }
+
+  async function onChangeStatus(action: "suspend" | "activate") {
+    setActionErr(null); setActionMsg(null);
+    const label = action === "suspend" ? "suspend" : "activate";
+    if (!window.confirm(`Are you sure you want to ${label} this team leader?`)) return;
+    setBusy(action);
+    try {
+      await statusFn({ data: { userId: id, action } });
+      setActionMsg(action === "suspend" ? "Team leader suspended." : "Team leader activated.");
+      await refetch();
+    } catch (e) {
+      setActionErr(e instanceof Error ? e.message : "Status change failed");
+    } finally { setBusy(null); }
+  }
 
   if (isLoading || !data) {
     return (
@@ -135,13 +169,51 @@ function Content() {
               )}
             </div>
           </div>
-          <button
-            onClick={() => setEditing(true)}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-xs font-semibold text-foreground"
-          >
-            <Pencil size={14} /> Edit profile
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={onResetPassword}
+              disabled={busy !== null}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-xs font-semibold text-foreground disabled:opacity-60"
+            >
+              {busy === "reset" ? <Loader2 size={14} className="animate-spin" /> : <UserCog size={14} />}
+              Reset password
+            </button>
+            {(p.status ?? "active") === "suspended" ? (
+              <button
+                type="button"
+                onClick={() => onChangeStatus("activate")}
+                disabled={busy !== null}
+                className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-semibold text-emerald-700 disabled:opacity-60"
+              >
+                {busy === "activate" ? <Loader2 size={14} className="animate-spin" /> : <BadgeCheck size={14} />}
+                Activate
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onChangeStatus("suspend")}
+                disabled={busy !== null}
+                className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-xs font-semibold text-amber-700 disabled:opacity-60"
+              >
+                {busy === "suspend" ? <Loader2 size={14} className="animate-spin" /> : <Activity size={14} />}
+                Suspend
+              </button>
+            )}
+            <button
+              onClick={() => setEditing(true)}
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-[var(--shadow-soft)]"
+            >
+              <Pencil size={14} /> Edit profile
+            </button>
+          </div>
         </div>
+
+        {(actionMsg || actionErr) && (
+          <div className={`mt-4 rounded-2xl px-4 py-2 text-xs font-semibold ${actionErr ? "bg-rose-500/10 text-rose-700" : "bg-emerald-500/10 text-emerald-700"}`}>
+            {actionErr ?? actionMsg}
+          </div>
+        )}
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatMini icon={<Users size={14} />} label="Members" value={String(data.members.length)} />
