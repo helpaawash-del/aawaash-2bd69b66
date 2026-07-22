@@ -153,7 +153,7 @@ function Content() {
         break;
       case "activity":
         downloadCSV(`activity-report.csv`, (overview?.activity ?? []).map((a) => ({
-          action: a.action, resource: a.resource_type, at: a.created_at,
+          action: a.action, resource: a.entity_type, at: a.created_at,
         })));
         break;
       default:
@@ -391,7 +391,7 @@ function Content() {
                     <li key={i} className="flex items-center justify-between gap-3 py-2 text-sm">
                       <div>
                         <p className="font-semibold text-foreground">{a.action}</p>
-                        <p className="text-xs text-muted-foreground">{a.resource_type}</p>
+                        <p className="text-xs text-muted-foreground">{a.entity_type}</p>
                       </div>
                       <span className="text-xs text-muted-foreground">{new Date(a.created_at).toLocaleString()}</span>
                     </li>
