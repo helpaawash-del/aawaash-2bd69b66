@@ -139,9 +139,9 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof getFinancialDashbo
         <StatCard icon={<Gift className="h-4 w-4" />} label="Bonuses Paid" value={formatINR(commission.bonus)} accent="gold" />
       </section>
 
-      <SectionCard title="Ledger flow — last 30 days" icon={<ScrollText className="h-4 w-4" />}>
+      <SectionCard title="Ledger flow — last 30 days">
         {flow.length === 0 ? (
-          <EmptyState title="No ledger activity yet" description="Commission credits and withdrawals will show here." />
+          <EmptyState icon={null} title="No ledger activity yet" body="Commission credits and withdrawals will show here." />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[520px] text-sm">
@@ -177,7 +177,7 @@ function WalletsTab() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-      <SectionCard title="Wallets" icon={<Wallet className="h-4 w-4" />}>
+      <SectionCard title="Wallets">
         <div className="mb-3 flex flex-wrap gap-2">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -192,7 +192,7 @@ function WalletsTab() {
         {list.isLoading ? (
           <SkeletonBlock />
         ) : !list.data?.length ? (
-          <EmptyState title="No wallets" description="Try a different filter." />
+          <EmptyState icon={null} title="No wallets" body="Try a different filter." />
         ) : (
           <div className="max-h-[560px] overflow-auto rounded-xl border border-border">
             <table className="w-full text-sm">
@@ -262,14 +262,14 @@ function WalletDetail({ userId }: { userId: string | null }) {
 
   if (!userId) {
     return (
-      <SectionCard title="Wallet detail" icon={<Wallet className="h-4 w-4" />}>
-        <EmptyState title="Select a wallet" description="Pick a user from the list to inspect ledger and post adjustments." />
+      <SectionCard title="Wallet detail">
+        <EmptyState icon={null} title="Select a wallet" body="Pick a user from the list to inspect ledger and post adjustments." />
       </SectionCard>
     );
   }
   return (
     <div className="space-y-4">
-      <SectionCard title="Wallet detail" icon={<Wallet className="h-4 w-4" />}>
+      <SectionCard title="Wallet detail">
         {q.isLoading || !q.data ? (
           <SkeletonBlock />
         ) : (
@@ -288,7 +288,7 @@ function WalletDetail({ userId }: { userId: string | null }) {
         )}
       </SectionCard>
 
-      <SectionCard title="Post adjustment" icon={<Sparkles className="h-4 w-4" />}>
+      <SectionCard title="Post adjustment">
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-2">
             <select value={direction} onChange={(e) => setDirection(e.target.value as "credit" | "debit")} className="rounded-xl border border-border bg-background px-3 py-2 text-sm">
@@ -316,9 +316,9 @@ function WalletDetail({ userId }: { userId: string | null }) {
         </div>
       </SectionCard>
 
-      <SectionCard title="Recent ledger" icon={<ScrollText className="h-4 w-4" />}>
+      <SectionCard title="Recent ledger">
         {!q.data?.ledger.length ? (
-          <EmptyState title="No entries" description="This wallet has no ledger activity." />
+          <EmptyState icon={null} title="No entries" body="This wallet has no ledger activity." />
         ) : (
           <div className="max-h-[360px] space-y-2 overflow-auto">
             {q.data.ledger.slice(0, 40).map((l) => (
@@ -348,7 +348,7 @@ function LedgerTab() {
   const listFn = useServerFn(listAllLedger);
   const list = useQuery({ queryKey: ["fin-full-ledger", q], queryFn: () => listFn({ data: { q: q || undefined, limit: 300 } as never }) });
   return (
-    <SectionCard title="Immutable ledger — all transactions" icon={<ScrollText className="h-4 w-4" />}>
+    <SectionCard title="Immutable ledger — all transactions">
       <div className="mb-3 flex gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -356,7 +356,7 @@ function LedgerTab() {
         </div>
         <button onClick={() => exportCSV("ledger", list.data ?? [])} className="pill-btn"><Download className="h-4 w-4" /> CSV</button>
       </div>
-      {list.isLoading ? <SkeletonBlock /> : !list.data?.length ? <EmptyState title="Empty ledger" description="No entries match." /> : (
+      {list.isLoading ? <SkeletonBlock /> : !list.data?.length ? <EmptyState icon={null} title="Empty ledger" body="No entries match." /> : (
         <div className="max-h-[600px] overflow-auto rounded-xl border border-border">
           <table className="w-full text-sm">
             <thead className="sticky top-0 bg-muted/60 text-left text-xs uppercase text-muted-foreground">
@@ -388,8 +388,8 @@ function BonusesTab() {
   const listFn = useServerFn(listBonusHistory);
   const list = useQuery({ queryKey: ["fin-bonuses"], queryFn: () => listFn() });
   return (
-    <SectionCard title="Bonus history" icon={<Gift className="h-4 w-4" />}>
-      {list.isLoading ? <SkeletonBlock /> : !list.data?.length ? <EmptyState title="No bonuses yet" description="Bonuses awarded on sales will appear here." /> : (
+    <SectionCard title="Bonus history">
+      {list.isLoading ? <SkeletonBlock /> : !list.data?.length ? <EmptyState icon={null} title="No bonuses yet" body="Bonuses awarded on sales will appear here." /> : (
         <div className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[720px] text-sm">
             <thead className="bg-muted/60 text-left text-xs uppercase text-muted-foreground">
@@ -435,7 +435,7 @@ function RevenueTab() {
         <RevenueTable title="By Leader" rows={byLeader} />
         <RevenueTable title="By Member" rows={byMember} />
       </div>
-      <SectionCard title="By Month" icon={<Layers className="h-4 w-4" />}>
+      <SectionCard title="By Month">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[420px] text-sm">
             <thead className="text-left text-xs uppercase text-muted-foreground">
@@ -455,8 +455,8 @@ function RevenueTab() {
 
 function RevenueTable({ title, rows }: { title: string; rows: { label: string; total: number; count: number }[] }) {
   return (
-    <SectionCard title={title} icon={<Layers className="h-4 w-4" />}>
-      {!rows.length ? <EmptyState title="No data" description="No revenue recorded." /> : (
+    <SectionCard title={title}>
+      {!rows.length ? <EmptyState icon={null} title="No data" body="No revenue recorded." /> : (
         <div className="max-h-72 overflow-auto">
           <table className="w-full text-sm">
             <thead className="text-left text-xs uppercase text-muted-foreground"><tr><th className="py-2">Name</th><th className="py-2 text-right">Sales</th><th className="py-2 text-right">Revenue</th></tr></thead>
@@ -493,7 +493,7 @@ function ReportsTab() {
   );
 
   return (
-    <SectionCard title="Financial reports" icon={<Download className="h-4 w-4" />}>
+    <SectionCard title="Financial reports">
       <div className="grid gap-2 sm:grid-cols-2">
         {reports.map((r) => (
           <button
