@@ -778,7 +778,8 @@ function StatChip({ label, value, tone }: { label: string; value: number; tone: 
 
 function MediaTab({ project, onSaved }: { project: Record<string, unknown>; onSaved: () => void }) {
   const { profile } = useSession();
-  const role = (profile?.role ?? "guest") as Role;
+  const { role: sessionRole } = useSession();
+  const role = (sessionRole ?? "guest") as Role;
   const mayEditMedia = canEdit(role, "project.media");
   const mayEdit3D = canEdit(role, "project.3d_model");
 
