@@ -2440,6 +2440,16 @@ export type Database = {
       system_get_health: { Args: never; Returns: Json }
       system_run_integrity_checks: { Args: never; Returns: Json }
       system_run_maintenance: { Args: never; Returns: Json }
+      wallet_admin_adjust: {
+        Args: {
+          p_amount: number
+          p_direction: string
+          p_kind: string
+          p_reason: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       wallet_approve_withdrawal: {
         Args: { p_id: string; p_notes?: string }
         Returns: undefined
