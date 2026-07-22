@@ -18,6 +18,7 @@ import {
   Gift,
   Receipt,
   ClipboardList,
+  Trash2,
 } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
@@ -28,6 +29,7 @@ import {
   updateMember,
   changeMemberTeam,
   listAllMembers,
+  deleteTipPerson,
 } from "@/lib/members-admin.functions";
 import { adminResetPassword, setUserStatus } from "@/lib/admin.functions";
 
@@ -58,6 +60,7 @@ function Content() {
   const teamFn = useServerFn(changeMemberTeam);
   const resetFn = useServerFn(adminResetPassword);
   const statusFn = useServerFn(setUserStatus);
+  const deleteTipFn = useServerFn(deleteTipPerson);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin", "member", id],
@@ -423,7 +426,7 @@ function Content() {
           ) : (
             <div className="divide-y divide-border">
               {data.tipPersons.map((t) => (
-                <div key={t.id} className="grid grid-cols-[1fr_auto] items-center gap-3 py-3 text-sm">
+                <div key={t.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-3 py-3 text-sm">
                   <div>
                     <div className="font-semibold text-foreground">{t.tip_name}</div>
                     <div className="text-xs text-muted-foreground">
@@ -433,6 +436,23 @@ function Content() {
                   <span className="rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-primary">
                     {t.status}
                   </span>
+                  <button
+                    onClick={async () => {
+                      if (!window.confirm(`Delete tip person "${t.tip_name}"? This cannot be undone.`)) return;
+                      setErr(null);
+                      try {
+                        await deleteTipFn({ data: { tipId: t.id } });
+                        setMsg("Tip person deleted");
+                        await refetch();
+                      } catch (e) {
+                        setErr(e instanceof Error ? e.message : "Delete failed");
+                      }
+                    }}
+                    className="inline-flex items-center gap-1 rounded-full border border-red-500/40 bg-red-500/10 px-2.5 py-1 text-[11px] font-semibold text-red-800 hover:bg-red-500/20"
+                  >
+                    <Trash2 size={12} />
+                    Delete
+                  </button>
                 </div>
               ))}
             </div>

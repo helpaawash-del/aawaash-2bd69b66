@@ -559,3 +559,18 @@ export const getMemberDetail = createServerFn({ method: "GET" })
       audit: audit ?? [],
     };
   });
+
+/* ================================================================== */
+/* Delete tip person (super admin)                                     */
+/* ================================================================== */
+
+export const deleteTipPerson = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { tipId: string }) => z.object({ tipId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("tip_persons").delete().eq("id", data.tipId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
