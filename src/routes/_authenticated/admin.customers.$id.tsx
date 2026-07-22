@@ -695,7 +695,7 @@ function MeetingsTab({
   const schedule = useServerFn(scheduleMeeting);
   const setStatus = useServerFn(updateMeetingStatus);
   const [open, setOpen] = useState(false);
-  const [type, setType] = useState<"site_visit" | "call" | "meeting" | "video_call">("site_visit");
+  const [type, setType] = useState<"site_visit" | "call" | "in_person" | "virtual" | "other">("site_visit");
   const [when, setWhen] = useState("");
   const [location, setLocation] = useState("");
   const [remarks, setRemarks] = useState("");
