@@ -27,6 +27,7 @@ import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { getTeamLeaderDetail, updateTeamLeader } from "@/lib/team-leaders.functions";
+import { adminResetPassword, setUserStatus } from "@/lib/admin.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders/$id")({
