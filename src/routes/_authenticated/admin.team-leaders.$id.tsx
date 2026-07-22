@@ -51,6 +51,8 @@ function Content() {
   const navigate = useNavigate();
   const detailFn = useServerFn(getTeamLeaderDetail);
   const updateFn = useServerFn(updateTeamLeader);
+  const resetFn = useServerFn(adminResetPassword);
+  const statusFn = useServerFn(setUserStatus);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin", "team-leader", id],
@@ -59,6 +61,37 @@ function Content() {
 
   const [tab, setTab] = useState<Tab>("overview");
   const [editing, setEditing] = useState(false);
+  const [actionMsg, setActionMsg] = useState<string | null>(null);
+  const [actionErr, setActionErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState<"reset" | "suspend" | "activate" | null>(null);
+
+  async function onResetPassword() {
+    setActionErr(null); setActionMsg(null);
+    const pw = window.prompt("New temporary password (min 8 chars):");
+    if (!pw) return;
+    if (pw.length < 8) { setActionErr("Password must be at least 8 characters."); return; }
+    setBusy("reset");
+    try {
+      await resetFn({ data: { userId: id, password: pw } });
+      setActionMsg("Password reset. Share it securely with the team leader.");
+    } catch (e) {
+      setActionErr(e instanceof Error ? e.message : "Password reset failed");
+    } finally { setBusy(null); }
+  }
+
+  async function onChangeStatus(action: "suspend" | "activate") {
+    setActionErr(null); setActionMsg(null);
+    const label = action === "suspend" ? "suspend" : "activate";
+    if (!window.confirm(`Are you sure you want to ${label} this team leader?`)) return;
+    setBusy(action);
+    try {
+      await statusFn({ data: { userId: id, action } });
+      setActionMsg(action === "suspend" ? "Team leader suspended." : "Team leader activated.");
+      await refetch();
+    } catch (e) {
+      setActionErr(e instanceof Error ? e.message : "Status change failed");
+    } finally { setBusy(null); }
+  }
 
   if (isLoading || !data) {
     return (
