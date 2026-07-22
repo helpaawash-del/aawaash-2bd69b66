@@ -90,6 +90,18 @@ const projectSchema = z.object({
   seo_description: z.string().max(320).nullish(),
   three_d_tour_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
   virtual_walkthrough_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
+  gallery: z
+    .union([
+      z.array(z.string().url().max(1000)).max(12),
+      z.string().transform((s) => {
+        if (!s) return [];
+        try {
+          const parsed = JSON.parse(s);
+          return Array.isArray(parsed) ? parsed.filter((v) => typeof v === "string") : [];
+        } catch { return []; }
+      }),
+    ])
+    .optional(),
   total_flats: z.coerce.number().int().min(0).max(100000).optional(),
   available_flats: z.coerce.number().int().min(0).max(100000).optional(),
   reserved_flats: z.coerce.number().int().min(0).max(100000).optional(),
