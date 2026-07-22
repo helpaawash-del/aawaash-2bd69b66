@@ -73,6 +73,7 @@ const NAV: NavGroup[] = [
     label: "Intelligence",
     items: [
       { to: "/admin/analytics", label: "Analytics & BI", icon: BarChart3, prefix: "/admin/analytics" },
+      { to: "/admin/reports", label: "Reports & Executive", icon: ClipboardList, prefix: "/admin/reports" },
       { to: "/admin/system", label: "System Health", icon: Activity, prefix: "/admin/system" },
     ],
   },
