@@ -199,9 +199,9 @@ export const adminBulkReassign = createServerFn({ method: "POST" })
       "admin_bulk_reassign_customers",
       {
         _customer_ids: data.customer_ids,
-        _team_id: data.team_id ?? null,
-        _leader_id: data.leader_id ?? null,
-        _member_id: data.member_id ?? null,
+        _team_id: (data.team_id ?? null) as unknown as string,
+        _leader_id: (data.leader_id ?? null) as unknown as string,
+        _member_id: (data.member_id ?? null) as unknown as string,
       },
     );
     if (error) throw new Error(error.message);
