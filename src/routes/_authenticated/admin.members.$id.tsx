@@ -60,6 +60,7 @@ function Content() {
   const teamFn = useServerFn(changeMemberTeam);
   const resetFn = useServerFn(adminResetPassword);
   const statusFn = useServerFn(setUserStatus);
+  const deleteTipFn = useServerFn(deleteTipPerson);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin", "member", id],
