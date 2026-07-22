@@ -171,6 +171,19 @@ function Content() {
               </button>
             ))}
           </div>
+          <div className="inline-flex overflow-hidden rounded-full border border-border">
+            {([[true, "Group by team"], [false, "Flat list"]] as const).map(([v, l]) => (
+              <button
+                key={String(v)}
+                onClick={() => setGrouped(v)}
+                className={`px-3 py-1.5 text-xs font-semibold ${
+                  grouped === v ? "bg-primary text-primary-foreground" : "text-foreground"
+                }`}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
