@@ -247,7 +247,8 @@ export const getRevenueBreakdown = createServerFn({ method: "GET" })
     const uMap = new Map((profiles ?? []).map((p) => [p.id, p]));
     const tMap = new Map((teams ?? []).map((t) => [t.id, t.name]));
 
-    const groupBy = <K,>(getKey: (r: (typeof sales)[number]) => K, label: (k: K) => string) => {
+    type SaleRow = NonNullable<typeof sales>[number];
+    const groupBy = <K,>(getKey: (r: SaleRow) => K, label: (k: K) => string) => {
       const map = new Map<string, { label: string; total: number; count: number }>();
       (sales ?? []).forEach((r) => {
         const key = String(getKey(r) ?? "—");
