@@ -238,7 +238,7 @@ export const getRevenueBreakdown = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const sb = context.supabase;
     const [{ data: sales }, { data: projects }, { data: profiles }, { data: teams }] = await Promise.all([
-      sb.from("sales").select("id, deal_value, project_id, member_id, leader_id, team_id, created_at, sale_status").neq("sale_status", "cancelled"),
+      sb.from("sales").select("id, deal_value, project_id, seller_id, leader_id, team_id, created_at, sale_status").neq("sale_status", "cancelled"),
       sb.from("projects").select("id, name"),
       sb.from("profiles").select("id, full_name, login_id"),
       sb.from("teams").select("id, name"),
@@ -262,7 +262,7 @@ export const getRevenueBreakdown = createServerFn({ method: "GET" })
     const byProject = groupBy((r) => r.project_id, (k) => pMap.get(k as string) ?? "Unassigned");
     const byTeam = groupBy((r) => r.team_id, (k) => tMap.get(k as string) ?? "No team");
     const byLeader = groupBy((r) => r.leader_id, (k) => (uMap.get(k as string)?.full_name ?? "—"));
-    const byMember = groupBy((r) => r.member_id, (k) => (uMap.get(k as string)?.full_name ?? "—"));
+    const byMember = groupBy((r) => r.seller_id, (k) => (uMap.get(k as string)?.full_name ?? "—"));
 
     const monthMap = new Map<string, number>();
     (sales ?? []).forEach((r) => {
