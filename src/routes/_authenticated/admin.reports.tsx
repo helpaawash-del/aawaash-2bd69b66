@@ -293,7 +293,7 @@ function Content() {
             <section className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <StatCard icon={<Home size={18} />} label="Total sales" value={k.totalSales} />
-                <StatCard icon={<Home size={18} />} label="In range" value={k.rangeSales} hint={<span className="inline-flex"><TrendPill value={k.revenueGrowth} /></span> as unknown as string} />
+                <StatCard icon={<Home size={18} />} label="In range" value={k.rangeSales} hint={`${k.revenueGrowth.toFixed(1)}% vs prev`} />
                 <StatCard icon={<IndianRupee size={18} />} label="Avg sale" value={formatINR(k.avgSaleValue, { compact: true })} />
                 <StatCard icon={<TrendingUp size={18} />} label="Highest" value={formatINR(k.highestSale, { compact: true })} />
               </div>
