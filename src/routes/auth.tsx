@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { loginIdToEmail, validateLoginId, homePathForRole, type AppRole } from "@/lib/auth";
 import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/auth.functions";
 import { BrandMark } from "@/components/aawash/BrandMark";
-import skylineArt from "@/assets/auth-skyline.jpg";
+import skylineArt from "@/assets/auth-skyline-light.jpg.asset.json";
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -67,55 +67,54 @@ function AuthPage() {
 
   if (checking) {
     return (
-      <div className="relative grid min-h-screen place-items-center bg-[#0A0F1F]">
-        <StarField />
-        <Loader2 className="h-8 w-8 animate-spin text-[#D4AF37]" />
+      <div className="relative grid min-h-screen place-items-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0A0F1F] text-[#F5F7FA]">
-      {/* Ambient gradient orbs */}
-      <div className="pointer-events-none absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-[#D4AF37]/10 blur-[120px]" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 h-[560px] w-[560px] rounded-full bg-[#3B6FA0]/20 blur-[140px]" />
-      <StarField />
+    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
+      {/* Ambient soft orbs */}
+      <div className="pointer-events-none absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-primary/10 blur-[120px]" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 h-[560px] w-[560px] rounded-full bg-info/10 blur-[140px]" />
 
       <div className="relative z-10 grid min-h-screen lg:grid-cols-[1.15fr_1fr]">
         {/* Left: hero visual */}
         <aside className="relative hidden overflow-hidden lg:block">
           <img
-            src={skylineArt}
+            src={skylineArt.url}
             alt="Aawash luxury skyline"
-            className="absolute inset-0 h-full w-full object-cover opacity-90 animate-[skylineZoom_28s_ease-in-out_infinite_alternate]"
+            className="absolute inset-0 h-full w-full object-cover animate-[skylineZoom_28s_ease-in-out_infinite_alternate]"
           />
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#0A0F1F] via-[#0A0F1F]/60 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F1F]/70 via-transparent to-[#0A0F1F]/95" />
+          {/* Light wash so text on top of skyline remains legible */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
           {/* Content overlay */}
           <div className="relative flex h-full flex-col justify-between p-12 xl:p-16">
             <div className="flex items-center gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-2xl border border-[#D4AF37]/40 bg-white/5 backdrop-blur-xl">
-                <Building2 size={20} className="text-[#D4AF37]" />
+              <div className="grid h-11 w-11 place-items-center rounded-2xl border border-primary/30 bg-surface/70 backdrop-blur-xl">
+                <Building2 size={20} className="text-primary" />
               </div>
               <div>
-                <div className="text-lg font-bold tracking-wide">Aawash</div>
-                <div className="text-[11px] uppercase tracking-[0.24em] text-[#D4AF37]/80">Luxury Living</div>
+                <div className="text-lg font-bold tracking-wide text-foreground">Aawash</div>
+                <div className="text-[11px] uppercase tracking-[0.24em] text-primary/80">Luxury Living</div>
               </div>
             </div>
 
             <div className="max-w-lg">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D4AF37] backdrop-blur-md">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary backdrop-blur-md">
                 <Sparkles size={12} /> Elevate Your World
               </div>
-              <h2 className="mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight text-white xl:text-6xl">
+              <h2 className="mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight text-foreground xl:text-6xl">
                 Where skylines
                 <br />
-                <span className="bg-gradient-to-r from-[#D4AF37] via-[#F0D78C] to-[#D4AF37] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
                   become homes.
                 </span>
               </h2>
-              <p className="mt-5 max-w-md text-base leading-relaxed text-white/70">
+              <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
                 Sign in to the premium real estate ecosystem powering India's most
                 iconic residences.
               </p>
@@ -128,18 +127,18 @@ function AuthPage() {
                 ].map((it) => (
                   <div
                     key={it.v}
-                    className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-md"
+                    className="rounded-2xl border border-border bg-surface/70 p-3 backdrop-blur-md shadow-soft"
                   >
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-[#D4AF37]">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">
                       {it.k}
                     </div>
-                    <div className="mt-0.5 text-sm font-bold text-white">{it.v}</div>
+                    <div className="mt-0.5 text-sm font-bold text-foreground">{it.v}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="text-[11px] uppercase tracking-[0.25em] text-white/40">
+            <div className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
               © {new Date().getFullYear()} Aawash · Secured by end-to-end encryption
             </div>
           </div>
@@ -151,7 +150,7 @@ function AuthPage() {
             <BrandMark size="md" />
             <Link
               to="/"
-              className="text-xs font-medium text-white/60 transition-colors hover:text-white"
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               ← Home
             </Link>
@@ -161,7 +160,7 @@ function AuthPage() {
             {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
           </div>
 
-          <div className="mx-auto mt-8 hidden max-w-md text-center text-[11px] uppercase tracking-[0.25em] text-white/40 lg:block">
+          <div className="mx-auto mt-8 hidden max-w-md text-center text-[11px] uppercase tracking-[0.25em] text-muted-foreground lg:block">
             Invite-only · Protected by end-to-end encryption
           </div>
         </main>
@@ -172,46 +171,12 @@ function AuthPage() {
           0% { transform: scale(1) translateY(0); }
           100% { transform: scale(1.08) translateY(-1%); }
         }
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.2; }
-          50% { opacity: 1; }
-        }
         @keyframes floatIn {
           0% { opacity: 0; transform: translateY(16px); }
           100% { opacity: 1; transform: translateY(0); }
         }
         .auth-float-in { animation: floatIn 0.7s cubic-bezier(.2,.8,.2,1) both; }
       `}</style>
-    </div>
-  );
-}
-
-function StarField() {
-  // Deterministic tiny star field
-  const stars = Array.from({ length: 60 }).map((_, i) => {
-    const seed = (i * 9301 + 49297) % 233280;
-    const x = (seed % 100);
-    const y = ((seed * 7) % 100);
-    const s = ((seed * 3) % 3) + 1;
-    const d = ((seed * 5) % 4) + 2;
-    return { x, y, s, d, i };
-  });
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {stars.map((s) => (
-        <span
-          key={s.i}
-          className="absolute rounded-full bg-white"
-          style={{
-            left: `${s.x}%`,
-            top: `${s.y}%`,
-            width: s.s,
-            height: s.s,
-            opacity: 0.5,
-            animation: `twinkle ${s.d}s ease-in-out ${s.i * 0.15}s infinite`,
-          }}
-        />
-      ))}
     </div>
   );
 }
@@ -270,19 +235,19 @@ function LoginForm() {
   }
 
   return (
-    <div className="auth-float-in relative overflow-hidden rounded-[32px] border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-7 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.7)] backdrop-blur-2xl sm:p-9">
-      {/* Gold sheen */}
-      <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-[#D4AF37]/25 blur-3xl" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/60 to-transparent" />
+    <div className="auth-float-in relative overflow-hidden rounded-[32px] border border-border bg-surface/90 p-7 shadow-float backdrop-blur-2xl sm:p-9">
+      {/* Emerald sheen */}
+      <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-primary/15 blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
       <div className="relative mb-7">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#D4AF37]">
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">
           <ShieldCheck size={12} /> Secure Sign-In
         </div>
-        <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+        <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
           Welcome back.
         </h1>
-        <p className="mt-2 text-sm text-white/60">
+        <p className="mt-2 text-sm text-muted-foreground">
           Enter your Aawash Login ID and password to continue.
         </p>
       </div>
@@ -301,7 +266,7 @@ function LoginForm() {
             value={loginId}
             onChange={(e) => setLoginId(e.target.value.toUpperCase())}
             placeholder="A9876543210"
-            className="w-full bg-transparent text-base font-medium tracking-wide text-white outline-none placeholder:text-white/30"
+            className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/60"
           />
         </Field>
 
@@ -313,12 +278,12 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
-              className="w-full bg-transparent text-base font-medium tracking-wide text-white outline-none placeholder:text-white/30"
+              className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/60"
             />
             <button
               type="button"
               onClick={() => setShowPwd((v) => !v)}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-white/50 transition-colors hover:text-white"
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
               aria-label={showPwd ? "Hide password" : "Show password"}
             >
               {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -327,7 +292,7 @@ function LoginForm() {
         </Field>
 
         {error && (
-          <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-200">
+          <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
             {error}
           </div>
         )}
@@ -335,7 +300,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="group relative mt-3 inline-flex h-13 w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-[#D4AF37] via-[#F0D78C] to-[#D4AF37] py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-[#0A0F1F] shadow-[0_20px_50px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_60px_-15px_rgba(212,175,55,0.8)] disabled:opacity-70"
+          className="group relative mt-3 inline-flex h-13 w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-leaf to-primary py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-glow transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
         >
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
           {submitting ? (
@@ -349,7 +314,7 @@ function LoginForm() {
 
         <Link
           to="/"
-          className="mx-auto mt-2 hidden text-center text-[11px] font-medium text-white/40 transition-colors hover:text-white/80 lg:block"
+          className="mx-auto mt-2 hidden text-center text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground lg:block"
         >
           ← Back to home
         </Link>
@@ -384,16 +349,16 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="auth-float-in relative overflow-hidden rounded-[32px] border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-7 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.7)] backdrop-blur-2xl sm:p-9">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/60 to-transparent" />
+    <div className="auth-float-in relative overflow-hidden rounded-[32px] border border-border bg-surface/90 p-7 shadow-float backdrop-blur-2xl sm:p-9">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       <div className="relative mb-6">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#D4AF37]">
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">
           <ShieldCheck size={12} /> One-Time Setup
         </div>
-        <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white">
+        <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-foreground">
           Create Super Admin
         </h1>
-        <p className="mt-2 text-sm text-white/60">
+        <p className="mt-2 text-sm text-muted-foreground">
           No admin exists yet. Create the first Super Admin account. This screen
           locks permanently after setup.
         </p>
@@ -405,7 +370,7 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             placeholder="Your name"
-            className="w-full bg-transparent text-base font-medium text-white outline-none placeholder:text-white/30"
+            className="w-full bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground/60"
           />
         </Field>
 
@@ -415,7 +380,7 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
             onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
             inputMode="numeric"
             placeholder="9876543210"
-            className="w-full bg-transparent text-base font-medium tracking-wide text-white outline-none placeholder:text-white/30"
+            className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/60"
           />
         </Field>
 
@@ -425,12 +390,12 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Choose a strong password"
-            className="w-full bg-transparent text-base font-medium text-white outline-none placeholder:text-white/30"
+            className="w-full bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground/60"
           />
         </Field>
 
         {error && (
-          <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-200">
+          <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
             {error}
           </div>
         )}
@@ -438,7 +403,7 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#D4AF37] via-[#F0D78C] to-[#D4AF37] text-sm font-bold uppercase tracking-[0.18em] text-[#0A0F1F] shadow-[0_20px_50px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+          className="mt-2 inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary via-leaf to-primary text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-glow transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
         >
           {submitting ? <Loader2 size={16} className="animate-spin" /> : "Create Super Admin"}
         </button>
@@ -460,16 +425,16 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.22em] text-white/50">
+      <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
         {label}
       </span>
-      <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 backdrop-blur-md transition-all focus-within:border-[#D4AF37]/50 focus-within:bg-white/[0.08] focus-within:shadow-[0_0_0_4px_rgba(212,175,55,0.08)]">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[#D4AF37]/25 bg-[#D4AF37]/10 text-[#D4AF37]">
+      <div className="flex items-center gap-3 rounded-2xl border border-border bg-surface/70 px-4 py-3.5 backdrop-blur-md transition-all focus-within:border-primary/50 focus-within:bg-surface focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_12%,transparent)]">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-primary/25 bg-primary/10 text-primary">
           {icon}
         </span>
         <div className="min-w-0 flex-1">{children}</div>
       </div>
-      {hint && <p className="mt-1.5 text-[11px] text-white/40">{hint}</p>}
+      {hint && <p className="mt-1.5 text-[11px] text-muted-foreground">{hint}</p>}
     </label>
   );
 }
