@@ -256,8 +256,8 @@ function Content() {
       {tab === "overview" && <OverviewTab data={data} />}
       {tab === "sales" && <SalesTab data={data} />}
       {tab === "documents" && <DocumentsTab customerId={c.id} documents={data.documents} onChange={invalidate} />}
-      {tab === "meetings" && <MeetingsTab meetings={data.meetings} />}
-      {tab === "notes" && <NotesTab notes={data.notes} />}
+      {tab === "meetings" && <MeetingsTab customerId={c.id} meetings={data.meetings} onChanged={invalidate} />}
+      {tab === "notes" && <NotesTab customerId={c.id} notes={data.notes} onChanged={invalidate} />}
       {tab === "timeline" && <TimelineTab timeline={data.timeline} />}
     </AdminShell>
   );
