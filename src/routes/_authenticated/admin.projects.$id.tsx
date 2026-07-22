@@ -156,10 +156,31 @@ function OverviewTab({ project, onSaved }: { project: Record<string, unknown>; o
   const [error, setError] = useState<string | null>(null);
   const [ok, setOk] = useState(false);
 
+  const p = project as Record<string, string | number | null>;
+
+  // Live inventory counters
+  const [total, setTotal] = useState<number>(Number(p.total_flats ?? 0));
+  const [available, setAvailable] = useState<number>(Number(p.available_flats ?? 0));
+  const [reserved, setReserved] = useState<number>(Number(p.reserved_flats ?? 0));
+  const [sold, setSold] = useState<number>(Number(p.sold_flats ?? 0));
+
+  const allocated = available + reserved + sold;
+  const remaining = total - allocated;
+  const counterError =
+    total < 0 || available < 0 || reserved < 0 || sold < 0
+      ? "Values cannot be negative"
+      : allocated > total
+      ? `Available + reserved + sold (${allocated}) exceeds total flats (${total})`
+      : null;
+
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setOk(false);
+    if (counterError) {
+      setError(counterError);
+      return;
+    }
     setSaving(true);
     try {
       const fd = new FormData(e.currentTarget);
@@ -173,8 +194,6 @@ function OverviewTab({ project, onSaved }: { project: Record<string, unknown>; o
       setSaving(false);
     }
   }
-
-  const p = project as Record<string, string | number | null>;
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -217,6 +236,36 @@ function OverviewTab({ project, onSaved }: { project: Record<string, unknown>; o
         </div>
       </Section>
 
+      <Section title="Inventory Counters (live)">
+        <div className="grid gap-4 md:grid-cols-4">
+          <NumberBox label="Total Flats" name="total_flats" value={total} onChange={setTotal} min={0} />
+          <NumberBox label="Available" name="available_flats" value={available} onChange={setAvailable} min={0} max={total} tone="emerald" />
+          <NumberBox label="Reserved" name="reserved_flats" value={reserved} onChange={setReserved} min={0} max={total} tone="amber" />
+          <NumberBox label="Sold" name="sold_flats" value={sold} onChange={setSold} min={0} max={total} tone="rose" />
+        </div>
+        <div className="mt-3 flex flex-wrap items-center gap-3 text-xs">
+          <span className="rounded-full bg-muted px-3 py-1 font-semibold text-muted-foreground">
+            Allocated: <span className="text-foreground">{allocated}</span> / {total}
+          </span>
+          <span
+            className={`rounded-full px-3 py-1 font-semibold ${
+              remaining < 0
+                ? "bg-rose-500/15 text-rose-700"
+                : remaining === 0
+                ? "bg-emerald-500/15 text-emerald-700"
+                : "bg-primary-soft text-primary"
+            }`}
+          >
+            Remaining: {remaining}
+          </span>
+          {counterError && (
+            <span className="rounded-full bg-rose-500/15 px-3 py-1 font-semibold text-rose-700">
+              ⚠ {counterError}
+            </span>
+          )}
+        </div>
+      </Section>
+
       <Section title="Pricing">
         <div className="grid gap-4 md:grid-cols-3">
           <Field label="Price From (₹)" name="price_from" type="number" min={0} required defaultValue={(p.price_from as number) ?? 0} />
@@ -237,11 +286,77 @@ function OverviewTab({ project, onSaved }: { project: Record<string, unknown>; o
       {ok && <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-700">Saved.</div>}
 
       <div className="flex justify-end">
-        <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-60">
+        <button
+          type="submit"
+          disabled={saving || !!counterError}
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-60"
+        >
           <Save size={14} /> {saving ? "Saving…" : "Save Changes"}
         </button>
       </div>
     </form>
+  );
+}
+
+function NumberBox({
+  label,
+  name,
+  value,
+  onChange,
+  min,
+  max,
+  tone,
+}: {
+  label: string;
+  name: string;
+  value: number;
+  onChange: (n: number) => void;
+  min?: number;
+  max?: number;
+  tone?: "emerald" | "amber" | "rose";
+}) {
+  const toneMap: Record<string, string> = {
+    emerald: "focus:border-emerald-500 focus:ring-emerald-500/25",
+    amber: "focus:border-amber-500 focus:ring-amber-500/25",
+    rose: "focus:border-rose-500 focus:ring-rose-500/25",
+  };
+  const ring = tone ? toneMap[tone] : "focus:border-primary focus:ring-primary/25";
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-xs font-semibold text-muted-foreground">{label}</span>
+      <div className="flex items-stretch overflow-hidden rounded-2xl border border-border bg-background focus-within:ring-2 focus-within:ring-primary/20">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(min ?? 0, value - 1))}
+          aria-label={`Decrease ${label}`}
+          className="grid w-10 place-items-center text-lg font-bold text-muted-foreground hover:bg-muted"
+        >
+          −
+        </button>
+        <input
+          name={name}
+          type="number"
+          inputMode="numeric"
+          min={min}
+          max={max}
+          value={Number.isFinite(value) ? value : 0}
+          onChange={(e) => {
+            const n = Number(e.target.value);
+            if (Number.isNaN(n)) return;
+            onChange(n);
+          }}
+          className={`w-full border-x border-border bg-transparent px-3 py-2.5 text-center text-base font-bold text-foreground outline-none transition-colors ${ring}`}
+        />
+        <button
+          type="button"
+          onClick={() => onChange(Math.min(max ?? Number.MAX_SAFE_INTEGER, value + 1))}
+          aria-label={`Increase ${label}`}
+          className="grid w-10 place-items-center text-lg font-bold text-muted-foreground hover:bg-muted"
+        >
+          +
+        </button>
+      </div>
+    </label>
   );
 }
 
