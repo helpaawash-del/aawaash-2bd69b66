@@ -36,7 +36,7 @@ import {
   adminGetDocumentUrl,
   adminDeleteDocument,
 } from "@/lib/customers-admin.functions";
-import { updateCustomer } from "@/lib/crm.functions";
+import { updateCustomer, addNote, scheduleMeeting, updateMeetingStatus } from "@/lib/crm.functions";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/admin/customers/$id")({
