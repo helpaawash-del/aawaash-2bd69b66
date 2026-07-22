@@ -124,13 +124,13 @@ function AdminContent() {
         />
         <Kpi icon={<Circle size={16} />} label="Reserved" value={kpi?.flats_reserved ?? "—"} tone="warning" />
         <Kpi icon={<CheckCircle2 size={16} />} label="Sold" value={kpi?.flats_sold ?? "—"} tone="primary" />
-        <Kpi icon={<ClipboardList size={16} />} label="Customers" value={kpi?.customers_total ?? "—"} to="/crm" />
-        <Kpi icon={<Users size={16} />} label="Team Leaders" value={kpi?.team_leaders ?? "—"} to="/admin/users" />
-        <Kpi icon={<Users size={16} />} label="Members" value={kpi?.members ?? "—"} to="/admin/users" tone="gold" />
+        <Kpi icon={<ClipboardList size={16} />} label="Customers" value={kpi?.customers_total ?? "—"} to="/admin/customers" />
+        <Kpi icon={<Users size={16} />} label="Team Leaders" value={kpi?.team_leaders ?? "—"} to="/admin/team-leaders" />
+        <Kpi icon={<Users size={16} />} label="Members" value={kpi?.members ?? "—"} to="/admin/members" tone="gold" />
         <Kpi icon={<TrendingUp size={16} />} label="Sales today" value={kpi?.sales_today ?? "—"} to="/sales-workflow" />
         <Kpi icon={<TrendingUp size={16} />} label="Sales this month" value={kpi?.sales_month ?? "—"} to="/sales-workflow" />
         <Kpi icon={<Wallet size={16} />} label="Pending withdrawals" value={kpi?.withdrawals_pending ?? "—"} to="/admin/withdrawals" tone="warning" />
-        <Kpi icon={<Coins size={16} />} label="Pending sales" value={kpi?.commissions_pending ?? "—"} to="/sales-workflow" />
+        <Kpi icon={<Coins size={16} />} label="Pending sales" value={kpi?.commissions_pending ?? "—"} to="/admin/commissions" />
         <Kpi
           icon={<Wallet size={16} />}
           label="Wallet available"
@@ -243,12 +243,16 @@ function QuickActionPanel() {
   const actions = [
     { to: "/admin/team-leaders/new", icon: ShieldCheck, label: "Create Team Leader", tint: "primary" as const },
     { to: "/admin/members/new", icon: Users, label: "Create Member", tint: "leaf" as const },
+    { to: "/admin/team-leaders", icon: Users, label: "Manage Leaders", tint: "primary" as const },
+    { to: "/admin/members", icon: Users, label: "Manage Members", tint: "leaf" as const },
+    { to: "/admin/projects", icon: Building2, label: "Projects", tint: "gold" as const },
     { to: "/admin/projects/new", icon: Building2, label: "New Project", tint: "gold" as const },
-    { to: "/sales-workflow", icon: TrendingUp, label: "Approve sale", tint: "primary" as const },
-    { to: "/admin/withdrawals", icon: Wallet, label: "Approve payout", tint: "leaf" as const },
-    { to: "/admin/reports", icon: BarChart3, label: "View reports", tint: "gold" as const },
-    { to: "/admin/commissions", icon: Coins, label: "Commissions", tint: "primary" as const },
-    { to: "/admin/system", icon: Activity, label: "System health", tint: "leaf" as const },
+    { to: "/admin/customers", icon: ClipboardList, label: "Customer CRM", tint: "primary" as const },
+    { to: "/sales-workflow", icon: TrendingUp, label: "Sales & Performance", tint: "leaf" as const },
+    { to: "/admin/commissions", icon: Coins, label: "Commissions", tint: "gold" as const },
+    { to: "/admin/finance", icon: Wallet, label: "Wallet & Finance", tint: "primary" as const },
+    { to: "/admin/withdrawals", icon: Wallet, label: "Withdrawals", tint: "leaf" as const },
+    { to: "/admin/reports", icon: BarChart3, label: "Reports & BI", tint: "gold" as const },
   ];
   const tintMap = {
     primary: "bg-primary text-primary-foreground",
