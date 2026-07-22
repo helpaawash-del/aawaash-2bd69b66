@@ -124,13 +124,13 @@ function AdminContent() {
         />
         <Kpi icon={<Circle size={16} />} label="Reserved" value={kpi?.flats_reserved ?? "—"} tone="warning" />
         <Kpi icon={<CheckCircle2 size={16} />} label="Sold" value={kpi?.flats_sold ?? "—"} tone="primary" />
-        <Kpi icon={<ClipboardList size={16} />} label="Customers" value={kpi?.customers_total ?? "—"} to="/crm" />
-        <Kpi icon={<Users size={16} />} label="Team Leaders" value={kpi?.team_leaders ?? "—"} to="/admin/users" />
-        <Kpi icon={<Users size={16} />} label="Members" value={kpi?.members ?? "—"} to="/admin/users" tone="gold" />
+        <Kpi icon={<ClipboardList size={16} />} label="Customers" value={kpi?.customers_total ?? "—"} to="/admin/customers" />
+        <Kpi icon={<Users size={16} />} label="Team Leaders" value={kpi?.team_leaders ?? "—"} to="/admin/team-leaders" />
+        <Kpi icon={<Users size={16} />} label="Members" value={kpi?.members ?? "—"} to="/admin/members" tone="gold" />
         <Kpi icon={<TrendingUp size={16} />} label="Sales today" value={kpi?.sales_today ?? "—"} to="/sales-workflow" />
         <Kpi icon={<TrendingUp size={16} />} label="Sales this month" value={kpi?.sales_month ?? "—"} to="/sales-workflow" />
         <Kpi icon={<Wallet size={16} />} label="Pending withdrawals" value={kpi?.withdrawals_pending ?? "—"} to="/admin/withdrawals" tone="warning" />
-        <Kpi icon={<Coins size={16} />} label="Pending sales" value={kpi?.commissions_pending ?? "—"} to="/sales-workflow" />
+        <Kpi icon={<Coins size={16} />} label="Pending sales" value={kpi?.commissions_pending ?? "—"} to="/admin/commissions" />
         <Kpi
           icon={<Wallet size={16} />}
           label="Wallet available"
