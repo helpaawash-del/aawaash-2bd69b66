@@ -775,23 +775,32 @@ function StatChip({ label, value, tone }: { label: string; value: number; tone: 
 /* ==================== MEDIA ==================== */
 
 function MediaTab({ project, onSaved }: { project: Record<string, unknown>; onSaved: () => void }) {
+  const { profile } = useSession();
+  const role = (profile?.role ?? "guest") as Role;
+  const mayEditMedia = canEdit(role, "project.media");
+  const mayEdit3D = canEdit(role, "project.3d_model");
+
   const upsert = useServerFn(adminUpsertProject);
   const [saving, setSaving] = useState(false);
   const [ok, setOk] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const p = project as Record<string, string | null>;
+  const p = project as Record<string, string | null | unknown>;
+
+  const initialGallery: string[] = Array.isArray(p.gallery)
+    ? (p.gallery as unknown[]).filter((v): v is string => typeof v === "string")
+    : [];
+
+  const projectId = (project as { id: string }).id;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError(null);
-    setOk(false);
-    setSaving(true);
+    if (!mayEditMedia && !mayEdit3D) return;
+    setError(null); setOk(false); setSaving(true);
     try {
       const fd = new FormData(e.currentTarget);
       const raw = Object.fromEntries(fd.entries());
       await upsert({ data: {
-        id: project.id,
-        // preserve required fields
+        id: projectId,
         name: p.name, slug: p.slug, location: p.location,
         project_type: p.project_type, construction_status: p.construction_status,
         ...raw,
@@ -807,35 +816,72 @@ function MediaTab({ project, onSaved }: { project: Record<string, unknown>; onSa
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
-      <Section title="Cover Media (paste public URLs)">
+      <Section title="Cover Media">
         <div className="grid gap-4 md:grid-cols-2">
-          <MediaField label="Thumbnail" name="thumbnail_url" value={p.thumbnail_url} />
-          <MediaField label="Cover" name="cover_url" value={p.cover_url} />
-          <MediaField label="Hero Banner" name="hero_banner_url" value={p.hero_banner_url} />
-          <MediaField label="Logo" name="logo_url" value={p.logo_url} />
+          <ImageUploadField label="Thumbnail" name="thumbnail_url" value={p.thumbnail_url as string | null} folder={`projects/${projectId}/thumb`} disabled={!mayEditMedia} />
+          <ImageUploadField label="Cover" name="cover_url" value={p.cover_url as string | null} folder={`projects/${projectId}/cover`} disabled={!mayEditMedia} />
+          <ImageUploadField label="Hero Banner" name="hero_banner_url" value={p.hero_banner_url as string | null} folder={`projects/${projectId}/hero`} disabled={!mayEditMedia} />
+          <ImageUploadField label="Logo" name="logo_url" value={p.logo_url as string | null} folder={`projects/${projectId}/logo`} disabled={!mayEditMedia} />
         </div>
+      </Section>
+
+      <Section title="Project Gallery">
+        <ImageGalleryUploader
+          name="gallery"
+          value={initialGallery}
+          folder={`projects/${projectId}/gallery`}
+          max={12}
+          disabled={!mayEditMedia}
+        />
       </Section>
 
       <Section title="3D Model & Immersive Media">
         <div className="grid gap-4 md:grid-cols-2">
-          <MediaField label="3D Tour URL (Matterport / Sketchfab / GLB)" name="three_d_tour_url" value={p.three_d_tour_url} />
-          <MediaField label="Virtual Walkthrough (YouTube / Vimeo)" name="virtual_walkthrough_url" value={p.virtual_walkthrough_url} />
+          <Model3DUploadField
+            label="3D Tour / Model"
+            name="three_d_tour_url"
+            value={p.three_d_tour_url as string | null}
+            folder={`projects/${projectId}/models`}
+            disabled={!mayEdit3D}
+          />
+          <ImageUploadField
+            label="Walkthrough Poster (video URL below)"
+            name="_walkthrough_poster"
+            value={null}
+            folder={`projects/${projectId}/walkthrough`}
+            disabled={!mayEdit3D}
+          />
+          <label className="md:col-span-2 block">
+            <span className="mb-1.5 block text-xs font-semibold text-muted-foreground">Virtual Walkthrough (YouTube / Vimeo)</span>
+            <input
+              name="virtual_walkthrough_url"
+              type="url"
+              defaultValue={(p.virtual_walkthrough_url as string) ?? ""}
+              placeholder="https://youtube.com/…"
+              disabled={!mayEdit3D}
+              className="w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
+            />
+          </label>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          Paste a public URL to a Matterport tour, Sketchfab embed, hosted <code>.glb</code> file, or a video walkthrough.
+          Upload a <code>.glb</code>/<code>.gltf</code> file (≤ 40 MB) or paste a Matterport / Sketchfab / YouTube URL. Broken previews show an inline fallback.
         </p>
       </Section>
 
-      <p className="rounded-2xl border border-dashed border-border bg-background p-4 text-xs text-muted-foreground">
-        Rich media galleries (multiple images, brochures, master plans) can be pasted as public URLs above.
-        Drag-and-drop uploads with reorder are managed from the Media Library.
-      </p>
-
       {error && <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm font-medium text-rose-700">{error}</div>}
       {ok && <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-700">Saved.</div>}
+      {!mayEditMedia && !mayEdit3D && (
+        <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-sm font-medium text-amber-700">
+          Your role can view media but not modify it.
+        </div>
+      )}
 
       <div className="flex justify-end">
-        <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-60">
+        <button
+          type="submit"
+          disabled={saving || (!mayEditMedia && !mayEdit3D)}
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-60"
+        >
           <Save size={14} /> {saving ? "Saving…" : "Save Media"}
         </button>
       </div>
@@ -843,26 +889,6 @@ function MediaTab({ project, onSaved }: { project: Record<string, unknown>; onSa
   );
 }
 
-function MediaField({ label, name, value }: { label: string; name: string; value: string | null }) {
-  return (
-    <div>
-      <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-xs font-semibold text-muted-foreground">{label}</span>
-        {value && <span className="text-[10px] text-emerald-600">✓ set</span>}
-      </div>
-      <input
-        name={name}
-        type="url"
-        defaultValue={value ?? ""}
-        placeholder="https://…"
-        className="w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
-      />
-      {value && (
-        <div className="mt-2 h-24 overflow-hidden rounded-xl border border-border bg-muted/30" style={{ backgroundImage: `url(${value})`, backgroundSize: "cover", backgroundPosition: "center" }} />
-      )}
-    </div>
-  );
-}
 
 /* ==================== CONTENT / SEO ==================== */
 
