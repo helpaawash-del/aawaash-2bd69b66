@@ -749,8 +749,9 @@ function MeetingsTab({
               className="rounded-xl border border-border bg-surface px-3 py-2 text-sm">
               <option value="site_visit">Site visit</option>
               <option value="call">Call</option>
-              <option value="meeting">Meeting</option>
-              <option value="video_call">Video call</option>
+              <option value="in_person">In person</option>
+              <option value="virtual">Virtual</option>
+              <option value="other">Other</option>
             </select>
             <input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)}
               className="rounded-xl border border-border bg-surface px-3 py-2 text-sm" />
