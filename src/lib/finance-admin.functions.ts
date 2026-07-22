@@ -326,7 +326,7 @@ export const listBonusHistory = createServerFn({ method: "GET" })
       userIds.length ? context.supabase.from("profiles").select("id, full_name, login_id").in("id", userIds) : Promise.resolve({ data: [] }),
       projectIds.length ? context.supabase.from("projects").select("id, name").in("id", projectIds) : Promise.resolve({ data: [] }),
     ]);
-    const uMap = new Map((profs ?? []).map((p: { id: string }) => [p.id, p]));
+    const uMap = new Map((profs ?? []).map((p: { id: string; full_name: string; login_id: string }) => [p.id, p]));
     const pMap = new Map((projects ?? []).map((p: { id: string; name: string }) => [p.id, p.name]));
     return list.map((r) => ({
       ...r,
