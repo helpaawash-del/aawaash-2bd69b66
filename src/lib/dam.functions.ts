@@ -334,7 +334,7 @@ export const damUpdateAsset = createServerFn({ method: "POST" })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await context.supabase.from("assets").update({ ...patch, updated_by: context.userId } as any).eq("id", id);
     if (res.error) throw new Error(res.error.message);
-    await context.supabase.from("asset_audit_log").insert({ asset_id: id, action: "updated", actor: context.userId, meta: patch as Json });
+    await context.supabase.from("asset_audit_log").insert({ asset_id: id, action: "updated", actor: context.userId, meta: patch as unknown as Json });
     return { ok: true };
   });
 
