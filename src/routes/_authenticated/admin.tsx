@@ -243,12 +243,16 @@ function QuickActionPanel() {
   const actions = [
     { to: "/admin/team-leaders/new", icon: ShieldCheck, label: "Create Team Leader", tint: "primary" as const },
     { to: "/admin/members/new", icon: Users, label: "Create Member", tint: "leaf" as const },
+    { to: "/admin/team-leaders", icon: UsersIcon, label: "Manage Leaders", tint: "primary" as const },
+    { to: "/admin/members", icon: Users, label: "Manage Members", tint: "leaf" as const },
+    { to: "/admin/projects", icon: Building2, label: "Projects", tint: "gold" as const },
     { to: "/admin/projects/new", icon: Building2, label: "New Project", tint: "gold" as const },
-    { to: "/sales-workflow", icon: TrendingUp, label: "Approve sale", tint: "primary" as const },
-    { to: "/admin/withdrawals", icon: Wallet, label: "Approve payout", tint: "leaf" as const },
-    { to: "/admin/reports", icon: BarChart3, label: "View reports", tint: "gold" as const },
-    { to: "/admin/commissions", icon: Coins, label: "Commissions", tint: "primary" as const },
-    { to: "/admin/system", icon: Activity, label: "System health", tint: "leaf" as const },
+    { to: "/admin/customers", icon: ClipboardList, label: "Customer CRM", tint: "primary" as const },
+    { to: "/sales-workflow", icon: TrendingUp, label: "Sales & Performance", tint: "leaf" as const },
+    { to: "/admin/commissions", icon: Coins, label: "Commissions", tint: "gold" as const },
+    { to: "/admin/finance", icon: Wallet, label: "Wallet & Finance", tint: "primary" as const },
+    { to: "/admin/withdrawals", icon: Wallet, label: "Withdrawals", tint: "leaf" as const },
+    { to: "/admin/reports", icon: BarChart3, label: "Reports & BI", tint: "gold" as const },
   ];
   const tintMap = {
     primary: "bg-primary text-primary-foreground",
