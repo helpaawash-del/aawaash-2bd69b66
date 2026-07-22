@@ -1,0 +1,1 @@
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS three_d_tour_url text, ADD COLUMN IF NOT EXISTS virtual_walkthrough_url text;
