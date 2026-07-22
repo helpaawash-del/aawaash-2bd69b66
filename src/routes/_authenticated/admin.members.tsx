@@ -38,6 +38,7 @@ function Content() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<"all" | "active" | "suspended">("all");
   const [teamFilter, setTeamFilter] = useState<string>("all");
+  const [grouped, setGrouped] = useState<boolean>(true);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "members"],
