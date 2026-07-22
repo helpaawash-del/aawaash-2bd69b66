@@ -114,7 +114,7 @@ export const adminGetCustomerFilters = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     await assertAdmin(context.supabase, context.userId);
 
-    const [{ data: teams }, { data: leaders }, { data: members }, { data: tags }] =
+    const [{ data: teams }, { data: roleRows }, { data: profiles }, { data: tags }] =
       await Promise.all([
         context.supabase
           .from("teams")
@@ -122,23 +122,27 @@ export const adminGetCustomerFilters = createServerFn({ method: "GET" })
           .eq("is_deleted", false)
           .order("letter", { ascending: true }),
         context.supabase
-          .from("profiles")
-          .select("id, full_name, login_id, team_id")
-          .eq("account_kind", "team_leader"),
+          .from("user_roles")
+          .select("user_id, role")
+          .in("role", ["team_leader", "member"]),
         context.supabase
           .from("profiles")
-          .select("id, full_name, login_id, team_id")
-          .eq("account_kind", "member"),
+          .select("id, full_name, login_id, team_id, is_active"),
         context.supabase
           .from("customer_tags_catalog")
           .select("id, label, color, is_active")
           .order("label", { ascending: true }),
       ]);
 
+    const roleByUser = new Map<string, string>((roleRows ?? []).map((r) => [r.user_id, r.role as string]));
+    const activeProfiles = (profiles ?? []).filter((p) => p.is_active !== false);
+    const leaders = activeProfiles.filter((p) => roleByUser.get(p.id) === "team_leader");
+    const members = activeProfiles.filter((p) => roleByUser.get(p.id) === "member");
+
     return {
       teams: teams ?? [],
-      leaders: leaders ?? [],
-      members: members ?? [],
+      leaders,
+      members,
       tags: tags ?? [],
     };
   });
