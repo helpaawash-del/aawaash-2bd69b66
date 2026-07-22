@@ -64,6 +64,7 @@ const NAV: NavGroup[] = [
   {
     label: "Finance",
     items: [
+      { to: "/admin/finance", label: "Financial Console", icon: Coins, prefix: "/admin/finance" },
       { to: "/admin/commissions", label: "Commissions", icon: Coins, prefix: "/admin/commissions" },
       { to: "/admin/withdrawals", label: "Withdrawals", icon: Wallet, prefix: "/admin/withdrawals" },
     ],
