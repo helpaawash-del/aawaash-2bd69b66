@@ -1915,6 +1915,7 @@ export type Database = {
           sold_units: number
           status: string
           tag: string | null
+          three_d_tour_url: string | null
           thumbnail_url: string | null
           total_buildings: number
           total_flats: number
@@ -1922,6 +1923,7 @@ export type Database = {
           total_units: number
           updated_at: string
           video_count: number
+          virtual_walkthrough_url: string | null
           visibility: string
         }
         Insert: {
@@ -1965,6 +1967,7 @@ export type Database = {
           sold_units?: number
           status?: string
           tag?: string | null
+          three_d_tour_url?: string | null
           thumbnail_url?: string | null
           total_buildings?: number
           total_flats?: number
@@ -1972,6 +1975,7 @@ export type Database = {
           total_units?: number
           updated_at?: string
           video_count?: number
+          virtual_walkthrough_url?: string | null
           visibility?: string
         }
         Update: {
@@ -2015,6 +2019,7 @@ export type Database = {
           sold_units?: number
           status?: string
           tag?: string | null
+          three_d_tour_url?: string | null
           thumbnail_url?: string | null
           total_buildings?: number
           total_flats?: number
@@ -2022,6 +2027,7 @@ export type Database = {
           total_units?: number
           updated_at?: string
           video_count?: number
+          virtual_walkthrough_url?: string | null
           visibility?: string
         }
         Relationships: []

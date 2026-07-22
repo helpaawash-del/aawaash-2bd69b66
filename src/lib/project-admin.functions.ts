@@ -88,7 +88,22 @@ const projectSchema = z.object({
   completion_percent: z.coerce.number().int().min(0).max(100).default(0),
   seo_title: z.string().max(160).nullish(),
   seo_description: z.string().max(320).nullish(),
-});
+  three_d_tour_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
+  virtual_walkthrough_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
+  total_flats: z.coerce.number().int().min(0).max(100000).optional(),
+  available_flats: z.coerce.number().int().min(0).max(100000).optional(),
+  reserved_flats: z.coerce.number().int().min(0).max(100000).optional(),
+  sold_flats: z.coerce.number().int().min(0).max(100000).optional(),
+})
+.refine(
+  (v) => {
+    const t = v.total_flats;
+    if (t == null) return true;
+    const parts = (v.available_flats ?? 0) + (v.reserved_flats ?? 0) + (v.sold_flats ?? 0);
+    return parts <= t;
+  },
+  { message: "Available + reserved + sold cannot exceed total flats", path: ["total_flats"] },
+);
 
 export const adminUpsertProject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
