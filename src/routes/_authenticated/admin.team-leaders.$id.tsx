@@ -169,13 +169,51 @@ function Content() {
               )}
             </div>
           </div>
-          <button
-            onClick={() => setEditing(true)}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-xs font-semibold text-foreground"
-          >
-            <Pencil size={14} /> Edit profile
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={onResetPassword}
+              disabled={busy !== null}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-xs font-semibold text-foreground disabled:opacity-60"
+            >
+              {busy === "reset" ? <Loader2 size={14} className="animate-spin" /> : <UserCog size={14} />}
+              Reset password
+            </button>
+            {(p.status ?? "active") === "suspended" ? (
+              <button
+                type="button"
+                onClick={() => onChangeStatus("activate")}
+                disabled={busy !== null}
+                className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-semibold text-emerald-700 disabled:opacity-60"
+              >
+                {busy === "activate" ? <Loader2 size={14} className="animate-spin" /> : <BadgeCheck size={14} />}
+                Activate
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onChangeStatus("suspend")}
+                disabled={busy !== null}
+                className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-xs font-semibold text-amber-700 disabled:opacity-60"
+              >
+                {busy === "suspend" ? <Loader2 size={14} className="animate-spin" /> : <Activity size={14} />}
+                Suspend
+              </button>
+            )}
+            <button
+              onClick={() => setEditing(true)}
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-[var(--shadow-soft)]"
+            >
+              <Pencil size={14} /> Edit profile
+            </button>
+          </div>
         </div>
+
+        {(actionMsg || actionErr) && (
+          <div className={`mt-4 rounded-2xl px-4 py-2 text-xs font-semibold ${actionErr ? "bg-rose-500/10 text-rose-700" : "bg-emerald-500/10 text-emerald-700"}`}>
+            {actionErr ?? actionMsg}
+          </div>
+        )}
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatMini icon={<Users size={14} />} label="Members" value={String(data.members.length)} />
