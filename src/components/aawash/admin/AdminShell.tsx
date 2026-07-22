@@ -77,6 +77,15 @@ const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "Website CMS",
+    items: [
+      { to: "/admin/cms/pages", label: "Pages & Builder", icon: Sparkles, prefix: "/admin/cms/pages" },
+      { to: "/admin/cms/brand", label: "Brand & Theme", icon: Settings2, prefix: "/admin/cms/brand" },
+      { to: "/admin/cms/global", label: "Global Content", icon: ClipboardList, prefix: "/admin/cms/global" },
+      { to: "/admin/cms/media", label: "Media Library", icon: LayoutDashboard, prefix: "/admin/cms/media" },
+    ],
+  },
+  {
     label: "Account",
     items: [
       { to: "/admin/notifications", label: "Notifications", icon: Bell, prefix: "/admin/notifications" },
