@@ -582,6 +582,79 @@ export type Database = {
           },
         ]
       }
+      customer_documents: {
+        Row: {
+          created_at: string
+          customer_id: string
+          doc_type: string
+          id: string
+          is_current: boolean
+          label: string | null
+          mime_type: string | null
+          notes: string | null
+          replaces_id: string | null
+          size_bytes: number | null
+          storage_path: string
+          updated_at: string
+          uploaded_by: string | null
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          doc_type: string
+          id?: string
+          is_current?: boolean
+          label?: string | null
+          mime_type?: string | null
+          notes?: string | null
+          replaces_id?: string | null
+          size_bytes?: number | null
+          storage_path: string
+          updated_at?: string
+          uploaded_by?: string | null
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          doc_type?: string
+          id?: string
+          is_current?: boolean
+          label?: string | null
+          mime_type?: string | null
+          notes?: string | null
+          replaces_id?: string | null
+          size_bytes?: number | null
+          storage_path?: string
+          updated_at?: string
+          uploaded_by?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_documents_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_documents_replaces_id_fkey"
+            columns: ["replaces_id"]
+            isOneToOne: false
+            referencedRelation: "customer_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_documents_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_meetings: {
         Row: {
           created_at: string
@@ -699,6 +772,47 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_tags_catalog: {
+        Row: {
+          color: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          label: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          label: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          label?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_tags_catalog_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -2231,6 +2345,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_bulk_reassign_customers: {
+        Args: {
+          _customer_ids: string[]
+          _leader_id: string
+          _member_id: string
+          _team_id: string
+        }
+        Returns: Json
+      }
+      admin_merge_customers: {
+        Args: { _source_id: string; _target_id: string }
+        Returns: Json
+      }
       approve_sale: {
         Args: { p_notes?: string; p_sale_id: string }
         Returns: undefined
