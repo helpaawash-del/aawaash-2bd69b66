@@ -151,6 +151,8 @@ export function AdminShell({
   return (
     <div className="relative min-h-screen">
       <AmbientBackground />
+      <SkylineFrame />
+
 
       {/* Sidebar — desktop */}
       <aside
