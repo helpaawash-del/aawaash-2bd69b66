@@ -775,7 +775,7 @@ function AssetDrawer({
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
-          {q.isLoading || !asset ? <SkeletonBlock className="h-80" /> : (
+          {q.isLoading || !asset || !q.data ? <SkeletonBlock className="h-80" /> : (
             <>
               {tab === "preview" && (
                 <div className="space-y-3">
