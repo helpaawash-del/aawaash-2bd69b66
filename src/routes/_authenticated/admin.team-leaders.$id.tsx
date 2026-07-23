@@ -89,6 +89,10 @@ function Content() {
     try {
       await statusFn({ data: { userId: id, action } });
       setActionMsg(action === "suspend" ? "Team leader suspended." : "Team leader activated.");
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
+        qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
+      ]);
       await refetch();
     } catch (e) {
       setActionErr(e instanceof Error ? e.message : "Status change failed");
@@ -101,6 +105,11 @@ function Content() {
     setBusy("delete");
     try {
       await statusFn({ data: { userId: id, action: "delete" } });
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
+        qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
+        qc.invalidateQueries({ queryKey: ["admin", "members"] }),
+      ]);
       navigate({ to: "/admin/team-leaders" });
     } catch (e) {
       setActionErr(e instanceof Error ? e.message : "Delete failed");
