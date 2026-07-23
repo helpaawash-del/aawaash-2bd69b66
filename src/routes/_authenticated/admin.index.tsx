@@ -254,13 +254,7 @@ function AdminContent() {
                 onRefresh={refreshTeamData}
                 onCreate={async (input) => {
                   await createLeaderFn({ data: input });
-                  await Promise.all([
-                    qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-                    qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
-                    qc.invalidateQueries({ queryKey: ["admin", "members"] }),
-                    qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
-                  ]);
-                  await Promise.all([leaders.refetch(), limits.refetch(), members.refetch(), overview.refetch()]);
+                  await invalidateAdmin(qc, "leader");
                 }}
               />
             ))}
@@ -272,13 +266,10 @@ function AdminContent() {
           cap={limits.data?.maxMembersPerTeam ?? 10}
           onCreate={async (input) => {
             await createMemberFn({ data: input });
-            await Promise.all([
-              qc.invalidateQueries({ queryKey: ["admin", "members"] }),
-              qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-              qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
-            ]);
+            await invalidateAdmin(qc, "member");
           }}
         />
+
       </section>
 
       <section className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
