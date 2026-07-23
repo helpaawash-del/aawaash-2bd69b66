@@ -29,6 +29,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AmbientBackground } from "../AmbientBackground";
 import { SkylineFrame } from "../SkylineFrame";
 import { BrandMark } from "../BrandMark";
+import { BottomNav } from "../BottomNav";
 import type { AawashProfile } from "@/hooks/useSession";
 import type { AppRole } from "@/lib/auth";
 import { globalAdminSearch } from "@/lib/admin-overview.functions";
