@@ -35,6 +35,8 @@ import { listAllMembers, createMemberFull } from "@/lib/members-admin.functions"
 import { getSystemHealth } from "@/lib/system.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
 import { WalletQuickPanel } from "@/components/aawash/admin/WalletQuickPanel";
+import { invalidateAdmin } from "@/lib/admin-cache";
+
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdminHome,
@@ -94,13 +96,9 @@ function AdminContent() {
   });
 
   const refreshTeamData = async () => {
-    await Promise.all([
-      qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-      qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
-      qc.invalidateQueries({ queryKey: ["admin", "members"] }),
-    ]);
-    await Promise.all([leaders.refetch(), limits.refetch(), members.refetch()]);
+    await invalidateAdmin(qc, "team-refresh");
   };
+
 
   useEffect(() => {
     void refreshTeamData();
@@ -256,13 +254,7 @@ function AdminContent() {
                 onRefresh={refreshTeamData}
                 onCreate={async (input) => {
                   await createLeaderFn({ data: input });
-                  await Promise.all([
-                    qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-                    qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
-                    qc.invalidateQueries({ queryKey: ["admin", "members"] }),
-                    qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
-                  ]);
-                  await Promise.all([leaders.refetch(), limits.refetch(), members.refetch(), overview.refetch()]);
+                  await invalidateAdmin(qc, "leader");
                 }}
               />
             ))}
@@ -274,13 +266,10 @@ function AdminContent() {
           cap={limits.data?.maxMembersPerTeam ?? 10}
           onCreate={async (input) => {
             await createMemberFn({ data: input });
-            await Promise.all([
-              qc.invalidateQueries({ queryKey: ["admin", "members"] }),
-              qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-              qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
-            ]);
+            await invalidateAdmin(qc, "member");
           }}
         />
+
       </section>
 
       <section className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
