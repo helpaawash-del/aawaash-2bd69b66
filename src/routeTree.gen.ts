@@ -13,6 +13,7 @@ import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminLoginRouteImport } from './routes/admin-login'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
@@ -23,6 +24,7 @@ import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedSalesWorkflowNewRouteImport } from './routes/_authenticated/sales-workflow.new'
 import { Route as AuthenticatedSalesWorkflowIdRouteImport } from './routes/_authenticated/sales-workflow.$id'
@@ -99,6 +101,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin-login',
+  path: '/admin-login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -148,6 +155,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   id: '/api/public/health',
@@ -476,6 +488,7 @@ const AuthenticatedAdminCmsPagesIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
   '/projects': typeof ProjectsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -528,6 +541,7 @@ export interface FileRoutesByFullPath {
   '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
   '/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
   '/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
@@ -546,11 +560,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
   '/projects': typeof ProjectsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/crm': typeof AuthenticatedCrmRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
@@ -598,6 +612,7 @@ export interface FileRoutesByTo {
   '/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
   '/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
   '/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
@@ -618,6 +633,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
   '/projects': typeof ProjectsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -670,6 +686,7 @@ export interface FileRoutesById {
   '/_authenticated/sales-workflow/$id': typeof AuthenticatedSalesWorkflowIdRoute
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
   '/_authenticated/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
   '/_authenticated/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
@@ -690,6 +707,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin-login'
     | '/auth'
     | '/projects'
     | '/sitemap.xml'
@@ -742,6 +760,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/$id'
     | '/sales-workflow/new'
     | '/api/public/health'
+    | '/admin/'
     | '/admin/cms/brand'
     | '/admin/cms/global'
     | '/admin/cms/media'
@@ -760,11 +779,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin-login'
     | '/auth'
     | '/projects'
     | '/sitemap.xml'
     | '/unauthorized'
-    | '/admin'
     | '/crm'
     | '/dashboard'
     | '/leader'
@@ -812,6 +831,7 @@ export interface FileRouteTypes {
     | '/sales-workflow/$id'
     | '/sales-workflow/new'
     | '/api/public/health'
+    | '/admin'
     | '/admin/cms/brand'
     | '/admin/cms/global'
     | '/admin/cms/media'
@@ -831,6 +851,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/admin-login'
     | '/auth'
     | '/projects'
     | '/sitemap.xml'
@@ -883,6 +904,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales-workflow/$id'
     | '/_authenticated/sales-workflow/new'
     | '/api/public/health'
+    | '/_authenticated/admin/'
     | '/_authenticated/admin/cms/brand'
     | '/_authenticated/admin/cms/global'
     | '/_authenticated/admin/cms/media'
@@ -903,6 +925,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
   AuthRoute: typeof AuthRoute
   ProjectsRoute: typeof ProjectsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -940,6 +963,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-login': {
+      id: '/admin-login'
+      path: '/admin-login'
+      fullPath: '/admin-login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -1011,6 +1041,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/api/public/health': {
       id: '/api/public/health'
@@ -1492,6 +1529,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminTeamLeadersRoute: typeof AuthenticatedAdminTeamLeadersRouteWithChildren
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminCmsBrandRoute: typeof AuthenticatedAdminCmsBrandRoute
   AuthenticatedAdminCmsGlobalRoute: typeof AuthenticatedAdminCmsGlobalRoute
   AuthenticatedAdminCmsMediaRoute: typeof AuthenticatedAdminCmsMediaRoute
@@ -1515,6 +1553,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminTeamLeadersRouteWithChildren,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminCmsBrandRoute: AuthenticatedAdminCmsBrandRoute,
   AuthenticatedAdminCmsGlobalRoute: AuthenticatedAdminCmsGlobalRoute,
   AuthenticatedAdminCmsMediaRoute: AuthenticatedAdminCmsMediaRoute,
@@ -1677,6 +1716,7 @@ const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
   AuthRoute: AuthRoute,
   ProjectsRoute: ProjectsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
