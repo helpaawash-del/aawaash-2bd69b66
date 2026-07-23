@@ -96,13 +96,9 @@ function AdminContent() {
   });
 
   const refreshTeamData = async () => {
-    await Promise.all([
-      qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-      qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
-      qc.invalidateQueries({ queryKey: ["admin", "members"] }),
-    ]);
-    await Promise.all([leaders.refetch(), limits.refetch(), members.refetch()]);
+    await invalidateAdmin(qc, "team-refresh");
   };
+
 
   useEffect(() => {
     void refreshTeamData();
