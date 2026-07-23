@@ -22,6 +22,7 @@ import { Route as AuthenticatedMemberRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated/leader'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedSalesWorkflowNewRouteImport } from './routes/_authenticated/sales-workflow.new'
 import { Route as AuthenticatedSalesWorkflowIdRouteImport } from './routes/_authenticated/sales-workflow.$id'
@@ -141,6 +142,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 const AuthenticatedCrmRoute = AuthenticatedCrmRouteImport.update({
   id: '/crm',
   path: '/crm',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
@@ -297,85 +303,85 @@ const AuthenticatedCommissionsIdRoute =
   } as any)
 const AuthenticatedAdminWithdrawalsRoute =
   AuthenticatedAdminWithdrawalsRouteImport.update({
-    id: '/admin/withdrawals',
-    path: '/admin/withdrawals',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/withdrawals',
+    path: '/withdrawals',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
-  id: '/admin/users',
-  path: '/admin/users',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
 const AuthenticatedAdminTeamLeadersRoute =
   AuthenticatedAdminTeamLeadersRouteImport.update({
-    id: '/admin/team-leaders',
-    path: '/admin/team-leaders',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/team-leaders',
+    path: '/team-leaders',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminSystemRoute =
   AuthenticatedAdminSystemRouteImport.update({
-    id: '/admin/system',
-    path: '/admin/system',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/system',
+    path: '/system',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminReportsRoute =
   AuthenticatedAdminReportsRouteImport.update({
-    id: '/admin/reports',
-    path: '/admin/reports',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/reports',
+    path: '/reports',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminProjectsRoute =
   AuthenticatedAdminProjectsRouteImport.update({
-    id: '/admin/projects',
-    path: '/admin/projects',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminProfileRoute =
   AuthenticatedAdminProfileRouteImport.update({
-    id: '/admin/profile',
-    path: '/admin/profile',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminNotificationsRoute =
   AuthenticatedAdminNotificationsRouteImport.update({
-    id: '/admin/notifications',
-    path: '/admin/notifications',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminMembersRoute =
   AuthenticatedAdminMembersRouteImport.update({
-    id: '/admin/members',
-    path: '/admin/members',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
-  id: '/admin/media',
-  path: '/admin/media',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
 const AuthenticatedAdminFinanceRoute =
   AuthenticatedAdminFinanceRouteImport.update({
-    id: '/admin/finance',
-    path: '/admin/finance',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/finance',
+    path: '/finance',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCustomersRoute =
   AuthenticatedAdminCustomersRouteImport.update({
-    id: '/admin/customers',
-    path: '/admin/customers',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/customers',
+    path: '/customers',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCommissionsRoute =
   AuthenticatedAdminCommissionsRouteImport.update({
-    id: '/admin/commissions',
-    path: '/admin/commissions',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/commissions',
+    path: '/commissions',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminAnalyticsRoute =
   AuthenticatedAdminAnalyticsRouteImport.update({
-    id: '/admin/analytics',
-    path: '/admin/analytics',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const ApiPublicHooksSystemMaintenanceRoute =
   ApiPublicHooksSystemMaintenanceRouteImport.update({
@@ -439,27 +445,27 @@ const AuthenticatedAdminCustomersIdRoute =
   } as any)
 const AuthenticatedAdminCmsPagesRoute =
   AuthenticatedAdminCmsPagesRouteImport.update({
-    id: '/admin/cms/pages',
-    path: '/admin/cms/pages',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/cms/pages',
+    path: '/cms/pages',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCmsMediaRoute =
   AuthenticatedAdminCmsMediaRouteImport.update({
-    id: '/admin/cms/media',
-    path: '/admin/cms/media',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/cms/media',
+    path: '/cms/media',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCmsGlobalRoute =
   AuthenticatedAdminCmsGlobalRouteImport.update({
-    id: '/admin/cms/global',
-    path: '/admin/cms/global',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/cms/global',
+    path: '/cms/global',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCmsBrandRoute =
   AuthenticatedAdminCmsBrandRouteImport.update({
-    id: '/admin/cms/brand',
-    path: '/admin/cms/brand',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/cms/brand',
+    path: '/cms/brand',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCmsPagesIdRoute =
   AuthenticatedAdminCmsPagesIdRouteImport.update({
@@ -474,6 +480,7 @@ export interface FileRoutesByFullPath {
   '/projects': typeof ProjectsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/crm': typeof AuthenticatedCrmRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
@@ -543,6 +550,7 @@ export interface FileRoutesByTo {
   '/projects': typeof ProjectsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/crm': typeof AuthenticatedCrmRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leader': typeof AuthenticatedLeaderRouteWithChildren
@@ -614,6 +622,7 @@ export interface FileRoutesById {
   '/projects': typeof ProjectsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/crm': typeof AuthenticatedCrmRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leader': typeof AuthenticatedLeaderRouteWithChildren
@@ -685,6 +694,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/sitemap.xml'
     | '/unauthorized'
+    | '/admin'
     | '/crm'
     | '/dashboard'
     | '/leader'
@@ -754,6 +764,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/sitemap.xml'
     | '/unauthorized'
+    | '/admin'
     | '/crm'
     | '/dashboard'
     | '/leader'
@@ -824,6 +835,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/sitemap.xml'
     | '/unauthorized'
+    | '/_authenticated/admin'
     | '/_authenticated/crm'
     | '/_authenticated/dashboard'
     | '/_authenticated/leader'
@@ -991,6 +1003,13 @@ declare module '@tanstack/react-router' {
       path: '/crm'
       fullPath: '/crm'
       preLoaderRoute: typeof AuthenticatedCrmRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/api/public/health': {
@@ -1177,101 +1196,101 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/admin/withdrawals': {
       id: '/_authenticated/admin/withdrawals'
-      path: '/admin/withdrawals'
+      path: '/withdrawals'
       fullPath: '/admin/withdrawals'
       preLoaderRoute: typeof AuthenticatedAdminWithdrawalsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
-      path: '/admin/users'
+      path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/team-leaders': {
       id: '/_authenticated/admin/team-leaders'
-      path: '/admin/team-leaders'
+      path: '/team-leaders'
       fullPath: '/admin/team-leaders'
       preLoaderRoute: typeof AuthenticatedAdminTeamLeadersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/system': {
       id: '/_authenticated/admin/system'
-      path: '/admin/system'
+      path: '/system'
       fullPath: '/admin/system'
       preLoaderRoute: typeof AuthenticatedAdminSystemRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/reports': {
       id: '/_authenticated/admin/reports'
-      path: '/admin/reports'
+      path: '/reports'
       fullPath: '/admin/reports'
       preLoaderRoute: typeof AuthenticatedAdminReportsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/projects': {
       id: '/_authenticated/admin/projects'
-      path: '/admin/projects'
+      path: '/projects'
       fullPath: '/admin/projects'
       preLoaderRoute: typeof AuthenticatedAdminProjectsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/profile': {
       id: '/_authenticated/admin/profile'
-      path: '/admin/profile'
+      path: '/profile'
       fullPath: '/admin/profile'
       preLoaderRoute: typeof AuthenticatedAdminProfileRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/notifications': {
       id: '/_authenticated/admin/notifications'
-      path: '/admin/notifications'
+      path: '/notifications'
       fullPath: '/admin/notifications'
       preLoaderRoute: typeof AuthenticatedAdminNotificationsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/members': {
       id: '/_authenticated/admin/members'
-      path: '/admin/members'
+      path: '/members'
       fullPath: '/admin/members'
       preLoaderRoute: typeof AuthenticatedAdminMembersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/media': {
       id: '/_authenticated/admin/media'
-      path: '/admin/media'
+      path: '/media'
       fullPath: '/admin/media'
       preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/finance': {
       id: '/_authenticated/admin/finance'
-      path: '/admin/finance'
+      path: '/finance'
       fullPath: '/admin/finance'
       preLoaderRoute: typeof AuthenticatedAdminFinanceRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/customers': {
       id: '/_authenticated/admin/customers'
-      path: '/admin/customers'
+      path: '/customers'
       fullPath: '/admin/customers'
       preLoaderRoute: typeof AuthenticatedAdminCustomersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/commissions': {
       id: '/_authenticated/admin/commissions'
-      path: '/admin/commissions'
+      path: '/commissions'
       fullPath: '/admin/commissions'
       preLoaderRoute: typeof AuthenticatedAdminCommissionsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/analytics': {
       id: '/_authenticated/admin/analytics'
-      path: '/admin/analytics'
+      path: '/analytics'
       fullPath: '/admin/analytics'
       preLoaderRoute: typeof AuthenticatedAdminAnalyticsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/api/public/hooks/system-maintenance': {
       id: '/api/public/hooks/system-maintenance'
@@ -1345,31 +1364,31 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/admin/cms/pages': {
       id: '/_authenticated/admin/cms/pages'
-      path: '/admin/cms/pages'
+      path: '/cms/pages'
       fullPath: '/admin/cms/pages'
       preLoaderRoute: typeof AuthenticatedAdminCmsPagesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/cms/media': {
       id: '/_authenticated/admin/cms/media'
-      path: '/admin/cms/media'
+      path: '/cms/media'
       fullPath: '/admin/cms/media'
       preLoaderRoute: typeof AuthenticatedAdminCmsMediaRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/cms/global': {
       id: '/_authenticated/admin/cms/global'
-      path: '/admin/cms/global'
+      path: '/cms/global'
       fullPath: '/admin/cms/global'
       preLoaderRoute: typeof AuthenticatedAdminCmsGlobalRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/cms/brand': {
       id: '/_authenticated/admin/cms/brand'
-      path: '/admin/cms/brand'
+      path: '/cms/brand'
       fullPath: '/admin/cms/brand'
       preLoaderRoute: typeof AuthenticatedAdminCmsBrandRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/cms/pages/$id': {
       id: '/_authenticated/admin/cms/pages/$id'
@@ -1380,6 +1399,130 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAdminCustomersRouteChildren {
+  AuthenticatedAdminCustomersIdRoute: typeof AuthenticatedAdminCustomersIdRoute
+}
+
+const AuthenticatedAdminCustomersRouteChildren: AuthenticatedAdminCustomersRouteChildren =
+  {
+    AuthenticatedAdminCustomersIdRoute: AuthenticatedAdminCustomersIdRoute,
+  }
+
+const AuthenticatedAdminCustomersRouteWithChildren =
+  AuthenticatedAdminCustomersRoute._addFileChildren(
+    AuthenticatedAdminCustomersRouteChildren,
+  )
+
+interface AuthenticatedAdminMembersRouteChildren {
+  AuthenticatedAdminMembersIdRoute: typeof AuthenticatedAdminMembersIdRoute
+  AuthenticatedAdminMembersNewRoute: typeof AuthenticatedAdminMembersNewRoute
+}
+
+const AuthenticatedAdminMembersRouteChildren: AuthenticatedAdminMembersRouteChildren =
+  {
+    AuthenticatedAdminMembersIdRoute: AuthenticatedAdminMembersIdRoute,
+    AuthenticatedAdminMembersNewRoute: AuthenticatedAdminMembersNewRoute,
+  }
+
+const AuthenticatedAdminMembersRouteWithChildren =
+  AuthenticatedAdminMembersRoute._addFileChildren(
+    AuthenticatedAdminMembersRouteChildren,
+  )
+
+interface AuthenticatedAdminProjectsRouteChildren {
+  AuthenticatedAdminProjectsIdRoute: typeof AuthenticatedAdminProjectsIdRoute
+  AuthenticatedAdminProjectsNewRoute: typeof AuthenticatedAdminProjectsNewRoute
+}
+
+const AuthenticatedAdminProjectsRouteChildren: AuthenticatedAdminProjectsRouteChildren =
+  {
+    AuthenticatedAdminProjectsIdRoute: AuthenticatedAdminProjectsIdRoute,
+    AuthenticatedAdminProjectsNewRoute: AuthenticatedAdminProjectsNewRoute,
+  }
+
+const AuthenticatedAdminProjectsRouteWithChildren =
+  AuthenticatedAdminProjectsRoute._addFileChildren(
+    AuthenticatedAdminProjectsRouteChildren,
+  )
+
+interface AuthenticatedAdminTeamLeadersRouteChildren {
+  AuthenticatedAdminTeamLeadersIdRoute: typeof AuthenticatedAdminTeamLeadersIdRoute
+  AuthenticatedAdminTeamLeadersNewRoute: typeof AuthenticatedAdminTeamLeadersNewRoute
+}
+
+const AuthenticatedAdminTeamLeadersRouteChildren: AuthenticatedAdminTeamLeadersRouteChildren =
+  {
+    AuthenticatedAdminTeamLeadersIdRoute: AuthenticatedAdminTeamLeadersIdRoute,
+    AuthenticatedAdminTeamLeadersNewRoute:
+      AuthenticatedAdminTeamLeadersNewRoute,
+  }
+
+const AuthenticatedAdminTeamLeadersRouteWithChildren =
+  AuthenticatedAdminTeamLeadersRoute._addFileChildren(
+    AuthenticatedAdminTeamLeadersRouteChildren,
+  )
+
+interface AuthenticatedAdminCmsPagesRouteChildren {
+  AuthenticatedAdminCmsPagesIdRoute: typeof AuthenticatedAdminCmsPagesIdRoute
+}
+
+const AuthenticatedAdminCmsPagesRouteChildren: AuthenticatedAdminCmsPagesRouteChildren =
+  {
+    AuthenticatedAdminCmsPagesIdRoute: AuthenticatedAdminCmsPagesIdRoute,
+  }
+
+const AuthenticatedAdminCmsPagesRouteWithChildren =
+  AuthenticatedAdminCmsPagesRoute._addFileChildren(
+    AuthenticatedAdminCmsPagesRouteChildren,
+  )
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAnalyticsRoute: typeof AuthenticatedAdminAnalyticsRoute
+  AuthenticatedAdminCommissionsRoute: typeof AuthenticatedAdminCommissionsRoute
+  AuthenticatedAdminCustomersRoute: typeof AuthenticatedAdminCustomersRouteWithChildren
+  AuthenticatedAdminFinanceRoute: typeof AuthenticatedAdminFinanceRoute
+  AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
+  AuthenticatedAdminMembersRoute: typeof AuthenticatedAdminMembersRouteWithChildren
+  AuthenticatedAdminNotificationsRoute: typeof AuthenticatedAdminNotificationsRoute
+  AuthenticatedAdminProfileRoute: typeof AuthenticatedAdminProfileRoute
+  AuthenticatedAdminProjectsRoute: typeof AuthenticatedAdminProjectsRouteWithChildren
+  AuthenticatedAdminReportsRoute: typeof AuthenticatedAdminReportsRoute
+  AuthenticatedAdminSystemRoute: typeof AuthenticatedAdminSystemRoute
+  AuthenticatedAdminTeamLeadersRoute: typeof AuthenticatedAdminTeamLeadersRouteWithChildren
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
+  AuthenticatedAdminCmsBrandRoute: typeof AuthenticatedAdminCmsBrandRoute
+  AuthenticatedAdminCmsGlobalRoute: typeof AuthenticatedAdminCmsGlobalRoute
+  AuthenticatedAdminCmsMediaRoute: typeof AuthenticatedAdminCmsMediaRoute
+  AuthenticatedAdminCmsPagesRoute: typeof AuthenticatedAdminCmsPagesRouteWithChildren
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAnalyticsRoute: AuthenticatedAdminAnalyticsRoute,
+  AuthenticatedAdminCommissionsRoute: AuthenticatedAdminCommissionsRoute,
+  AuthenticatedAdminCustomersRoute:
+    AuthenticatedAdminCustomersRouteWithChildren,
+  AuthenticatedAdminFinanceRoute: AuthenticatedAdminFinanceRoute,
+  AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
+  AuthenticatedAdminMembersRoute: AuthenticatedAdminMembersRouteWithChildren,
+  AuthenticatedAdminNotificationsRoute: AuthenticatedAdminNotificationsRoute,
+  AuthenticatedAdminProfileRoute: AuthenticatedAdminProfileRoute,
+  AuthenticatedAdminProjectsRoute: AuthenticatedAdminProjectsRouteWithChildren,
+  AuthenticatedAdminReportsRoute: AuthenticatedAdminReportsRoute,
+  AuthenticatedAdminSystemRoute: AuthenticatedAdminSystemRoute,
+  AuthenticatedAdminTeamLeadersRoute:
+    AuthenticatedAdminTeamLeadersRouteWithChildren,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
+  AuthenticatedAdminCmsBrandRoute: AuthenticatedAdminCmsBrandRoute,
+  AuthenticatedAdminCmsGlobalRoute: AuthenticatedAdminCmsGlobalRoute,
+  AuthenticatedAdminCmsMediaRoute: AuthenticatedAdminCmsMediaRoute,
+  AuthenticatedAdminCmsPagesRoute: AuthenticatedAdminCmsPagesRouteWithChildren,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedCrmRouteChildren {
   AuthenticatedCrmIdRoute: typeof AuthenticatedCrmIdRoute
@@ -1496,137 +1639,24 @@ const AuthenticatedSalesWorkflowRouteWithChildren =
     AuthenticatedSalesWorkflowRouteChildren,
   )
 
-interface AuthenticatedAdminCustomersRouteChildren {
-  AuthenticatedAdminCustomersIdRoute: typeof AuthenticatedAdminCustomersIdRoute
-}
-
-const AuthenticatedAdminCustomersRouteChildren: AuthenticatedAdminCustomersRouteChildren =
-  {
-    AuthenticatedAdminCustomersIdRoute: AuthenticatedAdminCustomersIdRoute,
-  }
-
-const AuthenticatedAdminCustomersRouteWithChildren =
-  AuthenticatedAdminCustomersRoute._addFileChildren(
-    AuthenticatedAdminCustomersRouteChildren,
-  )
-
-interface AuthenticatedAdminMembersRouteChildren {
-  AuthenticatedAdminMembersIdRoute: typeof AuthenticatedAdminMembersIdRoute
-  AuthenticatedAdminMembersNewRoute: typeof AuthenticatedAdminMembersNewRoute
-}
-
-const AuthenticatedAdminMembersRouteChildren: AuthenticatedAdminMembersRouteChildren =
-  {
-    AuthenticatedAdminMembersIdRoute: AuthenticatedAdminMembersIdRoute,
-    AuthenticatedAdminMembersNewRoute: AuthenticatedAdminMembersNewRoute,
-  }
-
-const AuthenticatedAdminMembersRouteWithChildren =
-  AuthenticatedAdminMembersRoute._addFileChildren(
-    AuthenticatedAdminMembersRouteChildren,
-  )
-
-interface AuthenticatedAdminProjectsRouteChildren {
-  AuthenticatedAdminProjectsIdRoute: typeof AuthenticatedAdminProjectsIdRoute
-  AuthenticatedAdminProjectsNewRoute: typeof AuthenticatedAdminProjectsNewRoute
-}
-
-const AuthenticatedAdminProjectsRouteChildren: AuthenticatedAdminProjectsRouteChildren =
-  {
-    AuthenticatedAdminProjectsIdRoute: AuthenticatedAdminProjectsIdRoute,
-    AuthenticatedAdminProjectsNewRoute: AuthenticatedAdminProjectsNewRoute,
-  }
-
-const AuthenticatedAdminProjectsRouteWithChildren =
-  AuthenticatedAdminProjectsRoute._addFileChildren(
-    AuthenticatedAdminProjectsRouteChildren,
-  )
-
-interface AuthenticatedAdminTeamLeadersRouteChildren {
-  AuthenticatedAdminTeamLeadersIdRoute: typeof AuthenticatedAdminTeamLeadersIdRoute
-  AuthenticatedAdminTeamLeadersNewRoute: typeof AuthenticatedAdminTeamLeadersNewRoute
-}
-
-const AuthenticatedAdminTeamLeadersRouteChildren: AuthenticatedAdminTeamLeadersRouteChildren =
-  {
-    AuthenticatedAdminTeamLeadersIdRoute: AuthenticatedAdminTeamLeadersIdRoute,
-    AuthenticatedAdminTeamLeadersNewRoute:
-      AuthenticatedAdminTeamLeadersNewRoute,
-  }
-
-const AuthenticatedAdminTeamLeadersRouteWithChildren =
-  AuthenticatedAdminTeamLeadersRoute._addFileChildren(
-    AuthenticatedAdminTeamLeadersRouteChildren,
-  )
-
-interface AuthenticatedAdminCmsPagesRouteChildren {
-  AuthenticatedAdminCmsPagesIdRoute: typeof AuthenticatedAdminCmsPagesIdRoute
-}
-
-const AuthenticatedAdminCmsPagesRouteChildren: AuthenticatedAdminCmsPagesRouteChildren =
-  {
-    AuthenticatedAdminCmsPagesIdRoute: AuthenticatedAdminCmsPagesIdRoute,
-  }
-
-const AuthenticatedAdminCmsPagesRouteWithChildren =
-  AuthenticatedAdminCmsPagesRoute._addFileChildren(
-    AuthenticatedAdminCmsPagesRouteChildren,
-  )
-
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedCrmRoute: typeof AuthenticatedCrmRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderRoute: typeof AuthenticatedLeaderRouteWithChildren
   AuthenticatedMemberRoute: typeof AuthenticatedMemberRouteWithChildren
   AuthenticatedSalesWorkflowRoute: typeof AuthenticatedSalesWorkflowRouteWithChildren
-  AuthenticatedAdminAnalyticsRoute: typeof AuthenticatedAdminAnalyticsRoute
-  AuthenticatedAdminCommissionsRoute: typeof AuthenticatedAdminCommissionsRoute
-  AuthenticatedAdminCustomersRoute: typeof AuthenticatedAdminCustomersRouteWithChildren
-  AuthenticatedAdminFinanceRoute: typeof AuthenticatedAdminFinanceRoute
-  AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
-  AuthenticatedAdminMembersRoute: typeof AuthenticatedAdminMembersRouteWithChildren
-  AuthenticatedAdminNotificationsRoute: typeof AuthenticatedAdminNotificationsRoute
-  AuthenticatedAdminProfileRoute: typeof AuthenticatedAdminProfileRoute
-  AuthenticatedAdminProjectsRoute: typeof AuthenticatedAdminProjectsRouteWithChildren
-  AuthenticatedAdminReportsRoute: typeof AuthenticatedAdminReportsRoute
-  AuthenticatedAdminSystemRoute: typeof AuthenticatedAdminSystemRoute
-  AuthenticatedAdminTeamLeadersRoute: typeof AuthenticatedAdminTeamLeadersRouteWithChildren
-  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
-  AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
   AuthenticatedCommissionsIdRoute: typeof AuthenticatedCommissionsIdRoute
-  AuthenticatedAdminCmsBrandRoute: typeof AuthenticatedAdminCmsBrandRoute
-  AuthenticatedAdminCmsGlobalRoute: typeof AuthenticatedAdminCmsGlobalRoute
-  AuthenticatedAdminCmsMediaRoute: typeof AuthenticatedAdminCmsMediaRoute
-  AuthenticatedAdminCmsPagesRoute: typeof AuthenticatedAdminCmsPagesRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedCrmRoute: AuthenticatedCrmRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderRoute: AuthenticatedLeaderRouteWithChildren,
   AuthenticatedMemberRoute: AuthenticatedMemberRouteWithChildren,
   AuthenticatedSalesWorkflowRoute: AuthenticatedSalesWorkflowRouteWithChildren,
-  AuthenticatedAdminAnalyticsRoute: AuthenticatedAdminAnalyticsRoute,
-  AuthenticatedAdminCommissionsRoute: AuthenticatedAdminCommissionsRoute,
-  AuthenticatedAdminCustomersRoute:
-    AuthenticatedAdminCustomersRouteWithChildren,
-  AuthenticatedAdminFinanceRoute: AuthenticatedAdminFinanceRoute,
-  AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
-  AuthenticatedAdminMembersRoute: AuthenticatedAdminMembersRouteWithChildren,
-  AuthenticatedAdminNotificationsRoute: AuthenticatedAdminNotificationsRoute,
-  AuthenticatedAdminProfileRoute: AuthenticatedAdminProfileRoute,
-  AuthenticatedAdminProjectsRoute: AuthenticatedAdminProjectsRouteWithChildren,
-  AuthenticatedAdminReportsRoute: AuthenticatedAdminReportsRoute,
-  AuthenticatedAdminSystemRoute: AuthenticatedAdminSystemRoute,
-  AuthenticatedAdminTeamLeadersRoute:
-    AuthenticatedAdminTeamLeadersRouteWithChildren,
-  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
-  AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
   AuthenticatedCommissionsIdRoute: AuthenticatedCommissionsIdRoute,
-  AuthenticatedAdminCmsBrandRoute: AuthenticatedAdminCmsBrandRoute,
-  AuthenticatedAdminCmsGlobalRoute: AuthenticatedAdminCmsGlobalRoute,
-  AuthenticatedAdminCmsMediaRoute: AuthenticatedAdminCmsMediaRoute,
-  AuthenticatedAdminCmsPagesRoute: AuthenticatedAdminCmsPagesRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
