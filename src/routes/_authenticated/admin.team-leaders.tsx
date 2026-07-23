@@ -22,7 +22,16 @@ import { formatINR, initials } from "@/components/aawash/dashboard-kit";
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders")({
   component: Page,
-  head: () => ({ meta: [{ title: "Team Leaders — Aawash Admin" }] }),
+  head: () => ({
+    meta: [
+      { title: "Team Leaders — Aawash Admin" },
+      { name: "description", content: "Manage Aawash team leader slots, limits, credentials, teams, members, revenue, and wallet summaries." },
+      { property: "og:title", content: "Team Leaders — Aawash Admin" },
+      { property: "og:description", content: "Private admin console for Aawash team leader management." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
 });
 
 function Page() {
@@ -53,10 +62,16 @@ function Content() {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin", "team-leaders"],
     queryFn: () => listFn(),
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
   const { data: limits, refetch: refetchLimits } = useQuery({
     queryKey: ["admin", "team-limits"],
     queryFn: () => limitsFn(),
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 
   const filtered = useMemo(() => {

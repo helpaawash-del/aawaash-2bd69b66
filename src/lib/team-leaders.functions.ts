@@ -104,6 +104,14 @@ export const listTeamLeaders = createServerFn({ method: "GET" })
     await assertSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+    const { data: teams, error: teamsErr } = await supabaseAdmin
+      .from("teams")
+      .select("id, letter, name, leader_id, is_deleted")
+      .eq("is_deleted", false)
+      .order("letter");
+    if (teamsErr) throw new Error(teamsErr.message);
+    const activeTeams = teams ?? [];
+
     const { data: leaderRoles } = await supabaseAdmin
       .from("user_roles")
       .select("user_id")
@@ -111,12 +119,7 @@ export const listTeamLeaders = createServerFn({ method: "GET" })
     const leaderIds = (leaderRoles ?? []).map((r) => r.user_id);
 
     if (!leaderIds.length) {
-      const { data: teams } = await supabaseAdmin
-        .from("teams")
-        .select("id, letter, name, leader_id, is_deleted")
-        .eq("is_deleted", false)
-        .order("letter");
-      return { leaders: [], teams: teams ?? [] };
+      return { leaders: [], teams: activeTeams };
     }
 
     const { data: profiles, error } = await supabaseAdmin
@@ -128,11 +131,7 @@ export const listTeamLeaders = createServerFn({ method: "GET" })
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
 
-    const { data: teams } = await supabaseAdmin
-      .from("teams")
-      .select("id, letter, name, leader_id, is_deleted")
-      .order("letter");
-    const teamById = new Map((teams ?? []).map((t) => [t.id, t]));
+    const teamById = new Map(activeTeams.map((t) => [t.id, t]));
 
     // Member counts per team (excluding the leader)
     const teamIds = (profiles ?? []).map((p) => p.team_id).filter(Boolean) as string[];
@@ -201,7 +200,7 @@ export const listTeamLeaders = createServerFn({ method: "GET" })
       };
     });
 
-    return { leaders, teams: teams ?? [] };
+    return { leaders, teams: activeTeams };
   });
 
 /* ================================================================== */
@@ -281,28 +280,34 @@ export const createTeamLeaderFull = createServerFn({ method: "POST" })
 
     // Trigger inserts default member role — swap for team_leader.
     await supabaseAdmin.from("user_roles").delete().eq("user_id", created.user.id);
-    await supabaseAdmin.from("user_roles").insert({
+    const { error: roleErr } = await supabaseAdmin.from("user_roles").insert({
       user_id: created.user.id,
       role: "team_leader",
       granted_by: context.userId,
     } as never);
+    if (roleErr) throw new Error(roleErr.message);
 
     // Optional team rename
     if (data.teamName && data.teamName !== team.name) {
-      await supabaseAdmin
+      const { error: renameErr } = await supabaseAdmin
         .from("teams")
         .update({ name: data.teamName, updated_by: context.userId } as never)
         .eq("id", team.id);
+      if (renameErr) throw new Error(renameErr.message);
     }
 
     // Assign leader to team
-    await supabaseAdmin
+    const { error: teamUpdateErr } = await supabaseAdmin
       .from("teams")
       .update({ leader_id: created.user.id, updated_by: context.userId } as never)
       .eq("id", team.id);
+    if (teamUpdateErr) throw new Error(teamUpdateErr.message);
 
     // Persist enterprise profile fields
     const profileUpdate: Record<string, unknown> = {
+      full_name: data.fullName,
+      mobile_number: data.mobile,
+      login_id: loginId,
       team_id: team.id,
       email: data.email && data.email.length > 0 ? data.email : null,
       avatar_url: data.avatarUrl && data.avatarUrl.length > 0 ? data.avatarUrl : null,
@@ -312,7 +317,11 @@ export const createTeamLeaderFull = createServerFn({ method: "POST" })
       created_by: context.userId,
       updated_by: context.userId,
     };
-    await supabaseAdmin.from("profiles").update(profileUpdate as never).eq("id", created.user.id);
+    const { error: profileErr } = await supabaseAdmin
+      .from("profiles")
+      .update(profileUpdate as never)
+      .eq("id", created.user.id);
+    if (profileErr) throw new Error(profileErr.message);
 
     await supabaseAdmin.from("audit_logs").insert({
       actor_id: context.userId,

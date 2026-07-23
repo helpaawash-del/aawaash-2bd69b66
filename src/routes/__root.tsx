@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -94,8 +95,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Aawash — Premium Real Estate, Reimagined" },
       { name: "twitter:description", content: "Aawash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8be3fd40-a3b0-49ae-adac-d910f3f63864/id-preview-1776682c--b6eaed25-010a-45b0-9244-82743247de4f.lovable.app-1784616993889.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8be3fd40-a3b0-49ae-adac-d910f3f63864/id-preview-1776682c--b6eaed25-010a-45b0-9244-82743247de4f.lovable.app-1784616993889.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -148,6 +147,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
 }
