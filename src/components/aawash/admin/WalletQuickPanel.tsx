@@ -15,6 +15,7 @@ type Person = {
   mobile_number: string | null;
   avatar_url: string | null;
   wallet_balance: number | null;
+  team_id?: string | null;
   team_letter?: string | null;
   team_name?: string | null;
 };
