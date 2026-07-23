@@ -107,6 +107,7 @@ function AdminContent() {
   }, []);
 
   const [clock, setClock] = useState(new Date());
+  const [walletOpen, setWalletOpen] = useState(false);
   useEffect(() => {
     const id = window.setInterval(() => setClock(new Date()), 30_000);
     return () => window.clearInterval(id);
