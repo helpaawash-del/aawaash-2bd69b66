@@ -194,6 +194,7 @@ export function WalletQuickPanel({ open, onClose }: { open: boolean; onClose: ()
           }
           onClose={() => setMembersOfTeam(null)}
           onAdjusted={refresh}
+          onOptimistic={applyOptimistic}
         />
       )}
     </>
