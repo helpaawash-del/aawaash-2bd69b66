@@ -207,12 +207,14 @@ function MembersWalletModal({
   members,
   onClose,
   onAdjusted,
+  onOptimistic,
 }: {
   teamId: string;
   title: string;
   members: Person[];
   onClose: () => void;
   onAdjusted: () => Promise<void> | void;
+  onOptimistic: (userId: string, delta: number) => void;
 }) {
   void teamId;
   return (
@@ -255,6 +257,7 @@ function MembersWalletModal({
                   person={m}
                   subLabel={m.login_id ?? m.mobile_number ?? "Member"}
                   onAdjusted={onAdjusted}
+                  onOptimistic={onOptimistic}
                 />
               ))}
             </ul>
@@ -269,11 +272,13 @@ function WalletRow({
   person,
   subLabel,
   onAdjusted,
+  onOptimistic,
   extraAction,
 }: {
   person: Person;
   subLabel: string;
   onAdjusted: () => Promise<void> | void;
+  onOptimistic?: (userId: string, delta: number) => void;
   extraAction?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -304,7 +309,16 @@ function WalletRow({
           <Wallet size={13} /> {open ? "Close" : "Edit"}
         </button>
       </div>
-      {open && <AdjustForm userId={person.id} onDone={async () => { setOpen(false); await onAdjusted(); }} />}
+      {open && (
+        <AdjustForm
+          userId={person.id}
+          onOptimistic={onOptimistic}
+          onDone={async () => {
+            setOpen(false);
+            await onAdjusted();
+          }}
+        />
+      )}
     </li>
   );
 }
