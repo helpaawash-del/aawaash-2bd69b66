@@ -34,6 +34,7 @@ import { listTeamLeaders, createTeamLeaderFull, getTeamLimits } from "@/lib/team
 import { listAllMembers, createMemberFull } from "@/lib/members-admin.functions";
 import { getSystemHealth } from "@/lib/system.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
+import { WalletQuickPanel } from "@/components/aawash/admin/WalletQuickPanel";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdminHome,
