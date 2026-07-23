@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /leader
+Disallow: /member
+Disallow: /auth
+
+Sitemap: https://aawaash.lovable.app/sitemap.xml
