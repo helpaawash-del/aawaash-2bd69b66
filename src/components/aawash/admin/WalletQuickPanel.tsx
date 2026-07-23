@@ -326,9 +326,11 @@ function WalletRow({
 function AdjustForm({
   userId,
   onDone,
+  onOptimistic,
 }: {
   userId: string;
   onDone: () => Promise<void> | void;
+  onOptimistic?: (userId: string, delta: number) => void;
 }) {
   const adjust = useServerFn(adjustWallet);
   const [amount, setAmount] = useState("");
@@ -348,6 +350,8 @@ function AdjustForm({
       return;
     }
     setBusy(true);
+    const delta = direction === "credit" ? amt : -amt;
+    onOptimistic?.(userId, delta);
     try {
       await adjust({
         data: {
@@ -363,11 +367,13 @@ function AdjustForm({
       setReason("");
       await onDone();
     } catch (err) {
+      onOptimistic?.(userId, -delta);
       toast.error(err instanceof Error ? err.message : "Adjustment failed");
     } finally {
       setBusy(false);
     }
   };
+
 
   return (
     <form onSubmit={submit} className="mt-3 grid gap-2 rounded-2xl border border-border/70 bg-surface-warm/40 p-3 sm:grid-cols-[auto_1fr_auto]">
