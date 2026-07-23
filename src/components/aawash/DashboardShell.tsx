@@ -61,7 +61,7 @@ export function DashboardShell({
     <div className="relative min-h-screen">
       <AmbientBackground />
 
-      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-28 pt-6 sm:max-w-lg md:max-w-3xl md:px-8 md:pb-16 lg:max-w-6xl lg:px-12">
+      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-32 pt-6 sm:max-w-lg md:max-w-3xl md:px-8 md:pb-32 lg:max-w-6xl lg:px-12">
         <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
           <BrandMark size="md" />
           <div className="flex shrink-0 items-center gap-2">

@@ -29,6 +29,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AmbientBackground } from "../AmbientBackground";
 import { SkylineFrame } from "../SkylineFrame";
 import { BrandMark } from "../BrandMark";
+import { BottomNav } from "../BottomNav";
 import type { AawashProfile } from "@/hooks/useSession";
 import type { AppRole } from "@/lib/auth";
 import { globalAdminSearch } from "@/lib/admin-overview.functions";
@@ -292,8 +293,10 @@ export function AdminShell({
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-7xl px-4 pb-16 pt-6 sm:px-6 lg:px-8">{children}</main>
+        <main className="mx-auto w-full max-w-7xl px-4 pb-32 pt-6 sm:px-6 lg:px-8">{children}</main>
       </div>
+
+      <BottomNav role="super_admin" />
 
       {searchOpen && <GlobalSearchModal onClose={() => setSearchOpen(false)} />}
     </div>
