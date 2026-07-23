@@ -50,6 +50,7 @@ function Content() {
   const { profile: me } = useSession();
   const { id } = Route.useParams();
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const detailFn = useServerFn(getTeamLeaderDetail);
   const updateFn = useServerFn(updateTeamLeader);
   const resetFn = useServerFn(adminResetPassword);
