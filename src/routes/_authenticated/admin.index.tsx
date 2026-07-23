@@ -162,7 +162,23 @@ function AdminContent() {
         <Kpi icon={<Home size={16} />} label="Flats" value={overview.data?.flats_total ?? "—"} />
         <Kpi icon={<CheckCircle2 size={16} />} label="Available" value={overview.data?.flats_available ?? "—"} tone="success" />
         <Kpi icon={<Users size={16} />} label="Members" value={overview.data?.members ?? "—"} to="/admin/members" />
-        <Kpi icon={<Wallet size={16} />} label="Withdrawals" value={overview.data?.withdrawals_pending ?? "—"} to="/admin/withdrawals" tone="warning" />
+        <button
+          type="button"
+          onClick={() => setWalletOpen(true)}
+          className="glass-card group flex items-center justify-between gap-2 rounded-3xl border border-primary/25 bg-gradient-to-br from-primary-soft to-surface p-3 text-left shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow)]"
+          aria-label="Open wallet quick edit"
+        >
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+              <Wallet size={14} /> Wallets
+            </div>
+            <div className="mt-0.5 truncate text-[13px] font-extrabold text-foreground">
+              Quick edit
+            </div>
+            <div className="text-[10px] text-muted-foreground">Leaders & members</div>
+          </div>
+          <ArrowRight size={16} className="shrink-0 text-primary transition-transform group-hover:translate-x-0.5" />
+        </button>
         <Kpi icon={<TrendingUp size={16} />} label="Revenue" value={formatINR(overview.data?.revenue_total ?? 0, { compact: true })} to="/admin/finance" tone="gold" />
       </section>
 
