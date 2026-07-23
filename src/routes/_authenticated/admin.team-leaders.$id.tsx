@@ -549,6 +549,12 @@ function Content() {
           onClose={() => setEditing(false)}
           onSave={async (payload) => {
             await updateFn({ data: { userId: id, ...payload } });
+            await Promise.all([
+              qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
+              qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
+              qc.invalidateQueries({ queryKey: ["admin", "members"] }),
+              qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
+            ]);
             await refetch();
             setEditing(false);
           }}
