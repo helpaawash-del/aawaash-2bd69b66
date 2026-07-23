@@ -14,9 +14,9 @@ export function BottomNav({ role }: { role: AppRole }) {
   return (
     <nav
       aria-label="Primary"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-6"
     >
-      <div className="pointer-events-auto mx-auto flex max-w-lg items-center justify-between gap-1 rounded-[28px] border border-border/60 bg-surface/80 p-1.5 shadow-[var(--shadow-float)] backdrop-blur-2xl ring-1 ring-inset ring-white/40">
+      <div className="pointer-events-auto mx-auto flex w-full max-w-lg items-stretch justify-between gap-0.5 rounded-[28px] border border-border/60 bg-surface/85 p-1 shadow-[var(--shadow-float)] backdrop-blur-2xl ring-1 ring-inset ring-white/40 sm:gap-1 sm:p-1.5">
         {items.map(({ label, icon: Icon, to, activePrefix }) => {
           const active =
             pathname === to || (activePrefix ? pathname.startsWith(activePrefix) : false);
@@ -25,7 +25,7 @@ export function BottomNav({ role }: { role: AppRole }) {
               key={label}
               to={to}
               aria-current={active ? "page" : undefined}
-              className={`group relative flex flex-1 flex-col items-center gap-0.5 rounded-2xl px-2 py-2 transition-all duration-200 ${
+              className={`group relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl px-1 py-1.5 transition-all duration-200 sm:px-2 sm:py-2 ${
                 active
                   ? "bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)]"
                   : "text-muted-foreground hover:bg-primary-soft/60 hover:text-foreground"
@@ -34,10 +34,10 @@ export function BottomNav({ role }: { role: AppRole }) {
               <Icon
                 size={18}
                 strokeWidth={active ? 2.5 : 2}
-                className="transition-transform group-active:scale-90"
+                className="shrink-0 transition-transform group-active:scale-90"
               />
               <span
-                className={`text-[10px] font-bold leading-none tracking-wide ${
+                className={`w-full truncate text-center text-[9px] font-bold leading-none tracking-wide sm:text-[10px] ${
                   active ? "text-primary-foreground" : ""
                 }`}
               >

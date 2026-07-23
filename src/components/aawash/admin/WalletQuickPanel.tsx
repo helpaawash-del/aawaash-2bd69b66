@@ -60,10 +60,32 @@ export function WalletQuickPanel({ open, onClose }: { open: boolean; onClose: ()
 
   const refresh = async () => {
     await Promise.all([
-      qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-      qc.invalidateQueries({ queryKey: ["admin", "members"] }),
+      qc.refetchQueries({ queryKey: ["admin", "team-leaders"] }),
+      qc.refetchQueries({ queryKey: ["admin", "members"] }),
       qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
+      qc.invalidateQueries({ queryKey: ["admin", "finance"] }),
     ]);
+  };
+
+  const applyOptimistic = (userId: string, delta: number) => {
+    qc.setQueryData<typeof leaders.data>(["admin", "team-leaders"], (prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        leaders: prev.leaders.map((l) =>
+          l.id === userId ? { ...l, wallet_balance: Number(l.wallet_balance ?? 0) + delta } : l,
+        ),
+      };
+    });
+    qc.setQueryData<typeof membersData.data>(["admin", "members"], (prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        members: prev.members.map((m) =>
+          m.id === userId ? { ...m, wallet_balance: Number(m.wallet_balance ?? 0) + delta } : m,
+        ),
+      };
+    });
   };
 
   if (!open) return null;
@@ -134,6 +156,7 @@ export function WalletQuickPanel({ open, onClose }: { open: boolean; onClose: ()
                           : "No team assigned"
                       }
                       onAdjusted={refresh}
+                      onOptimistic={applyOptimistic}
                       extraAction={
                         leader.team_id ? (
                           <button
@@ -171,6 +194,7 @@ export function WalletQuickPanel({ open, onClose }: { open: boolean; onClose: ()
           }
           onClose={() => setMembersOfTeam(null)}
           onAdjusted={refresh}
+          onOptimistic={applyOptimistic}
         />
       )}
     </>
@@ -183,12 +207,14 @@ function MembersWalletModal({
   members,
   onClose,
   onAdjusted,
+  onOptimistic,
 }: {
   teamId: string;
   title: string;
   members: Person[];
   onClose: () => void;
   onAdjusted: () => Promise<void> | void;
+  onOptimistic: (userId: string, delta: number) => void;
 }) {
   void teamId;
   return (
@@ -231,6 +257,7 @@ function MembersWalletModal({
                   person={m}
                   subLabel={m.login_id ?? m.mobile_number ?? "Member"}
                   onAdjusted={onAdjusted}
+                  onOptimistic={onOptimistic}
                 />
               ))}
             </ul>
@@ -245,11 +272,13 @@ function WalletRow({
   person,
   subLabel,
   onAdjusted,
+  onOptimistic,
   extraAction,
 }: {
   person: Person;
   subLabel: string;
   onAdjusted: () => Promise<void> | void;
+  onOptimistic?: (userId: string, delta: number) => void;
   extraAction?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -280,7 +309,16 @@ function WalletRow({
           <Wallet size={13} /> {open ? "Close" : "Edit"}
         </button>
       </div>
-      {open && <AdjustForm userId={person.id} onDone={async () => { setOpen(false); await onAdjusted(); }} />}
+      {open && (
+        <AdjustForm
+          userId={person.id}
+          onOptimistic={onOptimistic}
+          onDone={async () => {
+            setOpen(false);
+            await onAdjusted();
+          }}
+        />
+      )}
     </li>
   );
 }
@@ -288,9 +326,11 @@ function WalletRow({
 function AdjustForm({
   userId,
   onDone,
+  onOptimistic,
 }: {
   userId: string;
   onDone: () => Promise<void> | void;
+  onOptimistic?: (userId: string, delta: number) => void;
 }) {
   const adjust = useServerFn(adjustWallet);
   const [amount, setAmount] = useState("");
@@ -310,6 +350,8 @@ function AdjustForm({
       return;
     }
     setBusy(true);
+    const delta = direction === "credit" ? amt : -amt;
+    onOptimistic?.(userId, delta);
     try {
       await adjust({
         data: {
@@ -325,11 +367,13 @@ function AdjustForm({
       setReason("");
       await onDone();
     } catch (err) {
+      onOptimistic?.(userId, -delta);
       toast.error(err instanceof Error ? err.message : "Adjustment failed");
     } finally {
       setBusy(false);
     }
   };
+
 
   return (
     <form onSubmit={submit} className="mt-3 grid gap-2 rounded-2xl border border-border/70 bg-surface-warm/40 p-3 sm:grid-cols-[auto_1fr_auto]">

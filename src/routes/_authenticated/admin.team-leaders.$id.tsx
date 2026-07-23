@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   UserCog,
@@ -50,6 +50,7 @@ function Content() {
   const { profile: me } = useSession();
   const { id } = Route.useParams();
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const detailFn = useServerFn(getTeamLeaderDetail);
   const updateFn = useServerFn(updateTeamLeader);
   const resetFn = useServerFn(adminResetPassword);
@@ -88,6 +89,10 @@ function Content() {
     try {
       await statusFn({ data: { userId: id, action } });
       setActionMsg(action === "suspend" ? "Team leader suspended." : "Team leader activated.");
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
+        qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
+      ]);
       await refetch();
     } catch (e) {
       setActionErr(e instanceof Error ? e.message : "Status change failed");
@@ -100,6 +105,11 @@ function Content() {
     setBusy("delete");
     try {
       await statusFn({ data: { userId: id, action: "delete" } });
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
+        qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
+        qc.invalidateQueries({ queryKey: ["admin", "members"] }),
+      ]);
       navigate({ to: "/admin/team-leaders" });
     } catch (e) {
       setActionErr(e instanceof Error ? e.message : "Delete failed");
@@ -548,6 +558,12 @@ function Content() {
           onClose={() => setEditing(false)}
           onSave={async (payload) => {
             await updateFn({ data: { userId: id, ...payload } });
+            await Promise.all([
+              qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
+              qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
+              qc.invalidateQueries({ queryKey: ["admin", "members"] }),
+              qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
+            ]);
             await refetch();
             setEditing(false);
           }}
