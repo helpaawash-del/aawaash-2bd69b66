@@ -53,10 +53,16 @@ function Content() {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin", "team-leaders"],
     queryFn: () => listFn(),
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
   const { data: limits, refetch: refetchLimits } = useQuery({
     queryKey: ["admin", "team-limits"],
     queryFn: () => limitsFn(),
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 
   const filtered = useMemo(() => {

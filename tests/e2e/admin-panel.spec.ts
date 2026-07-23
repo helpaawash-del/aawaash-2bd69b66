@@ -63,7 +63,7 @@ test.describe("Admin master dashboard", () => {
     await enterPasscode(page, PASSCODE);
     await page.waitForURL(/\/admin\/?$/, { timeout: 10_000 });
     await expect(page.getByRole("heading", { name: /Aawash Control Center/i })).toBeVisible();
-    await expect(page.getByRole("button", { name: /refresh teams/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /refresh teams/i }).first()).toBeVisible();
     await expect(page.getByText(/Team Leader A/i)).toBeVisible();
     await expect(page.getByText(/Team Leader B/i)).toBeVisible();
     await expect(page.getByText(/Team Leader C/i)).toBeVisible();

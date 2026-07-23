@@ -435,7 +435,7 @@ function TeamLeaderSlot({
       </div>
       {message && <div className="mt-3 rounded-2xl bg-leaf/10 px-3 py-2 text-xs font-semibold text-leaf">{message}</div>}
       {error && <div className="mt-3 rounded-2xl bg-destructive/10 px-3 py-2 text-xs font-semibold text-destructive">{error}</div>}
-      <button type="submit" aria-label={`Save Team Leader ${letter}`} disabled={!canCreate} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] disabled:cursor-not-allowed disabled:opacity-50">
+      <button type="submit" aria-label={`Save leader Team ${letter}`} disabled={!canCreate} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] disabled:cursor-not-allowed disabled:opacity-50">
         {busy ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
         Save leader
       </button>

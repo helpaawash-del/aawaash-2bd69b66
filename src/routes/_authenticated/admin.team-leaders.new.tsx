@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { ArrowLeft, UserPlus, CheckCircle2, Loader2, Sparkles, AlertTriangle } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
@@ -24,12 +25,31 @@ function Page() {
 function Content() {
   const { profile } = useSession();
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const createFn = useServerFn(createTeamLeaderFull);
   const listFn = useServerFn(listTeamLeaders);
   const limitsFn = useServerFn(getTeamLimits);
 
-  const { data } = useQuery({ queryKey: ["admin", "team-leaders"], queryFn: () => listFn() });
-  const { data: limits } = useQuery({ queryKey: ["admin", "team-limits"], queryFn: () => limitsFn() });
+  const leadersQuery = useQuery({
+    queryKey: ["admin", "team-leaders"],
+    queryFn: () => listFn(),
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+  const limitsQuery = useQuery({
+    queryKey: ["admin", "team-limits"],
+    queryFn: () => limitsFn(),
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+  const { data } = leadersQuery;
+  const { data: limits } = limitsQuery;
+
+  useEffect(() => {
+    void Promise.all([leadersQuery.refetch(), limitsQuery.refetch()]);
+  }, []);
 
   const availableTeams = useMemo(
     () => (data?.teams ?? []).filter((t) => !t.leader_id && !t.is_deleted),
@@ -53,6 +73,7 @@ function Content() {
   const cap = limits?.maxTeamLeaders ?? 3;
   const current = limits?.currentTeamLeaders ?? 0;
   const capReached = current >= cap;
+  const teamsLoading = leadersQuery.isLoading || leadersQuery.isFetching || limitsQuery.isLoading || limitsQuery.isFetching;
 
   const canSubmit =
     !submitting &&
@@ -82,9 +103,19 @@ function Content() {
           remarks: remarks.trim(),
         },
       });
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
+        qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
+        qc.invalidateQueries({ queryKey: ["admin", "members"] }),
+        qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
+      ]);
+      await Promise.all([leadersQuery.refetch(), limitsQuery.refetch()]);
+      toast.success(`Team Leader ${res.teamLetter} created`);
       setSuccess({ loginId: res.loginId, teamLetter: res.teamLetter });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create Team Leader");
+      const msg = err instanceof Error ? err.message : "Failed to create Team Leader";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }
@@ -251,14 +282,15 @@ function Content() {
             <span className="text-xs font-semibold text-muted-foreground">Select team*</span>
             <select
               value={teamId}
+              disabled={teamsLoading}
               onChange={(e) => {
                 setTeamId(e.target.value);
                 const t = availableTeams.find((t) => t.id === e.target.value);
                 if (t) setTeamName(t.name ?? "");
               }}
-              className="mt-1 block w-full rounded-2xl border border-border bg-surface px-3 py-2.5 text-sm font-semibold text-foreground outline-none focus:border-primary"
+              className="mt-1 block w-full rounded-2xl border border-border bg-surface px-3 py-2.5 text-sm font-semibold text-foreground outline-none focus:border-primary disabled:cursor-wait disabled:opacity-60"
             >
-              <option value="">— Choose a team —</option>
+              <option value="">{teamsLoading ? "Refreshing teams…" : "— Choose a team —"}</option>
               {availableTeams.map((t) => (
                 <option key={t.id} value={t.id}>
                   Team {t.letter} · {t.name}
@@ -276,6 +308,12 @@ function Content() {
           {error && (
             <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-3 text-xs text-red-800">
               {error}
+            </div>
+          )}
+
+          {!teamsLoading && availableTeams.length === 0 && !capReached && (
+            <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs font-semibold text-amber-900">
+              No unassigned team slots are available. Refresh the list or release a team before creating another leader.
             </div>
           )}
 
