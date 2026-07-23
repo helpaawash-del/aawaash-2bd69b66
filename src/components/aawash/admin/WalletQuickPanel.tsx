@@ -59,13 +59,9 @@ export function WalletQuickPanel({ open, onClose }: { open: boolean; onClose: ()
   }, [leaders.data, q]);
 
   const refresh = async () => {
-    await Promise.all([
-      qc.refetchQueries({ queryKey: ["admin", "team-leaders"] }),
-      qc.refetchQueries({ queryKey: ["admin", "members"] }),
-      qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
-      qc.invalidateQueries({ queryKey: ["admin", "finance"] }),
-    ]);
+    await invalidateAdmin(qc, "wallet");
   };
+
 
   const applyOptimistic = (userId: string, delta: number) => {
     qc.setQueryData<typeof leaders.data>(["admin", "team-leaders"], (prev) => {
