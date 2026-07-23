@@ -287,6 +287,8 @@ function AdminContent() {
         <FeatureDirectory />
         <SystemStatus sys={health.data} />
       </section>
+
+      <WalletQuickPanel open={walletOpen} onClose={() => setWalletOpen(false)} />
     </AdminShell>
   );
 }
