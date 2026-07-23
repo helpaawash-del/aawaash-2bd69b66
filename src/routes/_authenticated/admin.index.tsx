@@ -7,21 +7,18 @@ import {
   Activity,
   AlertTriangle,
   ArrowRight,
-  BadgeCheck,
   BarChart3,
   Building2,
   CheckCircle2,
   Circle,
   ClipboardList,
   Coins,
-  Eye,
   Home,
   Loader2,
   Plus,
   RefreshCw,
   Save,
   ShieldCheck,
-  Sparkles,
   TrendingUp,
   UserCog,
   UserPlus,
@@ -411,7 +408,7 @@ function TeamLeaderSlot({
           <span className="rounded-full bg-leaf/15 px-2 py-1 text-[10px] font-extrabold uppercase text-leaf">Team {leader.team_letter ?? letter}</span>
         </div>
         <h3 className="mt-4 line-clamp-1 text-lg font-extrabold text-foreground">{leader.full_name}</h3>
-        <div className="mt-1 font-mono text-xs font-bold text-muted-foreground">{leader.login_id ?? leader.mobile_number}</div>
+        <div className="mt-1 font-mono text-xs font-bold text-muted-foreground">Login ID: {leader.login_id ?? leader.mobile_number}</div>
         <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs">
           <MiniStat label="Members" value={leader.member_count ?? 0} />
           <MiniStat label="Revenue" value={formatINR(leader.total_revenue ?? 0, { compact: true })} />
