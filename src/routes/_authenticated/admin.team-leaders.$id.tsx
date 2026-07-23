@@ -60,7 +60,7 @@ function Content() {
     queryFn: () => detailFn({ data: { userId: id } }),
   });
 
-  const [tab, setTab] = useState<Tab>("overview");
+  const [tab, setTab] = useState<Tab>("members");
   const [editing, setEditing] = useState(false);
   const [actionMsg, setActionMsg] = useState<string | null>(null);
   const [actionErr, setActionErr] = useState<string | null>(null);
@@ -260,7 +260,7 @@ function Content() {
 
       {/* Tabs */}
       <nav className="glass-card mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl p-1">
-        {(["overview", "members", "sales", "commissions", "wallet", "activity"] as Tab[]).map((t) => (
+        {(["members", "overview", "sales", "commissions", "wallet", "activity"] as Tab[]).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -325,13 +325,28 @@ function Content() {
 
       {tab === "members" && (
         <Card title={`Team members (${data.members.length})`}>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-surface px-4 py-3">
+            <div>
+              <div className="text-sm font-extrabold text-foreground">Members section</div>
+              <div className="text-xs text-muted-foreground">Add new members and open any member account from this team.</div>
+            </div>
+            <Link
+              to="/admin/members/new"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)]"
+            >
+              <Users size={14} />
+              Create member
+            </Link>
+          </div>
           {data.members.length === 0 ? (
-            <Empty>No members yet — the leader can invite members from their dashboard.</Empty>
+            <Empty>No members yet — create the first member for this team.</Empty>
           ) : (
             <div className="grid gap-2 sm:grid-cols-2">
               {data.members.map((m) => (
-                <div
+                <Link
                   key={m.id}
+                  to="/admin/members/$id"
+                  params={{ id: m.id }}
                   className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3"
                 >
                   <div className="grid h-10 w-10 place-items-center overflow-hidden rounded-2xl bg-primary/15 text-sm font-bold text-primary">
@@ -356,7 +371,7 @@ function Content() {
                       {formatINR(Number(m.total_sales ?? 0), { compact: true })}
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
