@@ -156,6 +156,7 @@ export function WalletQuickPanel({ open, onClose }: { open: boolean; onClose: ()
                           : "No team assigned"
                       }
                       onAdjusted={refresh}
+                      onOptimistic={applyOptimistic}
                       extraAction={
                         leader.team_id ? (
                           <button
