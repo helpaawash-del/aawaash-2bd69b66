@@ -60,10 +60,32 @@ export function WalletQuickPanel({ open, onClose }: { open: boolean; onClose: ()
 
   const refresh = async () => {
     await Promise.all([
-      qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-      qc.invalidateQueries({ queryKey: ["admin", "members"] }),
+      qc.refetchQueries({ queryKey: ["admin", "team-leaders"] }),
+      qc.refetchQueries({ queryKey: ["admin", "members"] }),
       qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
+      qc.invalidateQueries({ queryKey: ["admin", "finance"] }),
     ]);
+  };
+
+  const applyOptimistic = (userId: string, delta: number) => {
+    qc.setQueryData<typeof leaders.data>(["admin", "team-leaders"], (prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        leaders: prev.leaders.map((l) =>
+          l.id === userId ? { ...l, wallet_balance: Number(l.wallet_balance ?? 0) + delta } : l,
+        ),
+      };
+    });
+    qc.setQueryData<typeof membersData.data>(["admin", "members"], (prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        members: prev.members.map((m) =>
+          m.id === userId ? { ...m, wallet_balance: Number(m.wallet_balance ?? 0) + delta } : m,
+        ),
+      };
+    });
   };
 
   if (!open) return null;
