@@ -11,7 +11,16 @@ import { listTeamLeaders, createTeamLeaderFull, getTeamLimits } from "@/lib/team
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders/new")({
   component: Page,
-  head: () => ({ meta: [{ title: "New Team Leader — Aawash Admin" }] }),
+  head: () => ({
+    meta: [
+      { title: "New Team Leader — Aawash Admin" },
+      { name: "description", content: "Create a new Aawash team leader account with refreshed team slot availability and admin-only controls." },
+      { property: "og:title", content: "New Team Leader — Aawash Admin" },
+      { property: "og:description", content: "Private admin page for creating Aawash team leader accounts." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
 });
 
 function Page() {
@@ -77,6 +86,7 @@ function Content() {
 
   const canSubmit =
     !submitting &&
+    !teamsLoading &&
     !capReached &&
     fullName.trim().length >= 2 &&
     /^\d{10}$/.test(mobile) &&
