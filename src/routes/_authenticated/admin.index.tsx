@@ -2,8 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import {
   Activity,
+  AlertTriangle,
   ArrowRight,
   BadgeCheck,
   BarChart3,
@@ -16,6 +18,7 @@ import {
   Home,
   Loader2,
   Plus,
+  RefreshCw,
   Save,
   ShieldCheck,
   Sparkles,
@@ -72,9 +75,38 @@ function AdminContent() {
   const overview = useQuery({ queryKey: ["admin", "overview"], queryFn: () => overviewFn(), refetchInterval: 60_000 });
   const health = useQuery({ queryKey: ["admin", "health"], queryFn: () => healthFn(), refetchInterval: 90_000 });
   const projects = useQuery({ queryKey: ["admin", "projects", false], queryFn: () => projectFn({ data: { includeArchived: false } }) });
-  const leaders = useQuery({ queryKey: ["admin", "team-leaders"], queryFn: () => leadersFn() });
-  const members = useQuery({ queryKey: ["admin", "members"], queryFn: () => membersFn() });
-  const limits = useQuery({ queryKey: ["admin", "team-limits"], queryFn: () => limitsFn() });
+  const leaders = useQuery({
+    queryKey: ["admin", "team-leaders"],
+    queryFn: () => leadersFn(),
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+  const members = useQuery({
+    queryKey: ["admin", "members"],
+    queryFn: () => membersFn(),
+    staleTime: 0,
+    refetchOnMount: "always",
+  });
+  const limits = useQuery({
+    queryKey: ["admin", "team-limits"],
+    queryFn: () => limitsFn(),
+    staleTime: 0,
+    refetchOnMount: "always",
+  });
+
+  const refreshTeamData = async () => {
+    await Promise.all([
+      qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
+      qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
+      qc.invalidateQueries({ queryKey: ["admin", "members"] }),
+    ]);
+    await Promise.all([leaders.refetch(), limits.refetch(), members.refetch()]);
+  };
+
+  useEffect(() => {
+    void refreshTeamData();
+  }, []);
 
   const [clock, setClock] = useState(new Date());
   useEffect(() => {
@@ -85,14 +117,19 @@ function AdminContent() {
   const projectRows = (projects.data ?? []).slice(0, 5);
   const teamRows = useMemo(() => {
     const rows = leaders.data?.leaders ?? [];
-    const teams = leaders.data?.teams ?? [];
+    const teams = (leaders.data?.teams ?? []).filter((team) => !team.is_deleted);
     const slots = ["A", "B", "C"].map((letter) => {
       const team = teams.find((t) => t.letter === letter) ?? teams.find((t) => !rows.some((l) => l.team_id === t.id));
       const leader = rows.find((l) => l.team_letter === letter) ?? (team ? rows.find((l) => l.team_id === team.id) : undefined);
-      return { letter, team, leader };
+      const occupiedLeaderId = team?.leader_id && !leader ? team.leader_id : null;
+      return { letter, team, leader, occupiedLeaderId };
     });
     return slots;
   }, [leaders.data]);
+  const currentLeaderCount = leaders.data?.leaders.length ?? limits.data?.currentTeamLeaders ?? 0;
+  const maxTeamLeaders = limits.data?.maxTeamLeaders ?? 3;
+  const teamDataLoading = leaders.isLoading || leaders.isFetching || limits.isLoading || limits.isFetching;
+  const teamDataError = leaders.error ?? limits.error;
 
   return (
     <AdminShell profile={profile}>
@@ -167,10 +204,29 @@ function AdminContent() {
               <h2 className="text-xl font-extrabold text-foreground">Team leader slots</h2>
               <p className="text-xs text-muted-foreground">Three direct leader boxes with name, login ID/mobile and password creation.</p>
             </div>
-            <Link to="/admin/team-leaders" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-xs font-bold text-foreground">
-              Manage leaders <ArrowRight size={14} />
-            </Link>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => void refreshTeamData()}
+                disabled={teamDataLoading}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-xs font-bold text-foreground disabled:cursor-wait disabled:opacity-60"
+              >
+                <RefreshCw size={14} className={teamDataLoading ? "animate-spin" : ""} />
+                Refresh teams
+              </button>
+              <Link to="/admin/team-leaders" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-xs font-bold text-foreground">
+                Manage leaders <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
+          {teamDataError && (
+            <div role="alert" className="mb-3 flex items-start gap-2 rounded-3xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-xs font-semibold text-destructive">
+              <AlertTriangle size={16} className="mt-0.5 flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                Team slots could not refresh: {teamDataError instanceof Error ? teamDataError.message : "Unknown error"}
+              </div>
+            </div>
+          )}
           <div className="grid gap-3 lg:grid-cols-3">
             {teamRows.map((slot) => (
               <TeamLeaderSlot
@@ -178,14 +234,20 @@ function AdminContent() {
                 letter={slot.letter}
                 team={slot.team}
                 leader={slot.leader}
-                capReached={(limits.data?.currentTeamLeaders ?? 0) >= (limits.data?.maxTeamLeaders ?? 3)}
+                occupiedLeaderId={slot.occupiedLeaderId}
+                capReached={currentLeaderCount >= maxTeamLeaders}
+                maxTeamLeaders={maxTeamLeaders}
+                teamDataLoading={teamDataLoading}
+                onRefresh={refreshTeamData}
                 onCreate={async (input) => {
                   await createLeaderFn({ data: input });
                   await Promise.all([
                     qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
                     qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
+                    qc.invalidateQueries({ queryKey: ["admin", "members"] }),
                     qc.invalidateQueries({ queryKey: ["admin", "overview"] }),
                   ]);
+                  await Promise.all([leaders.refetch(), limits.refetch(), members.refetch(), overview.refetch()]);
                 }}
               />
             ))}
@@ -270,13 +332,21 @@ function TeamLeaderSlot({
   letter,
   team,
   leader,
+  occupiedLeaderId,
   capReached,
+  maxTeamLeaders,
+  teamDataLoading,
+  onRefresh,
   onCreate,
 }: {
   letter: string;
   team?: TeamSlot | null;
   leader?: LeaderSummary | null;
+  occupiedLeaderId?: string | null;
   capReached: boolean;
+  maxTeamLeaders: number;
+  teamDataLoading: boolean;
+  onRefresh: () => Promise<void>;
   onCreate: (input: { fullName: string; mobile: string; password: string; teamId: string; teamName?: string }) => Promise<void>;
 }) {
   const [fullName, setFullName] = useState("");
@@ -286,22 +356,48 @@ function TeamLeaderSlot({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const teamId = team?.id ?? "";
-  const canCreate = !!teamId && !leader && !capReached && fullName.trim().length >= 2 && /^\d{10}$/.test(mobile) && password.length >= 8 && !busy;
+  const unavailableReason = teamDataLoading
+    ? "Checking the latest available teams before enabling this slot."
+    : !teamId
+      ? "Team data is unavailable for this slot. Refresh teams, then try again."
+      : occupiedLeaderId
+        ? "This team already has a leader assignment, but the leader profile did not load. Refresh teams or open Manage leaders."
+        : capReached
+          ? `Team Leader cap reached (${maxTeamLeaders}). Increase the limit in Settings or remove an inactive leader first.`
+          : null;
+  const formIssue = fullName.trim().length < 2
+    ? "Enter the leader name."
+    : !/^\d{10}$/.test(mobile)
+      ? "Enter a 10-digit mobile/login ID."
+      : password.length < 8
+        ? "Enter a password with at least 8 characters."
+        : null;
+  const canCreate = !unavailableReason && !formIssue && !leader && !busy;
+  const disabledReason = unavailableReason ?? formIssue;
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!canCreate) return;
+    if (!canCreate) {
+      if (disabledReason) {
+        setError(disabledReason);
+        if (unavailableReason) toast.error(disabledReason);
+      }
+      return;
+    }
     setError(null);
     setMessage(null);
     setBusy(true);
     try {
       await onCreate({ fullName: fullName.trim(), mobile, password, teamId, teamName: team?.name ?? `Team ${letter}` });
       setMessage(`Team Leader ${letter} created. Login ID: ${mobile}`);
+      toast.success(`Team Leader ${letter} created`);
       setFullName("");
       setMobile("");
       setPassword("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not create team leader");
+      const msg = err instanceof Error ? err.message : "Could not create team leader";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setBusy(false);
     }
@@ -342,11 +438,16 @@ function TeamLeaderSlot({
       </div>
       {message && <div className="mt-3 rounded-2xl bg-leaf/10 px-3 py-2 text-xs font-semibold text-leaf">{message}</div>}
       {error && <div className="mt-3 rounded-2xl bg-destructive/10 px-3 py-2 text-xs font-semibold text-destructive">{error}</div>}
-      <button type="submit" disabled={!canCreate} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] disabled:cursor-not-allowed disabled:opacity-50">
+      <button type="submit" aria-label={`Save Team Leader ${letter}`} disabled={!canCreate} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] disabled:cursor-not-allowed disabled:opacity-50">
         {busy ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
         Save leader
       </button>
-      {(capReached || !teamId) && <div className="mt-2 text-[11px] text-muted-foreground">{capReached ? "Leader cap reached." : "Team slot unavailable."}</div>}
+      {disabledReason && <div className="mt-2 text-[11px] font-semibold text-muted-foreground">{disabledReason}</div>}
+      {unavailableReason && (
+        <button type="button" onClick={() => void onRefresh()} className="mt-2 text-[11px] font-extrabold text-primary">
+          Refresh teams
+        </button>
+      )}
     </form>
   );
 }
