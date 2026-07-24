@@ -237,7 +237,7 @@ function Hero() {
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
         <div className="mt-4 lg:hidden">
-          <div className="relative mx-auto aspect-square w-[min(72vw,20rem)] sm:w-[min(60vw,22rem)] md:w-[min(52vw,26rem)]">
+          <div className="relative mx-auto aspect-square w-[min(92vw,26rem)] sm:w-[min(78vw,30rem)] md:w-[min(65vw,34rem)]">
             {/* Soft ground bloom to seat the building */}
             <div
               aria-hidden
