@@ -1073,12 +1073,20 @@ function Projects() {
                         </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setOpenProject(p)}
+                        <Link
+                          to="/projects/$slug"
+                          params={{ slug: "savitri-enclave" }}
                           className="inline-flex h-12 items-center gap-2 rounded-2xl border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                         >
                           View details
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => setOpenProject(p)}
+                          className="hidden"
+                          aria-hidden
+                        >
+                          quick preview
                         </button>
                         <Link
                           to="/auth"
