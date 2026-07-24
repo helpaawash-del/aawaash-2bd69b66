@@ -393,6 +393,70 @@ function Hero() {
   );
 }
 
+/* ---- Lightweight interactive 3D miniature building ---- */
+function Mini3DBuilding({
+  className = "",
+  style,
+  hue,
+  floors,
+  label,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+  hue: string;
+  floors: number;
+  label: string;
+}) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    setTilt({ x: py * -14, y: px * 18 });
+  };
+  const reset = () => setTilt({ x: 0, y: 0 });
+
+  return (
+    <div
+      className={`group animate-tilt-float pointer-events-auto [perspective:900px] ${className}`}
+      style={style}
+      onMouseMove={onMove}
+      onMouseLeave={reset}
+    >
+      <div
+        className="relative h-32 w-24 rounded-2xl border border-white/50 bg-white/60 p-2 shadow-[var(--shadow-float)] backdrop-blur-xl [transform-style:preserve-3d] motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out"
+        style={{ transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }}
+      >
+        {/* Building silhouette */}
+        <div className={`relative h-full w-full overflow-hidden rounded-xl bg-gradient-to-b ${hue}`}>
+          <div className="absolute inset-x-2 bottom-0 top-2 flex flex-col-reverse gap-[3px]">
+            {Array.from({ length: floors }).map((_, i) => (
+              <div key={i} className="grid grid-cols-3 gap-[2px]">
+                {Array.from({ length: 3 }).map((_, j) => (
+                  <span
+                    key={j}
+                    className="h-2 rounded-[2px] bg-white/70 motion-safe:animate-pulse"
+                    style={{ animationDelay: `${(i * 3 + j) * 220}ms`, opacity: 0.55 + ((i + j) % 3) * 0.15 }}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+          {/* Rooftop */}
+          <div className="absolute inset-x-1 top-1 h-2 rounded-md bg-white/40" />
+          {/* Reflection */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-white/40 to-transparent" />
+        </div>
+        {/* Floating label chip */}
+        <div className="pointer-events-none absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/60 bg-white/90 px-2 py-0.5 text-[9px] font-bold text-primary shadow-[var(--shadow-soft)]">
+          {label}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 /* ------------------------------ CATEGORIES ------------------------------ */
 
 const CATEGORIES: { label: string; icon: typeof Home; hue: string; count: string; accent: string }[] = [
