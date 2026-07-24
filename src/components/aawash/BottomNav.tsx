@@ -110,8 +110,8 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 data-testid={`dock-link-${label.toLowerCase()}`}
                 className={`group relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl px-1 py-1.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:px-2 sm:py-2 ${
                   active
-                    ? "bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)]"
-                    : "text-muted-foreground hover:bg-primary-soft/60 hover:text-foreground"
+                    ? "bg-gradient-to-br from-primary via-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] scale-[1.04]"
+                    : "text-muted-foreground hover:bg-primary-soft hover:text-primary"
                 }`}
               >
                 <Icon
