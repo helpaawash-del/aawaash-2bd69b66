@@ -101,6 +101,7 @@ function Landing() {
         <Features />
         <Projects />
         <Lifestyle />
+        <SmartPanels />
         <BookVisit />
         <HowItWorks />
         <Commission />
