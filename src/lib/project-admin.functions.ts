@@ -102,6 +102,18 @@ const projectSchema = z.object({
       }),
     ])
     .optional(),
+  videos: z
+    .union([
+      z.array(z.string().url().max(1000)).max(8),
+      z.string().transform((s) => {
+        if (!s) return [];
+        try {
+          const parsed = JSON.parse(s);
+          return Array.isArray(parsed) ? parsed.filter((v) => typeof v === "string") : [];
+        } catch { return []; }
+      }),
+    ])
+    .optional(),
   total_flats: z.coerce.number().int().min(0).max(100000).optional(),
   available_flats: z.coerce.number().int().min(0).max(100000).optional(),
   reserved_flats: z.coerce.number().int().min(0).max(100000).optional(),
