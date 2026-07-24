@@ -838,6 +838,7 @@ type UnitPlan = {
 };
 
 type ProjectDetail = {
+  slug: string;
   name: string;
   tagline: string;
   developer: string;
@@ -857,6 +858,7 @@ type ProjectDetail = {
 };
 
 const SAVITRI: ProjectDetail = {
+  slug: "savitri-enclave",
   name: "Savitri Enclave",
   tagline: "Unveil a new chapter of refined living.",
   developer: "S.B.P. Buildcon Pvt. Ltd.",
