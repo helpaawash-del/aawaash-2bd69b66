@@ -74,7 +74,7 @@ function ProjectDetailPage() {
   const { slug } = Route.useParams();
   const qc = useQueryClient();
   const fetchProject = useServerFn(getPublicProject);
-  const { data: project, isLoading } = useQuery({
+  const { data: project, isLoading, isError, refetch } = useQuery({
     queryKey: ["project", "public", slug],
     queryFn: () => fetchProject({ data: { slug } }),
   });
@@ -136,11 +136,11 @@ function ProjectDetailPage() {
     document.head.appendChild(s);
   }, [isGlb]);
 
-  const dockItems: Array<{ id: string; label: string; icon: React.ElementType; href: string }> = [
+  const dockItems: Array<{ id: string; label: string; icon: React.ElementType; href: string; targetId?: string }> = [
     { id: "home", label: "Home", icon: HomeIcon, href: "/" },
-    { id: "gallery", label: "Gallery", icon: Images, href: "#gallery" },
-    { id: "flats", label: "Total Flats", icon: Layers, href: "#flats" },
-    { id: "availability", label: "Availability", icon: Grid3x3, href: "#availability" },
+    { id: "gallery", label: "Gallery", icon: Images, href: "#gallery", targetId: "gallery" },
+    { id: "flats", label: "Total Flats", icon: Layers, href: "#flats", targetId: "flats" },
+    { id: "availability", label: "Availability", icon: Grid3x3, href: "#availability", targetId: "availability" },
   ];
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : `/projects/${slug}`;
@@ -184,10 +184,26 @@ function ProjectDetailPage() {
           <ArrowLeft size={14} /> All Projects
         </Link>
 
-        {isLoading || !project ? (
-          <div className="mt-4 space-y-4">
-            <SkeletonBlock className="h-72" />
-            <SkeletonBlock className="h-40" />
+        {isError ? (
+          <div className="mt-6 rounded-3xl border border-destructive/30 bg-destructive/5 p-6 text-center">
+            <p className="text-sm font-semibold text-destructive">We couldn't load this project.</p>
+            <button
+              onClick={() => refetch()}
+              className="mt-3 inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-bold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110"
+            >
+              Retry
+            </button>
+          </div>
+        ) : isLoading || !project ? (
+          <div className="mt-4 space-y-4" aria-busy="true" aria-live="polite">
+            <SkeletonBlock className="h-72 rounded-[2rem]" />
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <SkeletonBlock key={i} className="h-20 rounded-2xl" />
+              ))}
+            </div>
+            <SkeletonBlock className="h-40 rounded-3xl" />
+            <SkeletonBlock className="h-64 rounded-3xl" />
           </div>
         ) : (
           <>
@@ -511,24 +527,43 @@ function GalleryPanel({ images, onOpen }: { images: string[]; onOpen: (i: number
       <section className="glass-card rounded-3xl p-4 shadow-[var(--shadow-soft)] sm:p-6">
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
           {images.map((src, i) => (
-            <button
-              key={`${src}-${i}`}
-              type="button"
-              onClick={() => onOpen(i)}
-              className="group relative aspect-square overflow-hidden rounded-2xl border border-border/60 bg-muted/30"
-            >
-              <img
-                src={src}
-                alt=""
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-            </button>
+            <GalleryTile key={`${src}-${i}`} src={src} index={i} onOpen={onOpen} />
           ))}
         </div>
       </section>
     </Reveal>
+  );
+}
+
+function GalleryTile({ src, index, onOpen }: { src: string; index: number; onOpen: (i: number) => void }) {
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(index)}
+      className="group relative aspect-square overflow-hidden rounded-2xl border border-border/60 bg-muted/30"
+    >
+      {!loaded && !errored && (
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-muted/60 to-muted/30" />
+      )}
+      {errored ? (
+        <div className="absolute inset-0 grid place-items-center text-muted-foreground">
+          <Images size={18} />
+        </div>
+      ) : (
+        <img
+          src={src}
+          alt=""
+          className={`h-full w-full object-cover transition-all duration-500 group-hover:scale-[1.05] ${loaded ? "opacity-100" : "opacity-0"}`}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setLoaded(true)}
+          onError={() => setErrored(true)}
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+    </button>
   );
 }
 
@@ -561,29 +596,13 @@ function TourPanel({
               </a>
             )}
           </div>
-          <div className="aspect-video w-full bg-gradient-to-br from-primary/5 to-leaf/10">
+          <div className="relative aspect-video w-full bg-gradient-to-br from-primary/5 to-leaf/10">
             {!modelUrl ? (
               <EmptyTile icon={<Box size={22} />} label="3D tour coming soon" />
             ) : isGlb ? (
-              // model-viewer web component (script injected in parent)
-              // @ts-expect-error - custom element
-              <model-viewer
-                src={modelUrl}
-                camera-controls
-                auto-rotate
-                touch-action="pan-y"
-                shadow-intensity="1"
-                exposure="1"
-                style={{ width: "100%", height: "100%", background: "transparent" }}
-              />
+              <ModelViewerFrame src={modelUrl} />
             ) : (
-              <iframe
-                title="3D tour"
-                src={modelUrl}
-                className="h-full w-full"
-                allow="fullscreen; xr-spatial-tracking; vr; accelerometer; gyroscope"
-                allowFullScreen
-              />
+              <IframeFrame src={modelUrl} title="3D tour" />
             )}
           </div>
         </section>
@@ -624,6 +643,75 @@ function VideoTile({ url }: { url: string }) {
         </div>
       </section>
     </Reveal>
+  );
+}
+
+function ModelViewerFrame({ src }: { src: string }) {
+  const [ready, setReady] = useState(false);
+  const [errored, setErrored] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    const check = () => {
+      if (cancelled) return;
+      if (customElements.get("model-viewer")) setReady(true);
+      else setTimeout(check, 200);
+    };
+    check();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  if (errored) {
+    return <EmptyTile icon={<Box size={22} />} label="Couldn't load 3D model" />;
+  }
+  return (
+    <>
+      {!ready && (
+        <div className="absolute inset-0 grid animate-pulse place-items-center text-muted-foreground">
+          <div className="flex flex-col items-center gap-2">
+            <Box size={22} />
+            <span className="text-xs font-semibold">Loading 3D model…</span>
+          </div>
+        </div>
+      )}
+      {ready && (
+        // @ts-expect-error - custom element
+        <model-viewer
+          src={src}
+          camera-controls
+          auto-rotate
+          touch-action="pan-y"
+          shadow-intensity="1"
+          exposure="1"
+          onError={() => setErrored(true)}
+          style={{ width: "100%", height: "100%", background: "transparent" }}
+        />
+      )}
+    </>
+  );
+}
+
+function IframeFrame({ src, title }: { src: string; title: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <>
+      {!loaded && (
+        <div className="absolute inset-0 grid animate-pulse place-items-center text-muted-foreground">
+          <div className="flex flex-col items-center gap-2">
+            <Box size={22} />
+            <span className="text-xs font-semibold">Loading tour…</span>
+          </div>
+        </div>
+      )}
+      <iframe
+        title={title}
+        src={src}
+        onLoad={() => setLoaded(true)}
+        className="h-full w-full"
+        allow="fullscreen; xr-spatial-tracking; vr; accelerometer; gyroscope"
+        allowFullScreen
+      />
+    </>
   );
 }
 
@@ -919,8 +1007,37 @@ function SectionHeader({
 function ProjectDock({
   items,
 }: {
-  items: Array<{ id: string; label: string; icon: React.ElementType; href: string }>;
+  items: Array<{ id: string; label: string; icon: React.ElementType; href: string; targetId?: string }>;
 }) {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const targetIds = useMemo(
+    () => items.map((i) => i.targetId).filter((v): v is string => !!v),
+    [items],
+  );
+
+  useEffect(() => {
+    if (!targetIds.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry closest to the top that is intersecting
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.1, 0.5] },
+    );
+    const els: HTMLElement[] = [];
+    targetIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        observer.observe(el);
+        els.push(el);
+      }
+    });
+    return () => observer.disconnect();
+  }, [targetIds]);
+
   const onClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (!href.startsWith("#")) return;
     e.preventDefault();
@@ -937,21 +1054,41 @@ function ProjectDock({
         className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-10 max-w-[300px] rounded-full bg-primary/15 blur-2xl"
       />
       <ul className="pointer-events-auto relative mx-auto flex h-[68px] w-full max-w-[420px] items-stretch justify-between rounded-[32px] border border-white/60 bg-white/85 px-1.5 shadow-[0_20px_50px_rgba(46,125,91,0.18),0_4px_12px_rgba(0,0,0,0.05)] ring-1 ring-black/5 backdrop-blur-2xl">
-        {items.map(({ id, label, icon: Icon, href }) => {
+        {items.map(({ id, label, icon: Icon, href, targetId }) => {
           const isRoute = href.startsWith("/");
           const Cmp: React.ElementType = isRoute ? Link : "a";
-          const props = isRoute ? { to: href } : { href, onClick: (e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, href) };
+          const props = isRoute
+            ? { to: href }
+            : { href, onClick: (e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, href) };
+          const isActive = !!targetId && activeId === targetId;
           return (
             <li key={id} className="relative flex min-w-0 flex-1">
               <Cmp
                 {...(props as Record<string, unknown>)}
                 aria-label={label}
-                className="group flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-[24px] px-1 text-slate-600 outline-none transition-colors duration-200 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/40"
+                aria-current={isActive ? "page" : undefined}
+                className={`group relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-[24px] px-1 outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                  isActive
+                    ? "text-primary"
+                    : "text-slate-600 hover:text-primary"
+                }`}
               >
-                <Icon size={20} strokeWidth={2} aria-hidden="true" />
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-2 inset-y-1 -z-10 rounded-[20px] bg-primary/10 ring-1 ring-primary/25"
+                  />
+                )}
+                <Icon size={20} strokeWidth={isActive ? 2.4 : 2} aria-hidden="true" />
                 <span className="w-full truncate text-center text-[10px] font-semibold leading-none tracking-tight">
                   {label}
                 </span>
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary"
+                  />
+                )}
               </Cmp>
             </li>
           );

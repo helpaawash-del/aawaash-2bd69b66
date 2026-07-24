@@ -49,8 +49,9 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 
-import heroResidence from "@/assets/hero-residence.jpg";
-import heroTowerTrees from "@/assets/hero-tower-trees.png";
+import heroResidenceAsset from "@/assets/hero-residence.png.asset.json";
+const heroResidence = heroResidenceAsset.url;
+const heroTowerTrees = heroResidenceAsset.url;
 import savitriHero from "@/assets/savitri-hero.jpg.asset.json";
 import savitriFacade from "@/assets/savitri-facade.jpg.asset.json";
 import savitriRender from "@/assets/savitri-render.jpg";
@@ -236,7 +237,7 @@ function Hero() {
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
         <div className="mt-4 lg:hidden">
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem]">
+          <div className="relative mx-auto aspect-square w-full max-w-[15rem] sm:max-w-[18rem]">
             {/* Soft ground bloom to seat the building */}
             <div
               aria-hidden
@@ -249,9 +250,9 @@ function Hero() {
             />
             <img
               src={heroTowerTrees}
-              alt="Aawash biophilic skyscraper residence"
+              alt="Aawash biophilic residence"
               width={1024}
-              height={1536}
+              height={1024}
               loading="eager"
               decoding="async"
               fetchPriority="high"
@@ -361,7 +362,7 @@ function Hero() {
       {/* Building emerging from the bottom + floating stat chips */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[46vh] lg:block"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[38vh] lg:block"
         style={{ transform: `translateY(${scrollY * 0.08}px)` }}
       >
         {/* Soft bloom behind building */}
@@ -371,12 +372,13 @@ function Hero() {
 
         {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
-          <div className="relative w-full max-w-[22rem]">
+          <div className="relative w-full max-w-[20rem]">
             <img
               src={heroTowerTrees}
-              alt="Aawash biophilic skyscraper residence"
+              alt="Aawash biophilic residence"
               width={1024}
-              height={1536}
+              height={1024}
+              loading="lazy"
               decoding="async"
               className="mx-auto h-auto w-full select-none object-contain drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_24%,transparent)] animate-[float_10s_ease-in-out_infinite]"
             />
