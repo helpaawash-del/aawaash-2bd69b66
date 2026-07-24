@@ -971,6 +971,15 @@ function Projects() {
             return (
               <Reveal key={p.name} variant="up" delay={i * 100}>
                 <article className="group relative overflow-hidden rounded-[2.25rem] border border-border/50 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
+                  {/* Stretched link — entire card navigates to public project details */}
+                  <Link
+                    to="/projects/$slug"
+                    params={{ slug: "savitri-enclave" }}
+                    aria-label={`View ${p.name} details`}
+                    className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                  />
+                  <div className="pointer-events-none absolute inset-0 z-20" aria-hidden />
+                  <style>{`.card-ctl{position:relative;z-index:30;pointer-events:auto}`}</style>
                   {/* Image — clean, no overlaid copy */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10 sm:aspect-[16/10]">
                     <img
