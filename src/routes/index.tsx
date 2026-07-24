@@ -369,8 +369,25 @@ function Hero() {
                 <div className="text-base font-bold text-foreground">+38% Sales</div>
               </div>
             </div>
+
+            {/* Lightweight 3D building miniatures — parallax tilt on hover */}
+            <Mini3DBuilding
+              className="absolute -left-2 top-40 hidden sm:block"
+              style={{ animationDelay: "-1.5s" }}
+              hue="from-primary/40 via-primary/25 to-leaf/25"
+              floors={5}
+              label="Serai · 24 units left"
+            />
+            <Mini3DBuilding
+              className="absolute -right-2 top-44 hidden md:block"
+              style={{ animationDelay: "-3.5s" }}
+              hue="from-gold/30 via-primary/25 to-leaf/20"
+              floors={7}
+              label="Skyline · 3 BHK"
+            />
           </div>
         </div>
+
       </div>
     </section>
   );
