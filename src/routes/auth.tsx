@@ -240,7 +240,7 @@ function AuthPage() {
           .limit(1)
           .maybeSingle();
         const role = (r?.role as AppRole | null) ?? null;
-        navigate({ to: search.redirect ?? homePathForRole(role), replace: true });
+        navigate({ to: toInternalPath(search.redirect) ?? homePathForRole(role), replace: true });
         return;
       }
       try {
@@ -456,7 +456,7 @@ function LoginForm() {
       touch().catch(() => undefined);
       setSuccess(true);
       setTimeout(() => {
-        navigate({ to: search.redirect ?? homePathForRole(role), replace: true });
+        navigate({ to: toInternalPath(search.redirect) ?? homePathForRole(role), replace: true });
       }, 600);
     } catch {
       setError("Invalid login credentials.");
