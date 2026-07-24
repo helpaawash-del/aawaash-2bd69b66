@@ -889,3 +889,74 @@ function toEmbedUrl(url: string): string | null {
     return null;
   }
 }
+
+/* ================== SECTION HEADER + PROJECT DOCK ================== */
+
+function SectionHeader({
+  icon,
+  title,
+  subtitle,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+}) {
+  return (
+    <div className="flex items-end justify-between gap-3">
+      <div>
+        <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
+          <span className="grid h-6 w-6 place-items-center rounded-full bg-primary-soft">{icon}</span>
+          {title}
+        </div>
+        {subtitle ? (
+          <div className="mt-1 text-sm text-muted-foreground">{subtitle}</div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function ProjectDock({
+  items,
+}: {
+  items: Array<{ id: string; label: string; icon: React.ElementType; href: string }>;
+}) {
+  const onClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith("#")) return;
+    e.preventDefault();
+    const el = document.getElementById(href.slice(1));
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  return (
+    <nav
+      aria-label="Project sections"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-[95] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-10 max-w-[300px] rounded-full bg-primary/15 blur-2xl"
+      />
+      <ul className="pointer-events-auto relative mx-auto flex h-[68px] w-full max-w-[420px] items-stretch justify-between rounded-[32px] border border-white/60 bg-white/85 px-1.5 shadow-[0_20px_50px_rgba(46,125,91,0.18),0_4px_12px_rgba(0,0,0,0.05)] ring-1 ring-black/5 backdrop-blur-2xl">
+        {items.map(({ id, label, icon: Icon, href }) => {
+          const isRoute = href.startsWith("/");
+          const Cmp: React.ElementType = isRoute ? Link : "a";
+          const props = isRoute ? { to: href } : { href, onClick: (e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, href) };
+          return (
+            <li key={id} className="relative flex min-w-0 flex-1">
+              <Cmp
+                {...(props as Record<string, unknown>)}
+                aria-label={label}
+                className="group flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-[24px] px-1 text-slate-600 outline-none transition-colors duration-200 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/40"
+              >
+                <Icon size={20} strokeWidth={2} aria-hidden="true" />
+                <span className="w-full truncate text-center text-[10px] font-semibold leading-none tracking-tight">
+                  {label}
+                </span>
+              </Cmp>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
