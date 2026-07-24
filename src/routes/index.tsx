@@ -1282,8 +1282,8 @@ function ProjectDetailModal({
               {p.developerNote}
             </p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <ContactRow icon={<Phone size={14} />} label="Phone" value={p.contact.phone} />
-              <ContactRow icon={<Mail size={14} />} label="Email" value={p.contact.email} />
+              <DetailContactRow icon={<Phone size={14} />} label="Phone" value={p.contact.phone} />
+              <DetailContactRow icon={<Mail size={14} />} label="Email" value={p.contact.email} />
               <ContactRow
                 icon={<MapPinned size={14} />}
                 label="Office"
@@ -1357,7 +1357,7 @@ function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   );
 }
 
-function ContactRow({
+function DetailContactRow({
   icon,
   label,
   value,
