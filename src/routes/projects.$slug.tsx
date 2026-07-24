@@ -74,7 +74,7 @@ function ProjectDetailPage() {
   const { slug } = Route.useParams();
   const qc = useQueryClient();
   const fetchProject = useServerFn(getPublicProject);
-  const { data: project, isLoading } = useQuery({
+  const { data: project, isLoading, isError, refetch } = useQuery({
     queryKey: ["project", "public", slug],
     queryFn: () => fetchProject({ data: { slug } }),
   });
@@ -136,11 +136,11 @@ function ProjectDetailPage() {
     document.head.appendChild(s);
   }, [isGlb]);
 
-  const dockItems: Array<{ id: string; label: string; icon: React.ElementType; href: string }> = [
+  const dockItems: Array<{ id: string; label: string; icon: React.ElementType; href: string; targetId?: string }> = [
     { id: "home", label: "Home", icon: HomeIcon, href: "/" },
-    { id: "gallery", label: "Gallery", icon: Images, href: "#gallery" },
-    { id: "flats", label: "Total Flats", icon: Layers, href: "#flats" },
-    { id: "availability", label: "Availability", icon: Grid3x3, href: "#availability" },
+    { id: "gallery", label: "Gallery", icon: Images, href: "#gallery", targetId: "gallery" },
+    { id: "flats", label: "Total Flats", icon: Layers, href: "#flats", targetId: "flats" },
+    { id: "availability", label: "Availability", icon: Grid3x3, href: "#availability", targetId: "availability" },
   ];
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : `/projects/${slug}`;
