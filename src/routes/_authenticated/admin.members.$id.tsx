@@ -171,6 +171,22 @@ function Content() {
     }
   }
 
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  async function doDelete() {
+    setDeleting(true);
+    try {
+      await statusFn({ data: { userId: id, action: "delete" } });
+      toast.success("Member archived.");
+      await invalidateAdmin(qc, "member");
+      navigate({ to: "/admin/members" });
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+
+
   if (isLoading || !p) {
     return (
       <AdminShell profile={me}>
