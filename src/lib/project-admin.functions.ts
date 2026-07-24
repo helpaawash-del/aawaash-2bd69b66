@@ -472,3 +472,61 @@ export const adminBulkCreateFlats = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true as const, created: rows.length };
   });
+
+/* ============================= FLAT AUDIT LOG ============================= */
+
+/**
+ * List recent flat status changes for a project. Joins actor profile so the
+ * admin UI can render "who changed what, when". Requires super_admin.
+ */
+export const adminListFlatStatusAudit = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ project_id: z.string().uuid(), limit: z.number().int().min(1).max(200).optional() }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+
+    // Pull flat ids for the project (audit_logs.entity_id references the flat).
+    const { data: flats, error: flatsErr } = await context.supabase
+      .from("flats")
+      .select("id, unit_code")
+      .eq("project_id", data.project_id);
+    if (flatsErr) throw new Error(flatsErr.message);
+
+    const flatMap = new Map((flats ?? []).map((f) => [f.id as string, f.unit_code as string]));
+    const flatIds = Array.from(flatMap.keys());
+    if (flatIds.length === 0) return { entries: [] as Array<Record<string, unknown>> };
+
+    const { data: rows, error } = await context.supabase
+      .from("audit_logs")
+      .select("id, actor_id, action, entity_id, previous_value, new_value, metadata, created_at")
+      .eq("entity_type", "flat")
+      .eq("action", "flat_status_changed")
+      .in("entity_id", flatIds)
+      .order("created_at", { ascending: false })
+      .limit(data.limit ?? 50);
+    if (error) throw new Error(error.message);
+
+    const actorIds = Array.from(new Set((rows ?? []).map((r) => r.actor_id).filter((v): v is string => !!v)));
+    const actors = actorIds.length
+      ? (await context.supabase
+          .from("profiles")
+          .select("id, full_name")
+          .in("id", actorIds)).data ?? []
+      : [];
+    const actorMap = new Map(actors.map((a) => [a.id as string, a.full_name as string | null]));
+
+    return {
+      entries: (rows ?? []).map((r) => ({
+        id: r.id as string,
+        created_at: r.created_at as string,
+        actor_id: r.actor_id as string | null,
+        actor_name: r.actor_id ? actorMap.get(r.actor_id as string) ?? null : null,
+        flat_id: r.entity_id as string,
+        unit_code: flatMap.get(r.entity_id as string) ?? "—",
+        from_status: (r.previous_value as { status?: string } | null)?.status ?? null,
+        to_status: (r.new_value as { status?: string } | null)?.status ?? null,
+      })),
+    };
+  });
