@@ -11,11 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminLoginRouteImport } from './routes/admin-login'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
 import { Route as ErrorKindRouteImport } from './routes/error.$kind'
 import { Route as AuthenticatedSalesWorkflowRouteImport } from './routes/_authenticated/sales-workflow'
@@ -91,11 +91,6 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -115,10 +110,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ProjectsRoute,
+  id: '/projects/$slug',
+  path: '/projects/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ErrorKindRoute = ErrorKindRouteImport.update({
   id: '/error/$kind',
@@ -490,7 +490,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
-  '/projects': typeof ProjectsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -501,6 +500,7 @@ export interface FileRoutesByFullPath {
   '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects/': typeof ProjectsIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/admin/customers': typeof AuthenticatedAdminCustomersRouteWithChildren
@@ -562,7 +562,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
-  '/projects': typeof ProjectsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/crm': typeof AuthenticatedCrmRouteWithChildren
@@ -572,6 +571,7 @@ export interface FileRoutesByTo {
   '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects': typeof ProjectsIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/admin/customers': typeof AuthenticatedAdminCustomersRouteWithChildren
@@ -635,7 +635,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
-  '/projects': typeof ProjectsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -646,6 +645,7 @@ export interface FileRoutesById {
   '/_authenticated/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects/': typeof ProjectsIndexRoute
   '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
   '/_authenticated/admin/customers': typeof AuthenticatedAdminCustomersRouteWithChildren
@@ -709,7 +709,6 @@ export interface FileRouteTypes {
     | '/'
     | '/admin-login'
     | '/auth'
-    | '/projects'
     | '/sitemap.xml'
     | '/unauthorized'
     | '/admin'
@@ -720,6 +719,7 @@ export interface FileRouteTypes {
     | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
+    | '/projects/'
     | '/admin/analytics'
     | '/admin/commissions'
     | '/admin/customers'
@@ -781,7 +781,6 @@ export interface FileRouteTypes {
     | '/'
     | '/admin-login'
     | '/auth'
-    | '/projects'
     | '/sitemap.xml'
     | '/unauthorized'
     | '/crm'
@@ -791,6 +790,7 @@ export interface FileRouteTypes {
     | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
+    | '/projects'
     | '/admin/analytics'
     | '/admin/commissions'
     | '/admin/customers'
@@ -853,7 +853,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/admin-login'
     | '/auth'
-    | '/projects'
     | '/sitemap.xml'
     | '/unauthorized'
     | '/_authenticated/admin'
@@ -864,6 +863,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
+    | '/projects/'
     | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/commissions'
     | '/_authenticated/admin/customers'
@@ -927,10 +927,11 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
   AuthRoute: typeof AuthRoute
-  ProjectsRoute: typeof ProjectsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   ErrorKindRoute: typeof ErrorKindRoute
+  ProjectsSlugRoute: typeof ProjectsSlugRoute
+  ProjectsIndexRoute: typeof ProjectsIndexRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicHooksSystemMaintenanceRoute: typeof ApiPublicHooksSystemMaintenanceRoute
 }
@@ -949,13 +950,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -986,12 +980,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/': {
+      id: '/projects/'
+      path: '/projects'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof ProjectsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects/$slug': {
       id: '/projects/$slug'
-      path: '/$slug'
+      path: '/projects/$slug'
       fullPath: '/projects/$slug'
       preLoaderRoute: typeof ProjectsSlugRouteImport
-      parentRoute: typeof ProjectsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/error/$kind': {
       id: '/error/$kind'
@@ -1701,27 +1702,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface ProjectsRouteChildren {
-  ProjectsSlugRoute: typeof ProjectsSlugRoute
-}
-
-const ProjectsRouteChildren: ProjectsRouteChildren = {
-  ProjectsSlugRoute: ProjectsSlugRoute,
-}
-
-const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
-  ProjectsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,
   AuthRoute: AuthRoute,
-  ProjectsRoute: ProjectsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   ErrorKindRoute: ErrorKindRoute,
+  ProjectsSlugRoute: ProjectsSlugRoute,
+  ProjectsIndexRoute: ProjectsIndexRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicHooksSystemMaintenanceRoute: ApiPublicHooksSystemMaintenanceRoute,
 }

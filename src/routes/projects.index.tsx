@@ -54,7 +54,7 @@ type Search = {
   sort?: NonNullable<ProjectFilters["sort"]>;
 };
 
-export const Route = createFileRoute("/projects")({
+export const Route = createFileRoute("/projects/")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     q: typeof s.q === "string" ? s.q : undefined,
     type: typeof s.type === "string" ? s.type : undefined,
