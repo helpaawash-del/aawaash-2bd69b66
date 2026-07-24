@@ -38,7 +38,17 @@ import {
   GitCompare,
   Bookmark,
   ChevronRight,
+  X,
+  Ruler,
+  Layers,
+  ShieldAlert,
+  Zap,
+  Droplet,
+  DoorOpen,
+  Paintbrush,
+  ArrowUpDown,
 } from "lucide-react";
+
 import heroResidence from "@/assets/hero-residence.jpg";
 import heroResidenceCutout from "@/assets/hero-residence.png.asset.json";
 import savitriHero from "@/assets/savitri-hero.jpg.asset.json";
