@@ -1284,12 +1284,12 @@ function ProjectDetailModal({
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               <DetailContactRow icon={<Phone size={14} />} label="Phone" value={p.contact.phone} />
               <DetailContactRow icon={<Mail size={14} />} label="Email" value={p.contact.email} />
-              <ContactRow
+              <DetailContactRow
                 icon={<MapPinned size={14} />}
                 label="Office"
                 value={p.contact.office}
               />
-              <ContactRow
+              <DetailContactRow
                 icon={<Landmark size={14} />}
                 label="Website"
                 value={p.contact.website}
