@@ -96,12 +96,12 @@ function Landing() {
 
       <main className="relative">
         <Hero />
-        <Stats />
         <Categories />
-        <Features />
         <Projects />
+        <Stats />
         <Lifestyle />
         <SmartPanels />
+        <Features />
         <BookVisit />
         <HowItWorks />
         <Commission />
