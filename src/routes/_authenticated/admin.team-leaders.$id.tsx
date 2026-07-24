@@ -398,24 +398,20 @@ function Content() {
       )}
 
       {tab === "members" && (
-        <Card
-          title={
-            <span className="inline-flex items-center gap-2">
-              Team members ({data.members.length})
-              {isFetching && (
-                <span
-                  className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary"
-                  aria-live="polite"
-                >
-                  <RefreshCw size={10} className="animate-spin" /> Syncing
-                </span>
-              )}
-            </span>
-          }
-        >
+        <Card title={`Team members (${data.members.length})`}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-surface px-4 py-3">
             <div>
-              <div className="text-sm font-extrabold text-foreground">Members section</div>
+              <div className="flex items-center gap-2 text-sm font-extrabold text-foreground">
+                Members section
+                {isFetching && (
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary"
+                    aria-live="polite"
+                  >
+                    <RefreshCw size={10} className="animate-spin" /> Syncing
+                  </span>
+                )}
+              </div>
               <div className="text-xs text-muted-foreground">
                 Live updates on • Add new members or open any member account from this team.
               </div>
@@ -429,6 +425,7 @@ function Content() {
               Create member
             </Link>
           </div>
+
 
           {data.members.length === 0 ? (
             <Empty>No members yet — create the first member for this team.</Empty>
