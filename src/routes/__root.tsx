@@ -163,6 +163,33 @@ function RootComponent() {
     });
   }, [queryClient, router]);
 
+  // Belt-and-suspenders: ensure #lovable-badge stays hidden even when
+  // injected after hydration. CSS !important covers paint; this observer
+  // strips late-added nodes so they cannot flash or steal focus.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hide = (el: Element) => {
+      const node = el as HTMLElement;
+      node.style.setProperty("display", "none", "important");
+      node.style.setProperty("visibility", "hidden", "important");
+      node.style.setProperty("opacity", "0", "important");
+      node.style.setProperty("pointer-events", "none", "important");
+      node.setAttribute("aria-hidden", "true");
+    };
+    document.querySelectorAll("#lovable-badge").forEach(hide);
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        m.addedNodes.forEach((n) => {
+          if (!(n instanceof HTMLElement)) return;
+          if (n.id === "lovable-badge") hide(n);
+          n.querySelectorAll?.("#lovable-badge").forEach(hide);
+        });
+      }
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
