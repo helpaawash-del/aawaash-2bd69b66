@@ -646,6 +646,75 @@ function VideoTile({ url }: { url: string }) {
   );
 }
 
+function ModelViewerFrame({ src }: { src: string }) {
+  const [ready, setReady] = useState(false);
+  const [errored, setErrored] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    const check = () => {
+      if (cancelled) return;
+      if (customElements.get("model-viewer")) setReady(true);
+      else setTimeout(check, 200);
+    };
+    check();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  if (errored) {
+    return <EmptyTile icon={<Box size={22} />} label="Couldn't load 3D model" />;
+  }
+  return (
+    <>
+      {!ready && (
+        <div className="absolute inset-0 grid animate-pulse place-items-center text-muted-foreground">
+          <div className="flex flex-col items-center gap-2">
+            <Box size={22} />
+            <span className="text-xs font-semibold">Loading 3D model…</span>
+          </div>
+        </div>
+      )}
+      {ready && (
+        // @ts-expect-error - custom element
+        <model-viewer
+          src={src}
+          camera-controls
+          auto-rotate
+          touch-action="pan-y"
+          shadow-intensity="1"
+          exposure="1"
+          onError={() => setErrored(true)}
+          style={{ width: "100%", height: "100%", background: "transparent" }}
+        />
+      )}
+    </>
+  );
+}
+
+function IframeFrame({ src, title }: { src: string; title: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <>
+      {!loaded && (
+        <div className="absolute inset-0 grid animate-pulse place-items-center text-muted-foreground">
+          <div className="flex flex-col items-center gap-2">
+            <Box size={22} />
+            <span className="text-xs font-semibold">Loading tour…</span>
+          </div>
+        </div>
+      )}
+      <iframe
+        title={title}
+        src={src}
+        onLoad={() => setLoaded(true)}
+        className="h-full w-full"
+        allow="fullscreen; xr-spatial-tracking; vr; accelerometer; gyroscope"
+        allowFullScreen
+      />
+    </>
+  );
+}
+
 function LocationPanel({ p }: { p: Record<string, unknown> }) {
   const map = p.google_map_url as string | null;
   return (
@@ -938,8 +1007,37 @@ function SectionHeader({
 function ProjectDock({
   items,
 }: {
-  items: Array<{ id: string; label: string; icon: React.ElementType; href: string }>;
+  items: Array<{ id: string; label: string; icon: React.ElementType; href: string; targetId?: string }>;
 }) {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const targetIds = useMemo(
+    () => items.map((i) => i.targetId).filter((v): v is string => !!v),
+    [items],
+  );
+
+  useEffect(() => {
+    if (!targetIds.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry closest to the top that is intersecting
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.1, 0.5] },
+    );
+    const els: HTMLElement[] = [];
+    targetIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        observer.observe(el);
+        els.push(el);
+      }
+    });
+    return () => observer.disconnect();
+  }, [targetIds]);
+
   const onClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (!href.startsWith("#")) return;
     e.preventDefault();
@@ -956,21 +1054,41 @@ function ProjectDock({
         className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-10 max-w-[300px] rounded-full bg-primary/15 blur-2xl"
       />
       <ul className="pointer-events-auto relative mx-auto flex h-[68px] w-full max-w-[420px] items-stretch justify-between rounded-[32px] border border-white/60 bg-white/85 px-1.5 shadow-[0_20px_50px_rgba(46,125,91,0.18),0_4px_12px_rgba(0,0,0,0.05)] ring-1 ring-black/5 backdrop-blur-2xl">
-        {items.map(({ id, label, icon: Icon, href }) => {
+        {items.map(({ id, label, icon: Icon, href, targetId }) => {
           const isRoute = href.startsWith("/");
           const Cmp: React.ElementType = isRoute ? Link : "a";
-          const props = isRoute ? { to: href } : { href, onClick: (e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, href) };
+          const props = isRoute
+            ? { to: href }
+            : { href, onClick: (e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, href) };
+          const isActive = !!targetId && activeId === targetId;
           return (
             <li key={id} className="relative flex min-w-0 flex-1">
               <Cmp
                 {...(props as Record<string, unknown>)}
                 aria-label={label}
-                className="group flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-[24px] px-1 text-slate-600 outline-none transition-colors duration-200 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/40"
+                aria-current={isActive ? "page" : undefined}
+                className={`group relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-[24px] px-1 outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                  isActive
+                    ? "text-primary"
+                    : "text-slate-600 hover:text-primary"
+                }`}
               >
-                <Icon size={20} strokeWidth={2} aria-hidden="true" />
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-2 inset-y-1 -z-10 rounded-[20px] bg-primary/10 ring-1 ring-primary/25"
+                  />
+                )}
+                <Icon size={20} strokeWidth={isActive ? 2.4 : 2} aria-hidden="true" />
                 <span className="w-full truncate text-center text-[10px] font-semibold leading-none tracking-tight">
                   {label}
                 </span>
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary"
+                  />
+                )}
               </Cmp>
             </li>
           );
