@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -146,6 +147,9 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const { role, loading: sessionLoading } = useSession();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // Project detail pages use their own contextual dock; suppress the global one.
+  const hideGlobalDock = /^\/projects\/[^/]+$/.test(pathname);
 
   useEffect(() => {
     // Import inside effect to keep the browser client out of any SSR path.
@@ -163,7 +167,11 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      {sessionLoading ? <BottomNavSkeleton /> : role ? <BottomNav role={role} /> : <PublicBottomNav />}
+      {hideGlobalDock
+        ? null
+        : sessionLoading
+          ? <BottomNavSkeleton />
+          : role ? <BottomNav role={role} /> : <PublicBottomNav />}
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
