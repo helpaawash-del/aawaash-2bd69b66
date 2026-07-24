@@ -381,7 +381,7 @@ function Hero() {
               height={1024}
               loading="lazy"
               decoding="async"
-              sizes="(min-width: 1280px) 24rem, 30vw"
+              sizes="(min-width: 1280px) 38rem, 46vw"
               className="mx-auto h-auto w-full select-none object-contain object-center drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_24%,transparent)] animate-[float_10s_ease-in-out_infinite]"
             />
           </div>
