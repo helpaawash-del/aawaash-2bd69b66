@@ -169,7 +169,7 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
         {/* Magnetic Emerald Puck */}
         <li
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-1.5 rounded-[24px] bg-gradient-to-br from-[#2E7D5B] to-[#3E9E74] shadow-[0_10px_22px_-6px_rgba(46,125,91,0.55),inset_0_1px_1px_rgba(255,255,255,0.35)] motion-safe:transition-[transform,width,opacity] motion-safe:duration-[520ms] motion-reduce:transition-none"
+          className="pointer-events-none absolute inset-y-1.5 overflow-hidden rounded-[24px] bg-gradient-to-br from-[#2E7D5B] to-[#3E9E74] shadow-[0_10px_22px_-6px_rgba(46,125,91,0.55),inset_0_1px_1px_rgba(255,255,255,0.35)] motion-safe:transition-[transform,width,opacity] motion-safe:duration-[520ms] motion-reduce:transition-none"
           style={{
             width: puck.w ? `${puck.w}px` : 0,
             transform: `translate3d(${puck.x}px, 0, 0)`,
@@ -178,7 +178,12 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
           }}
         >
           <span className="absolute inset-x-4 -top-px h-px bg-white/60 blur-[0.5px]" />
+          {/* Shimmer sweep */}
+          <span
+            className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/25 to-transparent motion-safe:animate-[dock-shimmer_3.6s_ease-in-out_infinite]"
+          />
         </li>
+
 
         {items.map(({ label, icon: Icon, to, activePrefix, description }, i) => {
           const active =
