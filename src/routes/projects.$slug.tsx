@@ -184,10 +184,26 @@ function ProjectDetailPage() {
           <ArrowLeft size={14} /> All Projects
         </Link>
 
-        {isLoading || !project ? (
-          <div className="mt-4 space-y-4">
-            <SkeletonBlock className="h-72" />
-            <SkeletonBlock className="h-40" />
+        {isError ? (
+          <div className="mt-6 rounded-3xl border border-destructive/30 bg-destructive/5 p-6 text-center">
+            <p className="text-sm font-semibold text-destructive">We couldn't load this project.</p>
+            <button
+              onClick={() => refetch()}
+              className="mt-3 inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-xs font-bold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110"
+            >
+              Retry
+            </button>
+          </div>
+        ) : isLoading || !project ? (
+          <div className="mt-4 space-y-4" aria-busy="true" aria-live="polite">
+            <SkeletonBlock className="h-72 rounded-[2rem]" />
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <SkeletonBlock key={i} className="h-20 rounded-2xl" />
+              ))}
+            </div>
+            <SkeletonBlock className="h-40 rounded-3xl" />
+            <SkeletonBlock className="h-64 rounded-3xl" />
           </div>
         ) : (
           <>
