@@ -18,14 +18,31 @@ export function BottomNav({ role }: { role: AppRole }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const items = itemsForRole(role);
 
+  return <DockList items={items} pathname={pathname} />;
+}
+
+export function PublicBottomNav() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const items: NavItem[] = [
+    { label: "Home", icon: Home, to: "/", description: "Aawash home" },
+    { label: "Projects", icon: Building2, to: "/projects", activePrefix: "/projects", description: "Browse projects" },
+    { label: "Sales", icon: TrendingUp, to: "/auth", description: "Sign in to manage sales" },
+    { label: "Wallet", icon: Wallet, to: "/auth", description: "Sign in to view wallet" },
+    { label: "Account", icon: User, to: "/auth", activePrefix: "/auth", description: "Sign in to your account" },
+  ];
+
+  return <DockList items={items} pathname={pathname} />;
+}
+
+function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
   return (
     <nav
       role="navigation"
       aria-label="Primary"
       data-testid="bottom-dock"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-6"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-2 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
     >
-      <ul className="pointer-events-auto mx-auto flex w-full max-w-lg items-stretch justify-between gap-0.5 rounded-[28px] border border-border/60 bg-surface/85 p-1 shadow-[var(--shadow-float)] backdrop-blur-2xl ring-1 ring-inset ring-white/40 sm:gap-1 sm:p-1.5">
+      <ul className="pointer-events-auto mx-auto flex w-full max-w-lg items-stretch justify-between gap-0.5 rounded-[28px] border border-border/70 bg-surface/95 p-1 shadow-[var(--shadow-float)] backdrop-blur-2xl ring-1 ring-inset ring-white/60 sm:gap-1 sm:p-1.5">
         {items.map(({ label, icon: Icon, to, activePrefix, description }) => {
           const active =
             pathname === to || (activePrefix ? pathname.startsWith(activePrefix) : false);

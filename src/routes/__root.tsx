@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
+import { BottomNav, PublicBottomNav } from "@/components/aawash/BottomNav";
+import { useSession } from "@/hooks/useSession";
 
 function NotFoundComponent() {
   return (
@@ -130,6 +132,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+  const { role } = useSession();
 
   useEffect(() => {
     // Import inside effect to keep the browser client out of any SSR path.
@@ -147,6 +150,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      {role ? <BottomNav role={role} /> : <PublicBottomNav />}
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
