@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   UserCog,
@@ -23,13 +24,18 @@ import {
   Activity,
   Circle,
   Trash2,
+  RefreshCw,
 } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
+import { ConfirmDialog } from "@/components/aawash/admin/ConfirmDialog";
 import { getTeamLeaderDetail, updateTeamLeader } from "@/lib/team-leaders.functions";
 import { adminResetPassword, setUserStatus } from "@/lib/admin.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
+import { supabase } from "@/integrations/supabase/client";
+import { invalidateAdmin } from "@/lib/admin-cache";
+
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders/$id")({
   component: Page,
