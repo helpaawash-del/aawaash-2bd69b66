@@ -15,6 +15,7 @@ import {
 } from "@/components/aawash/dashboard-kit";
 import { listSales, salesDashboard } from "@/lib/sales.functions";
 import { saleMeta } from "@/components/aawash/sales/status";
+import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
 
 export const Route = createFileRoute("/_authenticated/sales-workflow")({
   component: SalesWorkflow,
@@ -45,6 +46,12 @@ function SalesWorkflowInner() {
     queryKey: ["sales-list", scope, q],
     queryFn: () => fetchList({ data: { scope, q: q || undefined, limit: 100 } }),
   });
+
+  useRealtimeInvalidate(
+    "sales-live",
+    ["sales", "sale_payments"],
+    [["sales-overview"], ["sales-list", scope, q]],
+  );
 
   return (
     <DashboardShell role={role ?? "member"} profile={profile}>

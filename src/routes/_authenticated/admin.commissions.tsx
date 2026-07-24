@@ -25,6 +25,7 @@ import {
   listCommissionTransactions,
   commissionDashboard,
 } from "@/lib/commissions.functions";
+import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
 
 export const Route = createFileRoute("/_authenticated/admin/commissions")({
   component: Page,
@@ -83,6 +84,12 @@ function Content() {
       : { member_share_pct: 30, tip_share_pct: 0.5, bonus_threshold: 100000000 });
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["commissions"] });
+
+  useRealtimeInvalidate(
+    "commissions-live",
+    ["commission_transactions", "commissions", "commission_ledger"],
+    [["commissions", "dashboard"], ["commissions", "txns", "all"]],
+  );
 
   const upsertMut = useMutation({
     mutationFn: (data: SlabForm) => upsertFn({ data }),

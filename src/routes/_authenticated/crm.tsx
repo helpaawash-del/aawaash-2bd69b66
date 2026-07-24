@@ -30,6 +30,7 @@ import {
 } from "@/components/aawash/dashboard-kit";
 import { getCrmOverview, listCustomers, listFollowups } from "@/lib/crm.functions";
 import { CUSTOMER_STATUS_META, priorityStyle } from "@/components/aawash/crm/status";
+import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
 
 export const Route = createFileRoute("/_authenticated/crm")({
   component: CrmHome,
@@ -60,6 +61,12 @@ function CrmContent() {
     queryFn: () => listFn({ data: { status } }),
   });
   const followups = useQuery({ queryKey: ["crm", "followups"], queryFn: () => followFn() });
+
+  useRealtimeInvalidate(
+    "crm-live",
+    ["customers", "customer_timeline"],
+    [["crm", "overview"], ["crm", "customers"], ["crm", "followups"]],
+  );
 
   const filtered = useMemo(() => {
     const s = search.trim().toLowerCase();

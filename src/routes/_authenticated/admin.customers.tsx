@@ -32,6 +32,7 @@ import {
   adminUpsertTag,
   adminDeleteTag,
 } from "@/lib/customers-admin.functions";
+import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
 
 export const Route = createFileRoute("/_authenticated/admin/customers")({
   component: Page,
@@ -85,6 +86,12 @@ function Content() {
         },
       }),
   });
+
+  useRealtimeInvalidate(
+    "admin-customers-live",
+    ["customers", "customer_timeline"],
+    [["admin", "customers"], ["admin", "customers", "filters"]],
+  );
 
   const filtered = useMemo(() => {
     const rows = list.data ?? [];

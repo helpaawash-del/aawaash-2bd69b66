@@ -35,6 +35,7 @@ import { getProjectInventory } from "@/lib/inventory.functions";
 import { formatINR } from "@/components/aawash/dashboard-kit";
 import { canEdit, type Role } from "@/lib/permissions";
 import { ImageUploadField, ImageGalleryUploader, Model3DUploadField } from "@/components/aawash/admin/MediaUploaders";
+import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
 
 export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
   component: EditProjectPage,
@@ -702,6 +703,18 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
   });
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+
+  useRealtimeInvalidate(
+    `admin-inv-${projectId}`,
+    ["flats", "projects"],
+    [
+      ["admin", "inv-view", projectId],
+      ["admin", "project-inv", projectId],
+      ["admin", "project", projectId],
+      ["project-inventory", slug],
+      ["public-project", slug],
+    ],
+  );
 
   async function cycleFlat(fl: {
     id: string; unit_code: string; building_id: string; floor_id: string;
