@@ -41,6 +41,8 @@ import {
 } from "lucide-react";
 import heroResidence from "@/assets/hero-residence.jpg";
 import heroResidenceCutout from "@/assets/hero-residence.png.asset.json";
+import savitriHero from "@/assets/savitri-hero.jpg.asset.json";
+import savitriFacade from "@/assets/savitri-facade.jpg.asset.json";
 
 
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
