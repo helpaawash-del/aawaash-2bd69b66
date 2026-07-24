@@ -373,7 +373,7 @@ function Hero() {
 
         {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
-          <div className="relative w-[min(30vw,22rem)] xl:w-[min(26vw,24rem)]">
+          <div className="relative w-[min(46vw,34rem)] xl:w-[min(40vw,38rem)]">
             <img
               src={heroTowerTrees}
               alt="Aawash biophilic residence"
