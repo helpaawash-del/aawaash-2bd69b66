@@ -47,6 +47,12 @@ function SalesWorkflowInner() {
     queryFn: () => fetchList({ data: { scope, q: q || undefined, limit: 100 } }),
   });
 
+  useRealtimeInvalidate(
+    "sales-live",
+    ["sales", "sale_payments"],
+    [["sales-overview"], ["sales-list", scope, q]],
+  );
+
   return (
     <DashboardShell role={role ?? "member"} profile={profile}>
       <section className="glass-card relative overflow-hidden rounded-4xl p-5 shadow-[var(--shadow-float)] sm:p-8">
