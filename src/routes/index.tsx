@@ -237,7 +237,7 @@ function Hero() {
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
         <div className="mt-4 lg:hidden">
-          <div className="relative mx-auto aspect-square w-full max-w-[15rem] sm:max-w-[18rem]">
+          <div className="relative mx-auto aspect-square w-[min(72vw,20rem)] sm:w-[min(60vw,22rem)] md:w-[min(52vw,26rem)]">
             {/* Soft ground bloom to seat the building */}
             <div
               aria-hidden
@@ -256,9 +256,11 @@ function Hero() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              className="relative h-full w-full select-none object-contain drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_22%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
+              sizes="(min-width: 768px) 26rem, (min-width: 640px) 22rem, 72vw"
+              className="relative h-full w-full select-none object-contain object-center drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_22%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
             />
           </div>
+        </div>
           <div className="mt-5 flex justify-center">
             <a
               href="#projects"
