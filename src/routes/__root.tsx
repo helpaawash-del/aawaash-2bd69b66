@@ -12,7 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
-import { BottomNav, PublicBottomNav } from "@/components/aawash/BottomNav";
+import { BottomNav, BottomNavSkeleton, PublicBottomNav } from "@/components/aawash/BottomNav";
 import { useSession } from "@/hooks/useSession";
 
 function NotFoundComponent() {
