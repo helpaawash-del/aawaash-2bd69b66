@@ -7,6 +7,7 @@ import { AlertCircle, KeyRound, Loader2, Lock, ShieldCheck } from "lucide-react"
 import { BrandMark } from "@/components/aawash/BrandMark";
 import { supabase } from "@/integrations/supabase/client";
 import { isAdminPanelUnlocked, unlockAdminPanel } from "@/lib/admin-passcode.functions";
+import { toInternalPath } from "@/lib/auth";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 

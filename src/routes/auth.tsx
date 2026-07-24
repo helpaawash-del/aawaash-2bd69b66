@@ -17,7 +17,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { loginIdToEmail, validateLoginId, homePathForRole, type AppRole } from "@/lib/auth";
+import { loginIdToEmail, validateLoginId, homePathForRole, toInternalPath, type AppRole } from "@/lib/auth";
 import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/auth.functions";
 import { BrandMark } from "@/components/aawash/BrandMark";
 
