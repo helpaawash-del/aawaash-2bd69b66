@@ -50,7 +50,7 @@ import {
 } from "lucide-react";
 
 import heroResidence from "@/assets/hero-residence.jpg";
-import heroResidenceCutout from "@/assets/hero-residence.png.asset.json";
+import heroResidenceCutout from "@/assets/hero-skyscraper.png.asset.json";
 import savitriHero from "@/assets/savitri-hero.jpg.asset.json";
 import savitriFacade from "@/assets/savitri-facade.jpg.asset.json";
 import savitriRender from "@/assets/savitri-render.jpg";
@@ -236,26 +236,26 @@ function Hero() {
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
         <div className="mt-4 lg:hidden">
-          <div className="relative mx-auto aspect-square w-full max-w-md">
+          <div className="relative mx-auto aspect-[3/4] w-full max-w-[22rem]">
             {/* Soft ground bloom to seat the building */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-6 bottom-4 h-16 rounded-[50%] bg-[radial-gradient(50%_60%_at_50%_50%,color-mix(in_oklab,var(--primary)_28%,transparent),transparent_75%)] blur-2xl"
+              className="pointer-events-none absolute inset-x-10 bottom-2 h-10 rounded-[50%] bg-[radial-gradient(50%_60%_at_50%_50%,color-mix(in_oklab,var(--primary)_28%,transparent),transparent_75%)] blur-2xl"
             />
             {/* Subtle halo behind subject */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-8 top-6 bottom-8 rounded-[46%] bg-[radial-gradient(60%_50%_at_50%_45%,color-mix(in_oklab,var(--leaf)_18%,transparent),transparent_70%)] blur-3xl"
+              className="pointer-events-none absolute inset-x-6 top-6 bottom-8 rounded-[40%] bg-[radial-gradient(55%_60%_at_50%_45%,color-mix(in_oklab,var(--leaf)_18%,transparent),transparent_70%)] blur-3xl"
             />
             <img
               src={heroResidenceCutout.url}
-              alt="Aawash luxury residential architecture render"
+              alt="Aawash biophilic skyscraper residence"
               width={1024}
-              height={1024}
+              height={1536}
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              className="relative h-full w-full select-none object-contain drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_20%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
+              className="relative h-full w-full select-none object-contain drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_22%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
             />
           </div>
           <div className="mt-5 flex justify-center">
@@ -361,24 +361,24 @@ function Hero() {
       {/* Building emerging from the bottom + floating stat chips */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[50vh] lg:block lg:h-[50vh]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[60vh] lg:block"
         style={{ transform: `translateY(${scrollY * 0.08}px)` }}
       >
         {/* Soft bloom behind building */}
         <div className="absolute inset-x-0 bottom-0 mx-auto h-full max-w-6xl">
-          <div className="absolute bottom-0 left-1/2 h-[70%] w-[110%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(50%_50%_at_50%_100%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)] blur-2xl" />
+          <div className="absolute bottom-0 left-1/2 h-[70%] w-[70%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(50%_50%_at_50%_100%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)] blur-2xl" />
         </div>
 
         {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
-          <div className="relative w-full max-w-3xl">
+          <div className="relative w-full max-w-[26rem]">
             <img
               src={heroResidenceCutout.url}
-              alt="Aawash luxury residential architecture render"
+              alt="Aawash biophilic skyscraper residence"
               width={1024}
-              height={1024}
+              height={1536}
               decoding="async"
-              className="mx-auto h-auto w-full select-none object-contain drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_22%,transparent)] animate-[float_10s_ease-in-out_infinite]"
+              className="mx-auto h-auto w-full select-none object-contain drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_24%,transparent)] animate-[float_10s_ease-in-out_infinite]"
             />
           </div>
         </div>
@@ -1035,91 +1035,37 @@ function Projects() {
                     )}
                   </div>
 
-                  {/* Editorial info block — generous whitespace */}
-                  <div className="relative z-20 px-6 pb-10 pt-9 sm:px-12 sm:pb-14 sm:pt-12">
-                    {/* Meta row */}
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                      <span className="inline-flex items-center gap-1.5">
+                  {/* Minimal info block */}
+                  <div className="relative z-20 flex flex-col gap-5 px-6 pb-7 pt-6 sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:pb-8 sm:pt-7">
+                    <div className="min-w-0">
+                      <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
                         <MapPin size={12} className="text-primary" /> Darbhanga, Bihar
-                      </span>
-                      <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
-                      <span>{p.units}</span>
+                      </div>
+                      <Link
+                        to="/projects/$slug"
+                        params={{ slug: p.slug }}
+                        className="mt-1.5 block truncate text-xl font-semibold tracking-tight text-foreground transition-colors hover:text-primary sm:text-2xl"
+                      >
+                        {p.name}
+                      </Link>
                     </div>
-
-                    <Link
-                      to="/projects/$slug"
-                      params={{ slug: p.slug }}
-                      className="mt-4 block text-3xl font-bold tracking-tight text-foreground transition-colors hover:text-primary sm:text-[2.75rem] sm:leading-[1.05]"
-                    >
-                      {p.name}
-                    </Link>
-                    <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
-                      {p.tagline}
-                    </p>
-                    <div className="mt-3 text-[13px] font-medium text-muted-foreground/80">
-                      By {p.developer}
-                    </div>
-
-                    {/* Highlights — subtle grid, not pill soup */}
-                    <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-                      {p.highlights.map((h) => (
-                        <li
-                          key={h}
-                          className="flex items-start gap-2.5 text-[13px] leading-relaxed text-foreground/85"
-                        >
-                          <CheckCircle2
-                            size={15}
-                            className="mt-0.5 shrink-0 text-primary"
-                            strokeWidth={2.25}
-                          />
-                          <span>{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Divider */}
-                    <div className="mt-10 h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
-
-                    {/* Price + CTAs */}
-                    <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                          Starting Price
+                    <div className="flex items-center justify-between gap-4 sm:justify-end">
+                      <div className="sm:text-right">
+                        <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                          From
                         </div>
-                        <div className="mt-1 flex items-baseline gap-3">
-                          <span className="text-2xl font-extrabold text-foreground sm:text-3xl">
-                            {p.price}
-                          </span>
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary">
-                            <Star size={11} className="fill-gold text-gold" /> 4.9 · Concierge
-                          </span>
+                        <div className="text-base font-bold text-foreground sm:text-lg">
+                          {p.price}
                         </div>
                       </div>
-                      <div className="flex flex-wrap items-center gap-3">
-                        <Link
-                          to="/projects/$slug"
-                          params={{ slug: p.slug }}
-                          className="inline-flex h-12 items-center gap-2 rounded-2xl border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
-                        >
-                          View details
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => setOpenProject(p)}
-                          className="hidden"
-                          aria-hidden
-                        >
-                          quick preview
-                        </button>
-                        <Link
-                          to="/projects/$slug"
-                          params={{ slug: p.slug }}
-                          aria-label={`Explore ${p.name}`}
-                          className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
-                        >
-                          Explore <ArrowRight size={15} />
-                        </Link>
-                      </div>
+                      <Link
+                        to="/projects/$slug"
+                        params={{ slug: p.slug }}
+                        aria-label={`Explore ${p.name}`}
+                        className="inline-flex h-11 items-center gap-1.5 rounded-full bg-foreground px-4 text-xs font-semibold text-background transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                      >
+                        Explore <ArrowRight size={14} />
+                      </Link>
                     </div>
                   </div>
                 </article>
