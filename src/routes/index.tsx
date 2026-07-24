@@ -976,7 +976,7 @@ function Projects() {
                   {/* Stretched link — the entire card opens the public project detail page */}
                   <Link
                     to="/projects/$slug"
-                    params={{ slug: "savitri-enclave" }}
+                    params={{ slug: p.slug }}
                     aria-label={`View ${p.name} details`}
                     className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                   />
@@ -1040,7 +1040,7 @@ function Projects() {
 
                     <Link
                       to="/projects/$slug"
-                      params={{ slug: "savitri-enclave" }}
+                      params={{ slug: p.slug }}
                       className="mt-4 block text-3xl font-bold tracking-tight text-foreground transition-colors hover:text-primary sm:text-[2.75rem] sm:leading-[1.05]"
                     >
                       {p.name}
@@ -1090,7 +1090,7 @@ function Projects() {
                       <div className="flex flex-wrap items-center gap-3">
                         <Link
                           to="/projects/$slug"
-                          params={{ slug: "savitri-enclave" }}
+                          params={{ slug: p.slug }}
                           className="inline-flex h-12 items-center gap-2 rounded-2xl border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                         >
                           View details
@@ -1105,7 +1105,7 @@ function Projects() {
                         </button>
                         <Link
                           to="/projects/$slug"
-                          params={{ slug: "savitri-enclave" }}
+                          params={{ slug: p.slug }}
                           aria-label={`Explore ${p.name}`}
                           className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                         >
