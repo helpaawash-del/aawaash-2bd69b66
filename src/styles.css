@@ -292,3 +292,21 @@
 @utility animate-fade-up {
   animation: aawash-fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* App-style violet aurora used behind hero sections and auth */
+@utility aurora-violet {
+  background:
+    radial-gradient(60% 50% at 15% 10%, color-mix(in oklab, var(--primary) 26%, transparent) 0%, transparent 60%),
+    radial-gradient(50% 45% at 90% 20%, color-mix(in oklab, var(--leaf) 22%, transparent) 0%, transparent 60%),
+    radial-gradient(70% 55% at 50% 100%, color-mix(in oklab, var(--primary) 18%, transparent) 0%, transparent 65%);
+}
+
+/* Elevated dock pill with violet halo */
+@utility dock-pill {
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid color-mix(in oklab, var(--primary) 18%, var(--border));
+  box-shadow:
+    0 20px 50px -18px color-mix(in oklab, var(--primary) 40%, transparent),
+    0 2px 0 0 color-mix(in oklab, var(--primary) 6%, transparent) inset;
+}
