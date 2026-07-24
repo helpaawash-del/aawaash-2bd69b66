@@ -597,7 +597,7 @@ function ReconciliationTab() {
             icon={<ShieldAlert size={18} />}
             label="Discrepancies"
             value={String(totals?.discrepancies ?? 0)}
-            accent={totals && totals.discrepancies > 0 ? "warn" : "cool"}
+            accent={totals && totals.discrepancies > 0 ? "destructive" : "leaf"}
           />
           <StatCard
             icon={<TrendingUp size={18} />}
