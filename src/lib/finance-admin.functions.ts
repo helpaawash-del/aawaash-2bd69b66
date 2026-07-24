@@ -335,3 +335,115 @@ export const listBonusHistory = createServerFn({ method: "GET" })
       project: r.project_id ? pMap.get(r.project_id) ?? null : null,
     }));
   });
+
+/* ---------------------- Wallet Reconciliation ---------------------- */
+
+/**
+ * Compares each user's stored wallet balances against the ledger-derived
+ * expected balance so admins can spot drift caused by manual DB edits,
+ * failed transactions, or missed adjustments.
+ *
+ * Rule of thumb:
+ *   expected = SUM(credit) - SUM(debit) over commission_ledger for that user.
+ *   stored   = wallet_balance + pending_balance + locked_balance
+ *              + lifetime_withdrawals (money that already left the wallet).
+ * A non-zero delta means the wallet totals no longer match the ledger.
+ */
+export const reconcileWallets = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        onlyDiscrepancies: z.boolean().default(false),
+        limit: z.number().int().min(1).max(1000).default(500),
+      })
+      .parse(d ?? {}),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+
+    const [{ data: profiles, error: pe }, { data: ledger, error: le }] = await Promise.all([
+      context.supabase
+        .from("profiles")
+        .select(
+          "id, full_name, login_id, display_code, wallet_balance, pending_balance, locked_balance, total_earnings, lifetime_withdrawals",
+        )
+        .limit(data.limit),
+      context.supabase
+        .from("commission_ledger")
+        .select("user_id, credit, debit")
+        .limit(50_000),
+    ]);
+    if (pe) throw new Error(pe.message);
+    if (le) throw new Error(le.message);
+
+    const sums = new Map<string, { credit: number; debit: number }>();
+    for (const row of ledger ?? []) {
+      if (!row.user_id) continue;
+      const cur = sums.get(row.user_id) ?? { credit: 0, debit: 0 };
+      cur.credit += Number(row.credit ?? 0);
+      cur.debit += Number(row.debit ?? 0);
+      sums.set(row.user_id, cur);
+    }
+
+    const rows = (profiles ?? []).map((p) => {
+      const s = sums.get(p.id) ?? { credit: 0, debit: 0 };
+      const expected = s.credit - s.debit;
+      const stored =
+        Number(p.wallet_balance ?? 0) +
+        Number(p.pending_balance ?? 0) +
+        Number(p.locked_balance ?? 0) +
+        Number(p.lifetime_withdrawals ?? 0);
+      const delta = Number((stored - expected).toFixed(2));
+      return {
+        user_id: p.id,
+        full_name: p.full_name,
+        login_id: p.login_id,
+        display_code: p.display_code,
+        wallet_balance: Number(p.wallet_balance ?? 0),
+        pending_balance: Number(p.pending_balance ?? 0),
+        locked_balance: Number(p.locked_balance ?? 0),
+        lifetime_withdrawals: Number(p.lifetime_withdrawals ?? 0),
+        ledger_credit: s.credit,
+        ledger_debit: s.debit,
+        ledger_net: expected,
+        expected_total: expected,
+        stored_total: stored,
+        delta,
+        status:
+          Math.abs(delta) < 0.01
+            ? ("matched" as const)
+            : delta > 0
+              ? ("stored_high" as const)
+              : ("stored_low" as const),
+      };
+    });
+
+    const filtered = data.onlyDiscrepancies
+      ? rows.filter((r) => r.status !== "matched")
+      : rows;
+
+    filtered.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+
+    const totals = rows.reduce(
+      (acc, r) => {
+        acc.stored += r.stored_total;
+        acc.expected += r.expected_total;
+        if (r.status !== "matched") acc.discrepancies += 1;
+        return acc;
+      },
+      { stored: 0, expected: 0, discrepancies: 0 },
+    );
+
+    return {
+      rows: filtered,
+      totals: {
+        wallets_checked: rows.length,
+        discrepancies: totals.discrepancies,
+        stored_total: Number(totals.stored.toFixed(2)),
+        expected_total: Number(totals.expected.toFixed(2)),
+        delta_total: Number((totals.stored - totals.expected).toFixed(2)),
+      },
+    };
+  });
+
