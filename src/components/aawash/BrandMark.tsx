@@ -1,42 +1,57 @@
 import logoAsset from "@/assets/aawaash-logo.png.asset.json";
 
+type Size = "sm" | "md" | "lg";
+
+const SIZES: Record<Size, { box: string; text: string; sub: string; gap: string }> = {
+  sm: { box: "h-9 w-9", text: "text-base", sub: "text-[9px]", gap: "gap-2.5" },
+  md: { box: "h-12 w-12", text: "text-xl", sub: "text-[10px]", gap: "gap-3" },
+  lg: { box: "h-16 w-16", text: "text-3xl", sub: "text-[11px]", gap: "gap-3.5" },
+};
+
 /**
  * BrandMark — Aawaash logotype
- * Uses the official Aawaash building-mark logo.
+ * Standardized sizing, spacing, and hover across every breakpoint.
+ * Renders as an inline flex row so it composes cleanly inside any nav/header/footer.
  */
 export function BrandMark({
   size = "md",
   showWordmark = true,
 }: {
-  size?: "sm" | "md" | "lg";
+  size?: Size;
   showWordmark?: boolean;
 }) {
-  const dims = {
-    sm: { box: "h-9 w-9", text: "text-base" },
-    md: { box: "h-12 w-12", text: "text-xl" },
-    lg: { box: "h-16 w-16", text: "text-3xl" },
-  }[size];
+  const s = SIZES[size];
 
   return (
-    <div className="flex items-center gap-3">
-      <div className={`${dims.box} relative grid place-items-center`}>
+    <span
+      className={`group/brand inline-flex items-center ${s.gap} transition-transform duration-300 ease-out hover:-translate-y-0.5`}
+      aria-label="Aawaash"
+    >
+      <span
+        className={`${s.box} relative grid shrink-0 place-items-center overflow-hidden rounded-2xl transition-transform duration-300 ease-out group-hover/brand:scale-105`}
+      >
         <img
           src={logoAsset.url}
-          alt="Aawaash"
+          alt=""
+          aria-hidden="true"
           className="h-full w-full object-contain"
           decoding="async"
+          loading="eager"
+          draggable={false}
         />
-      </div>
+      </span>
       {showWordmark && (
-        <div className="flex flex-col leading-none">
-          <span className={`${dims.text} font-extrabold tracking-tight text-foreground`}>
+        <span className="flex flex-col leading-none">
+          <span className={`${s.text} font-extrabold tracking-tight text-foreground`}>
             Aawaash
           </span>
-          <span className="mt-1 text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+          <span
+            className={`mt-1 ${s.sub} font-medium uppercase tracking-[0.18em] text-muted-foreground`}
+          >
             Real Estate
           </span>
-        </div>
+        </span>
       )}
-    </div>
+    </span>
   );
 }
