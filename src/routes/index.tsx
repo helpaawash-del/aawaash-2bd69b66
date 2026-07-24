@@ -499,11 +499,14 @@ const CATEGORIES: { label: string; icon: typeof Home; hue: string; count: string
 ];
 
 function Categories() {
+  const mobileCats = CATEGORIES.filter((c) =>
+    ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
+  );
   return (
     <section aria-labelledby="cats-title" className="px-5 py-10 sm:px-8 sm:py-14">
       <div className="mx-auto max-w-6xl">
         <div className="flex items-end justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Explore</div>
             <h2 id="cats-title" className="mt-1 text-2xl font-bold text-foreground sm:text-3xl">
               Browse by category
@@ -515,8 +518,28 @@ function Categories() {
           </Link>
         </div>
 
-        {/* Premium horizontally scrollable swipe cards */}
-        <div className="-mx-5 mt-6 overflow-x-auto px-5 pb-3 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
+        {/* Mobile / tablet: compact 4-icon grid */}
+        <ul className="mt-6 grid grid-cols-4 gap-3 lg:hidden">
+          {mobileCats.map((c, i) => (
+            <li key={c.label}>
+              <Link
+                to="/projects"
+                style={{ animationDelay: `${i * 60}ms` }}
+                className="group flex aspect-square flex-col items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/70 p-2 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95"
+              >
+                <span
+                  className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
+                >
+                  <c.icon size={20} className="motion-safe:animate-[float_6s_ease-in-out_infinite]" />
+                </span>
+                <span className="text-[11px] font-semibold text-foreground">{c.label}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* Desktop: premium horizontally scrollable swipe cards */}
+        <div className="-mx-5 mt-6 hidden overflow-x-auto px-5 pb-3 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:block [&::-webkit-scrollbar]:hidden">
           <ul className="flex snap-x snap-mandatory gap-4">
             {CATEGORIES.map((c, i) => (
               <li key={c.label} className="snap-start">
