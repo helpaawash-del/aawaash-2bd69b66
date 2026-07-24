@@ -40,6 +40,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import heroResidence from "@/assets/hero-residence.jpg";
+import heroResidenceCutout from "@/assets/hero-residence.png.asset.json";
 
 
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
