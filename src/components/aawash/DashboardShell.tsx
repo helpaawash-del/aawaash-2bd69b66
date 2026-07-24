@@ -147,8 +147,7 @@ function FloatingSideRail({ role }: { role: AppRole }) {
     >
       <div className="group pointer-events-auto relative">
         <nav
-          className="glass-card relative flex w-16 flex-col gap-1 rounded-[28px] p-2 shadow-[var(--shadow-float)] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:w-58"
-          style={{ width: undefined }}
+          className="glass-card relative flex w-16 flex-col gap-1 rounded-[28px] p-2 shadow-[var(--shadow-float)] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:w-[232px]"
         >
           {/* animated active indicator */}
           {activeIndex >= 0 && (
