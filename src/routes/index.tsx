@@ -1102,11 +1102,12 @@ function Projects() {
                           quick preview
                         </button>
                         <Link
-                          to="/auth"
-                          aria-label={`Enquire about ${p.name}`}
+                          to="/projects/$slug"
+                          params={{ slug: "savitri-enclave" }}
+                          aria-label={`Explore ${p.name}`}
                           className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                         >
-                          Enquire <ArrowRight size={15} />
+                          Explore <ArrowRight size={15} />
                         </Link>
                       </div>
                     </div>
