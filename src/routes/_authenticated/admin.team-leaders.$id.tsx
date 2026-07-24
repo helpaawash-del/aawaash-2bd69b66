@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   UserCog,
@@ -23,13 +24,18 @@ import {
   Activity,
   Circle,
   Trash2,
+  RefreshCw,
 } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
+import { ConfirmDialog } from "@/components/aawash/admin/ConfirmDialog";
 import { getTeamLeaderDetail, updateTeamLeader } from "@/lib/team-leaders.functions";
 import { adminResetPassword, setUserStatus } from "@/lib/admin.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
+import { supabase } from "@/integrations/supabase/client";
+import { invalidateAdmin } from "@/lib/admin-cache";
+
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders/$id")({
   component: Page,
@@ -56,66 +62,97 @@ function Content() {
   const resetFn = useServerFn(adminResetPassword);
   const statusFn = useServerFn(setUserStatus);
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: ["admin", "team-leader", id],
     queryFn: () => detailFn({ data: { userId: id } }),
+    // Poll every 8s so leaders' members list stays visibly current
+    // even without realtime, and always refresh on window focus.
+    refetchInterval: 8000,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 
   const [tab, setTab] = useState<Tab>("members");
   const [editing, setEditing] = useState(false);
-  const [actionMsg, setActionMsg] = useState<string | null>(null);
-  const [actionErr, setActionErr] = useState<string | null>(null);
   const [busy, setBusy] = useState<"reset" | "suspend" | "activate" | "delete" | null>(null);
+  const [confirmKind, setConfirmKind] = useState<"suspend" | "activate" | "delete" | null>(null);
+
+  // Realtime member-roster subscription for the leader's team.
+  // Falls back gracefully to the 8s poll above if realtime isn't wired up
+  // for the profiles table; either way the list stays fresh and we surface
+  // a toast whenever a member is added, updated, or removed.
+  const teamId = data?.team?.id ?? data?.profile?.team_id ?? null;
+  const prevMemberCountRef = useRef<number | null>(null);
+  useEffect(() => {
+    const count = data?.members.length ?? null;
+    if (count === null) return;
+    const prev = prevMemberCountRef.current;
+    if (prev !== null && count !== prev) {
+      if (count > prev) toast.success(`Team roster updated · ${count - prev} member added`);
+      else if (count < prev) toast.info(`Team roster updated · ${prev - count} member removed`);
+    }
+    prevMemberCountRef.current = count;
+  }, [data?.members.length]);
+
+  useEffect(() => {
+    if (!teamId) return;
+    const channel = supabase
+      .channel(`leader-members-${teamId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "profiles", filter: `team_id=eq.${teamId}` },
+        () => {
+          refetch();
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [teamId, refetch]);
 
   async function onResetPassword() {
-    setActionErr(null); setActionMsg(null);
     const pw = window.prompt("New temporary password (min 8 chars):");
     if (!pw) return;
-    if (pw.length < 8) { setActionErr("Password must be at least 8 characters."); return; }
+    if (pw.length < 8) {
+      toast.error("Password must be at least 8 characters.");
+      return;
+    }
     setBusy("reset");
     try {
       await resetFn({ data: { userId: id, password: pw } });
-      setActionMsg("Password reset. Share it securely with the team leader.");
+      toast.success("Password reset. Share it securely with the team leader.");
     } catch (e) {
-      setActionErr(e instanceof Error ? e.message : "Password reset failed");
-    } finally { setBusy(null); }
-  }
-
-  async function onChangeStatus(action: "suspend" | "activate") {
-    setActionErr(null); setActionMsg(null);
-    const label = action === "suspend" ? "suspend" : "activate";
-    if (!window.confirm(`Are you sure you want to ${label} this team leader?`)) return;
-    setBusy(action);
-    try {
-      await statusFn({ data: { userId: id, action } });
-      setActionMsg(action === "suspend" ? "Team leader suspended." : "Team leader activated.");
-      await Promise.all([
-        qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-        qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
-      ]);
-      await refetch();
-    } catch (e) {
-      setActionErr(e instanceof Error ? e.message : "Status change failed");
-    } finally { setBusy(null); }
-  }
-
-  async function onDelete() {
-    setActionErr(null); setActionMsg(null);
-    if (!window.confirm("Delete this Team Leader? This bans their account and archives the profile. This cannot be undone from the UI.")) return;
-    setBusy("delete");
-    try {
-      await statusFn({ data: { userId: id, action: "delete" } });
-      await Promise.all([
-        qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-        qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
-        qc.invalidateQueries({ queryKey: ["admin", "members"] }),
-      ]);
-      navigate({ to: "/admin/team-leaders" });
-    } catch (e) {
-      setActionErr(e instanceof Error ? e.message : "Delete failed");
+      toast.error(e instanceof Error ? e.message : "Password reset failed");
+    } finally {
       setBusy(null);
     }
   }
+
+  async function confirmChangeStatus(action: "suspend" | "activate") {
+    setBusy(action);
+    try {
+      await statusFn({ data: { userId: id, action } });
+      toast.success(action === "suspend" ? "Team leader suspended." : "Team leader activated.");
+      await invalidateAdmin(qc, "leader");
+      await refetch();
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function confirmDelete() {
+    setBusy("delete");
+    try {
+      await statusFn({ data: { userId: id, action: "delete" } });
+      toast.success("Team leader archived.");
+      await invalidateAdmin(qc, "leader");
+      navigate({ to: "/admin/team-leaders" });
+    } finally {
+      setBusy(null);
+    }
+  }
+
 
   if (isLoading || !data) {
     return (
@@ -206,7 +243,7 @@ function Content() {
             {(p.status ?? "active") === "suspended" ? (
               <button
                 type="button"
-                onClick={() => onChangeStatus("activate")}
+                onClick={() => setConfirmKind("activate")}
                 disabled={busy !== null}
                 className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-semibold text-emerald-700 disabled:opacity-60"
               >
@@ -216,7 +253,7 @@ function Content() {
             ) : (
               <button
                 type="button"
-                onClick={() => onChangeStatus("suspend")}
+                onClick={() => setConfirmKind("suspend")}
                 disabled={busy !== null}
                 className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-xs font-semibold text-amber-700 disabled:opacity-60"
               >
@@ -232,7 +269,7 @@ function Content() {
             </button>
             <button
               type="button"
-              onClick={onDelete}
+              onClick={() => setConfirmKind("delete")}
               disabled={busy !== null}
               className="inline-flex items-center gap-2 rounded-full border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-700 disabled:opacity-60"
             >
@@ -242,11 +279,38 @@ function Content() {
           </div>
         </div>
 
-        {(actionMsg || actionErr) && (
-          <div className={`mt-4 rounded-2xl px-4 py-2 text-xs font-semibold ${actionErr ? "bg-rose-500/10 text-rose-700" : "bg-emerald-500/10 text-emerald-700"}`}>
-            {actionErr ?? actionMsg}
-          </div>
-        )}
+        <ConfirmDialog
+          open={confirmKind !== null}
+          onOpenChange={(next) => (!next ? setConfirmKind(null) : null)}
+          destructive={confirmKind === "delete" || confirmKind === "suspend"}
+          title={
+            confirmKind === "delete"
+              ? "Delete this Team Leader?"
+              : confirmKind === "suspend"
+                ? "Suspend this Team Leader?"
+                : "Activate this Team Leader?"
+          }
+          description={
+            confirmKind === "delete"
+              ? "This bans their account and archives the profile. This cannot be undone from the UI."
+              : confirmKind === "suspend"
+                ? "They won't be able to sign in until you reactivate the account."
+                : "They will regain full access to the leader dashboard immediately."
+          }
+          confirmLabel={
+            confirmKind === "delete"
+              ? "Delete leader"
+              : confirmKind === "suspend"
+                ? "Suspend"
+                : "Activate"
+          }
+          onConfirm={async () => {
+            if (confirmKind === "delete") await confirmDelete();
+            else if (confirmKind) await confirmChangeStatus(confirmKind);
+          }}
+        />
+
+
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatMini icon={<Users size={14} />} label="Members" value={String(data.members.length)} />
@@ -337,17 +401,32 @@ function Content() {
         <Card title={`Team members (${data.members.length})`}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-surface px-4 py-3">
             <div>
-              <div className="text-sm font-extrabold text-foreground">Members section</div>
-              <div className="text-xs text-muted-foreground">Add new members and open any member account from this team.</div>
+              <div className="flex items-center gap-2 text-sm font-extrabold text-foreground">
+                Members section
+                {isFetching && (
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary"
+                    aria-live="polite"
+                  >
+                    <RefreshCw size={10} className="animate-spin" /> Syncing
+                  </span>
+                )}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Live updates on • Add new members or open any member account from this team.
+              </div>
             </div>
             <Link
               to="/admin/members/new"
+              search={{ leaderId: id }}
               className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)]"
             >
               <Users size={14} />
               Create member
             </Link>
           </div>
+
+
           {data.members.length === 0 ? (
             <Empty>No members yet — create the first member for this team.</Empty>
           ) : (

@@ -1,18 +1,23 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, UserPlus, CheckCircle2, Loader2, Sparkles, AlertTriangle } from "lucide-react";
+import { ArrowLeft, UserPlus, CheckCircle2, Loader2, Sparkles, AlertTriangle, Lock } from "lucide-react";
+import { z } from "zod";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { createMemberFull, listAllMembers } from "@/lib/members-admin.functions";
 import { getTeamLimits } from "@/lib/team-leaders.functions";
 
+const searchSchema = z.object({ leaderId: z.string().uuid().optional() });
+
 export const Route = createFileRoute("/_authenticated/admin/members/new")({
   component: Page,
+  validateSearch: (s) => searchSchema.parse(s),
   head: () => ({ meta: [{ title: "New Member — Aawash Admin" }] }),
 });
+
 
 function Page() {
   return (
@@ -25,6 +30,7 @@ function Page() {
 function Content() {
   const { profile } = useSession();
   const navigate = useNavigate();
+  const { leaderId } = Route.useSearch();
   const createFn = useServerFn(createMemberFull);
   const listFn = useServerFn(listAllMembers);
   const limitsFn = useServerFn(getTeamLimits);
@@ -42,6 +48,16 @@ function Content() {
     [data, cap],
   );
 
+  // Resolve leader → team (may include a full team even without spare slots,
+  // so we can render an explicit "Team is full" message rather than silently
+  // clearing the deep-linked selection).
+  const lockedTeam = useMemo(() => {
+    if (!leaderId) return null;
+    return (data?.leaders ?? []).find((t) => t.leader_id === leaderId) ?? null;
+  }, [data, leaderId]);
+  const lockedTeamHasSpace = lockedTeam ? lockedTeam.member_count < cap : false;
+  const lockedFromLeader = Boolean(lockedTeam && lockedTeamHasSpace);
+
   const [fullName, setFullName] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
@@ -55,6 +71,14 @@ function Content() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{ loginId: string; teamLetter: string } | null>(null);
+
+  // Auto-prefill and lock the team when arriving from a Team Leader detail page.
+  useEffect(() => {
+    if (lockedFromLeader && lockedTeam && teamId !== lockedTeam.team_id) {
+      setTeamId(lockedTeam.team_id);
+    }
+  }, [lockedFromLeader, lockedTeam, teamId]);
+
 
   const chosenTeam = availableTeams.find((t) => t.team_id === teamId);
   const previewLoginId =
@@ -248,11 +272,20 @@ function Content() {
             </p>
           </div>
           <label className="block text-sm">
-            <span className="text-xs font-semibold text-muted-foreground">Select team*</span>
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+              Select team*
+              {lockedFromLeader && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+                  <Lock size={10} /> Locked to leader
+                </span>
+              )}
+            </span>
             <select
               value={teamId}
               onChange={(e) => setTeamId(e.target.value)}
-              className="mt-1 block w-full rounded-2xl border border-border bg-surface px-3 py-2.5 text-sm font-semibold text-foreground outline-none focus:border-primary"
+              disabled={lockedFromLeader}
+              aria-readonly={lockedFromLeader}
+              className="mt-1 block w-full rounded-2xl border border-border bg-surface px-3 py-2.5 text-sm font-semibold text-foreground outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-80"
             >
               <option value="">— Choose a team —</option>
               {availableTeams.map((t) => (
@@ -261,7 +294,20 @@ function Content() {
                 </option>
               ))}
             </select>
+            {lockedFromLeader && lockedTeam && (
+              <span className="mt-1 block text-[11px] text-muted-foreground">
+                Pre-selected from Team Leader {lockedTeam.leader_name ?? ""}. Return to the leader
+                page to switch teams.
+              </span>
+            )}
+            {leaderId && !lockedFromLeader && (
+              <span className="mt-1 block text-[11px] font-semibold text-amber-700">
+                That leader's team is at capacity ({lockedTeam?.member_count ?? 0}/{cap}) — raise
+                the member limit or pick another team below.
+              </span>
+            )}
           </label>
+
 
           {previewLoginId && (
             <div className="rounded-2xl border border-primary/30 bg-primary-soft p-3 text-sm">
