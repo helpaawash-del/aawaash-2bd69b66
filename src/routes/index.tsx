@@ -138,7 +138,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-[100svh] overflow-hidden px-5 pb-[54vh] pt-28 sm:px-8 sm:pt-32 md:pb-[46vh] md:pt-36"
+      className="relative overflow-hidden px-5 pt-24 pb-8 sm:px-8 sm:pt-28 lg:min-h-[100svh] lg:pb-[46vh] lg:pt-36"
     >
       {/* Layer 1-2 — atmospheric wash */}
       <div className="pointer-events-none absolute inset-0 -z-10">
