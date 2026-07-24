@@ -1,18 +1,23 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, UserPlus, CheckCircle2, Loader2, Sparkles, AlertTriangle } from "lucide-react";
+import { ArrowLeft, UserPlus, CheckCircle2, Loader2, Sparkles, AlertTriangle, Lock } from "lucide-react";
+import { z } from "zod";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { createMemberFull, listAllMembers } from "@/lib/members-admin.functions";
 import { getTeamLimits } from "@/lib/team-leaders.functions";
 
+const searchSchema = z.object({ leaderId: z.string().uuid().optional() });
+
 export const Route = createFileRoute("/_authenticated/admin/members/new")({
   component: Page,
+  validateSearch: (s) => searchSchema.parse(s),
   head: () => ({ meta: [{ title: "New Member — Aawash Admin" }] }),
 });
+
 
 function Page() {
   return (
