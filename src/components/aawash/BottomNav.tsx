@@ -1,23 +1,18 @@
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Building2, TrendingUp, Wallet, User, LayoutDashboard } from "lucide-react";
 import type { AppRole } from "@/lib/auth";
 
 /**
- * Futuristic floating dock — visible on every device, every role.
- * Exactly 5 destinations: Home · Projects · Sales · Wallet · Account.
- * Route targets adapt to the current user's role.
- *
- * Accessibility:
- *  - <nav aria-label="Primary"> with role="navigation".
- *  - Each Link is a real anchor (native Tab/Enter/Space support) with an
- *    aria-label describing its destination and aria-current="page" while active.
- *  - Focus ring uses the design-system token so keyboard focus is visible
- *    against the glass background on every viewport.
+ * Kinetic Emerald Dock — floating primary nav.
+ * A magnetic emerald puck slides between five destinations along a polished
+ * pearl-glass rail. The puck is a single absolutely-positioned element that
+ * animates its transform/width for smooth 60fps motion; each cell keeps its
+ * own accessible <Link> so keyboard + screen reader semantics stay intact.
  */
 export function BottomNav({ role }: { role: AppRole }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const items = itemsForRole(role);
-
   return <DockList items={items} pathname={pathname} />;
 }
 
@@ -30,15 +25,9 @@ export function PublicBottomNav() {
     { label: "Wallet", icon: Wallet, to: "/auth", description: "Sign in to view wallet" },
     { label: "Account", icon: User, to: "/auth", activePrefix: "/auth", description: "Sign in to your account" },
   ];
-
   return <DockList items={items} pathname={pathname} />;
 }
 
-/**
- * Loading skeleton for the dock. Rendered while the session is resolving so
- * the five action slots stay visible and the change is announced to screen
- * readers via `aria-busy` and a polite live region.
- */
 export function BottomNavSkeleton() {
   return (
     <nav
@@ -46,21 +35,19 @@ export function BottomNavSkeleton() {
       aria-label="Primary"
       aria-busy="true"
       data-testid="bottom-dock-loading"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-2 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
     >
       <span role="status" aria-live="polite" className="sr-only">
         Loading primary navigation
       </span>
-      <ul className="mx-auto flex w-full max-w-lg items-stretch justify-between gap-0.5 rounded-[28px] border border-border/70 bg-surface/95 p-1 shadow-[var(--shadow-float)] backdrop-blur-2xl ring-1 ring-inset ring-white/60 sm:gap-1 sm:p-1.5">
+      <div className="pointer-events-auto mx-auto flex h-[68px] w-full max-w-[380px] items-center justify-between rounded-[32px] border border-white/50 bg-white/60 px-2 shadow-[0_20px_50px_rgba(46,125,91,0.12),0_4px_12px_rgba(0,0,0,0.05)] ring-1 ring-black/5 backdrop-blur-2xl">
         {Array.from({ length: 5 }).map((_, i) => (
-          <li key={i} className="flex min-w-0 flex-1" aria-hidden="true">
-            <div className="flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-1.5 sm:px-2 sm:py-2">
-              <div className="h-[18px] w-[18px] animate-pulse rounded-md bg-muted" />
-              <div className="h-2 w-8 animate-pulse rounded bg-muted" />
-            </div>
-          </li>
+          <div key={i} className="flex flex-1 flex-col items-center gap-1" aria-hidden="true">
+            <div className="h-6 w-6 animate-pulse rounded-lg bg-muted/70" />
+            <div className="h-2 w-8 animate-pulse rounded bg-muted/70" />
+          </div>
         ))}
-      </ul>
+      </div>
     </nav>
   );
 }
@@ -72,67 +59,140 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
         role="navigation"
         aria-label="Primary"
         data-testid="bottom-dock-empty"
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-2 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
       >
         <p
           role="status"
           aria-live="polite"
-          className="pointer-events-auto mx-auto max-w-lg rounded-[28px] border border-border/70 bg-surface/95 px-4 py-3 text-center text-xs font-semibold text-muted-foreground shadow-[var(--shadow-float)] backdrop-blur-2xl"
+          className="pointer-events-auto mx-auto max-w-[380px] rounded-[32px] border border-white/50 bg-white/70 px-4 py-3 text-center text-xs font-semibold text-muted-foreground shadow-[0_20px_50px_rgba(46,125,91,0.12)] backdrop-blur-2xl"
         >
           Navigation unavailable
         </p>
       </nav>
     );
   }
-  const activeItem = items.find(
+
+  const activeIndex = items.findIndex(
     ({ to, activePrefix }) => pathname === to || (activePrefix ? pathname.startsWith(activePrefix) : false),
   );
+  const activeItem = activeIndex >= 0 ? items[activeIndex] : undefined;
+
+  const listRef = useRef<HTMLUListElement | null>(null);
+  const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
+  const [puck, setPuck] = useState<{ x: number; w: number; ready: boolean }>({ x: 0, w: 0, ready: false });
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const list = listRef.current;
+      const el = activeIndex >= 0 ? itemRefs.current[activeIndex] : null;
+      if (!list || !el) {
+        setPuck((p) => ({ ...p, ready: false }));
+        return;
+      }
+      const listRect = list.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
+      setPuck({ x: rect.left - listRect.left, w: rect.width, ready: true });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (listRef.current) ro.observe(listRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [activeIndex, items.length]);
+
+  // Re-measure once after mount to catch font/layout settle.
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      const list = listRef.current;
+      const el = activeIndex >= 0 ? itemRefs.current[activeIndex] : null;
+      if (!list || !el) return;
+      const listRect = list.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
+      setPuck({ x: rect.left - listRect.left, w: rect.width, ready: true });
+    }, 60);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <nav
       role="navigation"
       aria-label="Primary"
       data-testid="bottom-dock"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-2 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
     >
       <span aria-live="polite" aria-atomic="true" className="sr-only">
         {activeItem ? `${activeItem.label} section active` : "Navigation ready"}
       </span>
-      <ul className="dock-pill pointer-events-auto mx-auto flex w-full max-w-lg items-stretch justify-between gap-0.5 rounded-[28px] p-1 sm:gap-1 sm:p-1.5">
-        {items.map(({ label, icon: Icon, to, activePrefix, description }) => {
+
+      {/* Ambient emerald bloom under the dock */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-10 max-w-[300px] rounded-full bg-[color:var(--primary,#2E7D5B)]/15 blur-2xl"
+      />
+
+      <ul
+        ref={listRef}
+        className="pointer-events-auto relative mx-auto flex h-[68px] w-full max-w-[380px] items-stretch justify-between rounded-[32px] border border-white/50 bg-white/65 px-1.5 shadow-[0_20px_50px_rgba(46,125,91,0.14),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.7)] ring-1 ring-black/5 backdrop-blur-2xl"
+      >
+        {/* Magnetic Emerald Puck */}
+        <li
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-1.5 rounded-[24px] bg-gradient-to-br from-[#2E7D5B] to-[#3E9E74] shadow-[0_10px_22px_-6px_rgba(46,125,91,0.55),inset_0_1px_1px_rgba(255,255,255,0.35)] motion-safe:transition-[transform,width,opacity] motion-safe:duration-[520ms] motion-reduce:transition-none"
+          style={{
+            width: puck.w ? `${puck.w}px` : 0,
+            transform: `translate3d(${puck.x}px, 0, 0)`,
+            transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+            opacity: puck.ready ? 1 : 0,
+          }}
+        >
+          <span className="absolute inset-x-4 -top-px h-px bg-white/60 blur-[0.5px]" />
+        </li>
+
+        {items.map(({ label, icon: Icon, to, activePrefix, description }, i) => {
           const active =
             pathname === to || (activePrefix ? pathname.startsWith(activePrefix) : false);
           return (
-            <li key={label} className="flex min-w-0 flex-1">
+            <li
+              key={label}
+              ref={(el) => {
+                itemRefs.current[i] = el;
+              }}
+              className="relative z-10 flex min-w-0 flex-1"
+            >
               <Link
                 to={to}
                 aria-label={`${label} — ${description}`}
                 aria-current={active ? "page" : undefined}
                 data-testid={`dock-link-${label.toLowerCase()}`}
-                className={`group relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl px-1 py-1.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:px-2 sm:py-2 ${
-                  active
-                    ? "bg-gradient-to-br from-primary via-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] scale-[1.04]"
-                    : "text-muted-foreground hover:bg-primary-soft hover:text-primary"
+                className={`group relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-[24px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#2E7D5B]/40 ${
+                  active ? "text-white" : "text-slate-500 hover:text-[#2E7D5B]"
                 }`}
               >
-                <Icon
-                  size={18}
-                  strokeWidth={active ? 2.5 : 2}
-                  aria-hidden="true"
-                  className="shrink-0 transition-transform group-active:scale-90"
-                />
                 <span
-                  className={`w-full truncate text-center text-[9px] font-bold leading-none tracking-wide sm:text-[10px] ${
-                    active ? "text-primary-foreground" : ""
+                  className={`grid place-items-center transition-transform duration-300 group-active:scale-90 ${
+                    active ? "-translate-y-[1px] scale-[1.06]" : "group-hover:-translate-y-[1px]"
+                  }`}
+                >
+                  <Icon
+                    size={22}
+                    strokeWidth={active ? 2.4 : 2}
+                    aria-hidden="true"
+                    className={active ? "drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]" : ""}
+                  />
+                </span>
+                <span
+                  className={`w-full truncate text-center text-[10px] leading-none tracking-tight transition-all duration-300 ${
+                    active
+                      ? "font-semibold text-white opacity-100"
+                      : "font-medium opacity-90 group-hover:opacity-100"
                   }`}
                 >
                   {label}
                 </span>
-                {active && (
-                  <span
-                    className="absolute -bottom-0.5 h-1 w-6 rounded-full bg-white/70"
-                    aria-hidden="true"
-                  />
-                )}
               </Link>
             </li>
           );
