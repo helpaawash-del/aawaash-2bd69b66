@@ -18,7 +18,22 @@ import {
   MapPinned,
   Send,
   CheckCircle2,
+  Search,
+  SlidersHorizontal,
+  Home,
+  Landmark,
+  Trees,
+  Store,
+  Gem,
+  Heart,
+  CalendarCheck,
+  Waves,
+  Dumbbell,
+  Coffee,
+  Bike,
 } from "lucide-react";
+import heroResidence from "@/assets/hero-residence.jpg";
+
 
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
 import { BrandMark } from "@/components/aawash/BrandMark";
