@@ -41,6 +41,8 @@ import {
 } from "lucide-react";
 import heroResidence from "@/assets/hero-residence.jpg";
 import heroResidenceCutout from "@/assets/hero-residence.png.asset.json";
+import savitriHero from "@/assets/savitri-hero.jpg.asset.json";
+import savitriFacade from "@/assets/savitri-facade.jpg.asset.json";
 
 
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
@@ -812,33 +814,26 @@ function Features() {
 
 const PROJECTS = [
   {
-    name: "The Serai Residences",
-    location: "Whitefield, Bengaluru",
-    price: "₹1.85 Cr onwards",
-    units: "3 & 4 BHK",
-    hue: "from-primary/30 to-leaf/25",
+    name: "Savitri Enclave",
+    tagline: "Unveil A New Chapter Of Refined Living",
+    developer: "By S.B.P. Buildcon Pvt. Ltd.",
+    location: "Near JP Chowk, Bhagwan Das Mohalla, Darbhanga",
+    price: "On Request",
+    units: "3 BHK · 1,763 – 2,016 sqft",
     tag: "New Launch",
-  },
-  {
-    name: "Aawash Skyline",
-    location: "Andheri West, Mumbai",
-    price: "₹3.25 Cr onwards",
-    units: "2 & 3 BHK",
-    hue: "from-gold/25 to-primary/20",
-    tag: "Premium",
-  },
-  {
-    name: "Verdant Heights",
-    location: "Sector 62, Noida",
-    price: "₹1.15 Cr onwards",
-    units: "2, 3 & 4 BHK",
-    hue: "from-leaf/25 to-primary/25",
-    tag: "Ready to Move",
+    images: [savitriHero.url, savitriFacade.url],
+    highlights: [
+      "5 Unit types across 4 floors",
+      "Dual vertical circulation cores",
+      "Earthquake-resistant RCC frame",
+      "Automatic Johnson / Kone elevator",
+    ],
   },
 ];
 
 function Projects() {
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
+  const [activeImg, setActiveImg] = useState<Record<string, number>>({});
   const toggleWish = (name: string) =>
     setWishlist((prev) => {
       const next = new Set(prev);
@@ -849,17 +844,17 @@ function Projects() {
 
   return (
     <section id="projects" className="px-5 py-20 sm:px-8">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-4xl">
         <div className="flex items-end justify-between gap-4">
           <div>
             <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
-              Featured Projects
+              Featured Project
             </div>
             <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">
               Homes worth coming home to.
             </h2>
             <p className="mt-2 max-w-lg text-sm text-muted-foreground sm:text-base">
-              A preview of the curated projects Aawash partners are actively selling.
+              A curated residence Aawash partners are actively selling.
             </p>
           </div>
           <Link
@@ -870,101 +865,120 @@ function Projects() {
           </Link>
         </div>
 
-        {/* Horizontal swipe rail — clean spacing, no overlap on mobile */}
-        <div className="-mx-5 mt-8 overflow-x-auto pb-6 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 [&::-webkit-scrollbar]:hidden">
-          <ul className="flex snap-x snap-mandatory gap-5 px-5 sm:gap-6 sm:px-8 lg:gap-8">
-            {PROJECTS.map((p, i) => {
-              const wished = wishlist.has(p.name);
-              return (
-                <li
-                  key={p.name}
-                  className="snap-start shrink-0 basis-[82%] sm:basis-[55%] md:basis-[44%] lg:basis-[32%]"
-                >
+        {/* One project per row — spacious editorial cards */}
+        <div className="mt-10 flex flex-col gap-10">
+          {PROJECTS.map((p, i) => {
+            const wished = wishlist.has(p.name);
+            const idx = activeImg[p.name] ?? 0;
+            return (
+              <Reveal key={p.name} variant="up" delay={i * 100}>
+                <article className="group relative overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
+                  {/* Image (clean — no text overlays) */}
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10 sm:aspect-[16/9]">
+                    <img
+                      src={p.images[idx]}
+                      alt={`${p.name} — exterior view ${idx + 1}`}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+                    />
+                    {/* Tag chip (top-left, minimal) */}
+                    <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary shadow-sm backdrop-blur">
+                      {p.tag}
+                    </span>
+                    {/* Wishlist (top-right) */}
+                    <button
+                      type="button"
+                      aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
+                      aria-pressed={wished}
+                      onClick={() => toggleWish(p.name)}
+                      className={`absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full bg-white/90 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
+                        wished ? "text-destructive" : "text-primary"
+                      }`}
+                    >
+                      <Heart size={17} fill={wished ? "currentColor" : "none"} />
+                    </button>
 
-                  <Reveal variant="up" delay={i * 100}>
-                    <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out [transform-style:preserve-3d] hover:-translate-y-2 hover:rotate-[-0.6deg] hover:shadow-[var(--shadow-glow)]">
-                      <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
-                        {/* Skeleton shimmer beneath image */}
-                        <div
-                          aria-hidden
-                          className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${p.hue} motion-safe:animate-pulse`}
-                        />
-                        <img
-                          src={heroResidence}
-                          alt={p.name}
-                          loading="lazy"
-                          decoding="async"
-                          width={1408}
-                          height={1760}
-                          onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
-                          className="relative h-full w-full scale-105 object-cover opacity-0 transition-[transform,opacity] duration-[1400ms] ease-out group-hover:scale-[1.14] [transition-property:opacity,transform] [&:not(.opacity-0)]:opacity-100"
-                        />
-                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/10 to-transparent" />
-
-                        {/* subtle sheen sweep on hover */}
-                        <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-1000 ease-out group-hover:translate-x-full group-hover:opacity-100" />
-
-                        <span className="glass-card absolute left-4 top-4 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
-                          {p.tag}
-                        </span>
-                        <button
-                          type="button"
-                          aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
-                          aria-pressed={wished}
-                          onClick={() => toggleWish(p.name)}
-                          className={`glass-card absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
-                            wished ? "text-destructive" : "text-primary"
-                          }`}
-                        >
-                          <Heart
-                            size={17}
-                            fill={wished ? "currentColor" : "none"}
-                            className={`transition-transform duration-300 ${wished ? "scale-110" : ""}`}
+                    {/* Image dots (bottom-center) — only if multiple */}
+                    {p.images.length > 1 && (
+                      <div className="absolute inset-x-0 bottom-4 flex justify-center gap-1.5">
+                        {p.images.map((_, ii) => (
+                          <button
+                            key={ii}
+                            type="button"
+                            aria-label={`View image ${ii + 1}`}
+                            onClick={() =>
+                              setActiveImg((prev) => ({ ...prev, [p.name]: ii }))
+                            }
+                            className={`h-1.5 rounded-full transition-all ${
+                              ii === idx
+                                ? "w-6 bg-white"
+                                : "w-1.5 bg-white/60 hover:bg-white/80"
+                            }`}
                           />
-                        </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-                        {/* Rating chip */}
-                        <span className="glass-card absolute bottom-[9.5rem] left-4 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold text-foreground sm:bottom-[10.5rem]">
-                          <Star size={11} className="fill-gold text-gold" /> 4.9 · Concierge
+                  {/* Info — cleanly below the image */}
+                  <div className="grid gap-6 p-6 sm:grid-cols-[1fr_auto] sm:items-start sm:gap-8 sm:p-8">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+                          {p.name}
+                        </h3>
+                        <span className="rounded-full bg-primary-soft px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                          {p.units}
                         </span>
+                      </div>
+                      <p className="mt-1 text-sm italic text-muted-foreground">{p.tagline}</p>
+                      <div className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground">
+                        <MapPin size={13} className="text-primary" /> {p.location}
+                      </div>
+                      <div className="mt-1 text-[12px] font-medium text-muted-foreground/80">
+                        {p.developer}
+                      </div>
 
-                        {/* Info glass overlay — richer */}
-                        <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/40 bg-white/85 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="min-w-0">
-                              <h3 className="truncate text-base font-bold text-foreground">{p.name}</h3>
-                              <div className="mt-0.5 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                                <MapPin size={11} /> {p.location}
-                              </div>
-                            </div>
-                            <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-primary">
-                              {p.units}
-                            </span>
-                          </div>
+                      {/* Highlight pills */}
+                      <ul className="mt-5 flex flex-wrap gap-2">
+                        {p.highlights.map((h) => (
+                          <li
+                            key={h}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface px-3 py-1 text-[11px] font-medium text-muted-foreground"
+                          >
+                            <CheckCircle2 size={11} className="text-primary" /> {h}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
 
-                          <div className="mt-3 flex items-end justify-between gap-2">
-                            <div className="min-w-0">
-                              <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
-                                Starting
-                              </div>
-                              <div className="truncate text-sm font-extrabold text-foreground">{p.price}</div>
-                            </div>
-                            <Link
-                              to="/auth"
-                              aria-label={`Explore ${p.name}`}
-                              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 hover:rotate-6 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
-                            >
-                              <ArrowRight size={14} />
-                            </Link>
-                          </div>
+                    {/* Price + CTA */}
+                    <div className="flex items-center justify-between gap-4 border-t border-border/60 pt-6 sm:flex-col sm:items-end sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0">
+                      <div className="sm:text-right">
+                        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          Starting
+                        </div>
+                        <div className="mt-0.5 text-xl font-extrabold text-foreground sm:text-2xl">
+                          {p.price}
+                        </div>
+                        <div className="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-primary">
+                          <Star size={11} className="fill-gold text-gold" /> 4.9 · Concierge
                         </div>
                       </div>
-                    </article>
-                  </Reveal>
-                </li>
-              );
-            })}
-          </ul>
+                      <Link
+                        to="/projects"
+                        aria-label={`Explore ${p.name}`}
+                        className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                      >
+                        Explore <ArrowRight size={15} />
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>
