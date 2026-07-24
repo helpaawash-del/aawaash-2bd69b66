@@ -361,24 +361,24 @@ function Hero() {
       {/* Building emerging from the bottom + floating stat chips */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[50vh] lg:block lg:h-[50vh]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[60vh] lg:block"
         style={{ transform: `translateY(${scrollY * 0.08}px)` }}
       >
         {/* Soft bloom behind building */}
         <div className="absolute inset-x-0 bottom-0 mx-auto h-full max-w-6xl">
-          <div className="absolute bottom-0 left-1/2 h-[70%] w-[110%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(50%_50%_at_50%_100%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)] blur-2xl" />
+          <div className="absolute bottom-0 left-1/2 h-[70%] w-[70%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(50%_50%_at_50%_100%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)] blur-2xl" />
         </div>
 
         {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
-          <div className="relative w-full max-w-3xl">
+          <div className="relative w-full max-w-[26rem]">
             <img
               src={heroResidenceCutout.url}
-              alt="Aawash luxury residential architecture render"
+              alt="Aawash biophilic skyscraper residence"
               width={1024}
-              height={1024}
+              height={1536}
               decoding="async"
-              className="mx-auto h-auto w-full select-none object-contain drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_22%,transparent)] animate-[float_10s_ease-in-out_infinite]"
+              className="mx-auto h-auto w-full select-none object-contain drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_24%,transparent)] animate-[float_10s_ease-in-out_infinite]"
             />
           </div>
         </div>
