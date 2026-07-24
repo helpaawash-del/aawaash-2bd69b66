@@ -260,7 +260,6 @@ function Hero() {
               className="relative h-full w-full select-none object-contain object-center drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_22%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
             />
           </div>
-        </div>
           <div className="mt-5 flex justify-center">
             <a
               href="#projects"
