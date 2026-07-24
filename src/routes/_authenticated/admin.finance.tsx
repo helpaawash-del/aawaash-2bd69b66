@@ -18,6 +18,10 @@ import {
   Sparkles,
   Landmark,
   Layers,
+  ShieldAlert,
+  CheckCircle2,
+  RefreshCw,
+
 } from "lucide-react";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
@@ -31,7 +35,10 @@ import {
   getRevenueBreakdown,
   listAllLedger,
   listBonusHistory,
+  reconcileWallets,
 } from "@/lib/finance-admin.functions";
+
+
 
 export const Route = createFileRoute("/_authenticated/admin/finance")({
   component: () => (
@@ -51,7 +58,7 @@ export const Route = createFileRoute("/_authenticated/admin/finance")({
   }),
 });
 
-type Tab = "overview" | "wallets" | "ledger" | "bonuses" | "revenue" | "reports";
+type Tab = "overview" | "wallets" | "ledger" | "bonuses" | "revenue" | "reconciliation" | "reports";
 
 function Content() {
   const { profile } = useSession();
@@ -88,6 +95,7 @@ function Content() {
             ["ledger", "Ledger", ScrollText],
             ["bonuses", "Bonuses", Gift],
             ["revenue", "Revenue", TrendingUp],
+            ["reconciliation", "Reconciliation", ShieldAlert],
             ["reports", "Reports", Download],
           ] as [Tab, string, typeof BarChart3][]).map(([k, label, Icon]) => (
             <button
@@ -108,6 +116,7 @@ function Content() {
         {tab === "ledger" && <LedgerTab />}
         {tab === "bonuses" && <BonusesTab />}
         {tab === "revenue" && <RevenueTab />}
+        {tab === "reconciliation" && <ReconciliationTab />}
         {tab === "reports" && <ReportsTab />}
       </div>
     </AdminShell>
@@ -538,6 +547,178 @@ function RevenueTable({ title, rows }: { title: string; rows: { label: string; t
 }
 
 /* ---------------- Reports ---------------- */
+
+function ReconciliationTab() {
+  const [onlyDiscrepancies, setOnly] = useState(true);
+  const reconcileFn = useServerFn(reconcileWallets);
+  const q = useQuery({
+    queryKey: ["fin-reconcile", onlyDiscrepancies],
+    queryFn: () => reconcileFn({ data: { onlyDiscrepancies, limit: 500 } }),
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+  });
+
+  const totals = q.data?.totals;
+  const rows = q.data?.rows ?? [];
+
+  function exportCSV() {
+    if (!rows.length) return;
+    const header = [
+      "login_id","full_name","display_code","wallet_balance","pending_balance",
+      "locked_balance","lifetime_withdrawals","ledger_credit","ledger_debit",
+      "ledger_net","stored_total","delta","status",
+    ];
+    const csv = [
+      header.join(","),
+      ...rows.map((r) => header.map((h) => JSON.stringify((r as Record<string, unknown>)[h] ?? "")).join(",")),
+    ].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `wallet-reconciliation-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="space-y-4">
+      <SectionCard
+        title="Wallet vs Ledger Reconciliation"
+        subtitle="Detect drift between stored wallet totals and ledger-derived expected balances. Any non-zero delta needs manual review."
+      >
+        <div className="mb-4 grid gap-3 sm:grid-cols-4">
+          <StatCard
+            icon={<Wallet size={18} />}
+            label="Wallets checked"
+            value={String(totals?.wallets_checked ?? "—")}
+          />
+          <StatCard
+            icon={<ShieldAlert size={18} />}
+            label="Discrepancies"
+            value={String(totals?.discrepancies ?? 0)}
+            accent={totals && totals.discrepancies > 0 ? "destructive" : "leaf"}
+          />
+          <StatCard
+            icon={<TrendingUp size={18} />}
+            label="Stored total"
+            value={formatINR(totals?.stored_total ?? 0, { compact: true })}
+          />
+          <StatCard
+            icon={<ScrollText size={18} />}
+            label="Ledger delta"
+            value={formatINR(totals?.delta_total ?? 0, { compact: true })}
+            accent={totals && Math.abs(totals.delta_total) > 0.01 ? "destructive" : "leaf"}
+          />
+        </div>
+
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <label className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+            <input
+              type="checkbox"
+              checked={onlyDiscrepancies}
+              onChange={(e) => setOnly(e.target.checked)}
+              className="h-4 w-4 rounded border-border"
+            />
+            Only show wallets with drift
+          </label>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => q.refetch()}
+              disabled={q.isFetching}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-1.5 text-xs font-semibold hover:bg-muted disabled:opacity-60"
+            >
+              <RefreshCw size={12} className={q.isFetching ? "animate-spin" : ""} />
+              Recompute
+            </button>
+            <button
+              type="button"
+              onClick={exportCSV}
+              disabled={!rows.length}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground disabled:opacity-60"
+            >
+              <Download size={12} /> Export CSV
+            </button>
+          </div>
+        </div>
+
+        {q.isLoading ? (
+          <SkeletonBlock className="h-40" />
+        ) : rows.length === 0 ? (
+          <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 text-center text-sm font-semibold text-emerald-700">
+            <CheckCircle2 className="mx-auto mb-2 h-6 w-6" />
+            All wallets match the ledger. Nothing to reconcile.
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {rows.map((r) => (
+              <div
+                key={r.user_id}
+                className={`rounded-2xl border p-3 text-sm ${
+                  r.status === "matched"
+                    ? "border-border bg-surface"
+                    : "border-rose-500/40 bg-rose-500/5"
+                }`}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-bold text-primary">
+                        {r.display_code ?? r.login_id}
+                      </span>
+                      <span className="truncate font-semibold text-foreground">
+                        {r.full_name}
+                      </span>
+                    </div>
+                    <div className="mt-0.5 text-[11px] text-muted-foreground">
+                      Ledger: +{formatINR(r.ledger_credit)} / −{formatINR(r.ledger_debit)} · net{" "}
+                      {formatINR(r.ledger_net)}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      Delta
+                    </div>
+                    <div
+                      className={`font-mono text-sm font-black ${
+                        r.status === "matched"
+                          ? "text-emerald-700"
+                          : r.status === "stored_high"
+                            ? "text-amber-700"
+                            : "text-rose-700"
+                      }`}
+                    >
+                      {r.delta > 0 ? "+" : ""}
+                      {formatINR(r.delta)}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-2 grid grid-cols-2 gap-2 text-[11px] sm:grid-cols-4">
+                  <Metric label="Available" value={formatINR(r.wallet_balance)} />
+                  <Metric label="Pending" value={formatINR(r.pending_balance)} />
+                  <Metric label="Locked" value={formatINR(r.locked_balance)} />
+                  <Metric label="Lifetime W/D" value={formatINR(r.lifetime_withdrawals)} />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </SectionCard>
+    </div>
+  );
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl bg-background px-2 py-1.5">
+      <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </div>
+      <div className="font-mono text-xs font-bold text-foreground">{value}</div>
+    </div>
+  );
+}
 
 function ReportsTab() {
   const dashFn = useServerFn(getFinancialDashboard);
