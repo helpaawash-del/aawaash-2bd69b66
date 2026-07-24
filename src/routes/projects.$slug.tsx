@@ -163,42 +163,17 @@ function ProjectDetailPage() {
       <AmbientBackground />
       <LandingNav />
 
-      {/* Sticky tab bar (below nav) */}
+      {/* Floating share pill (top-right, under header) */}
       {project && (
-        <div className="sticky top-16 z-30 -mb-2 border-b border-border/40 bg-background/70 backdrop-blur-xl">
-          <div className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-3 py-2 sm:px-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {tabs.map((t) => {
-              const active = tab === t.id;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => {
-                    setTab(t.id);
-                    qc.invalidateQueries({ queryKey: ["project", "public", slug] });
-                  }}
-                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                    active
-                      ? "bg-primary text-primary-foreground shadow-[var(--shadow-glow)]"
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                  }`}
-                >
-                  <t.icon size={13} />
-                  {t.label}
-                </button>
-              );
-            })}
-            <div className="ml-auto flex shrink-0 items-center gap-1">
-              <button
-                onClick={doShare}
-                aria-label="Share"
-                className="grid h-8 w-8 place-items-center rounded-full border border-border bg-surface text-muted-foreground hover:text-foreground"
-              >
-                <Share2 size={13} />
-              </button>
-            </div>
-          </div>
-        </div>
+        <button
+          onClick={doShare}
+          aria-label="Share project"
+          className="fixed right-4 top-20 z-30 grid h-10 w-10 place-items-center rounded-full border border-border bg-white text-foreground shadow-[var(--shadow-soft)] hover:text-primary sm:right-8"
+        >
+          <Share2 size={14} />
+        </button>
       )}
+
 
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6">
         <Link
