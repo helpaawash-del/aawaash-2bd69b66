@@ -85,6 +85,12 @@ function Content() {
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["commissions"] });
 
+  useRealtimeInvalidate(
+    "commissions-live",
+    ["commission_transactions", "commissions", "commission_ledger"],
+    [["commissions", "dashboard"], ["commissions", "txns", "all"]],
+  );
+
   const upsertMut = useMutation({
     mutationFn: (data: SlabForm) => upsertFn({ data }),
     onSuccess: () => {
