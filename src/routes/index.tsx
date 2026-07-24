@@ -170,7 +170,7 @@ function Hero() {
       </svg>
 
       {/* Layer 6 — floating particles + leaves */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden lg:block">
         {Array.from({ length: 18 }).map((_, i) => {
           const left = (i * 53) % 100;
           const top = (i * 37) % 90;
