@@ -1026,7 +1026,7 @@ function Projects() {
                   </div>
 
                   {/* Editorial info block — generous whitespace */}
-                  <div className="px-6 pb-10 pt-9 sm:px-12 sm:pb-14 sm:pt-12">
+                  <div className="relative z-20 px-6 pb-10 pt-9 sm:px-12 sm:pb-14 sm:pt-12">
                     {/* Meta row */}
                     <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                       <span className="inline-flex items-center gap-1.5">
