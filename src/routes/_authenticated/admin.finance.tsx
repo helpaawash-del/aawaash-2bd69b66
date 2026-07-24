@@ -58,7 +58,7 @@ export const Route = createFileRoute("/_authenticated/admin/finance")({
   }),
 });
 
-type Tab = "overview" | "wallets" | "ledger" | "bonuses" | "revenue" | "reports";
+type Tab = "overview" | "wallets" | "ledger" | "bonuses" | "revenue" | "reconciliation" | "reports";
 
 function Content() {
   const { profile } = useSession();
