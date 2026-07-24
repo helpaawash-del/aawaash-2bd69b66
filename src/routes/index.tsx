@@ -363,7 +363,7 @@ function Hero() {
       {/* Building emerging from the bottom + floating stat chips */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[38vh] lg:block"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[54vh] lg:block"
         style={{ transform: `translateY(${scrollY * 0.08}px)` }}
       >
         {/* Soft bloom behind building */}
