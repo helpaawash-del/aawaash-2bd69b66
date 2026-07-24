@@ -1005,15 +1005,17 @@ function Projects() {
                     </button>
 
                     {p.images.length > 1 && (
-                      <div className="absolute inset-x-0 bottom-5 flex justify-center gap-1.5">
+                      <div className="absolute inset-x-0 bottom-5 z-30 flex justify-center gap-1.5">
                         {p.images.map((_, ii) => (
                           <button
                             key={ii}
                             type="button"
                             aria-label={`View image ${ii + 1}`}
-                            onClick={() =>
-                              setActiveImg((prev) => ({ ...prev, [p.name]: ii }))
-                            }
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setActiveImg((prev) => ({ ...prev, [p.name]: ii }));
+                            }}
                             className={`h-1.5 rounded-full transition-all ${
                               ii === idx ? "w-7 bg-white" : "w-1.5 bg-white/70 hover:bg-white/90"
                             }`}
