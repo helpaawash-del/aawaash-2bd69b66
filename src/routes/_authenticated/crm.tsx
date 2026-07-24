@@ -30,6 +30,7 @@ import {
 } from "@/components/aawash/dashboard-kit";
 import { getCrmOverview, listCustomers, listFollowups } from "@/lib/crm.functions";
 import { CUSTOMER_STATUS_META, priorityStyle } from "@/components/aawash/crm/status";
+import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
 
 export const Route = createFileRoute("/_authenticated/crm")({
   component: CrmHome,
