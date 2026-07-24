@@ -218,15 +218,13 @@ function ProjectDetailPage() {
                   {heroImages.length > 1 && (
                     <button
                       type="button"
-                      onClick={() => {
-                        setTab("gallery");
-                        setLightbox(0);
-                      }}
+                      onClick={() => setLightbox(0)}
                       className="glass-card absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold text-foreground shadow-[var(--shadow-soft)]"
                     >
                       <Images size={12} /> {heroImages.length} photos
                     </button>
                   )}
+
 
                   <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-3 bg-gradient-to-t from-background/95 via-background/50 to-transparent p-5 sm:p-8">
                     <div className="min-w-0 max-w-full">
@@ -311,40 +309,67 @@ function ProjectDetailPage() {
               />
             </section>
 
-            {/* TAB PANELS */}
-            <div className="mt-6">
-              {tab === "overview" && (
-                <OverviewPanel
-                  p={p}
-                  buildPct={buildPct}
-                  salesPct={salesPct}
-                  availPct={availPct}
-                  total={total}
-                  available={available}
-                  reserved={reserved}
-                  sold={sold}
-                />
-              )}
+            {/* ABOUT + STATS (Overview) */}
+            <div id="about" className="mt-6">
+              <OverviewPanel
+                p={p}
+                buildPct={buildPct}
+                salesPct={salesPct}
+                availPct={availPct}
+                total={total}
+                available={available}
+                reserved={reserved}
+                sold={sold}
+              />
+            </div>
 
-              {tab === "gallery" && (
+            {/* GALLERY */}
+            <section id="gallery" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<Images size={16} />} title="Gallery" subtitle="Photos of the project" />
+              <div className="mt-4">
                 <GalleryPanel images={heroImages} onOpen={(i) => setLightbox(i)} />
-              )}
+              </div>
+            </section>
 
-              {tab === "tour" && (
+            {/* 3D MODEL & VIDEO */}
+            <section id="tour" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<Box size={16} />} title="3D Model & Video" subtitle="Explore in immersive detail" />
+              <div className="mt-4">
                 <TourPanel modelUrl={modelUrl} isGlb={isGlb} videos={videos} />
-              )}
+              </div>
+            </section>
 
-              {tab === "availability" && (
+            {/* TOTAL FLATS (breakdown) */}
+            <section id="flats" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<Layers size={16} />} title="Total Flats" subtitle="Inventory at a glance" />
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <QuickCard icon={<HomeIcon size={14} />} label="Total" value={String(total)} />
+                <QuickCard icon={<Layers size={14} />} label="Available" value={String(available)} accent="emerald" />
+                <QuickCard icon={<Sparkles size={14} />} label="Reserved" value={String(reserved)} />
+                <QuickCard icon={<CheckCircle2 size={14} />} label="Sold" value={String(sold)} />
+              </div>
+            </section>
+
+            {/* AVAILABILITY (seatmap) */}
+            <section id="availability" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<Grid3x3 size={16} />} title="Availability" subtitle="Live flat seatmap" />
+              <div className="mt-4">
                 <Reveal>
                   <FlatInventoryBoard slug={slug} projectName={p.name as string} />
                 </Reveal>
-              )}
+              </div>
+            </section>
 
-              {tab === "location" && <LocationPanel p={p} />}
-            </div>
+            {/* LOCATION */}
+            <section id="location" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<MapPin size={16} />} title="Location" subtitle="Where you'll live" />
+              <div className="mt-4">
+                <LocationPanel p={p} />
+              </div>
+            </section>
 
             {/* Desktop CTAs */}
-            <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
+            <div className="mt-10 hidden flex-wrap gap-3 sm:flex">
               <Link
                 to="/auth"
                 className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110"
@@ -357,45 +382,14 @@ function ProjectDetailPage() {
               >
                 <Link2 size={14} /> Copy Share Link
               </button>
-              <Link
-                to="/projects"
-                className="inline-flex h-12 items-center gap-2 rounded-full border border-input bg-surface px-6 text-sm font-bold text-foreground hover:bg-muted"
-              >
-                Back to Projects
-              </Link>
             </div>
           </>
         )}
       </main>
 
-      {/* Sticky mobile CTA */}
-      {project && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border/40 bg-background/85 px-4 py-3 backdrop-blur-xl sm:hidden">
-          <div className="mx-auto flex max-w-6xl items-center gap-2">
-            <div className="min-w-0 flex-1">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                From
-              </div>
-              <div className="truncate text-sm font-extrabold text-foreground">
-                {formatINR((p.price_min as number) ?? (p.price_from as number), { compact: true })}
-              </div>
-            </div>
-            <button
-              onClick={doShare}
-              aria-label="Share"
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground"
-            >
-              <Share2 size={16} />
-            </button>
-            <Link
-              to="/auth"
-              className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-full bg-primary text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)]"
-            >
-              <Phone size={14} /> Enquire
-            </Link>
-          </div>
-        </div>
-      )}
+      {/* Project Dock — Home / Gallery / Total Flats / Availability */}
+      {project && <ProjectDock items={dockItems} />}
+
 
       {/* Lightbox */}
       {lightbox !== null && heroImages.length > 0 && (
