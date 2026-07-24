@@ -11,7 +11,7 @@ import type { Database } from "@/integrations/supabase/types";
  */
 
 const PROJECT_LIST_COLUMNS =
-  "id, slug, name, location, address, latitude, longitude, google_map_url, project_type, construction_status, visibility, display_priority, short_description, description, tag, price_from, price_min, price_max, area_min, area_max, total_buildings, total_floors, total_flats, available_flats, reserved_flats, sold_flats, total_units, sold_units, completion_percent, hero_hue, thumbnail_url, hero_banner_url, cover_url, logo_url, launch_date, possession_date, gallery_count, video_count, model_count, floor_plan_count, amenities, seo_title, seo_description, gallery, three_d_tour_url, virtual_walkthrough_url, extra, created_at";
+  "id, slug, name, location, address, latitude, longitude, google_map_url, project_type, construction_status, visibility, display_priority, short_description, description, tag, price_from, price_min, price_max, area_min, area_max, total_buildings, total_floors, total_flats, available_flats, reserved_flats, sold_flats, total_units, sold_units, completion_percent, hero_hue, thumbnail_url, hero_banner_url, cover_url, logo_url, launch_date, possession_date, gallery_count, video_count, model_count, floor_plan_count, amenities, seo_title, seo_description, three_d_tour_url, virtual_walkthrough_url, extra, created_at";
 
 function makePublicClient() {
   const url = process.env.SUPABASE_URL!;
