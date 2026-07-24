@@ -268,7 +268,7 @@ export function DonutBreakdown({ data, title }: { data: Array<{ name: string; va
                   <Cell key={i} fill={PALETTE[i % PALETTE.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(v: number) => formatINR(v, { compact: true })} contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--surface)" }} />
+              <Tooltip content={<GlassTooltip />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
