@@ -10,7 +10,6 @@ import {
   ChevronRight,
   Phone,
   MapPin,
-  Sparkles,
   Flame,
   Clock,
   CheckCircle2,
@@ -82,39 +81,142 @@ function CrmContent() {
 
   const s = overview.data?.stats;
 
+  const now = new Date();
+  const hh = now.getHours();
+  const daypart = hh < 5 ? "Night" : hh < 12 ? "Morning" : hh < 17 ? "Afternoon" : hh < 21 ? "Evening" : "Night";
+  const firstName = (profile?.full_name || profile?.login_id || "Operator").split(" ")[0];
+  const dateStr = now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
+
   return (
     <DashboardShell role={role ?? "member"} profile={profile}>
-      {/* Hero */}
-      <section className="glass-card relative overflow-hidden rounded-4xl p-5 shadow-[var(--shadow-float)] sm:p-8">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/12 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -left-14 h-56 w-56 rounded-full bg-gold/15 blur-3xl" />
-        <div className="relative grid gap-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-          <div className="min-w-0">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
-              <Sparkles size={12} /> Customer CRM
-            </div>
-            <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              Every relationship,{" "}
-              <span className="bg-gradient-to-br from-primary to-leaf bg-clip-text text-transparent">
-                one place.
+      {/* ─── Ambient futuristic layers (behind everything in this view) ─── */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[560px] overflow-hidden">
+        {/* Layer 1 — soft wash */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[color:var(--surface-warm)] via-background to-transparent" />
+        {/* Layer 2 — architectural blueprint vectors */}
+        <svg className="absolute inset-x-0 bottom-0 h-72 w-full opacity-[0.08]" viewBox="0 0 1200 300" fill="none" preserveAspectRatio="xMidYMax slice">
+          <g stroke="currentColor" className="text-primary" strokeWidth="0.75">
+            <path d="M0 260 L1200 260" />
+            <path d="M60 260 L60 90 L180 90 L180 260" />
+            <path d="M80 240 L80 110 M100 240 L100 110 M120 240 L120 110 M140 240 L140 110 M160 240 L160 110" />
+            <path d="M220 260 L220 40 L360 40 L360 260" />
+            <path d="M240 240 L340 240 M240 210 L340 210 M240 180 L340 180 M240 150 L340 150 M240 120 L340 120 M240 90 L340 90 M240 60 L340 60" />
+            <path d="M400 260 L400 140 L520 140 L520 260" />
+            <path d="M560 260 L560 20 L720 20 L720 260" />
+            <path d="M580 240 L700 240 M580 200 L700 200 M580 160 L700 160 M580 120 L700 120 M580 80 L700 80 M580 40 L700 40" />
+            <path d="M760 260 L760 110 L880 110 L880 260" />
+            <path d="M920 260 L920 60 L1080 60 L1080 260" />
+            <path d="M940 240 L1060 240 M940 200 L1060 200 M940 160 L1060 160 M940 120 L1060 120 M940 80 L1060 80" />
+          </g>
+        </svg>
+        {/* Layer 3 — floating orbs */}
+        <div className="animate-drift absolute -right-20 top-6 h-64 w-64 rounded-full bg-primary/12 blur-3xl" />
+        <div className="animate-drift absolute -left-16 top-24 h-56 w-56 rounded-full bg-leaf/15 blur-3xl" style={{ animationDelay: "-8s" }} />
+        <div className="animate-drift absolute right-1/3 top-40 h-40 w-40 rounded-full bg-gold/12 blur-3xl" style={{ animationDelay: "-4s" }} />
+        {/* Layer 4 — grid */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
+            color: "hsl(var(--primary))",
+            maskImage: "radial-gradient(ellipse at top, black 30%, transparent 75%)",
+          }}
+        />
+      </div>
+
+      {/* ─── Hero — futuristic control panel ─── */}
+      <section className="relative">
+        <div className="glass-card relative overflow-hidden rounded-[32px] p-6 shadow-[var(--shadow-float)] sm:p-9">
+          {/* inner ambient */}
+          <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+          <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-14 h-56 w-56 rounded-full bg-gold/15 blur-3xl" />
+
+          <div className="relative flex flex-wrap items-center justify-between gap-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-surface/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary backdrop-blur">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
               </span>
-            </h1>
-            <p className="mt-2 max-w-xl text-sm text-muted-foreground sm:text-base">
-              Track every lead from first hello to the day they get the keys.
-            </p>
-            <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-              <Link
-                to="/crm/new"
-                className="inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]"
-              >
-                <UserPlus size={14} /> New lead
-              </Link>
-              <Link
-                to="/crm/followups"
-                className="inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl border border-border bg-surface px-4 text-sm font-semibold text-foreground shadow-[var(--shadow-soft)]"
-              >
-                <Calendar size={14} /> Follow-ups
-              </Link>
+              Live · Aawash CRM
+            </div>
+            <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              {dateStr}
+            </div>
+          </div>
+
+          <div className="relative mt-6 grid gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-muted-foreground">
+                Good {daypart}, <span className="text-foreground">{firstName}</span>
+              </p>
+              <h1 className="mt-2 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground sm:text-5xl">
+                Every relationship,
+                <br />
+                <span className="bg-gradient-to-br from-primary via-primary to-leaf bg-clip-text text-transparent">
+                  one calm surface.
+                </span>
+              </h1>
+              <p className="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
+                Your operating layer for every lead — from first hello to key handover.
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                <Link
+                  to="/crm/new"
+                  className="group inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
+                >
+                  <UserPlus size={15} className="transition-transform group-hover:rotate-6" /> New lead
+                </Link>
+                <Link
+                  to="/crm/followups"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-border/70 bg-surface/80 px-5 text-sm font-semibold text-foreground shadow-[var(--shadow-soft)] backdrop-blur transition-all hover:-translate-y-0.5 hover:border-primary/40"
+                >
+                  <Calendar size={15} /> Follow-ups
+                </Link>
+              </div>
+            </div>
+
+            {/* Right — floating micro control tile */}
+            <div className="relative hidden shrink-0 sm:block">
+              <div className="relative w-56 rounded-3xl border border-border/60 bg-gradient-to-br from-white/80 to-surface-warm/60 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+                <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-primary/25 via-transparent to-leaf/25 opacity-40 blur-xl" />
+                <div className="relative">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                      Pipeline
+                    </span>
+                    <TrendingUp size={14} className="text-primary" />
+                  </div>
+                  <div className="mt-3 font-display text-4xl font-extrabold tracking-tight text-foreground">
+                    {s?.conversion ?? 0}
+                    <span className="text-base text-muted-foreground">%</span>
+                  </div>
+                  <div className="mt-1 text-[11px] text-muted-foreground">Conversion rate</div>
+                  <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-primary-soft">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-primary to-leaf transition-all duration-700"
+                      style={{ width: `${Math.min(100, Number(s?.conversion ?? 0))}%` }}
+                    />
+                  </div>
+                  <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                    <div>
+                      <div className="text-sm font-bold text-foreground">{s?.total ?? 0}</div>
+                      <div className="text-[9px] uppercase tracking-wider text-muted-foreground">Leads</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-foreground">{s?.bookings ?? 0}</div>
+                      <div className="text-[9px] uppercase tracking-wider text-muted-foreground">Book</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-foreground">{s?.sales_completed ?? 0}</div>
+                      <div className="text-[9px] uppercase tracking-wider text-muted-foreground">Sold</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
