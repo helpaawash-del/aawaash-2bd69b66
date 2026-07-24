@@ -97,7 +97,7 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
       <span aria-live="polite" aria-atomic="true" className="sr-only">
         {activeItem ? `${activeItem.label} section active` : "Navigation ready"}
       </span>
-      <ul className="pointer-events-auto mx-auto flex w-full max-w-lg items-stretch justify-between gap-0.5 rounded-[28px] border border-border/70 bg-surface/95 p-1 shadow-[var(--shadow-float)] backdrop-blur-2xl ring-1 ring-inset ring-white/60 sm:gap-1 sm:p-1.5">
+      <ul className="dock-pill pointer-events-auto mx-auto flex w-full max-w-lg items-stretch justify-between gap-0.5 rounded-[28px] p-1 sm:gap-1 sm:p-1.5">
         {items.map(({ label, icon: Icon, to, activePrefix, description }) => {
           const active =
             pathname === to || (activePrefix ? pathname.startsWith(activePrefix) : false);
