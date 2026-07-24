@@ -215,6 +215,32 @@ function Hero() {
             It's a feeling.
           </span>
         </h1>
+        {/* Mobile / tablet: image directly below the title */}
+        <div className="mt-6 lg:hidden">
+          <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 shadow-[var(--shadow-float)]">
+            <img
+              src={heroResidence}
+              alt="Aawash luxury residential architecture render"
+              width={1408}
+              height={1408}
+              loading="eager"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/70 to-transparent" />
+          </div>
+          <div className="mt-5 flex justify-center">
+            <a
+              href="#projects"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] active:scale-[0.98]"
+            >
+              Explore Projects <ArrowRight size={15} />
+            </a>
+          </div>
+        </div>
+
+        {/* Desktop-only: description, search pill, chips, CTAs, trust */}
+        <div className="hidden lg:block">
         <p className="mx-auto mt-5 max-w-xl text-balance text-[15px] leading-relaxed text-muted-foreground sm:text-lg">
           Aawash brings together premium residential projects, a professional team system, and
           transparent commission tracking — all in one elegant, mobile-first experience.
@@ -299,6 +325,8 @@ function Hero() {
             </span>
           ))}
         </div>
+        </div>
+
       </div>
 
       {/* Building emerging from the bottom + floating stat chips */}
