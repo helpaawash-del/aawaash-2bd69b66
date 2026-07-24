@@ -1173,3 +1173,87 @@ function SelectField({ label, name, defaultValue, options }: { label: string; na
     </label>
   );
 }
+
+function VideoUrlList({
+  name,
+  initial,
+  disabled,
+}: {
+  name: string;
+  initial: string[];
+  disabled?: boolean;
+}) {
+  const [urls, setUrls] = useState<string[]>(initial);
+  const [draft, setDraft] = useState("");
+
+  function add() {
+    const v = draft.trim();
+    if (!v) return;
+    try {
+      new URL(v);
+    } catch {
+      alert("Enter a valid https:// URL");
+      return;
+    }
+    if (urls.includes(v)) return;
+    setUrls([...urls, v]);
+    setDraft("");
+  }
+
+  return (
+    <div>
+      <input type="hidden" name={name} value={JSON.stringify(urls)} />
+      <div className="flex flex-wrap items-stretch gap-2">
+        <input
+          type="url"
+          placeholder="https://youtube.com/watch?v=…"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              add();
+            }
+          }}
+          disabled={disabled}
+          className="min-w-[240px] flex-1 rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+        />
+        <button
+          type="button"
+          onClick={add}
+          disabled={disabled || !draft.trim()}
+          className="inline-flex items-center gap-1.5 rounded-2xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+        >
+          <Plus size={14} /> Add
+        </button>
+      </div>
+      {urls.length === 0 ? (
+        <p className="mt-3 text-xs text-muted-foreground">
+          No videos yet. Paste a YouTube, Vimeo, or direct .mp4 URL.
+        </p>
+      ) : (
+        <ul className="mt-3 space-y-2">
+          {urls.map((u, i) => (
+            <li
+              key={`${u}-${i}`}
+              className="flex items-center gap-2 rounded-2xl border border-border bg-background px-3 py-2"
+            >
+              <span className="truncate text-xs text-foreground">{u}</span>
+              {!disabled && (
+                <button
+                  type="button"
+                  onClick={() => setUrls(urls.filter((_, idx) => idx !== i))}
+                  className="ml-auto grid h-6 w-6 place-items-center rounded-full bg-muted text-muted-foreground hover:bg-rose-500/20 hover:text-rose-600"
+                  aria-label="Remove"
+                >
+                  <Trash2 size={12} />
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
