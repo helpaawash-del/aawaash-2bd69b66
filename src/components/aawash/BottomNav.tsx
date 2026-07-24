@@ -80,6 +80,31 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
   const listRef = useRef<HTMLUListElement | null>(null);
   const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
   const [puck, setPuck] = useState<{ x: number; w: number; ready: boolean }>({ x: 0, w: 0, ready: false });
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+
+  // Hide on scroll-down, reappear on scroll-up.
+  useEffect(() => {
+    lastY.current = window.scrollY;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const dy = y - lastY.current;
+        if (Math.abs(dy) < 6) return;
+        if (y < 40) setHidden(false);
+        else if (dy > 0) setHidden(true);
+        else setHidden(false);
+        lastY.current = y;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -122,8 +147,11 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
       role="navigation"
       aria-label="Primary"
       data-testid="bottom-dock"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
+      className={`pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6 motion-safe:transition-[transform,opacity] motion-safe:duration-[420ms] motion-safe:ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+        hidden ? "translate-y-[130%] opacity-0" : "translate-y-0 opacity-100"
+      }`}
     >
+
       <span aria-live="polite" aria-atomic="true" className="sr-only">
         {activeItem ? `${activeItem.label} section active` : "Navigation ready"}
       </span>
@@ -141,7 +169,7 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
         {/* Magnetic Emerald Puck */}
         <li
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-1.5 rounded-[24px] bg-gradient-to-br from-[#2E7D5B] to-[#3E9E74] shadow-[0_10px_22px_-6px_rgba(46,125,91,0.55),inset_0_1px_1px_rgba(255,255,255,0.35)] motion-safe:transition-[transform,width,opacity] motion-safe:duration-[520ms] motion-reduce:transition-none"
+          className="pointer-events-none absolute inset-y-1.5 overflow-hidden rounded-[24px] bg-gradient-to-br from-[#2E7D5B] to-[#3E9E74] shadow-[0_10px_22px_-6px_rgba(46,125,91,0.55),inset_0_1px_1px_rgba(255,255,255,0.35)] motion-safe:transition-[transform,width,opacity] motion-safe:duration-[520ms] motion-reduce:transition-none"
           style={{
             width: puck.w ? `${puck.w}px` : 0,
             transform: `translate3d(${puck.x}px, 0, 0)`,
@@ -150,7 +178,12 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
           }}
         >
           <span className="absolute inset-x-4 -top-px h-px bg-white/60 blur-[0.5px]" />
+          {/* Shimmer sweep */}
+          <span
+            className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/25 to-transparent motion-safe:animate-[dock-shimmer_3.6s_ease-in-out_infinite]"
+          />
         </li>
+
 
         {items.map(({ label, icon: Icon, to, activePrefix, description }, i) => {
           const active =

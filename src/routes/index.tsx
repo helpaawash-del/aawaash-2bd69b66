@@ -369,22 +369,103 @@ function Hero() {
                 <div className="text-base font-bold text-foreground">+38% Sales</div>
               </div>
             </div>
+
+            {/* Lightweight 3D building miniatures — parallax tilt on hover */}
+            <Mini3DBuilding
+              className="absolute -left-2 top-40 hidden sm:block"
+              style={{ animationDelay: "-1.5s" }}
+              hue="from-primary/40 via-primary/25 to-leaf/25"
+              floors={5}
+              label="Serai · 24 units left"
+            />
+            <Mini3DBuilding
+              className="absolute -right-2 top-44 hidden md:block"
+              style={{ animationDelay: "-3.5s" }}
+              hue="from-gold/30 via-primary/25 to-leaf/20"
+              floors={7}
+              label="Skyline · 3 BHK"
+            />
           </div>
         </div>
+
       </div>
     </section>
   );
 }
 
+/* ---- Lightweight interactive 3D miniature building ---- */
+function Mini3DBuilding({
+  className = "",
+  style,
+  hue,
+  floors,
+  label,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+  hue: string;
+  floors: number;
+  label: string;
+}) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    setTilt({ x: py * -14, y: px * 18 });
+  };
+  const reset = () => setTilt({ x: 0, y: 0 });
+
+  return (
+    <div
+      className={`group animate-tilt-float pointer-events-auto [perspective:900px] ${className}`}
+      style={style}
+      onMouseMove={onMove}
+      onMouseLeave={reset}
+    >
+      <div
+        className="relative h-32 w-24 rounded-2xl border border-white/50 bg-white/60 p-2 shadow-[var(--shadow-float)] backdrop-blur-xl [transform-style:preserve-3d] motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out"
+        style={{ transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }}
+      >
+        {/* Building silhouette */}
+        <div className={`relative h-full w-full overflow-hidden rounded-xl bg-gradient-to-b ${hue}`}>
+          <div className="absolute inset-x-2 bottom-0 top-2 flex flex-col-reverse gap-[3px]">
+            {Array.from({ length: floors }).map((_, i) => (
+              <div key={i} className="grid grid-cols-3 gap-[2px]">
+                {Array.from({ length: 3 }).map((_, j) => (
+                  <span
+                    key={j}
+                    className="h-2 rounded-[2px] bg-white/70 motion-safe:animate-pulse"
+                    style={{ animationDelay: `${(i * 3 + j) * 220}ms`, opacity: 0.55 + ((i + j) % 3) * 0.15 }}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+          {/* Rooftop */}
+          <div className="absolute inset-x-1 top-1 h-2 rounded-md bg-white/40" />
+          {/* Reflection */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-white/40 to-transparent" />
+        </div>
+        {/* Floating label chip */}
+        <div className="pointer-events-none absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/60 bg-white/90 px-2 py-0.5 text-[9px] font-bold text-primary shadow-[var(--shadow-soft)]">
+          {label}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 /* ------------------------------ CATEGORIES ------------------------------ */
 
-const CATEGORIES: { label: string; icon: typeof Home; hue: string }[] = [
-  { label: "Apartments", icon: Home, hue: "from-primary/15 to-leaf/15 text-primary" },
-  { label: "Villas", icon: Trees, hue: "from-leaf/20 to-primary/10 text-primary" },
-  { label: "Towers", icon: Building2, hue: "from-gold/25 to-primary/10 text-gold-foreground" },
-  { label: "Plots", icon: Landmark, hue: "from-primary/15 to-gold/15 text-primary" },
-  { label: "Commercial", icon: Store, hue: "from-leaf/20 to-gold/20 text-primary" },
-  { label: "Luxury", icon: Gem, hue: "from-gold/25 to-leaf/15 text-gold-foreground" },
+const CATEGORIES: { label: string; icon: typeof Home; hue: string; count: string; accent: string }[] = [
+  { label: "Apartments", icon: Home, hue: "from-primary/20 to-leaf/15 text-primary", count: "1,240+ homes", accent: "bg-primary/10" },
+  { label: "Villas", icon: Trees, hue: "from-leaf/25 to-primary/10 text-primary", count: "320 estates", accent: "bg-leaf/15" },
+  { label: "Towers", icon: Building2, hue: "from-gold/25 to-primary/10 text-gold-foreground", count: "78 landmarks", accent: "bg-gold/15" },
+  { label: "Plots", icon: Landmark, hue: "from-primary/15 to-gold/15 text-primary", count: "540 parcels", accent: "bg-primary/10" },
+  { label: "Commercial", icon: Store, hue: "from-leaf/20 to-gold/20 text-primary", count: "96 spaces", accent: "bg-leaf/15" },
+  { label: "Luxury", icon: Gem, hue: "from-gold/25 to-leaf/15 text-gold-foreground", count: "42 signature", accent: "bg-gold/20" },
 ];
 
 function Categories() {
@@ -393,28 +474,54 @@ function Categories() {
       <div className="mx-auto max-w-6xl">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 id="cats-title" className="text-2xl font-bold text-foreground sm:text-3xl">
+            <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Explore</div>
+            <h2 id="cats-title" className="mt-1 text-2xl font-bold text-foreground sm:text-3xl">
               Browse by category
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">Find the home that fits your lifestyle.</p>
           </div>
+          <Link to="/projects" className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-primary sm:inline-flex">
+            View all <ChevronRight size={14} />
+          </Link>
         </div>
 
-        {/* horizontal scroller, snap on mobile */}
-        <div className="-mx-5 mt-6 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
-          <ul className="flex snap-x snap-mandatory gap-3">
-            {CATEGORIES.map((c) => (
+        {/* Premium horizontally scrollable swipe cards */}
+        <div className="-mx-5 mt-6 overflow-x-auto px-5 pb-3 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
+          <ul className="flex snap-x snap-mandatory gap-4">
+            {CATEGORIES.map((c, i) => (
               <li key={c.label} className="snap-start">
                 <button
                   type="button"
-                  className="group flex h-32 w-28 flex-col items-center justify-center gap-2.5 rounded-3xl border border-border bg-surface p-3 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-float)] sm:h-36 sm:w-32"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                  className="group relative flex h-48 w-40 shrink-0 flex-col justify-between overflow-hidden rounded-[26px] border border-white/60 bg-white/70 p-4 text-left shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] active:scale-[0.97] sm:h-52 sm:w-44"
                 >
+                  {/* Illustrative gradient blob */}
                   <span
-                    className={`grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${c.hue} transition-transform group-hover:scale-110`}
-                  >
-                    <c.icon size={22} />
-                  </span>
-                  <span className="text-xs font-semibold text-foreground">{c.label}</span>
+                    aria-hidden
+                    className={`absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br ${c.hue} opacity-70 blur-2xl transition-transform duration-700 group-hover:scale-125`}
+                  />
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_50%_100%,color-mix(in_oklab,var(--primary)_10%,transparent),transparent_70%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  />
+
+                  <div className="relative">
+                    <span
+                      className={`inline-grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110`}
+                    >
+                      <c.icon size={22} />
+                    </span>
+                  </div>
+
+                  <div className="relative">
+                    <div className="text-sm font-bold text-foreground">{c.label}</div>
+                    <div className={`mt-1 inline-flex items-center gap-1 rounded-full ${c.accent} px-2 py-0.5 text-[10px] font-semibold text-primary`}>
+                      {c.count}
+                    </div>
+                    <div className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      Explore <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
+                    </div>
+                  </div>
                 </button>
               </li>
             ))}
@@ -424,6 +531,7 @@ function Categories() {
     </section>
   );
 }
+
 
 /* ------------------------------ LIFESTYLE ------------------------------ */
 
@@ -674,6 +782,15 @@ const PROJECTS = [
 ];
 
 function Projects() {
+  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
+  const toggleWish = (name: string) =>
+    setWishlist((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+
   return (
     <section id="projects" className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-6xl">
@@ -700,73 +817,95 @@ function Projects() {
         {/* Horizontal swipe rail with overlapping cards on desktop */}
         <div className="-mx-5 mt-8 overflow-x-auto pb-6 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 [&::-webkit-scrollbar]:hidden">
           <ul className="flex snap-x snap-mandatory gap-4 px-5 sm:px-8 lg:gap-0">
-            {PROJECTS.map((p, i) => (
-              <li
-                key={p.name}
-                className="snap-start shrink-0 basis-[85%] sm:basis-[60%] md:basis-[46%] lg:basis-[38%]"
-                style={{ marginLeft: i > 0 ? "-2.5rem" : undefined, zIndex: PROJECTS.length - i }}
-              >
-                <Reveal variant="up" delay={i * 100}>
-                  <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-glow)]">
-                    <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
-                      <img
-                        src={heroResidence}
-                        alt={p.name}
-                        loading="lazy"
-                        className="h-full w-full scale-105 object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
-                      />
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
+            {PROJECTS.map((p, i) => {
+              const wished = wishlist.has(p.name);
+              return (
+                <li
+                  key={p.name}
+                  className="snap-start shrink-0 basis-[85%] sm:basis-[60%] md:basis-[46%] lg:basis-[38%]"
+                  style={{ marginLeft: i > 0 ? "-2.5rem" : undefined, zIndex: PROJECTS.length - i }}
+                >
+                  <Reveal variant="up" delay={i * 100}>
+                    <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out [transform-style:preserve-3d] hover:-translate-y-2 hover:rotate-[-0.6deg] hover:shadow-[var(--shadow-glow)]">
+                      <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
+                        <img
+                          src={heroResidence}
+                          alt={p.name}
+                          loading="lazy"
+                          className="h-full w-full scale-105 object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.14]"
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/10 to-transparent" />
 
-                      <span className="glass-card absolute left-4 top-4 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
-                        {p.tag}
-                      </span>
-                      <button
-                        type="button"
-                        aria-label="Save to wishlist"
-                        className="glass-card absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full text-primary transition-transform active:scale-90"
-                      >
-                        <Heart size={16} />
-                      </button>
+                        {/* subtle sheen sweep on hover */}
+                        <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-1000 ease-out group-hover:translate-x-full group-hover:opacity-100" />
 
-                      {/* Info glass overlay */}
-                      <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/30 bg-white/85 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
-                        <h3 className="text-base font-bold text-foreground">{p.name}</h3>
-                        <div className="mt-0.5 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                          <MapPin size={11} /> {p.location}
-                        </div>
-                        <div className="mt-3 flex items-end justify-between gap-2">
-                          <div className="min-w-0">
-                            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
-                              Starting
+                        <span className="glass-card absolute left-4 top-4 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                          {p.tag}
+                        </span>
+                        <button
+                          type="button"
+                          aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
+                          aria-pressed={wished}
+                          onClick={() => toggleWish(p.name)}
+                          className={`glass-card absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-0.5 active:scale-90 ${
+                            wished ? "text-destructive" : "text-primary"
+                          }`}
+                        >
+                          <Heart
+                            size={17}
+                            fill={wished ? "currentColor" : "none"}
+                            className={`transition-transform duration-300 ${wished ? "scale-110" : ""}`}
+                          />
+                        </button>
+
+                        {/* Rating chip */}
+                        <span className="glass-card absolute bottom-[9.5rem] left-4 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold text-foreground sm:bottom-[10.5rem]">
+                          <Star size={11} className="fill-gold text-gold" /> 4.9 · Concierge
+                        </span>
+
+                        {/* Info glass overlay — richer */}
+                        <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/40 bg-white/85 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <h3 className="truncate text-base font-bold text-foreground">{p.name}</h3>
+                              <div className="mt-0.5 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                                <MapPin size={11} /> {p.location}
+                              </div>
                             </div>
-                            <div className="truncate text-sm font-extrabold text-foreground">{p.price}</div>
+                            <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-primary">
+                              {p.units}
+                            </span>
                           </div>
-                          <div className="text-right">
-                            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
-                              Units
+
+                          <div className="mt-3 flex items-end justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                Starting
+                              </div>
+                              <div className="truncate text-sm font-extrabold text-foreground">{p.price}</div>
                             </div>
-                            <div className="text-xs font-semibold text-foreground">{p.units}</div>
+                            <Link
+                              to="/auth"
+                              aria-label={`Explore ${p.name}`}
+                              className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 hover:rotate-6 active:scale-95"
+                            >
+                              <ArrowRight size={14} />
+                            </Link>
                           </div>
-                          <Link
-                            to="/auth"
-                            aria-label={`Explore ${p.name}`}
-                            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] transition-transform active:scale-95"
-                          >
-                            <ArrowRight size={14} />
-                          </Link>
                         </div>
                       </div>
-                    </div>
-                  </article>
-                </Reveal>
-              </li>
-            ))}
+                    </article>
+                  </Reveal>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
     </section>
   );
 }
+
 
 /* ------------------------------ SMART PANELS ------------------------------ */
 
