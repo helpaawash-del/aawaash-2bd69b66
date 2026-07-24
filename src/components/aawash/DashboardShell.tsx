@@ -5,7 +5,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AmbientBackground } from "./AmbientBackground";
 import { BrandMark } from "./BrandMark";
-import { BottomNav } from "./BottomNav";
 import type { AawashProfile } from "@/hooks/useSession";
 import { roleLabel } from "@/lib/auth";
 import type { AppRole } from "@/lib/auth";
@@ -117,7 +116,6 @@ export function DashboardShell({
 
         <main className="mt-8 flex-1">{children}</main>
       </div>
-      <BottomNav role={role} />
     </div>
   );
 }
