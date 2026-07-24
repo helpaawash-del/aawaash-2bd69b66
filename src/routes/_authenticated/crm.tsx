@@ -30,7 +30,10 @@ import {
 import { getCrmOverview, listCustomers, listFollowups } from "@/lib/crm.functions";
 import { CUSTOMER_STATUS_META, priorityStyle } from "@/components/aawash/crm/status";
 import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
-import { Parallax3DBuilding } from "@/components/aawash/Parallax3DBuilding";
+import { lazy, Suspense } from "react";
+const Parallax3DBuilding = lazy(() =>
+  import("@/components/aawash/Parallax3DBuilding").then((m) => ({ default: m.Parallax3DBuilding })),
+);
 
 export const Route = createFileRoute("/_authenticated/crm")({
   component: CrmHome,
@@ -182,7 +185,17 @@ function CrmContent() {
 
             {/* Right — floating micro control tile + interactive 3D blueprint */}
             <div className="relative hidden shrink-0 sm:block">
-              <Parallax3DBuilding className="mx-auto mb-3 w-56" height={200} />
+              <Suspense
+                fallback={
+                  <div
+                    aria-hidden
+                    className="mx-auto mb-3 w-56 rounded-3xl bg-gradient-to-br from-primary/10 via-transparent to-leaf/10"
+                    style={{ height: 200 }}
+                  />
+                }
+              >
+                <Parallax3DBuilding className="mx-auto mb-3 w-56" height={200} />
+              </Suspense>
               <div className="relative w-56 rounded-3xl border border-border/60 bg-gradient-to-br from-white/80 to-surface-warm/60 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
                 <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-primary/25 via-transparent to-leaf/25 opacity-40 blur-xl" />
                 <div className="relative">
