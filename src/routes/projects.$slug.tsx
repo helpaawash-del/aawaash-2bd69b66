@@ -596,29 +596,13 @@ function TourPanel({
               </a>
             )}
           </div>
-          <div className="aspect-video w-full bg-gradient-to-br from-primary/5 to-leaf/10">
+          <div className="relative aspect-video w-full bg-gradient-to-br from-primary/5 to-leaf/10">
             {!modelUrl ? (
               <EmptyTile icon={<Box size={22} />} label="3D tour coming soon" />
             ) : isGlb ? (
-              // model-viewer web component (script injected in parent)
-              // @ts-expect-error - custom element
-              <model-viewer
-                src={modelUrl}
-                camera-controls
-                auto-rotate
-                touch-action="pan-y"
-                shadow-intensity="1"
-                exposure="1"
-                style={{ width: "100%", height: "100%", background: "transparent" }}
-              />
+              <ModelViewerFrame src={modelUrl} />
             ) : (
-              <iframe
-                title="3D tour"
-                src={modelUrl}
-                className="h-full w-full"
-                allow="fullscreen; xr-spatial-tracking; vr; accelerometer; gyroscope"
-                allowFullScreen
-              />
+              <IframeFrame src={modelUrl} title="3D tour" />
             )}
           </div>
         </section>
