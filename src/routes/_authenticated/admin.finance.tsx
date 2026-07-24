@@ -194,29 +194,94 @@ function WalletsTab() {
         ) : !list.data?.length ? (
           <EmptyState icon={null} title="No wallets" body="Try a different filter." />
         ) : (
-          <div className="max-h-[560px] overflow-auto rounded-xl border border-border">
-            <table className="w-full text-sm">
-              <thead className="sticky top-0 bg-muted/60 text-left text-xs uppercase text-muted-foreground">
-                <tr><th className="p-2">User</th><th className="p-2 text-right">Available</th><th className="p-2 text-right">Pending</th><th className="p-2 text-right">Lifetime</th></tr>
-              </thead>
-              <tbody>
-                {list.data.map((w) => (
-                  <tr
-                    key={w.id}
-                    onClick={() => setSelected(w.id)}
-                    className={`cursor-pointer border-t border-border/60 hover:bg-muted/40 ${selected === w.id ? "bg-primary/5" : ""}`}
-                  >
-                    <td className="p-2">
-                      <div className="font-semibold">{w.full_name}</div>
-                      <div className="text-xs text-muted-foreground">{w.login_id}</div>
-                    </td>
-                    <td className="p-2 text-right font-semibold">{formatINR(w.wallet_balance)}</td>
-                    <td className="p-2 text-right">{formatINR(w.pending_balance)}</td>
-                    <td className="p-2 text-right">{formatINR(w.total_earnings)}</td>
+          <div className="overflow-hidden rounded-xl border border-border">
+            {/* Mobile: stacked cards. No horizontal scroll. */}
+            <ul className="divide-y divide-border sm:hidden" aria-label="Wallets">
+              {list.data.map((w) => {
+                const isSelected = selected === w.id;
+                return (
+                  <li key={w.id}>
+                    <button
+                      type="button"
+                      onClick={() => setSelected(w.id)}
+                      aria-pressed={isSelected}
+                      aria-label={`Open wallet for ${w.full_name} (${w.login_id})`}
+                      className={`flex w-full flex-col gap-2 p-3 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                        isSelected ? "bg-primary/5" : "hover:bg-muted/40"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="truncate font-semibold text-foreground">{w.full_name}</div>
+                          <div className="truncate text-xs text-muted-foreground">{w.login_id}</div>
+                        </div>
+                        <span className="shrink-0 text-sm font-bold text-foreground">
+                          {formatINR(w.wallet_balance)}
+                        </span>
+                      </div>
+                      <dl className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="rounded-lg bg-muted/40 px-2 py-1.5">
+                          <dt className="text-[10px] uppercase tracking-wide text-muted-foreground">Pending</dt>
+                          <dd className="font-semibold text-foreground">{formatINR(w.pending_balance)}</dd>
+                        </div>
+                        <div className="rounded-lg bg-muted/40 px-2 py-1.5">
+                          <dt className="text-[10px] uppercase tracking-wide text-muted-foreground">Lifetime</dt>
+                          <dd className="font-semibold text-foreground">{formatINR(w.total_earnings)}</dd>
+                        </div>
+                      </dl>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+            {/* sm+: table (no horizontal scroll needed at these widths). */}
+            <div className="hidden max-h-[560px] overflow-y-auto sm:block">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 bg-muted/60 text-left text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="p-2">User</th>
+                    <th className="p-2 text-right">Available</th>
+                    <th className="p-2 text-right">Pending</th>
+                    <th className="p-2 text-right">Lifetime</th>
+                    <th className="p-2 text-right sr-only">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {list.data.map((w) => {
+                    const isSelected = selected === w.id;
+                    return (
+                      <tr
+                        key={w.id}
+                        onClick={() => setSelected(w.id)}
+                        className={`cursor-pointer border-t border-border/60 hover:bg-muted/40 ${isSelected ? "bg-primary/5" : ""}`}
+                      >
+                        <td className="p-2">
+                          <div className="font-semibold">{w.full_name}</div>
+                          <div className="text-xs text-muted-foreground">{w.login_id}</div>
+                        </td>
+                        <td className="p-2 text-right font-semibold">{formatINR(w.wallet_balance)}</td>
+                        <td className="p-2 text-right">{formatINR(w.pending_balance)}</td>
+                        <td className="p-2 text-right">{formatINR(w.total_earnings)}</td>
+                        <td className="p-2 text-right">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelected(w.id);
+                            }}
+                            aria-pressed={isSelected}
+                            aria-label={`Open wallet for ${w.full_name}`}
+                            className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-foreground hover:bg-muted"
+                          >
+                            {isSelected ? "Selected" : "Open"}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </SectionCard>
