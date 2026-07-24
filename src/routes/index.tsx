@@ -119,185 +119,260 @@ function Landing() {
 /* ------------------------------ HERO ------------------------------ */
 
 function Hero() {
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => setScrollY(window.scrollY));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
-    <section id="home" className="relative overflow-hidden px-5 pb-16 pt-32 sm:px-8 sm:pt-36 md:pt-40">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid items-center gap-12 md:grid-cols-[1.05fr_1fr] md:gap-10">
-          <Reveal variant="up">
-            <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary">
-              <Sparkles size={14} className="text-gold" />
-              Curated Luxury Residences
+    <section
+      id="home"
+      className="relative min-h-[100svh] overflow-hidden px-5 pb-[54vh] pt-28 sm:px-8 sm:pt-32 md:pb-[46vh] md:pt-36"
+    >
+      {/* Layer 1-2 — atmospheric wash */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-10%,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_100%,color-mix(in_oklab,var(--leaf,var(--primary))_18%,transparent),transparent_70%)]" />
+      </div>
 
-            </div>
-            <h1 className="mt-5 text-balance text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-              Home isn't a place.{" "}
-              <span className="bg-gradient-to-br from-primary to-leaf bg-clip-text text-transparent">
-                It's a feeling.
-              </span>
-            </h1>
-            <p className="mt-5 max-w-xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Aawash brings together premium residential projects, a professional team system, and
-              transparent commission tracking — all in one elegant, mobile-first experience.
-            </p>
+      {/* Layer 3 — architectural line-art vectors */}
+      <svg
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-24 -z-10 mx-auto h-[62%] w-full max-w-6xl opacity-[0.10]"
+        viewBox="0 0 1200 700"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <linearGradient id="lineFade" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="currentColor" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#lineFade)" strokeWidth="1" className="text-primary">
+          {Array.from({ length: 22 }).map((_, i) => (
+            <line key={i} x1={i * 60} y1="0" x2={i * 60} y2="700" />
+          ))}
+          {Array.from({ length: 10 }).map((_, i) => (
+            <line key={`h-${i}`} x1="0" y1={i * 70} x2="1200" y2={i * 70} />
+          ))}
+        </g>
+      </svg>
 
-            {/* App-style search */}
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="group mt-8 flex items-center gap-2 rounded-full border border-border bg-surface/90 py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-float)] backdrop-blur-xl transition-shadow focus-within:shadow-[var(--shadow-glow)]"
-              role="search"
-              aria-label="Search projects"
+      {/* Layer 6 — floating particles + leaves */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        {Array.from({ length: 18 }).map((_, i) => {
+          const left = (i * 53) % 100;
+          const top = (i * 37) % 90;
+          const delay = -(i * 0.7);
+          const size = 3 + ((i * 7) % 5);
+          return (
+            <span
+              key={i}
+              className="animate-float absolute rounded-full bg-primary/30"
+              style={{
+                left: `${left}%`,
+                top: `${top}%`,
+                width: size,
+                height: size,
+                animationDelay: `${delay}s`,
+                animationDuration: `${6 + (i % 5)}s`,
+                filter: "blur(0.5px)",
+              }}
+            />
+          );
+        })}
+        {/* Light rays */}
+        <div
+          className="absolute -top-32 left-1/2 h-[70vh] w-[80vw] -translate-x-1/2 rotate-[8deg] bg-[conic-gradient(from_200deg_at_50%_0%,transparent_0deg,color-mix(in_oklab,var(--primary)_10%,transparent)_30deg,transparent_60deg,color-mix(in_oklab,var(--gold,var(--primary))_8%,transparent)_120deg,transparent_180deg)] opacity-60 blur-2xl"
+          style={{ transform: `translate(-50%, ${scrollY * -0.05}px) rotate(8deg)` }}
+        />
+      </div>
+
+      {/* Floating pill trust indicator (top) */}
+      <div className="relative z-10 mx-auto flex max-w-6xl justify-center">
+        <div className="glass-card inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-primary shadow-[var(--shadow-soft)]">
+          <Sparkles size={13} className="text-gold" />
+          Curated Luxury Residences · India
+        </div>
+      </div>
+
+      {/* Headline */}
+      <div className="relative z-10 mx-auto mt-8 max-w-3xl text-center">
+        <h1 className="text-balance text-[2.6rem] font-extrabold leading-[1.03] tracking-tight text-foreground sm:text-6xl md:text-7xl">
+          Home isn't a place.{" "}
+          <span className="bg-gradient-to-br from-primary via-leaf to-primary bg-clip-text text-transparent">
+            It's a feeling.
+          </span>
+        </h1>
+        <p className="mx-auto mt-5 max-w-xl text-balance text-[15px] leading-relaxed text-muted-foreground sm:text-lg">
+          Aawash brings together premium residential projects, a professional team system, and
+          transparent commission tracking — all in one elegant, mobile-first experience.
+        </p>
+
+        {/* App-style floating search pill */}
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          role="search"
+          aria-label="Search projects"
+          className="group mx-auto mt-8 flex max-w-xl items-center gap-2 rounded-full border border-white/60 bg-white/70 py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-float)] backdrop-blur-2xl transition-all focus-within:-translate-y-0.5 focus-within:shadow-[var(--shadow-glow)]"
+        >
+          <Search size={18} className="shrink-0 text-muted-foreground transition-colors group-focus-within:text-primary" />
+          <input
+            type="search"
+            placeholder="Search by city, project, or 3 BHK…"
+            className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+            aria-label="Search"
+          />
+          <span className="hidden items-center gap-1 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-semibold text-primary md:inline-flex">
+            <MapPin size={11} /> Bengaluru
+          </span>
+          <button
+            type="button"
+            aria-label="Voice search"
+            className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:inline-flex"
+          >
+            <Mic size={16} />
+          </button>
+          <button
+            type="button"
+            aria-label="Filters"
+            className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:inline-flex"
+          >
+            <SlidersHorizontal size={16} />
+          </button>
+          <button
+            type="submit"
+            className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform active:scale-95"
+          >
+            <Search size={14} />
+            <span className="hidden sm:inline">Search</span>
+          </button>
+        </form>
+
+        {/* Suggestion chips */}
+        <div className="mx-auto mt-3 flex max-w-2xl flex-wrap justify-center gap-2">
+          {["3 BHK · Whitefield", "Sea-view · Andheri", "Ready to move", "Under ₹1.5 Cr"].map((s) => (
+            <button
+              key={s}
+              type="button"
+              className="rounded-full border border-border bg-surface/80 px-3 py-1.5 text-[11px] font-semibold text-muted-foreground backdrop-blur transition-colors hover:border-primary/40 hover:text-primary"
             >
-              <Search size={18} className="shrink-0 text-muted-foreground transition-colors group-focus-within:text-primary" />
-              <input
-                type="search"
-                placeholder="Search by city, project, or 3 BHK…"
-                className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                aria-label="Search"
-              />
-              <span className="hidden items-center gap-1 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-semibold text-primary md:inline-flex">
-                <MapPin size={11} /> Bengaluru
-              </span>
-              <button
-                type="button"
-                aria-label="Voice search"
-                className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:inline-flex"
-              >
-                <Mic size={16} />
-              </button>
-              <button
-                type="button"
-                aria-label="Filters"
-                className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:inline-flex"
-              >
-                <SlidersHorizontal size={16} />
-              </button>
-              <button
-                type="submit"
-                className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform active:scale-95"
-              >
-                <Search size={14} />
-                <span className="hidden sm:inline">Search</span>
-              </button>
-            </form>
+              {s}
+            </button>
+          ))}
+        </div>
 
-            {/* Quick suggestion chips */}
-            <div className="mt-3 -mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
-              {["3 BHK · Whitefield", "Sea-view · Andheri", "Ready to move", "Under ₹1.5 Cr", "Rooftop pool"].map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  className="shrink-0 rounded-full border border-border bg-surface/80 px-3 py-1.5 text-[11px] font-semibold text-muted-foreground backdrop-blur transition-colors hover:border-primary/40 hover:text-primary"
-                >
-                  {s}
-                </button>
-              ))}
+        {/* CTAs */}
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="#projects"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-6 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all hover:-translate-y-0.5 active:scale-[0.98]"
+          >
+            Explore Projects
+            <ArrowRight size={16} />
+          </a>
+          <Link
+            to="/auth"
+            className="inline-flex h-12 items-center justify-center rounded-2xl border border-border bg-white/70 px-6 text-sm font-semibold text-foreground shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all hover:-translate-y-0.5"
+          >
+            Login
+          </Link>
+        </div>
+
+        {/* Trust row */}
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs font-medium text-muted-foreground">
+          {["RERA-aligned", "Transparent Commissions", "Mobile-first"].map((t) => (
+            <span key={t} className="inline-flex items-center gap-1.5">
+              <CheckCircle2 size={14} className="text-primary" />
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Building emerging from the bottom + floating stat chips */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[58vh] md:h-[50vh]"
+        style={{ transform: `translateY(${scrollY * 0.08}px)` }}
+      >
+        {/* Soft bloom behind building */}
+        <div className="absolute inset-x-0 bottom-0 mx-auto h-full max-w-6xl">
+          <div className="absolute bottom-0 left-1/2 h-[70%] w-[110%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(50%_50%_at_50%_100%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)] blur-2xl" />
+        </div>
+
+        {/* The building itself */}
+        <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
+          <div className="relative w-full max-w-3xl">
+            <img
+              src={heroResidence}
+              alt="Aawash luxury residential architecture render"
+              width={1408}
+              height={1408}
+              className="mx-auto h-auto w-full select-none rounded-t-[3rem] object-cover animate-[float_10s_ease-in-out_infinite]"
+              style={{
+                maskImage:
+                  "linear-gradient(to top, black 55%, rgba(0,0,0,0.85) 78%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to top, black 55%, rgba(0,0,0,0.85) 78%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+                maskComposite: "intersect",
+                WebkitMaskComposite: "source-in",
+              }}
+            />
+            {/* Blend into background */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-background/60 to-transparent" />
+          </div>
+        </div>
+
+        {/* Floating stat chips over the scene */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-[38%] mx-auto max-w-6xl">
+          <div className="relative mx-auto h-0 max-w-4xl">
+            <div className="glass-card animate-float absolute left-3 top-0 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)] sm:left-6">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/15 text-primary">
+                <Building2 size={18} />
+              </div>
+              <div>
+                <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Live Projects</div>
+                <div className="text-base font-bold text-foreground">24 Cities</div>
+              </div>
             </div>
-
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              <a
-                href="#projects"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all hover:-translate-y-0.5"
-              >
-                Explore Projects
-                <ArrowRight size={16} />
-              </a>
-              <Link
-                to="/auth"
-                className="inline-flex h-12 items-center justify-center rounded-2xl border border-border bg-surface px-5 text-sm font-semibold text-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5"
-              >
-                Login
-              </Link>
+            <div
+              className="glass-card animate-float absolute right-3 top-8 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)] sm:right-6"
+              style={{ animationDelay: "-2s" }}
+            >
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-gold/20 text-gold-foreground">
+                <Wallet size={18} />
+              </div>
+              <div>
+                <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Avg. Commission</div>
+                <div className="text-base font-bold text-foreground">₹8.4L</div>
+              </div>
             </div>
-
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-medium text-muted-foreground">
-              {[
-                "RERA-aligned Projects",
-                "Transparent Commissions",
-                "Mobile-first Dashboard",
-              ].map((t) => (
-                <span key={t} className="inline-flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-primary" />
-                  {t}
-                </span>
-              ))}
+            <div
+              className="glass-card animate-float absolute left-1/2 top-24 hidden -translate-x-1/2 items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)] md:flex"
+              style={{ animationDelay: "-4s" }}
+            >
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-leaf/20 text-primary">
+                <LineChart size={18} />
+              </div>
+              <div>
+                <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">This Month</div>
+                <div className="text-base font-bold text-foreground">+38% Sales</div>
+              </div>
             </div>
-
-          </Reveal>
-
-          <Reveal variant="scale" delay={120}>
-            <HeroVisual />
-          </Reveal>
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function HeroVisual() {
-  return (
-    <div className="relative mx-auto aspect-square w-full max-w-md">
-      {/* soft aurora backdrop */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-1/2 h-[110%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-[3rem] bg-gradient-to-br from-primary/12 via-leaf/10 to-gold/12 blur-3xl" />
-      </div>
-
-      {/* main render card */}
-      <div className="relative h-full w-full overflow-hidden rounded-[2.5rem] border border-border/60 bg-surface shadow-[var(--shadow-float)]">
-        <img
-          src={heroResidence}
-          alt="Aawash luxury residential architecture render"
-          width={1408}
-          height={1408}
-          className="h-full w-full object-cover"
-        />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/80 via-background/10 to-transparent" />
-      </div>
-
-      {/* floating stat card 1 */}
-      <div className="glass-card animate-float absolute -left-3 top-10 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)] sm:-left-6">
-        <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/15 text-primary">
-          <Building2 size={18} />
-        </div>
-        <div>
-          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            Live Projects
-          </div>
-          <div className="text-base font-bold text-foreground">24 Cities</div>
-        </div>
-      </div>
-
-      {/* floating stat card 2 */}
-      <div
-        className="glass-card animate-float absolute -right-3 top-1/2 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)] sm:-right-6"
-        style={{ animationDelay: "-2s" }}
-      >
-        <div className="grid h-10 w-10 place-items-center rounded-xl bg-gold/20 text-gold-foreground">
-          <Wallet size={18} />
-        </div>
-        <div>
-          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            Avg. Commission
-          </div>
-          <div className="text-base font-bold text-foreground">₹8.4L</div>
-        </div>
-      </div>
-
-      {/* floating stat card 3 */}
-      <div
-        className="glass-card animate-float absolute -bottom-3 left-8 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)]"
-        style={{ animationDelay: "-4s" }}
-      >
-        <div className="grid h-10 w-10 place-items-center rounded-xl bg-leaf/20 text-primary">
-          <LineChart size={18} />
-        </div>
-        <div>
-          <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            This Month
-          </div>
-          <div className="text-base font-bold text-foreground">+38% Sales</div>
-        </div>
-      </div>
-    </div>
   );
 }
 
