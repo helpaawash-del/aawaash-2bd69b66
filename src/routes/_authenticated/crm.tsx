@@ -62,6 +62,12 @@ function CrmContent() {
   });
   const followups = useQuery({ queryKey: ["crm", "followups"], queryFn: () => followFn() });
 
+  useRealtimeInvalidate(
+    "crm-live",
+    ["customers", "customer_timeline"],
+    [["crm", "overview"], ["crm", "customers"], ["crm", "followups"]],
+  );
+
   const filtered = useMemo(() => {
     const s = search.trim().toLowerCase();
     if (!s) return customers.data ?? [];
