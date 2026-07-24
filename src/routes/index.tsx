@@ -50,7 +50,7 @@ import {
 } from "lucide-react";
 
 import heroResidence from "@/assets/hero-residence.jpg";
-import heroResidenceCutout from "@/assets/hero-skyscraper.png.asset.json";
+import heroTowerTrees from "@/assets/hero-tower-trees.png";
 import savitriHero from "@/assets/savitri-hero.jpg.asset.json";
 import savitriFacade from "@/assets/savitri-facade.jpg.asset.json";
 import savitriRender from "@/assets/savitri-render.jpg";
