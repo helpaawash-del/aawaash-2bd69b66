@@ -237,6 +237,20 @@
   50% { opacity: 1; }
 }
 
+@keyframes dock-shimmer {
+  0% { transform: translateX(0); }
+  60%, 100% { transform: translateX(600%); }
+}
+
+@keyframes tilt-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate3d(1, 1, 0, 0deg); }
+  50% { transform: translate3d(0, -10px, 0) rotate3d(1, 0.4, 0, 6deg); }
+}
+
+@utility animate-tilt-float {
+  animation: tilt-float 9s ease-in-out infinite;
+}
+
 @utility animate-float {
   animation: aawash-float 6s ease-in-out infinite;
 }
