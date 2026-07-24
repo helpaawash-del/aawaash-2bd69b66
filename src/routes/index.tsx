@@ -216,24 +216,34 @@ function Hero() {
             It's a feeling.
           </span>
         </h1>
-        {/* Mobile / tablet: image directly below the title */}
-        <div className="mt-6 lg:hidden">
-          <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 shadow-[var(--shadow-float)]">
+        {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
+        <div className="mt-4 lg:hidden">
+          <div className="relative mx-auto aspect-square w-full max-w-md">
+            {/* Soft ground bloom to seat the building */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-6 bottom-4 h-16 rounded-[50%] bg-[radial-gradient(50%_60%_at_50%_50%,color-mix(in_oklab,var(--primary)_28%,transparent),transparent_75%)] blur-2xl"
+            />
+            {/* Subtle halo behind subject */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-8 top-6 bottom-8 rounded-[46%] bg-[radial-gradient(60%_50%_at_50%_45%,color-mix(in_oklab,var(--leaf)_18%,transparent),transparent_70%)] blur-3xl"
+            />
             <img
-              src={heroResidence}
+              src={heroResidenceCutout.url}
               alt="Aawash luxury residential architecture render"
-              width={1408}
-              height={1408}
+              width={1024}
+              height={1024}
               loading="eager"
               decoding="async"
-              className="h-full w-full object-cover"
+              fetchPriority="high"
+              className="relative h-full w-full select-none object-contain drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_20%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
             />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/70 to-transparent" />
           </div>
           <div className="mt-5 flex justify-center">
             <a
               href="#projects"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] active:scale-[0.98]"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-6 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
             >
               Explore Projects <ArrowRight size={15} />
             </a>
