@@ -1010,6 +1010,19 @@ function MediaTab({ project, onSaved }: { project: Record<string, unknown>; onSa
         />
       </Section>
 
+      <Section title="Videos (YouTube / Vimeo / MP4 links)">
+        <VideoUrlList
+          name="videos"
+          initial={
+            Array.isArray(p.videos)
+              ? (p.videos as unknown[]).filter((v): v is string => typeof v === "string")
+              : []
+          }
+          disabled={!mayEditMedia}
+        />
+      </Section>
+
+
       <Section title="3D Model & Immersive Media">
         <div className="grid gap-4 md:grid-cols-2">
           <Model3DUploadField
