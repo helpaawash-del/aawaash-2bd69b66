@@ -236,26 +236,26 @@ function Hero() {
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
         <div className="mt-4 lg:hidden">
-          <div className="relative mx-auto aspect-square w-full max-w-md">
+          <div className="relative mx-auto aspect-[3/4] w-full max-w-[22rem]">
             {/* Soft ground bloom to seat the building */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-6 bottom-4 h-16 rounded-[50%] bg-[radial-gradient(50%_60%_at_50%_50%,color-mix(in_oklab,var(--primary)_28%,transparent),transparent_75%)] blur-2xl"
+              className="pointer-events-none absolute inset-x-10 bottom-2 h-10 rounded-[50%] bg-[radial-gradient(50%_60%_at_50%_50%,color-mix(in_oklab,var(--primary)_28%,transparent),transparent_75%)] blur-2xl"
             />
             {/* Subtle halo behind subject */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-8 top-6 bottom-8 rounded-[46%] bg-[radial-gradient(60%_50%_at_50%_45%,color-mix(in_oklab,var(--leaf)_18%,transparent),transparent_70%)] blur-3xl"
+              className="pointer-events-none absolute inset-x-6 top-6 bottom-8 rounded-[40%] bg-[radial-gradient(55%_60%_at_50%_45%,color-mix(in_oklab,var(--leaf)_18%,transparent),transparent_70%)] blur-3xl"
             />
             <img
               src={heroResidenceCutout.url}
-              alt="Aawash luxury residential architecture render"
+              alt="Aawash biophilic skyscraper residence"
               width={1024}
-              height={1024}
+              height={1536}
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              className="relative h-full w-full select-none object-contain drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_20%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
+              className="relative h-full w-full select-none object-contain drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_22%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
             />
           </div>
           <div className="mt-5 flex justify-center">
