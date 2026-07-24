@@ -351,26 +351,17 @@ function Hero() {
           <div className="absolute bottom-0 left-1/2 h-[70%] w-[110%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(50%_50%_at_50%_100%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)] blur-2xl" />
         </div>
 
-        {/* The building itself */}
+        {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
           <div className="relative w-full max-w-3xl">
             <img
-              src={heroResidence}
+              src={heroResidenceCutout.url}
               alt="Aawash luxury residential architecture render"
-              width={1408}
-              height={1408}
-              className="mx-auto h-auto w-full select-none rounded-t-[3rem] object-cover animate-[float_10s_ease-in-out_infinite]"
-              style={{
-                maskImage:
-                  "linear-gradient(to top, black 55%, rgba(0,0,0,0.85) 78%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-                WebkitMaskImage:
-                  "linear-gradient(to top, black 55%, rgba(0,0,0,0.85) 78%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-                maskComposite: "intersect",
-                WebkitMaskComposite: "source-in",
-              }}
+              width={1024}
+              height={1024}
+              decoding="async"
+              className="mx-auto h-auto w-full select-none object-contain drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_22%,transparent)] animate-[float_10s_ease-in-out_infinite]"
             />
-            {/* Blend into background */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-background/60 to-transparent" />
           </div>
         </div>
 
