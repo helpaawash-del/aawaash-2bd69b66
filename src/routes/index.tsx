@@ -1035,91 +1035,37 @@ function Projects() {
                     )}
                   </div>
 
-                  {/* Editorial info block — generous whitespace */}
-                  <div className="relative z-20 px-6 pb-10 pt-9 sm:px-12 sm:pb-14 sm:pt-12">
-                    {/* Meta row */}
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                      <span className="inline-flex items-center gap-1.5">
+                  {/* Minimal info block */}
+                  <div className="relative z-20 flex flex-col gap-5 px-6 pb-7 pt-6 sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:pb-8 sm:pt-7">
+                    <div className="min-w-0">
+                      <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
                         <MapPin size={12} className="text-primary" /> Darbhanga, Bihar
-                      </span>
-                      <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
-                      <span>{p.units}</span>
+                      </div>
+                      <Link
+                        to="/projects/$slug"
+                        params={{ slug: p.slug }}
+                        className="mt-1.5 block truncate text-xl font-semibold tracking-tight text-foreground transition-colors hover:text-primary sm:text-2xl"
+                      >
+                        {p.name}
+                      </Link>
                     </div>
-
-                    <Link
-                      to="/projects/$slug"
-                      params={{ slug: p.slug }}
-                      className="mt-4 block text-3xl font-bold tracking-tight text-foreground transition-colors hover:text-primary sm:text-[2.75rem] sm:leading-[1.05]"
-                    >
-                      {p.name}
-                    </Link>
-                    <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
-                      {p.tagline}
-                    </p>
-                    <div className="mt-3 text-[13px] font-medium text-muted-foreground/80">
-                      By {p.developer}
-                    </div>
-
-                    {/* Highlights — subtle grid, not pill soup */}
-                    <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-                      {p.highlights.map((h) => (
-                        <li
-                          key={h}
-                          className="flex items-start gap-2.5 text-[13px] leading-relaxed text-foreground/85"
-                        >
-                          <CheckCircle2
-                            size={15}
-                            className="mt-0.5 shrink-0 text-primary"
-                            strokeWidth={2.25}
-                          />
-                          <span>{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Divider */}
-                    <div className="mt-10 h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
-
-                    {/* Price + CTAs */}
-                    <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                          Starting Price
+                    <div className="flex items-center justify-between gap-4 sm:justify-end">
+                      <div className="sm:text-right">
+                        <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                          From
                         </div>
-                        <div className="mt-1 flex items-baseline gap-3">
-                          <span className="text-2xl font-extrabold text-foreground sm:text-3xl">
-                            {p.price}
-                          </span>
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary">
-                            <Star size={11} className="fill-gold text-gold" /> 4.9 · Concierge
-                          </span>
+                        <div className="text-base font-bold text-foreground sm:text-lg">
+                          {p.price}
                         </div>
                       </div>
-                      <div className="flex flex-wrap items-center gap-3">
-                        <Link
-                          to="/projects/$slug"
-                          params={{ slug: p.slug }}
-                          className="inline-flex h-12 items-center gap-2 rounded-2xl border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
-                        >
-                          View details
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => setOpenProject(p)}
-                          className="hidden"
-                          aria-hidden
-                        >
-                          quick preview
-                        </button>
-                        <Link
-                          to="/projects/$slug"
-                          params={{ slug: p.slug }}
-                          aria-label={`Explore ${p.name}`}
-                          className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
-                        >
-                          Explore <ArrowRight size={15} />
-                        </Link>
-                      </div>
+                      <Link
+                        to="/projects/$slug"
+                        params={{ slug: p.slug }}
+                        aria-label={`Explore ${p.name}`}
+                        className="inline-flex h-11 items-center gap-1.5 rounded-full bg-foreground px-4 text-xs font-semibold text-background transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                      >
+                        Explore <ArrowRight size={14} />
+                      </Link>
                     </div>
                   </div>
                 </article>
