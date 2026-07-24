@@ -34,6 +34,37 @@ export function PublicBottomNav() {
   return <DockList items={items} pathname={pathname} />;
 }
 
+/**
+ * Loading skeleton for the dock. Rendered while the session is resolving so
+ * the five action slots stay visible and the change is announced to screen
+ * readers via `aria-busy` and a polite live region.
+ */
+export function BottomNavSkeleton() {
+  return (
+    <nav
+      role="navigation"
+      aria-label="Primary"
+      aria-busy="true"
+      data-testid="bottom-dock-loading"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-2 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
+    >
+      <span role="status" aria-live="polite" className="sr-only">
+        Loading primary navigation
+      </span>
+      <ul className="mx-auto flex w-full max-w-lg items-stretch justify-between gap-0.5 rounded-[28px] border border-border/70 bg-surface/95 p-1 shadow-[var(--shadow-float)] backdrop-blur-2xl ring-1 ring-inset ring-white/60 sm:gap-1 sm:p-1.5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <li key={i} className="flex min-w-0 flex-1" aria-hidden="true">
+            <div className="flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-1.5 sm:px-2 sm:py-2">
+              <div className="h-[18px] w-[18px] animate-pulse rounded-md bg-muted" />
+              <div className="h-2 w-8 animate-pulse rounded bg-muted" />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
   return (
     <nav
