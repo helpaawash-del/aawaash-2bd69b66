@@ -121,6 +121,8 @@ function Landing() {
 function Hero() {
   const [scrollY, setScrollY] = useState(0);
   useEffect(() => {
+    // Skip parallax + scroll listener on small screens to keep scrolling smooth.
+    if (typeof window === "undefined" || window.matchMedia("(max-width: 1023px)").matches) return;
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
