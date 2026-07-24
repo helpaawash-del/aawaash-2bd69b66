@@ -18,7 +18,22 @@ import {
   MapPinned,
   Send,
   CheckCircle2,
+  Search,
+  SlidersHorizontal,
+  Home,
+  Landmark,
+  Trees,
+  Store,
+  Gem,
+  Heart,
+  CalendarCheck,
+  Waves,
+  Dumbbell,
+  Coffee,
+  Bike,
 } from "lucide-react";
+import heroResidence from "@/assets/hero-residence.jpg";
+
 
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
 import { BrandMark } from "@/components/aawash/BrandMark";
@@ -75,8 +90,11 @@ function Landing() {
       <main className="relative">
         <Hero />
         <Stats />
+        <Categories />
         <Features />
         <Projects />
+        <Lifestyle />
+        <BookVisit />
         <HowItWorks />
         <Commission />
         <WhyChoose />
@@ -96,11 +114,12 @@ function Hero() {
   return (
     <section id="home" className="relative overflow-hidden px-5 pb-16 pt-32 sm:px-8 sm:pt-36 md:pt-40">
       <div className="mx-auto max-w-6xl">
-        <div className="grid items-center gap-12 md:grid-cols-2 md:gap-8">
+        <div className="grid items-center gap-12 md:grid-cols-[1.05fr_1fr] md:gap-10">
           <Reveal variant="up">
             <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary">
               <Sparkles size={14} className="text-gold" />
               Curated Luxury Residences
+
             </div>
             <h1 className="mt-5 text-balance text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
               Home isn't a place.{" "}
@@ -113,7 +132,37 @@ function Hero() {
               transparent commission tracking — all in one elegant, mobile-first experience.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            {/* App-style search */}
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="mt-8 flex items-center gap-2 rounded-full border border-border bg-surface/90 py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-float)] backdrop-blur-xl"
+              role="search"
+              aria-label="Search projects"
+            >
+              <Search size={18} className="shrink-0 text-muted-foreground" />
+              <input
+                type="search"
+                placeholder="Search by city, project, or 3 BHK…"
+                className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                aria-label="Search"
+              />
+              <button
+                type="button"
+                aria-label="Filters"
+                className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:inline-flex"
+              >
+                <SlidersHorizontal size={16} />
+              </button>
+              <button
+                type="submit"
+                className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]"
+              >
+                <Search size={14} />
+                <span className="hidden sm:inline">Search</span>
+              </button>
+            </form>
+
+            <div className="mt-5 flex flex-wrap items-center gap-3">
               <a
                 href="#projects"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all hover:-translate-y-0.5"
@@ -141,6 +190,7 @@ function Hero() {
                 </span>
               ))}
             </div>
+
           </Reveal>
 
           <Reveal variant="scale" delay={120}>
@@ -154,50 +204,26 @@ function Hero() {
 
 function HeroVisual() {
   return (
-    <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
+    <div className="relative mx-auto aspect-square w-full max-w-md">
+      {/* soft aurora backdrop */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute left-1/2 top-1/2 h-[110%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-[3rem] bg-gradient-to-br from-primary/12 via-leaf/10 to-gold/12 blur-3xl" />
+      </div>
+
       {/* main render card */}
-      <div className="glass-card absolute inset-0 overflow-hidden rounded-[2rem] shadow-[var(--shadow-float)]">
-        <div className="relative h-full w-full bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20">
-          {/* skyline silhouette */}
-          <svg
-            viewBox="0 0 400 500"
-            className="absolute inset-0 h-full w-full"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden
-          >
-            <defs>
-              <linearGradient id="bldg" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="oklch(0.42 0.09 155)" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="oklch(0.62 0.15 148)" stopOpacity="0.6" />
-              </linearGradient>
-            </defs>
-            <g fill="url(#bldg)">
-              <rect x="40" y="200" width="60" height="260" rx="6" />
-              <rect x="110" y="140" width="80" height="320" rx="8" />
-              <rect x="200" y="180" width="55" height="280" rx="6" />
-              <rect x="265" y="100" width="90" height="360" rx="10" />
-              <rect x="365" y="230" width="30" height="230" rx="4" />
-            </g>
-            {/* windows */}
-            <g fill="oklch(0.99 0.005 100)" opacity="0.5">
-              {Array.from({ length: 40 }).map((_, i) => (
-                <rect
-                  key={i}
-                  x={50 + (i % 8) * 42}
-                  y={160 + Math.floor(i / 8) * 45}
-                  width="8"
-                  height="8"
-                  rx="1"
-                />
-              ))}
-            </g>
-          </svg>
-          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background/70 to-transparent" />
-        </div>
+      <div className="relative h-full w-full overflow-hidden rounded-[2.5rem] border border-border/60 bg-surface shadow-[var(--shadow-float)]">
+        <img
+          src={heroResidence}
+          alt="Aawash luxury residential architecture render"
+          width={1408}
+          height={1408}
+          className="h-full w-full object-cover"
+        />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/80 via-background/10 to-transparent" />
       </div>
 
       {/* floating stat card 1 */}
-      <div className="glass-card animate-float absolute -left-4 top-16 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)] sm:-left-6">
+      <div className="glass-card animate-float absolute -left-3 top-10 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)] sm:-left-6">
         <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/15 text-primary">
           <Building2 size={18} />
         </div>
@@ -211,7 +237,7 @@ function HeroVisual() {
 
       {/* floating stat card 2 */}
       <div
-        className="glass-card animate-float absolute -right-3 top-1/3 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)] sm:-right-6"
+        className="glass-card animate-float absolute -right-3 top-1/2 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)] sm:-right-6"
         style={{ animationDelay: "-2s" }}
       >
         <div className="grid h-10 w-10 place-items-center rounded-xl bg-gold/20 text-gold-foreground">
@@ -227,7 +253,7 @@ function HeroVisual() {
 
       {/* floating stat card 3 */}
       <div
-        className="glass-card animate-float absolute -bottom-2 left-6 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)]"
+        className="glass-card animate-float absolute -bottom-3 left-8 flex items-center gap-3 rounded-2xl px-3.5 py-2.5 shadow-[var(--shadow-float)]"
         style={{ animationDelay: "-4s" }}
       >
         <div className="grid h-10 w-10 place-items-center rounded-xl bg-leaf/20 text-primary">
@@ -243,6 +269,178 @@ function HeroVisual() {
     </div>
   );
 }
+
+/* ------------------------------ CATEGORIES ------------------------------ */
+
+const CATEGORIES: { label: string; icon: typeof Home; hue: string }[] = [
+  { label: "Apartments", icon: Home, hue: "from-primary/15 to-leaf/15 text-primary" },
+  { label: "Villas", icon: Trees, hue: "from-leaf/20 to-primary/10 text-primary" },
+  { label: "Towers", icon: Building2, hue: "from-gold/25 to-primary/10 text-gold-foreground" },
+  { label: "Plots", icon: Landmark, hue: "from-primary/15 to-gold/15 text-primary" },
+  { label: "Commercial", icon: Store, hue: "from-leaf/20 to-gold/20 text-primary" },
+  { label: "Luxury", icon: Gem, hue: "from-gold/25 to-leaf/15 text-gold-foreground" },
+];
+
+function Categories() {
+  return (
+    <section aria-labelledby="cats-title" className="px-5 py-10 sm:px-8 sm:py-14">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 id="cats-title" className="text-2xl font-bold text-foreground sm:text-3xl">
+              Browse by category
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">Find the home that fits your lifestyle.</p>
+          </div>
+        </div>
+
+        {/* horizontal scroller, snap on mobile */}
+        <div className="-mx-5 mt-6 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
+          <ul className="flex snap-x snap-mandatory gap-3">
+            {CATEGORIES.map((c) => (
+              <li key={c.label} className="snap-start">
+                <button
+                  type="button"
+                  className="group flex h-32 w-28 flex-col items-center justify-center gap-2.5 rounded-3xl border border-border bg-surface p-3 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-float)] sm:h-36 sm:w-32"
+                >
+                  <span
+                    className={`grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${c.hue} transition-transform group-hover:scale-110`}
+                  >
+                    <c.icon size={22} />
+                  </span>
+                  <span className="text-xs font-semibold text-foreground">{c.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------ LIFESTYLE ------------------------------ */
+
+const AMENITIES: { label: string; icon: typeof Waves; desc: string }[] = [
+  { label: "Infinity Pool", icon: Waves, desc: "Rooftop pools with skyline views" },
+  { label: "Fitness Club", icon: Dumbbell, desc: "24×7 wellness & recovery" },
+  { label: "Sky Lounge", icon: Coffee, desc: "Cafés and co-working" },
+  { label: "Green Trails", icon: Bike, desc: "Cycling & jogging tracks" },
+];
+
+function Lifestyle() {
+  return (
+    <section aria-labelledby="lifestyle-title" className="relative px-5 py-14 sm:px-8 sm:py-20">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid items-center gap-10 md:grid-cols-2">
+          <Reveal variant="left">
+            <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary">
+              <Leaf size={14} />
+              Lifestyle Amenities
+            </div>
+            <h2 id="lifestyle-title" className="mt-4 text-3xl font-bold leading-tight text-foreground sm:text-4xl">
+              A home that lives{" "}
+              <span className="bg-gradient-to-r from-primary to-leaf bg-clip-text text-transparent">
+                beyond four walls.
+              </span>
+            </h2>
+            <p className="mt-4 max-w-md text-base text-muted-foreground">
+              Curated amenities, biophilic design, and community spaces — every Aawash residence is
+              built for calm, everyday luxury.
+            </p>
+
+            <ul className="mt-8 grid grid-cols-2 gap-3">
+              {AMENITIES.map((a) => (
+                <li
+                  key={a.label}
+                  className="rounded-2xl border border-border bg-surface p-4 shadow-[var(--shadow-soft)]"
+                >
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-soft text-primary">
+                    <a.icon size={18} />
+                  </span>
+                  <div className="mt-3 text-sm font-semibold text-foreground">{a.label}</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">{a.desc}</div>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal variant="right" delay={100}>
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[2.5rem] border border-border bg-surface shadow-[var(--shadow-float)]">
+              <img
+                src={heroResidence}
+                alt="Lifestyle amenities and greenery"
+                loading="lazy"
+                width={1408}
+                height={1408}
+                className="h-full w-full scale-110 object-cover"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-background/20" />
+              <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-border bg-surface/95 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+                <div className="flex items-center gap-2 text-xs font-semibold text-primary">
+                  <Sparkles size={14} className="text-gold" />
+                  Wellness-first Living
+                </div>
+                <div className="mt-1.5 text-sm font-semibold text-foreground">
+                  Rooftop gardens, spa, and family-first design.
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------ BOOK VISIT ------------------------------ */
+
+function BookVisit() {
+  return (
+    <section aria-labelledby="visit-title" className="px-5 py-10 sm:px-8 sm:py-14">
+      <div className="mx-auto max-w-6xl">
+        <div className="relative overflow-hidden rounded-[2rem] border border-border bg-gradient-to-br from-primary via-primary to-leaf p-8 text-primary-foreground shadow-[var(--shadow-glow)] sm:p-12">
+          <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-leaf/40 blur-3xl" />
+
+          <div className="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-lg">
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 px-3 py-1 text-xs font-semibold backdrop-blur-md">
+                <CalendarCheck size={14} />
+                Book a Private Tour
+              </div>
+              <h2 id="visit-title" className="mt-4 text-3xl font-bold leading-tight sm:text-4xl">
+                Walk through your future home in person.
+              </h2>
+              <p className="mt-3 text-sm opacity-90 sm:text-base">
+                Personalised site visits with our concierge — pick a project, tell us a time, we do
+                the rest.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#projects"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-primary-foreground px-5 text-sm font-semibold text-primary shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5"
+              >
+                Schedule a Visit
+                <ArrowRight size={16} />
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex h-12 items-center justify-center rounded-2xl border border-primary-foreground/40 bg-primary-foreground/10 px-5 text-sm font-semibold text-primary-foreground backdrop-blur-md transition-all hover:bg-primary-foreground/20"
+              >
+                Talk to Advisor
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
 
 /* ------------------------------ STATS ------------------------------ */
 
