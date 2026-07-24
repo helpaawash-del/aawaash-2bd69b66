@@ -95,6 +95,7 @@ function Content() {
             ["ledger", "Ledger", ScrollText],
             ["bonuses", "Bonuses", Gift],
             ["revenue", "Revenue", TrendingUp],
+            ["reconciliation", "Reconciliation", ShieldAlert],
             ["reports", "Reports", Download],
           ] as [Tab, string, typeof BarChart3][]).map(([k, label, Icon]) => (
             <button
