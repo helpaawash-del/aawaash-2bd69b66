@@ -8,6 +8,7 @@ import {
   Building2,
   CalendarClock,
   Check,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   ExternalLink,
