@@ -62,66 +62,97 @@ function Content() {
   const resetFn = useServerFn(adminResetPassword);
   const statusFn = useServerFn(setUserStatus);
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: ["admin", "team-leader", id],
     queryFn: () => detailFn({ data: { userId: id } }),
+    // Poll every 8s so leaders' members list stays visibly current
+    // even without realtime, and always refresh on window focus.
+    refetchInterval: 8000,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 
   const [tab, setTab] = useState<Tab>("members");
   const [editing, setEditing] = useState(false);
-  const [actionMsg, setActionMsg] = useState<string | null>(null);
-  const [actionErr, setActionErr] = useState<string | null>(null);
   const [busy, setBusy] = useState<"reset" | "suspend" | "activate" | "delete" | null>(null);
+  const [confirmKind, setConfirmKind] = useState<"suspend" | "activate" | "delete" | null>(null);
+
+  // Realtime member-roster subscription for the leader's team.
+  // Falls back gracefully to the 8s poll above if realtime isn't wired up
+  // for the profiles table; either way the list stays fresh and we surface
+  // a toast whenever a member is added, updated, or removed.
+  const teamId = data?.team?.id ?? data?.profile?.team_id ?? null;
+  const prevMemberCountRef = useRef<number | null>(null);
+  useEffect(() => {
+    const count = data?.members.length ?? null;
+    if (count === null) return;
+    const prev = prevMemberCountRef.current;
+    if (prev !== null && count !== prev) {
+      if (count > prev) toast.success(`Team roster updated · ${count - prev} member added`);
+      else if (count < prev) toast.info(`Team roster updated · ${prev - count} member removed`);
+    }
+    prevMemberCountRef.current = count;
+  }, [data?.members.length]);
+
+  useEffect(() => {
+    if (!teamId) return;
+    const channel = supabase
+      .channel(`leader-members-${teamId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "profiles", filter: `team_id=eq.${teamId}` },
+        () => {
+          refetch();
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [teamId, refetch]);
 
   async function onResetPassword() {
-    setActionErr(null); setActionMsg(null);
     const pw = window.prompt("New temporary password (min 8 chars):");
     if (!pw) return;
-    if (pw.length < 8) { setActionErr("Password must be at least 8 characters."); return; }
+    if (pw.length < 8) {
+      toast.error("Password must be at least 8 characters.");
+      return;
+    }
     setBusy("reset");
     try {
       await resetFn({ data: { userId: id, password: pw } });
-      setActionMsg("Password reset. Share it securely with the team leader.");
+      toast.success("Password reset. Share it securely with the team leader.");
     } catch (e) {
-      setActionErr(e instanceof Error ? e.message : "Password reset failed");
-    } finally { setBusy(null); }
-  }
-
-  async function onChangeStatus(action: "suspend" | "activate") {
-    setActionErr(null); setActionMsg(null);
-    const label = action === "suspend" ? "suspend" : "activate";
-    if (!window.confirm(`Are you sure you want to ${label} this team leader?`)) return;
-    setBusy(action);
-    try {
-      await statusFn({ data: { userId: id, action } });
-      setActionMsg(action === "suspend" ? "Team leader suspended." : "Team leader activated.");
-      await Promise.all([
-        qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-        qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
-      ]);
-      await refetch();
-    } catch (e) {
-      setActionErr(e instanceof Error ? e.message : "Status change failed");
-    } finally { setBusy(null); }
-  }
-
-  async function onDelete() {
-    setActionErr(null); setActionMsg(null);
-    if (!window.confirm("Delete this Team Leader? This bans their account and archives the profile. This cannot be undone from the UI.")) return;
-    setBusy("delete");
-    try {
-      await statusFn({ data: { userId: id, action: "delete" } });
-      await Promise.all([
-        qc.invalidateQueries({ queryKey: ["admin", "team-leaders"] }),
-        qc.invalidateQueries({ queryKey: ["admin", "team-limits"] }),
-        qc.invalidateQueries({ queryKey: ["admin", "members"] }),
-      ]);
-      navigate({ to: "/admin/team-leaders" });
-    } catch (e) {
-      setActionErr(e instanceof Error ? e.message : "Delete failed");
+      toast.error(e instanceof Error ? e.message : "Password reset failed");
+    } finally {
       setBusy(null);
     }
   }
+
+  async function confirmChangeStatus(action: "suspend" | "activate") {
+    setBusy(action);
+    try {
+      await statusFn({ data: { userId: id, action } });
+      toast.success(action === "suspend" ? "Team leader suspended." : "Team leader activated.");
+      await invalidateAdmin(qc, "leader");
+      await refetch();
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function confirmDelete() {
+    setBusy("delete");
+    try {
+      await statusFn({ data: { userId: id, action: "delete" } });
+      toast.success("Team leader archived.");
+      await invalidateAdmin(qc, "leader");
+      navigate({ to: "/admin/team-leaders" });
+    } finally {
+      setBusy(null);
+    }
+  }
+
 
   if (isLoading || !data) {
     return (
