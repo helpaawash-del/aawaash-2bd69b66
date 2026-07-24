@@ -266,8 +266,8 @@ function Content() {
                 </div>
               </div>
 
-              <div className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                Open profile <ArrowRight size={12} />
+              <div className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform group-hover:-translate-y-0.5">
+                Manage leader <ArrowRight size={12} />
               </div>
             </Link>
           ))}
