@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LogOut, Loader2 } from "lucide-react";
+import { LogOut, Loader2, Search, Bell, Command } from "lucide-react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
