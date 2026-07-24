@@ -39,6 +39,25 @@ export function loginIdToEmail(loginId: string): string {
 
 export type AppRole = "super_admin" | "team_leader" | "member";
 
+/**
+ * Normalize a redirect target to an internal, router-safe path.
+ * TanStack `navigate({ to })` rejects absolute URLs, so we strip the
+ * origin if a caller accidentally forwarded `window.location.href`.
+ * Only same-app paths are accepted; anything external falls back to `null`.
+ */
+export function toInternalPath(input: string | null | undefined): string | null {
+  if (!input) return null;
+  const raw = String(input).trim();
+  if (!raw) return null;
+  if (raw.startsWith("/") && !raw.startsWith("//")) return raw;
+  try {
+    const url = new URL(raw, "http://x.local");
+    return `${url.pathname}${url.search}${url.hash}` || null;
+  } catch {
+    return null;
+  }
+}
+
 /** Where each role lands after signing in. */
 export function homePathForRole(role: AppRole | null | undefined): string {
   switch (role) {

@@ -7,6 +7,7 @@ import { AlertCircle, KeyRound, Loader2, Lock, ShieldCheck } from "lucide-react"
 import { BrandMark } from "@/components/aawash/BrandMark";
 import { supabase } from "@/integrations/supabase/client";
 import { isAdminPanelUnlocked, unlockAdminPanel } from "@/lib/admin-passcode.functions";
+import { toInternalPath } from "@/lib/auth";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 
@@ -35,16 +36,20 @@ function AdminLoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const { data, isLoading } = useQuery({ queryKey: ["admin", "passcode"], queryFn: () => check() });
 
+  // Normalize any redirect target to an internal path. Older links may have
+  // passed the full URL (window.location.href), which breaks navigate({ to }).
+  const safeRedirect = toInternalPath(search.redirect) ?? "/admin";
+
   useEffect(() => {
     if (!data?.unlocked) return;
     supabase.auth.getUser().then(({ data: userData }) => {
       if (userData.user) {
-        navigate({ to: search.redirect ?? "/admin", replace: true });
+        navigate({ to: safeRedirect, replace: true });
       } else {
-        navigate({ to: "/auth", search: { redirect: search.redirect ?? "/admin" }, replace: true });
+        navigate({ to: "/auth", search: { redirect: safeRedirect }, replace: true });
       }
     });
-  }, [data?.unlocked, navigate, search.redirect]);
+  }, [data?.unlocked, navigate, safeRedirect]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -62,9 +67,9 @@ function AdminLoginPage() {
       }
       const { data: userData } = await supabase.auth.getUser();
       if (userData.user) {
-        navigate({ to: search.redirect ?? "/admin", replace: true });
+        navigate({ to: safeRedirect, replace: true });
       } else {
-        navigate({ to: "/auth", search: { redirect: search.redirect ?? "/admin" }, replace: true });
+        navigate({ to: "/auth", search: { redirect: safeRedirect }, replace: true });
       }
     } finally {
       setSubmitting(false);

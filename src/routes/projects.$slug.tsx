@@ -8,6 +8,7 @@ import {
   Building2,
   CalendarClock,
   Check,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   ExternalLink,
@@ -86,7 +87,6 @@ function ProjectDetailPage() {
     { pollMs: 45_000 },
   );
 
-  const [tab, setTab] = useState<TabId>("overview");
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   if (!isLoading && !project) throw notFound();
@@ -136,12 +136,11 @@ function ProjectDetailPage() {
     document.head.appendChild(s);
   }, [isGlb]);
 
-  const tabs: Array<{ id: TabId; label: string; icon: React.ElementType }> = [
-    { id: "overview", label: "Overview", icon: Info },
-    { id: "gallery", label: "Gallery", icon: Images },
-    { id: "tour", label: "3D & Video", icon: Box },
-    { id: "availability", label: "Availability", icon: Grid3x3 },
-    { id: "location", label: "Location", icon: MapPin },
+  const dockItems: Array<{ id: string; label: string; icon: React.ElementType; href: string }> = [
+    { id: "home", label: "Home", icon: HomeIcon, href: "/" },
+    { id: "gallery", label: "Gallery", icon: Images, href: "#gallery" },
+    { id: "flats", label: "Total Flats", icon: Layers, href: "#flats" },
+    { id: "availability", label: "Availability", icon: Grid3x3, href: "#availability" },
   ];
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : `/projects/${slug}`;
@@ -165,42 +164,17 @@ function ProjectDetailPage() {
       <AmbientBackground />
       <LandingNav />
 
-      {/* Sticky tab bar (below nav) */}
+      {/* Floating share pill (top-right, under header) */}
       {project && (
-        <div className="sticky top-16 z-30 -mb-2 border-b border-border/40 bg-background/70 backdrop-blur-xl">
-          <div className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-3 py-2 sm:px-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {tabs.map((t) => {
-              const active = tab === t.id;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => {
-                    setTab(t.id);
-                    qc.invalidateQueries({ queryKey: ["project", "public", slug] });
-                  }}
-                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                    active
-                      ? "bg-primary text-primary-foreground shadow-[var(--shadow-glow)]"
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                  }`}
-                >
-                  <t.icon size={13} />
-                  {t.label}
-                </button>
-              );
-            })}
-            <div className="ml-auto flex shrink-0 items-center gap-1">
-              <button
-                onClick={doShare}
-                aria-label="Share"
-                className="grid h-8 w-8 place-items-center rounded-full border border-border bg-surface text-muted-foreground hover:text-foreground"
-              >
-                <Share2 size={13} />
-              </button>
-            </div>
-          </div>
-        </div>
+        <button
+          onClick={doShare}
+          aria-label="Share project"
+          className="fixed right-4 top-20 z-30 grid h-10 w-10 place-items-center rounded-full border border-border bg-white text-foreground shadow-[var(--shadow-soft)] hover:text-primary sm:right-8"
+        >
+          <Share2 size={14} />
+        </button>
       )}
+
 
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6">
         <Link
@@ -245,15 +219,13 @@ function ProjectDetailPage() {
                   {heroImages.length > 1 && (
                     <button
                       type="button"
-                      onClick={() => {
-                        setTab("gallery");
-                        setLightbox(0);
-                      }}
+                      onClick={() => setLightbox(0)}
                       className="glass-card absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold text-foreground shadow-[var(--shadow-soft)]"
                     >
                       <Images size={12} /> {heroImages.length} photos
                     </button>
                   )}
+
 
                   <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-3 bg-gradient-to-t from-background/95 via-background/50 to-transparent p-5 sm:p-8">
                     <div className="min-w-0 max-w-full">
@@ -338,40 +310,67 @@ function ProjectDetailPage() {
               />
             </section>
 
-            {/* TAB PANELS */}
-            <div className="mt-6">
-              {tab === "overview" && (
-                <OverviewPanel
-                  p={p}
-                  buildPct={buildPct}
-                  salesPct={salesPct}
-                  availPct={availPct}
-                  total={total}
-                  available={available}
-                  reserved={reserved}
-                  sold={sold}
-                />
-              )}
+            {/* ABOUT + STATS (Overview) */}
+            <div id="about" className="mt-6">
+              <OverviewPanel
+                p={p}
+                buildPct={buildPct}
+                salesPct={salesPct}
+                availPct={availPct}
+                total={total}
+                available={available}
+                reserved={reserved}
+                sold={sold}
+              />
+            </div>
 
-              {tab === "gallery" && (
+            {/* GALLERY */}
+            <section id="gallery" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<Images size={16} />} title="Gallery" subtitle="Photos of the project" />
+              <div className="mt-4">
                 <GalleryPanel images={heroImages} onOpen={(i) => setLightbox(i)} />
-              )}
+              </div>
+            </section>
 
-              {tab === "tour" && (
+            {/* 3D MODEL & VIDEO */}
+            <section id="tour" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<Box size={16} />} title="3D Model & Video" subtitle="Explore in immersive detail" />
+              <div className="mt-4">
                 <TourPanel modelUrl={modelUrl} isGlb={isGlb} videos={videos} />
-              )}
+              </div>
+            </section>
 
-              {tab === "availability" && (
+            {/* TOTAL FLATS (breakdown) */}
+            <section id="flats" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<Layers size={16} />} title="Total Flats" subtitle="Inventory at a glance" />
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <QuickCard icon={<HomeIcon size={14} />} label="Total" value={String(total)} />
+                <QuickCard icon={<Layers size={14} />} label="Available" value={String(available)} accent="emerald" />
+                <QuickCard icon={<Sparkles size={14} />} label="Reserved" value={String(reserved)} />
+                <QuickCard icon={<CheckCircle2 size={14} />} label="Sold" value={String(sold)} />
+              </div>
+            </section>
+
+            {/* AVAILABILITY (seatmap) */}
+            <section id="availability" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<Grid3x3 size={16} />} title="Availability" subtitle="Live flat seatmap" />
+              <div className="mt-4">
                 <Reveal>
                   <FlatInventoryBoard slug={slug} projectName={p.name as string} />
                 </Reveal>
-              )}
+              </div>
+            </section>
 
-              {tab === "location" && <LocationPanel p={p} />}
-            </div>
+            {/* LOCATION */}
+            <section id="location" className="mt-8 scroll-mt-24">
+              <SectionHeader icon={<MapPin size={16} />} title="Location" subtitle="Where you'll live" />
+              <div className="mt-4">
+                <LocationPanel p={p} />
+              </div>
+            </section>
 
             {/* Desktop CTAs */}
-            <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
+            <div className="mt-10 hidden flex-wrap gap-3 sm:flex">
               <Link
                 to="/auth"
                 className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110"
@@ -384,45 +383,14 @@ function ProjectDetailPage() {
               >
                 <Link2 size={14} /> Copy Share Link
               </button>
-              <Link
-                to="/projects"
-                className="inline-flex h-12 items-center gap-2 rounded-full border border-input bg-surface px-6 text-sm font-bold text-foreground hover:bg-muted"
-              >
-                Back to Projects
-              </Link>
             </div>
           </>
         )}
       </main>
 
-      {/* Sticky mobile CTA */}
-      {project && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border/40 bg-background/85 px-4 py-3 backdrop-blur-xl sm:hidden">
-          <div className="mx-auto flex max-w-6xl items-center gap-2">
-            <div className="min-w-0 flex-1">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                From
-              </div>
-              <div className="truncate text-sm font-extrabold text-foreground">
-                {formatINR((p.price_min as number) ?? (p.price_from as number), { compact: true })}
-              </div>
-            </div>
-            <button
-              onClick={doShare}
-              aria-label="Share"
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground"
-            >
-              <Share2 size={16} />
-            </button>
-            <Link
-              to="/auth"
-              className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-full bg-primary text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)]"
-            >
-              <Phone size={14} /> Enquire
-            </Link>
-          </div>
-        </div>
-      )}
+      {/* Project Dock — Home / Gallery / Total Flats / Availability */}
+      {project && <ProjectDock items={dockItems} />}
+
 
       {/* Lightbox */}
       {lightbox !== null && heroImages.length > 0 && (
@@ -524,32 +492,6 @@ function OverviewPanel({
         </Reveal>
       ) : null}
 
-      <Reveal>
-        <section className="glass-card rounded-3xl p-6 shadow-[var(--shadow-soft)]">
-          <h2 className="inline-flex items-center gap-2 text-lg font-bold text-foreground">
-            <CalendarClock size={16} /> Timeline
-          </h2>
-          <ol className="relative mt-4 border-l-2 border-dashed border-border pl-4">
-            <TimelineItem
-              label="Project Launch"
-              value={
-                (p.launch_date as string)
-                  ? new Date(p.launch_date as string).toLocaleDateString()
-                  : "TBA"
-              }
-            />
-            <TimelineItem label="Construction" value={`${buildPct}% complete`} highlight />
-            <TimelineItem
-              label="Expected Possession"
-              value={
-                (p.possession_date as string)
-                  ? new Date(p.possession_date as string).toLocaleDateString()
-                  : "TBA"
-              }
-            />
-          </ol>
-        </section>
-      </Reveal>
     </div>
   );
 }
@@ -946,4 +888,75 @@ function toEmbedUrl(url: string): string | null {
   } catch {
     return null;
   }
+}
+
+/* ================== SECTION HEADER + PROJECT DOCK ================== */
+
+function SectionHeader({
+  icon,
+  title,
+  subtitle,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+}) {
+  return (
+    <div className="flex items-end justify-between gap-3">
+      <div>
+        <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
+          <span className="grid h-6 w-6 place-items-center rounded-full bg-primary-soft">{icon}</span>
+          {title}
+        </div>
+        {subtitle ? (
+          <div className="mt-1 text-sm text-muted-foreground">{subtitle}</div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function ProjectDock({
+  items,
+}: {
+  items: Array<{ id: string; label: string; icon: React.ElementType; href: string }>;
+}) {
+  const onClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith("#")) return;
+    e.preventDefault();
+    const el = document.getElementById(href.slice(1));
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  return (
+    <nav
+      aria-label="Project sections"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-[95] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-10 max-w-[300px] rounded-full bg-primary/15 blur-2xl"
+      />
+      <ul className="pointer-events-auto relative mx-auto flex h-[68px] w-full max-w-[420px] items-stretch justify-between rounded-[32px] border border-white/60 bg-white/85 px-1.5 shadow-[0_20px_50px_rgba(46,125,91,0.18),0_4px_12px_rgba(0,0,0,0.05)] ring-1 ring-black/5 backdrop-blur-2xl">
+        {items.map(({ id, label, icon: Icon, href }) => {
+          const isRoute = href.startsWith("/");
+          const Cmp: React.ElementType = isRoute ? Link : "a";
+          const props = isRoute ? { to: href } : { href, onClick: (e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, href) };
+          return (
+            <li key={id} className="relative flex min-w-0 flex-1">
+              <Cmp
+                {...(props as Record<string, unknown>)}
+                aria-label={label}
+                className="group flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-[24px] px-1 text-slate-600 outline-none transition-colors duration-200 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/40"
+              >
+                <Icon size={20} strokeWidth={2} aria-hidden="true" />
+                <span className="w-full truncate text-center text-[10px] font-semibold leading-none tracking-tight">
+                  {label}
+                </span>
+              </Cmp>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
 }

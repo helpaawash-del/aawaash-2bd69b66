@@ -50,7 +50,7 @@ import {
 } from "lucide-react";
 
 import heroResidence from "@/assets/hero-residence.jpg";
-import heroResidenceCutout from "@/assets/hero-skyscraper.png.asset.json";
+import heroTowerTrees from "@/assets/hero-tower-trees.png";
 import savitriHero from "@/assets/savitri-hero.jpg.asset.json";
 import savitriFacade from "@/assets/savitri-facade.jpg.asset.json";
 import savitriRender from "@/assets/savitri-render.jpg";
@@ -157,7 +157,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden px-5 pt-24 pb-8 sm:px-8 sm:pt-28 lg:min-h-[100svh] lg:pb-[46vh] lg:pt-36"
+      className="relative overflow-hidden px-5 pt-24 pb-8 sm:px-8 sm:pt-28 lg:min-h-[92svh] lg:pb-[34vh] lg:pt-32"
     >
       {/* Layer 1-2 — atmospheric wash */}
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -236,7 +236,7 @@ function Hero() {
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
         <div className="mt-4 lg:hidden">
-          <div className="relative mx-auto aspect-[3/4] w-full max-w-[22rem]">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem]">
             {/* Soft ground bloom to seat the building */}
             <div
               aria-hidden
@@ -248,7 +248,7 @@ function Hero() {
               className="pointer-events-none absolute inset-x-6 top-6 bottom-8 rounded-[40%] bg-[radial-gradient(55%_60%_at_50%_45%,color-mix(in_oklab,var(--leaf)_18%,transparent),transparent_70%)] blur-3xl"
             />
             <img
-              src={heroResidenceCutout.url}
+              src={heroTowerTrees}
               alt="Aawash biophilic skyscraper residence"
               width={1024}
               height={1536}
@@ -361,7 +361,7 @@ function Hero() {
       {/* Building emerging from the bottom + floating stat chips */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[60vh] lg:block"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[46vh] lg:block"
         style={{ transform: `translateY(${scrollY * 0.08}px)` }}
       >
         {/* Soft bloom behind building */}
@@ -371,9 +371,9 @@ function Hero() {
 
         {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
-          <div className="relative w-full max-w-[26rem]">
+          <div className="relative w-full max-w-[22rem]">
             <img
-              src={heroResidenceCutout.url}
+              src={heroTowerTrees}
               alt="Aawash biophilic skyscraper residence"
               width={1024}
               height={1536}
