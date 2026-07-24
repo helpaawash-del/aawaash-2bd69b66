@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { LogOut, Loader2 } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AmbientBackground } from "./AmbientBackground";
 import { BrandMark } from "./BrandMark";
+import { itemsForRole } from "./BottomNav";
 import type { AawashProfile } from "@/hooks/useSession";
 import { roleLabel } from "@/lib/auth";
 import type { AppRole } from "@/lib/auth";
