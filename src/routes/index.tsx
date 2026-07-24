@@ -89,22 +89,22 @@ function Landing() {
   }, [loading, user, role, navigate]);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen overflow-x-hidden">
       <Splash />
       <AmbientBackground />
       <LandingNav />
 
-      <main className="relative">
+      <main className="relative overflow-x-hidden">
         <Hero />
         <Categories />
         <Projects />
+        <Commission />
         <Stats />
         <Lifestyle />
         <SmartPanels />
         <Features />
         <BookVisit />
         <HowItWorks />
-        <Commission />
         <WhyChoose />
         <Testimonials />
         <FAQ />
