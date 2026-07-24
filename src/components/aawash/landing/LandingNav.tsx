@@ -28,7 +28,7 @@ export function LandingNav() {
       <nav
         className={`mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-3xl px-4 py-2.5 transition-all duration-300 sm:px-6 sm:py-3 ${
           scrolled
-            ? "glass-card shadow-[var(--shadow-float)]"
+            ? "border border-border bg-background shadow-[var(--shadow-float)]"
             : "border border-transparent bg-transparent"
         }`}
       >
