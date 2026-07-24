@@ -288,8 +288,26 @@ function Content() {
                 Activate
               </button>
             )}
+            <button
+              onClick={() => setConfirmDelete(true)}
+              disabled={deleting}
+              className="inline-flex items-center gap-2 rounded-full border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-700 disabled:opacity-60"
+            >
+              {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+              Delete
+            </button>
           </div>
         </div>
+
+        <ConfirmDialog
+          open={confirmDelete}
+          onOpenChange={setConfirmDelete}
+          destructive
+          title="Delete this member?"
+          description="This bans their account and archives the profile. All their sales, commissions, and wallet records stay for auditing."
+          confirmLabel="Delete member"
+          onConfirm={doDelete}
+        />
 
         {(msg || err) && (
           <div
@@ -303,6 +321,7 @@ function Content() {
           </div>
         )}
       </section>
+
 
       {/* KPI strip */}
       <section className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
