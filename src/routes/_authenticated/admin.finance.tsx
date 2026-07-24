@@ -116,6 +116,7 @@ function Content() {
         {tab === "ledger" && <LedgerTab />}
         {tab === "bonuses" && <BonusesTab />}
         {tab === "revenue" && <RevenueTab />}
+        {tab === "reconciliation" && <ReconciliationTab />}
         {tab === "reports" && <ReportsTab />}
       </div>
     </AdminShell>
