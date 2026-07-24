@@ -132,7 +132,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
-  const { role } = useSession();
+  const { role, loading: sessionLoading } = useSession();
 
   useEffect(() => {
     // Import inside effect to keep the browser client out of any SSR path.
