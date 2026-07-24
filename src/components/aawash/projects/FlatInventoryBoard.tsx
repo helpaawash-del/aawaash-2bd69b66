@@ -363,6 +363,50 @@ function FlatModal({
           <MiniSpec icon={<Compass size={14} />} label="Facing" value={flat.facing ?? "—"} />
         </div>
 
+        {(flat.gallery?.length || flat.floor_plan_url) && (
+          <div className="mt-4">
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Media & Plans
+            </div>
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {flat.floor_plan_url && (
+                <a
+                  href={flat.floor_plan_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
+                  title="Floor plan"
+                >
+                  <img
+                    src={flat.floor_plan_url}
+                    alt={`Floor plan ${flat.unit_code}`}
+                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                  />
+                  <span className="absolute inset-x-0 bottom-0 bg-background/80 px-2 py-0.5 text-center text-[9px] font-bold uppercase tracking-wider">
+                    Floor Plan
+                  </span>
+                </a>
+              )}
+              {(flat.gallery ?? []).slice(0, 6).map((url, i) => (
+                <a
+                  key={`${url}-${i}`}
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
+                >
+                  <img
+                    src={url}
+                    alt={`${flat.unit_code} photo ${i + 1}`}
+                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                  />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+
         <div className="mt-4 rounded-2xl bg-primary-soft p-4">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
             Price
