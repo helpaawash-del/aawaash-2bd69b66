@@ -26,10 +26,8 @@ export function LandingNav() {
   return (
     <div className="fixed inset-x-0 top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
       <nav
-        className={`mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-3xl px-4 py-2.5 transition-all duration-300 sm:px-6 sm:py-3 ${
-          scrolled
-            ? "border border-border bg-background shadow-[var(--shadow-float)]"
-            : "border border-transparent bg-transparent"
+        className={`mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-3xl border border-border bg-white px-4 py-2.5 transition-shadow duration-300 sm:px-6 sm:py-3 ${
+          scrolled ? "shadow-[var(--shadow-float)]" : "shadow-[var(--shadow-soft)]"
         }`}
       >
         <Link to="/" className="shrink-0">
