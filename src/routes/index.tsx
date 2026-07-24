@@ -993,7 +993,7 @@ function Projects() {
                     to="/projects/$slug"
                     params={{ slug: p.slug }}
                     aria-label={`View ${p.name} details`}
-                    className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                    className="absolute inset-0 z-10 block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                   />
                   {/* Image — clean, no overlaid copy */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10 sm:aspect-[16/10]">
