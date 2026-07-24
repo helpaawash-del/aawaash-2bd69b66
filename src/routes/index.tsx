@@ -1027,9 +1027,13 @@ function Projects() {
                       <span>{p.units}</span>
                     </div>
 
-                    <h3 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-[2.75rem] sm:leading-[1.05]">
+                    <Link
+                      to="/projects/$slug"
+                      params={{ slug: "savitri-enclave" }}
+                      className="mt-4 block text-3xl font-bold tracking-tight text-foreground transition-colors hover:text-primary sm:text-[2.75rem] sm:leading-[1.05]"
+                    >
                       {p.name}
-                    </h3>
+                    </Link>
                     <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
                       {p.tagline}
                     </p>
