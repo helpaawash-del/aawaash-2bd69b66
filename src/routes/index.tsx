@@ -828,28 +828,109 @@ function Features() {
 
 /* ------------------------------ PROJECTS ------------------------------ */
 
-const PROJECTS = [
-  {
-    name: "Savitri Enclave",
-    tagline: "Unveil A New Chapter Of Refined Living",
-    developer: "By S.B.P. Buildcon Pvt. Ltd.",
-    location: "Near JP Chowk, Bhagwan Das Mohalla, Darbhanga",
-    price: "On Request",
-    units: "3 BHK · 1,763 – 2,016 sqft",
-    tag: "New Launch",
-    images: [savitriHero.url, savitriFacade.url],
-    highlights: [
-      "5 Unit types across 4 floors",
-      "Dual vertical circulation cores",
-      "Earthquake-resistant RCC frame",
-      "Automatic Johnson / Kone elevator",
-    ],
+type UnitPlan = {
+  code: string;
+  area: string;
+  config: string;
+  balconies: number;
+  washrooms: number;
+  flats: string;
+};
+
+type ProjectDetail = {
+  name: string;
+  tagline: string;
+  developer: string;
+  developerNote: string;
+  location: string;
+  address: string;
+  price: string;
+  units: string;
+  tag: string;
+  images: string[];
+  highlights: string[];
+  usps: { title: string; body: string }[];
+  unitPlans: UnitPlan[];
+  specs: { icon: typeof Building2; label: string; body: string }[];
+  amenities: string[];
+  contact: { phone: string; email: string; office: string; website: string };
+};
+
+const SAVITRI: ProjectDetail = {
+  name: "Savitri Enclave",
+  tagline: "Unveil a new chapter of refined living.",
+  developer: "S.B.P. Buildcon Pvt. Ltd.",
+  developerNote:
+    "A construction company committed to high-quality residential & commercial developments with a focus on innovation, sustainability, and customer satisfaction.",
+  location: "Near JP Chowk, Bhagwan Das Mohalla, Darbhanga",
+  address: "Near JP Chowk, Bhagwan Das Mohalla, Darbhanga, Bihar",
+  price: "On Request",
+  units: "3 BHK · 1,763 – 2,016 sqft",
+  tag: "New Launch",
+  images: [savitriHero.url, savitriFacade.url, savitriRender, savitriSitePlan],
+  highlights: [
+    "5 unit types across 4 floors",
+    "Dual vertical circulation cores",
+    "Earthquake-resistant RCC frame",
+    "Automatic Johnson / Kone elevator",
+  ],
+  usps: [
+    {
+      title: "Maximised parking density",
+      body: "High ratio of dedicated resident spots with generous turning radius and wide aisles.",
+    },
+    {
+      title: "Dual vertical circulation",
+      body: "Two independent cores serve Lobby A and Lobby B — enhanced privacy and reduced traffic.",
+    },
+    {
+      title: "Integrated perimeter greenery",
+      body: "A lush aesthetic and natural screen buffer wrapping the entire site.",
+    },
+    {
+      title: "Controlled, secure entry",
+      body: "A defined single entrance with layered security for peace of mind.",
+    },
+  ],
+  unitPlans: [
+    { code: "Unit 1", area: "2,016 sqft", config: "3 BHK · Drawing + Dining · Kitchen", balconies: 4, washrooms: 3, flats: "101, 201, 301, 401" },
+    { code: "Unit 2", area: "1,821 sqft", config: "3 BHK · Drawing + Dining · Kitchen", balconies: 3, washrooms: 3, flats: "102, 202, 302, 402" },
+    { code: "Unit 3", area: "1,894 sqft", config: "3 BHK · Drawing + Dining · Kitchen", balconies: 4, washrooms: 3, flats: "103, 203, 303, 403" },
+    { code: "Unit 4", area: "1,782 sqft", config: "3 BHK · Drawing + Dining · Kitchen", balconies: 3, washrooms: 3, flats: "104, 204, 304, 404" },
+    { code: "Unit 5", area: "1,763 sqft", config: "3 BHK · Drawing + Dining · Kitchen", balconies: 4, washrooms: 3, flats: "105, 205, 305, 405" },
+  ],
+  specs: [
+    { icon: ShieldAlert, label: "Structure", body: "Earthquake-resistant RCC frame with cement-mortar brickwork per structural consultants." },
+    { icon: DoorOpen, label: "Doors & Windows", body: "Laminated flush doors. Aluminium / UPVC two-track sliding windows with MS safety grills." },
+    { icon: Layers, label: "Flooring", body: "Glazed vitrified tiles in living, bedrooms & kitchen. Anti-skid tiles in washrooms & balconies." },
+    { icon: Droplet, label: "Kitchen", body: "Granite counter with SS sink, 2 ft tiled dado, hot & cold water, RO point." },
+    { icon: Waves, label: "Bathrooms", body: "Jaguar / Hindware chinaware & CP fittings with concealed hot & cold supply." },
+    { icon: Zap, label: "Electrical", body: "Concealed copper wiring with Anchor / Havells modular switches and generous outlets." },
+    { icon: Paintbrush, label: "Finishes", body: "White-putty walls with premium paint. Birla Opus / Asian Paints exterior with elevation railings." },
+    { icon: ArrowUpDown, label: "Elevator", body: "Automatic Johnson / Kone brand elevator serving both cores." },
+  ],
+  amenities: [
+    "Intercom in every flat",
+    "Covered parking",
+    "24×7 security & controlled entry",
+    "Landscaped perimeter",
+    "Dual lobbies",
+    "Power backup provision",
+  ],
+  contact: {
+    phone: "+91 82103 36686",
+    email: "rahul8580@gmail.com",
+    office: "VIP Road, Bela Fardan, Darbhanga",
+    website: "www.satyabhawani.com",
   },
-];
+};
+
+const PROJECTS: ProjectDetail[] = [SAVITRI];
 
 function Projects() {
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
   const [activeImg, setActiveImg] = useState<Record<string, number>>({});
+  const [openProject, setOpenProject] = useState<ProjectDetail | null>(null);
   const toggleWish = (name: string) =>
     setWishlist((prev) => {
       const next = new Set(prev);
@@ -859,18 +940,19 @@ function Projects() {
     });
 
   return (
-    <section id="projects" className="px-5 py-20 sm:px-8">
-      <div className="mx-auto max-w-4xl">
+    <section id="projects" className="px-5 py-24 sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-3xl">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
-              Featured Project
+            <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
+              Featured Residence
             </div>
-            <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">
-              Homes worth coming home to.
+            <h2 className="mt-3 text-3xl font-bold leading-[1.1] text-foreground sm:text-5xl">
+              A home to come home to.
             </h2>
-            <p className="mt-2 max-w-lg text-sm text-muted-foreground sm:text-base">
-              A curated residence Aawash partners are actively selling.
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
+              One curated residence, hand-picked by Aawash — every specification, plan and
+              amenity, transparent up front.
             </p>
           </div>
           <Link
@@ -881,43 +963,42 @@ function Projects() {
           </Link>
         </div>
 
-        {/* One project per row — spacious editorial cards */}
-        <div className="mt-10 flex flex-col gap-10">
+        {/* One project per row — spacious, editorial */}
+        <div className="mt-14 flex flex-col gap-16">
           {PROJECTS.map((p, i) => {
             const wished = wishlist.has(p.name);
             const idx = activeImg[p.name] ?? 0;
             return (
               <Reveal key={p.name} variant="up" delay={i * 100}>
-                <article className="group relative overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
-                  {/* Image (clean — no text overlays) */}
-                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10 sm:aspect-[16/9]">
+                <article className="group relative overflow-hidden rounded-[2.25rem] border border-border/50 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
+                  {/* Image — clean, no overlaid copy */}
+                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10 sm:aspect-[16/10]">
                     <img
                       src={p.images[idx]}
-                      alt={`${p.name} — exterior view ${idx + 1}`}
+                      alt={`${p.name} — view ${idx + 1}`}
                       loading="lazy"
                       decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+                      className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.04]"
                     />
-                    {/* Tag chip (top-left, minimal) */}
-                    <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary shadow-sm backdrop-blur">
+                    {/* Soft top vignette so chips read on any image */}
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/25 to-transparent" />
+                    <span className="absolute left-5 top-5 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary shadow-sm backdrop-blur">
                       {p.tag}
                     </span>
-                    {/* Wishlist (top-right) */}
                     <button
                       type="button"
                       aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
                       aria-pressed={wished}
                       onClick={() => toggleWish(p.name)}
-                      className={`absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full bg-white/90 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
+                      className={`absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/95 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
                         wished ? "text-destructive" : "text-primary"
                       }`}
                     >
                       <Heart size={17} fill={wished ? "currentColor" : "none"} />
                     </button>
 
-                    {/* Image dots (bottom-center) — only if multiple */}
                     {p.images.length > 1 && (
-                      <div className="absolute inset-x-0 bottom-4 flex justify-center gap-1.5">
+                      <div className="absolute inset-x-0 bottom-5 flex justify-center gap-1.5">
                         {p.images.map((_, ii) => (
                           <button
                             key={ii}
@@ -927,9 +1008,7 @@ function Projects() {
                               setActiveImg((prev) => ({ ...prev, [p.name]: ii }))
                             }
                             className={`h-1.5 rounded-full transition-all ${
-                              ii === idx
-                                ? "w-6 bg-white"
-                                : "w-1.5 bg-white/60 hover:bg-white/80"
+                              ii === idx ? "w-7 bg-white" : "w-1.5 bg-white/70 hover:bg-white/90"
                             }`}
                           />
                         ))}
@@ -937,58 +1016,78 @@ function Projects() {
                     )}
                   </div>
 
-                  {/* Info — cleanly below the image */}
-                  <div className="grid gap-6 p-6 sm:grid-cols-[1fr_auto] sm:items-start sm:gap-8 sm:p-8">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
-                          {p.name}
-                        </h3>
-                        <span className="rounded-full bg-primary-soft px-2.5 py-0.5 text-[11px] font-semibold text-primary">
-                          {p.units}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm italic text-muted-foreground">{p.tagline}</p>
-                      <div className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground">
-                        <MapPin size={13} className="text-primary" /> {p.location}
-                      </div>
-                      <div className="mt-1 text-[12px] font-medium text-muted-foreground/80">
-                        {p.developer}
-                      </div>
-
-                      {/* Highlight pills */}
-                      <ul className="mt-5 flex flex-wrap gap-2">
-                        {p.highlights.map((h) => (
-                          <li
-                            key={h}
-                            className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface px-3 py-1 text-[11px] font-medium text-muted-foreground"
-                          >
-                            <CheckCircle2 size={11} className="text-primary" /> {h}
-                          </li>
-                        ))}
-                      </ul>
+                  {/* Editorial info block — generous whitespace */}
+                  <div className="px-6 pb-10 pt-9 sm:px-12 sm:pb-14 sm:pt-12">
+                    {/* Meta row */}
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                      <span className="inline-flex items-center gap-1.5">
+                        <MapPin size={12} className="text-primary" /> Darbhanga, Bihar
+                      </span>
+                      <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
+                      <span>{p.units}</span>
                     </div>
 
-                    {/* Price + CTA */}
-                    <div className="flex items-center justify-between gap-4 border-t border-border/60 pt-6 sm:flex-col sm:items-end sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0">
-                      <div className="sm:text-right">
-                        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                          Starting
+                    <h3 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-[2.75rem] sm:leading-[1.05]">
+                      {p.name}
+                    </h3>
+                    <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
+                      {p.tagline}
+                    </p>
+                    <div className="mt-3 text-[13px] font-medium text-muted-foreground/80">
+                      By {p.developer}
+                    </div>
+
+                    {/* Highlights — subtle grid, not pill soup */}
+                    <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+                      {p.highlights.map((h) => (
+                        <li
+                          key={h}
+                          className="flex items-start gap-2.5 text-[13px] leading-relaxed text-foreground/85"
+                        >
+                          <CheckCircle2
+                            size={15}
+                            className="mt-0.5 shrink-0 text-primary"
+                            strokeWidth={2.25}
+                          />
+                          <span>{h}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Divider */}
+                    <div className="mt-10 h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
+
+                    {/* Price + CTAs */}
+                    <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                          Starting Price
                         </div>
-                        <div className="mt-0.5 text-xl font-extrabold text-foreground sm:text-2xl">
-                          {p.price}
-                        </div>
-                        <div className="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-primary">
-                          <Star size={11} className="fill-gold text-gold" /> 4.9 · Concierge
+                        <div className="mt-1 flex items-baseline gap-3">
+                          <span className="text-2xl font-extrabold text-foreground sm:text-3xl">
+                            {p.price}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary">
+                            <Star size={11} className="fill-gold text-gold" /> 4.9 · Concierge
+                          </span>
                         </div>
                       </div>
-                      <Link
-                        to="/projects"
-                        aria-label={`Explore ${p.name}`}
-                        className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
-                      >
-                        Explore <ArrowRight size={15} />
-                      </Link>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setOpenProject(p)}
+                          className="inline-flex h-12 items-center gap-2 rounded-2xl border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                        >
+                          View details
+                        </button>
+                        <Link
+                          to="/auth"
+                          aria-label={`Enquire about ${p.name}`}
+                          className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                        >
+                          Enquire <ArrowRight size={15} />
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </article>
@@ -997,9 +1096,292 @@ function Projects() {
           })}
         </div>
       </div>
+
+      <ProjectDetailModal
+        project={openProject}
+        onClose={() => setOpenProject(null)}
+      />
     </section>
   );
 }
+
+/* -------------------- Project Detail Modal -------------------- */
+
+function ProjectDetailModal({
+  project,
+  onClose,
+}: {
+  project: ProjectDetail | null;
+  onClose: () => void;
+}) {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    if (project) setIdx(0);
+  }, [project]);
+
+  if (!project) {
+    return (
+      <Dialog open={false} onOpenChange={(o) => !o && onClose()}>
+        <DialogContent />
+      </Dialog>
+    );
+  }
+
+  const p = project;
+  const gallery = [...p.images, savitriFloorPlan, savitriLocationMap];
+
+  return (
+    <Dialog open={!!project} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent
+        className="max-h-[92vh] w-[min(100vw-1rem,64rem)] max-w-none overflow-hidden rounded-[1.75rem] border border-border/60 bg-surface p-0 shadow-[var(--shadow-float)] sm:w-[min(100vw-2rem,64rem)]"
+      >
+        {/* Custom close (Dialog already has one; hide via absolute cover for consistent style) */}
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute right-4 top-4 z-30 grid h-10 w-10 place-items-center rounded-full bg-white/95 text-foreground shadow-[var(--shadow-soft)] backdrop-blur transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+        >
+          <X size={16} />
+        </button>
+
+        <div className="max-h-[92vh] overflow-y-auto">
+          {/* Hero image */}
+          <div className="relative aspect-[16/10] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10">
+            <img
+              src={gallery[idx]}
+              alt={`${p.name} — view ${idx + 1}`}
+              className="h-full w-full object-cover"
+            />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+            <span className="absolute left-5 top-5 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary shadow-sm">
+              {p.tag}
+            </span>
+            <div className="absolute inset-x-0 bottom-5 flex justify-center gap-1.5">
+              {gallery.map((_, ii) => (
+                <button
+                  key={ii}
+                  type="button"
+                  aria-label={`View image ${ii + 1}`}
+                  onClick={() => setIdx(ii)}
+                  className={`h-1.5 rounded-full transition-all ${
+                    ii === idx ? "w-7 bg-white" : "w-1.5 bg-white/60 hover:bg-white/85"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Body */}
+          <div className="px-6 pb-10 pt-8 sm:px-10">
+            <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin size={12} className="text-primary" /> {p.location}
+              </span>
+              <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
+              <span>{p.units}</span>
+            </div>
+            <h3 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              {p.name}
+            </h3>
+            <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
+              {p.tagline}
+            </p>
+            <div className="mt-1.5 text-[13px] font-medium text-muted-foreground/80">
+              By {p.developer}
+            </div>
+
+            {/* Quick facts */}
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <FactCard icon={<Home size={15} />} label="Configuration" value="3 BHK" />
+              <FactCard icon={<Ruler size={15} />} label="Sizes" value="1,763–2,016 sqft" />
+              <FactCard icon={<Layers size={15} />} label="Floors" value="G + 4" />
+              <FactCard icon={<Building2 size={15} />} label="Units / Floor" value="5" />
+            </div>
+
+            {/* USPs */}
+            <SectionTitle eyebrow="Why Savitri Enclave" title="Signature advantages" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              {p.usps.map((u) => (
+                <div
+                  key={u.title}
+                  className="rounded-2xl border border-border/60 bg-background/40 p-5"
+                >
+                  <div className="text-[13px] font-bold text-foreground">{u.title}</div>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
+                    {u.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Unit plans */}
+            <SectionTitle eyebrow="Floor plans" title="Five 3 BHK residences" />
+            <div className="overflow-hidden rounded-2xl border border-border/60">
+              <table className="w-full text-left text-[13px]">
+                <thead className="bg-muted/40 text-[11px] uppercase tracking-wider text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-3">Unit</th>
+                    <th className="px-4 py-3">Area</th>
+                    <th className="hidden px-4 py-3 sm:table-cell">Balconies</th>
+                    <th className="hidden px-4 py-3 sm:table-cell">Baths</th>
+                    <th className="px-4 py-3">Flats</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {p.unitPlans.map((u) => (
+                    <tr key={u.code} className="border-t border-border/60 text-foreground">
+                      <td className="px-4 py-3 font-semibold">{u.code}</td>
+                      <td className="px-4 py-3">{u.area}</td>
+                      <td className="hidden px-4 py-3 sm:table-cell">{u.balconies}</td>
+                      <td className="hidden px-4 py-3 sm:table-cell">{u.washrooms}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{u.flats}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Specifications */}
+            <SectionTitle eyebrow="Specifications" title="Built to a premium standard" />
+            <div className="grid gap-3 sm:grid-cols-2">
+              {p.specs.map((s) => (
+                <div
+                  key={s.label}
+                  className="flex gap-3 rounded-2xl border border-border/60 bg-background/40 p-4"
+                >
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">
+                    <s.icon size={16} />
+                  </span>
+                  <div>
+                    <div className="text-[13px] font-bold text-foreground">{s.label}</div>
+                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">
+                      {s.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Amenities */}
+            <SectionTitle eyebrow="Community" title="Everyday amenities" />
+            <div className="flex flex-wrap gap-2">
+              {p.amenities.map((a) => (
+                <span
+                  key={a}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-[12px] font-medium text-foreground/85"
+                >
+                  <CheckCircle2 size={12} className="text-primary" /> {a}
+                </span>
+              ))}
+            </div>
+
+            {/* Developer + contact */}
+            <SectionTitle eyebrow="About the developer" title={p.developer} />
+            <p className="text-[14px] leading-relaxed text-muted-foreground">
+              {p.developerNote}
+            </p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <ContactRow icon={<Phone size={14} />} label="Phone" value={p.contact.phone} />
+              <ContactRow icon={<Mail size={14} />} label="Email" value={p.contact.email} />
+              <ContactRow
+                icon={<MapPinned size={14} />}
+                label="Office"
+                value={p.contact.office}
+              />
+              <ContactRow
+                icon={<Landmark size={14} />}
+                label="Website"
+                value={p.contact.website}
+              />
+            </div>
+
+            {/* CTAs */}
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <Link
+                to="/auth"
+                className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:-translate-y-0.5 active:scale-95"
+              >
+                Enquire now <ArrowRight size={15} />
+              </Link>
+              <button
+                type="button"
+                onClick={onClose}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-6 text-sm font-semibold text-foreground transition hover:border-primary/40 hover:text-primary"
+              >
+                Close
+              </button>
+            </div>
+
+            <p className="mt-6 text-[11px] leading-relaxed text-muted-foreground/70">
+              Disclaimer — Details reflect the developer's brochure and are indicative. Images
+              are conceptual; specifications may be revised at the developer's discretion.
+            </p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function FactCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+      <div className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+        <span className="text-primary">{icon}</span>
+        {label}
+      </div>
+      <div className="mt-1.5 text-[15px] font-bold text-foreground">{value}</div>
+    </div>
+  );
+}
+
+function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
+  return (
+    <div className="mb-4 mt-10">
+      <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+        {eyebrow}
+      </div>
+      <h4 className="mt-1.5 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+        {title}
+      </h4>
+    </div>
+  );
+}
+
+function ContactRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/40 px-4 py-3">
+      <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-primary">
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          {label}
+        </div>
+        <div className="truncate text-[13px] font-semibold text-foreground">{value}</div>
+      </div>
+    </div>
+  );
+}
+
+
 
 
 /* ------------------------------ SMART PANELS ------------------------------ */
