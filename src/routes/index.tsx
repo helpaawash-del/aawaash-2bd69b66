@@ -248,7 +248,7 @@ function Hero() {
               className="pointer-events-none absolute inset-x-6 top-6 bottom-8 rounded-[40%] bg-[radial-gradient(55%_60%_at_50%_45%,color-mix(in_oklab,var(--leaf)_18%,transparent),transparent_70%)] blur-3xl"
             />
             <img
-              src={heroResidenceCutout.url}
+              src={heroTowerTrees}
               alt="Aawash biophilic skyscraper residence"
               width={1024}
               height={1536}
@@ -373,7 +373,7 @@ function Hero() {
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
           <div className="relative w-full max-w-[26rem]">
             <img
-              src={heroResidenceCutout.url}
+              src={heroTowerTrees}
               alt="Aawash biophilic skyscraper residence"
               width={1024}
               height={1536}
