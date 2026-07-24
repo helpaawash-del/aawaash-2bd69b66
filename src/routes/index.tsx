@@ -996,8 +996,8 @@ function Projects() {
                       type="button"
                       aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
                       aria-pressed={wished}
-                      onClick={() => toggleWish(p.name)}
-                      className={`absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/95 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWish(p.name); }}
+                      className={`absolute right-5 top-5 z-30 grid h-11 w-11 place-items-center rounded-full bg-white/95 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
                         wished ? "text-destructive" : "text-primary"
                       }`}
                     >
