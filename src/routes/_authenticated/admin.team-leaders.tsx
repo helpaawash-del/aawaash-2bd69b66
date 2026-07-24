@@ -19,6 +19,7 @@ import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { listTeamLeaders, getTeamLimits, updateTeamLimits } from "@/lib/team-leaders.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
+import { WalletEditButton } from "@/components/aawash/admin/WalletAdjustDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders")({
   component: Page,
