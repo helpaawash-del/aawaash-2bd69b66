@@ -971,6 +971,13 @@ function Projects() {
             return (
               <Reveal key={p.name} variant="up" delay={i * 100}>
                 <article className="group relative overflow-hidden rounded-[2.25rem] border border-border/50 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
+                  {/* Stretched link — the entire card opens the public project detail page */}
+                  <Link
+                    to="/projects/$slug"
+                    params={{ slug: "savitri-enclave" }}
+                    aria-label={`View ${p.name} details`}
+                    className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                  />
                   {/* Image — clean, no overlaid copy */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10 sm:aspect-[16/10]">
                     <img
@@ -989,8 +996,8 @@ function Projects() {
                       type="button"
                       aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
                       aria-pressed={wished}
-                      onClick={() => toggleWish(p.name)}
-                      className={`absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/95 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWish(p.name); }}
+                      className={`absolute right-5 top-5 z-30 grid h-11 w-11 place-items-center rounded-full bg-white/95 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
                         wished ? "text-destructive" : "text-primary"
                       }`}
                     >
@@ -998,15 +1005,17 @@ function Projects() {
                     </button>
 
                     {p.images.length > 1 && (
-                      <div className="absolute inset-x-0 bottom-5 flex justify-center gap-1.5">
+                      <div className="absolute inset-x-0 bottom-5 z-30 flex justify-center gap-1.5">
                         {p.images.map((_, ii) => (
                           <button
                             key={ii}
                             type="button"
                             aria-label={`View image ${ii + 1}`}
-                            onClick={() =>
-                              setActiveImg((prev) => ({ ...prev, [p.name]: ii }))
-                            }
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setActiveImg((prev) => ({ ...prev, [p.name]: ii }));
+                            }}
                             className={`h-1.5 rounded-full transition-all ${
                               ii === idx ? "w-7 bg-white" : "w-1.5 bg-white/70 hover:bg-white/90"
                             }`}
@@ -1017,7 +1026,7 @@ function Projects() {
                   </div>
 
                   {/* Editorial info block — generous whitespace */}
-                  <div className="px-6 pb-10 pt-9 sm:px-12 sm:pb-14 sm:pt-12">
+                  <div className="relative z-20 px-6 pb-10 pt-9 sm:px-12 sm:pb-14 sm:pt-12">
                     {/* Meta row */}
                     <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                       <span className="inline-flex items-center gap-1.5">
@@ -1093,11 +1102,12 @@ function Projects() {
                           quick preview
                         </button>
                         <Link
-                          to="/auth"
-                          aria-label={`Enquire about ${p.name}`}
+                          to="/projects/$slug"
+                          params={{ slug: "savitri-enclave" }}
+                          aria-label={`Explore ${p.name}`}
                           className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                         >
-                          Enquire <ArrowRight size={15} />
+                          Explore <ArrowRight size={15} />
                         </Link>
                       </div>
                     </div>
