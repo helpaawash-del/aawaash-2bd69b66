@@ -40,6 +40,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import heroResidence from "@/assets/hero-residence.jpg";
+import heroResidenceCutout from "@/assets/hero-residence.png.asset.json";
 
 
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
@@ -215,24 +216,34 @@ function Hero() {
             It's a feeling.
           </span>
         </h1>
-        {/* Mobile / tablet: image directly below the title */}
-        <div className="mt-6 lg:hidden">
-          <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 shadow-[var(--shadow-float)]">
+        {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
+        <div className="mt-4 lg:hidden">
+          <div className="relative mx-auto aspect-square w-full max-w-md">
+            {/* Soft ground bloom to seat the building */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-6 bottom-4 h-16 rounded-[50%] bg-[radial-gradient(50%_60%_at_50%_50%,color-mix(in_oklab,var(--primary)_28%,transparent),transparent_75%)] blur-2xl"
+            />
+            {/* Subtle halo behind subject */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-8 top-6 bottom-8 rounded-[46%] bg-[radial-gradient(60%_50%_at_50%_45%,color-mix(in_oklab,var(--leaf)_18%,transparent),transparent_70%)] blur-3xl"
+            />
             <img
-              src={heroResidence}
+              src={heroResidenceCutout.url}
               alt="Aawash luxury residential architecture render"
-              width={1408}
-              height={1408}
+              width={1024}
+              height={1024}
               loading="eager"
               decoding="async"
-              className="h-full w-full object-cover"
+              fetchPriority="high"
+              className="relative h-full w-full select-none object-contain drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_20%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
             />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/70 to-transparent" />
           </div>
           <div className="mt-5 flex justify-center">
             <a
               href="#projects"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] active:scale-[0.98]"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-6 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
             >
               Explore Projects <ArrowRight size={15} />
             </a>
@@ -340,26 +351,17 @@ function Hero() {
           <div className="absolute bottom-0 left-1/2 h-[70%] w-[110%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(50%_50%_at_50%_100%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)] blur-2xl" />
         </div>
 
-        {/* The building itself */}
+        {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
           <div className="relative w-full max-w-3xl">
             <img
-              src={heroResidence}
+              src={heroResidenceCutout.url}
               alt="Aawash luxury residential architecture render"
-              width={1408}
-              height={1408}
-              className="mx-auto h-auto w-full select-none rounded-t-[3rem] object-cover animate-[float_10s_ease-in-out_infinite]"
-              style={{
-                maskImage:
-                  "linear-gradient(to top, black 55%, rgba(0,0,0,0.85) 78%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-                WebkitMaskImage:
-                  "linear-gradient(to top, black 55%, rgba(0,0,0,0.85) 78%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-                maskComposite: "intersect",
-                WebkitMaskComposite: "source-in",
-              }}
+              width={1024}
+              height={1024}
+              decoding="async"
+              className="mx-auto h-auto w-full select-none object-contain drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_22%,transparent)] animate-[float_10s_ease-in-out_infinite]"
             />
-            {/* Blend into background */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-background/60 to-transparent" />
           </div>
         </div>
 
@@ -524,15 +526,16 @@ function Categories() {
             <li key={c.label}>
               <Link
                 to="/projects"
+                aria-label={`Browse ${c.label}`}
                 style={{ animationDelay: `${i * 60}ms` }}
-                className="group flex aspect-square flex-col items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/70 p-2 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95"
+                className="group flex min-h-[104px] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/70 p-3 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
               >
                 <span
-                  className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
+                  className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
                 >
-                  <c.icon size={20} className="motion-safe:animate-[float_6s_ease-in-out_infinite]" />
+                  <c.icon size={22} className="motion-safe:animate-[float_6s_ease-in-out_infinite]" />
                 </span>
-                <span className="text-[11px] font-semibold text-foreground">{c.label}</span>
+                <span className="text-[12px] font-semibold text-foreground">{c.label}</span>
               </Link>
             </li>
           ))}
@@ -881,11 +884,20 @@ function Projects() {
                   <Reveal variant="up" delay={i * 100}>
                     <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out [transform-style:preserve-3d] hover:-translate-y-2 hover:rotate-[-0.6deg] hover:shadow-[var(--shadow-glow)]">
                       <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
+                        {/* Skeleton shimmer beneath image */}
+                        <div
+                          aria-hidden
+                          className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${p.hue} motion-safe:animate-pulse`}
+                        />
                         <img
                           src={heroResidence}
                           alt={p.name}
                           loading="lazy"
-                          className="h-full w-full scale-105 object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.14]"
+                          decoding="async"
+                          width={1408}
+                          height={1760}
+                          onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
+                          className="relative h-full w-full scale-105 object-cover opacity-0 transition-[transform,opacity] duration-[1400ms] ease-out group-hover:scale-[1.14] [transition-property:opacity,transform] [&:not(.opacity-0)]:opacity-100"
                         />
                         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/10 to-transparent" />
 
@@ -900,7 +912,7 @@ function Projects() {
                           aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
                           aria-pressed={wished}
                           onClick={() => toggleWish(p.name)}
-                          className={`glass-card absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-0.5 active:scale-90 ${
+                          className={`glass-card absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
                             wished ? "text-destructive" : "text-primary"
                           }`}
                         >
@@ -940,7 +952,7 @@ function Projects() {
                             <Link
                               to="/auth"
                               aria-label={`Explore ${p.name}`}
-                              className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 hover:rotate-6 active:scale-95"
+                              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 hover:rotate-6 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                             >
                               <ArrowRight size={14} />
                             </Link>
