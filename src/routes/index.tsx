@@ -1027,9 +1027,13 @@ function Projects() {
                       <span>{p.units}</span>
                     </div>
 
-                    <h3 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-[2.75rem] sm:leading-[1.05]">
+                    <Link
+                      to="/projects/$slug"
+                      params={{ slug: "savitri-enclave" }}
+                      className="mt-4 block text-3xl font-bold tracking-tight text-foreground transition-colors hover:text-primary sm:text-[2.75rem] sm:leading-[1.05]"
+                    >
                       {p.name}
-                    </h3>
+                    </Link>
                     <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
                       {p.tagline}
                     </p>
@@ -1073,12 +1077,20 @@ function Projects() {
                         </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setOpenProject(p)}
+                        <Link
+                          to="/projects/$slug"
+                          params={{ slug: "savitri-enclave" }}
                           className="inline-flex h-12 items-center gap-2 rounded-2xl border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                         >
                           View details
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => setOpenProject(p)}
+                          className="hidden"
+                          aria-hidden
+                        >
+                          quick preview
                         </button>
                         <Link
                           to="/auth"
