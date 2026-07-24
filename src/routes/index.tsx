@@ -132,7 +132,37 @@ function Hero() {
               transparent commission tracking — all in one elegant, mobile-first experience.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            {/* App-style search */}
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="mt-8 flex items-center gap-2 rounded-full border border-border bg-surface/90 py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-float)] backdrop-blur-xl"
+              role="search"
+              aria-label="Search projects"
+            >
+              <Search size={18} className="shrink-0 text-muted-foreground" />
+              <input
+                type="search"
+                placeholder="Search by city, project, or 3 BHK…"
+                className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                aria-label="Search"
+              />
+              <button
+                type="button"
+                aria-label="Filters"
+                className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:inline-flex"
+              >
+                <SlidersHorizontal size={16} />
+              </button>
+              <button
+                type="submit"
+                className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]"
+              >
+                <Search size={14} />
+                <span className="hidden sm:inline">Search</span>
+              </button>
+            </form>
+
+            <div className="mt-5 flex flex-wrap items-center gap-3">
               <a
                 href="#projects"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all hover:-translate-y-0.5"
@@ -160,6 +190,7 @@ function Hero() {
                 </span>
               ))}
             </div>
+
           </Reveal>
 
           <Reveal variant="scale" delay={120}>
