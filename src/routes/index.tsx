@@ -1837,7 +1837,7 @@ function Footer() {
           </div>
         </div>
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row">
-          <div>© {new Date().getFullYear()} Aawash. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} Aawaash. All rights reserved.</div>
           <div>Made with care for premium real estate teams.</div>
         </div>
       </div>
