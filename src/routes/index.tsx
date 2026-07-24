@@ -930,6 +930,7 @@ const SAVITRI: ProjectDetail = {
 const PROJECTS: ProjectDetail[] = [SAVITRI];
 
 function Projects() {
+  const navigate = useNavigate();
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
   const [activeImg, setActiveImg] = useState<Record<string, number>>({});
   const [openProject, setOpenProject] = useState<ProjectDetail | null>(null);
@@ -972,14 +973,21 @@ function Projects() {
             const idx = activeImg[p.name] ?? 0;
             return (
               <Reveal key={p.name} variant="up" delay={i * 100}>
-                <article className="group relative overflow-hidden rounded-[2.25rem] border border-border/50 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-glow)]">
-                  {/* Stretched link — the entire card opens the public project detail page */}
-                  <Link
-                    to="/projects/$slug"
-                    params={{ slug: p.slug }}
-                    aria-label={`View ${p.name} details`}
-                    className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
-                  />
+                <article
+                  role="link"
+                  tabIndex={0}
+                  onClick={(event) => {
+                    const target = event.target as HTMLElement;
+                    if (target.closest("a,button")) return;
+                    navigate({ to: "/projects/$slug", params: { slug: p.slug } });
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter" && event.key !== " ") return;
+                    event.preventDefault();
+                    navigate({ to: "/projects/$slug", params: { slug: p.slug } });
+                  }}
+                  className="group relative cursor-pointer overflow-hidden rounded-[2.25rem] border border-border/50 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                >
                   {/* Image — clean, no overlaid copy */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10 sm:aspect-[16/10]">
                     <img
