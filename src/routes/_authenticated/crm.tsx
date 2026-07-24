@@ -30,6 +30,7 @@ import {
 import { getCrmOverview, listCustomers, listFollowups } from "@/lib/crm.functions";
 import { CUSTOMER_STATUS_META, priorityStyle } from "@/components/aawash/crm/status";
 import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
+import { Parallax3DBuilding } from "@/components/aawash/Parallax3DBuilding";
 
 export const Route = createFileRoute("/_authenticated/crm")({
   component: CrmHome,
@@ -179,8 +180,9 @@ function CrmContent() {
               </div>
             </div>
 
-            {/* Right — floating micro control tile */}
+            {/* Right — floating micro control tile + interactive 3D blueprint */}
             <div className="relative hidden shrink-0 sm:block">
+              <Parallax3DBuilding className="mx-auto mb-3 w-56" height={200} />
               <div className="relative w-56 rounded-3xl border border-border/60 bg-gradient-to-br from-white/80 to-surface-warm/60 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
                 <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-primary/25 via-transparent to-leaf/25 opacity-40 blur-xl" />
                 <div className="relative">

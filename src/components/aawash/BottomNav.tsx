@@ -243,7 +243,7 @@ type NavItem = {
   description: string;
 };
 
-function itemsForRole(role: AppRole): NavItem[] {
+export function itemsForRole(role: AppRole): NavItem[] {
   if (role === "super_admin") {
     return [
       { label: "Home", icon: Home, to: "/admin", description: "Admin dashboard home" },
