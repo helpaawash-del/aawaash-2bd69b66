@@ -704,6 +704,18 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
+  useRealtimeInvalidate(
+    `admin-inv-${projectId}`,
+    ["flats", "projects"],
+    [
+      ["admin", "inv-view", projectId],
+      ["admin", "project-inv", projectId],
+      ["admin", "project", projectId],
+      ["project-inventory", slug],
+      ["public-project", slug],
+    ],
+  );
+
   async function cycleFlat(fl: {
     id: string; unit_code: string; building_id: string; floor_id: string;
     bedrooms: number; bathrooms: number; balconies: number;
