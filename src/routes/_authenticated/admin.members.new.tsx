@@ -30,6 +30,7 @@ function Page() {
 function Content() {
   const { profile } = useSession();
   const navigate = useNavigate();
+  const { leaderId } = Route.useSearch();
   const createFn = useServerFn(createMemberFull);
   const listFn = useServerFn(listAllMembers);
   const limitsFn = useServerFn(getTeamLimits);
@@ -47,6 +48,16 @@ function Content() {
     [data, cap],
   );
 
+  // Resolve leader → team (may include a full team even without spare slots,
+  // so we can render an explicit "Team is full" message rather than silently
+  // clearing the deep-linked selection).
+  const lockedTeam = useMemo(() => {
+    if (!leaderId) return null;
+    return (data?.leaders ?? []).find((t) => t.leader_id === leaderId) ?? null;
+  }, [data, leaderId]);
+  const lockedTeamHasSpace = lockedTeam ? lockedTeam.member_count < cap : false;
+  const lockedFromLeader = Boolean(lockedTeam && lockedTeamHasSpace);
+
   const [fullName, setFullName] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
@@ -60,6 +71,14 @@ function Content() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{ loginId: string; teamLetter: string } | null>(null);
+
+  // Auto-prefill and lock the team when arriving from a Team Leader detail page.
+  useEffect(() => {
+    if (lockedFromLeader && lockedTeam && teamId !== lockedTeam.team_id) {
+      setTeamId(lockedTeam.team_id);
+    }
+  }, [lockedFromLeader, lockedTeam, teamId]);
+
 
   const chosenTeam = availableTeams.find((t) => t.team_id === teamId);
   const previewLoginId =
