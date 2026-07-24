@@ -90,8 +90,11 @@ function Landing() {
       <main className="relative">
         <Hero />
         <Stats />
+        <Categories />
         <Features />
         <Projects />
+        <Lifestyle />
+        <BookVisit />
         <HowItWorks />
         <Commission />
         <WhyChoose />
@@ -111,11 +114,12 @@ function Hero() {
   return (
     <section id="home" className="relative overflow-hidden px-5 pb-16 pt-32 sm:px-8 sm:pt-36 md:pt-40">
       <div className="mx-auto max-w-6xl">
-        <div className="grid items-center gap-12 md:grid-cols-2 md:gap-8">
+        <div className="grid items-center gap-12 md:grid-cols-[1.05fr_1fr] md:gap-10">
           <Reveal variant="up">
             <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary">
               <Sparkles size={14} className="text-gold" />
               Curated Luxury Residences
+
             </div>
             <h1 className="mt-5 text-balance text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
               Home isn't a place.{" "}
