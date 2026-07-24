@@ -80,13 +80,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#ffffff" },
+      { name: "theme-color", content: "#2E7D5B" },
+      { name: "apple-mobile-web-app-title", content: "Aawaash" },
+      { name: "application-name", content: "Aawaash" },
       { title: "Aawaash — Premium Real Estate, Reimagined" },
       {
         name: "description",
         content:
           "Aawaash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team.",
       },
+      { property: "og:site_name", content: "Aawaash" },
       { property: "og:title", content: "Aawaash — Premium Real Estate, Reimagined" },
       {
         property: "og:description",
@@ -94,13 +97,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Aawaash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://aawaash.lovable.app/__l5e/assets-v1/2e2ee34c-9ded-47cc-bd04-a31b7312c5e1/aawaash-og.png" },
+      { property: "og:image:width", content: "512" },
+      { property: "og:image:height", content: "512" },
+      { property: "og:image:alt", content: "Aawaash logo" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Aawaash — Premium Real Estate, Reimagined" },
       { name: "twitter:description", content: "Aawaash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team." },
+      { name: "twitter:image", content: "https://aawaash.lovable.app/__l5e/assets-v1/2e2ee34c-9ded-47cc-bd04-a31b7312c5e1/aawaash-og.png" },
+      { name: "twitter:image:alt", content: "Aawaash logo" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32.png" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+      { rel: "shortcut icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -109,6 +121,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
