@@ -867,17 +867,17 @@ function Projects() {
           </Link>
         </div>
 
-        {/* Horizontal swipe rail with overlapping cards on desktop */}
+        {/* Horizontal swipe rail — clean spacing, no overlap on mobile */}
         <div className="-mx-5 mt-8 overflow-x-auto pb-6 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 [&::-webkit-scrollbar]:hidden">
-          <ul className="flex snap-x snap-mandatory gap-4 px-5 sm:px-8 lg:gap-0">
+          <ul className="flex snap-x snap-mandatory gap-5 px-5 sm:gap-6 sm:px-8 lg:gap-8">
             {PROJECTS.map((p, i) => {
               const wished = wishlist.has(p.name);
               return (
                 <li
                   key={p.name}
-                  className="snap-start shrink-0 basis-[85%] sm:basis-[60%] md:basis-[46%] lg:basis-[38%]"
-                  style={{ marginLeft: i > 0 ? "-2.5rem" : undefined, zIndex: PROJECTS.length - i }}
+                  className="snap-start shrink-0 basis-[82%] sm:basis-[55%] md:basis-[44%] lg:basis-[32%]"
                 >
+
                   <Reveal variant="up" delay={i * 100}>
                     <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out [transform-style:preserve-3d] hover:-translate-y-2 hover:rotate-[-0.6deg] hover:shadow-[var(--shadow-glow)]">
                       <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
