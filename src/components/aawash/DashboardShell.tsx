@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LogOut, Loader2 } from "lucide-react";
+import { LogOut, Loader2, Search, Bell, Command } from "lucide-react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,22 +65,51 @@ export function DashboardShell({
 
       <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-32 pt-6 sm:max-w-lg md:max-w-3xl md:px-8 md:pb-32 lg:max-w-6xl lg:px-12 lg:pl-24">
 
-        <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
-          <BrandMark size="md" />
-          <div className="flex shrink-0 items-center gap-2">
-            <div className="glass-card hidden items-center gap-3 rounded-full px-3 py-1.5 shadow-[var(--shadow-soft)] sm:flex">
-              <div className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-primary to-leaf text-xs font-bold text-primary-foreground">
+        <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:gap-4">
+          <BrandMark size="sm" />
+
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            {/* Command / search pill — desktop only */}
+            <div className="glass-card hidden h-11 items-center gap-2 rounded-full pl-4 pr-1.5 shadow-[var(--shadow-soft)] transition-all focus-within:-translate-y-0.5 focus-within:shadow-[var(--shadow-glow)] lg:flex lg:w-72">
+              <Search size={15} className="shrink-0 text-muted-foreground" />
+              <input
+                type="search"
+                aria-label="Search"
+                placeholder="Search projects, members, sales…"
+                className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+              />
+              <kbd className="inline-flex h-7 items-center gap-1 rounded-full bg-primary-soft px-2 text-[10px] font-semibold text-primary">
+                <Command size={10} /> K
+              </kbd>
+            </div>
+
+            {/* Notifications */}
+            <Link
+              to={`/${role}/notifications` as never}
+              aria-label="Notifications"
+              className="group relative grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-border bg-surface text-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary"
+            >
+              <Bell size={17} />
+              <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_0_2px_var(--card)]" />
+            </Link>
+
+            {/* User chip */}
+            <Link
+              to={`/${role}/profile` as never}
+              className="glass-card hidden items-center gap-2.5 rounded-full py-1 pl-1 pr-3 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] sm:inline-flex"
+            >
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-primary to-leaf text-xs font-bold text-primary-foreground ring-2 ring-white/70">
                 {initials}
-              </div>
-              <div className="flex flex-col leading-tight">
+              </span>
+              <span className="flex flex-col leading-tight">
                 <span className="text-xs font-semibold text-foreground">
                   {profile?.full_name || profile?.login_id}
                 </span>
                 <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                   {roleLabel(role)}
                 </span>
-              </div>
-            </div>
+              </span>
+            </Link>
 
             <AlertDialog>
               <AlertDialogTrigger asChild>

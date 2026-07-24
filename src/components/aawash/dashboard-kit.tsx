@@ -12,6 +12,7 @@ export function StatCard({
   hint,
   accent = "primary",
   animated = true,
+  trend,
 }: {
   icon: ReactNode;
   label: string;
@@ -19,6 +20,8 @@ export function StatCard({
   hint?: string;
   accent?: "primary" | "gold" | "leaf" | "destructive";
   animated?: boolean;
+  /** Optional percentage-style trend badge, e.g. { dir: "up", value: "+12.4%" } */
+  trend?: { dir: "up" | "down" | "flat"; value: string };
 }) {
   const numeric = typeof value === "number" ? value : Number(String(value).replace(/[^0-9.-]/g, ""));
   const validNumeric = animated && Number.isFinite(numeric) && numeric > 0;
@@ -49,6 +52,13 @@ export function StatCard({
           ? "bg-destructive/10 text-destructive"
           : "bg-primary-soft text-primary";
 
+  const glowClass =
+    accent === "gold"
+      ? "before:bg-gold/25"
+      : accent === "destructive"
+        ? "before:bg-destructive/20"
+        : "before:bg-primary/20";
+
   const display =
     typeof value === "number"
       ? n.toLocaleString("en-IN")
@@ -56,19 +66,34 @@ export function StatCard({
         ? String(value).replace(String(numeric), n.toLocaleString("en-IN"))
         : String(value);
 
+  const trendClass =
+    trend?.dir === "up"
+      ? "bg-emerald-50 text-emerald-700 ring-emerald-200/70"
+      : trend?.dir === "down"
+        ? "bg-rose-50 text-rose-700 ring-rose-200/70"
+        : "bg-muted text-muted-foreground ring-border";
+
   return (
     <div
       ref={ref}
-      className="glass-card rounded-3xl p-4 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-float)] sm:p-5"
+      className={`glass-card group/stat relative overflow-hidden rounded-3xl p-4 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-float)] sm:p-5 before:pointer-events-none before:absolute before:-right-16 before:-top-16 before:h-40 before:w-40 before:rounded-full before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 group-hover/stat:before:opacity-100 hover:before:opacity-100 ${glowClass}`}
     >
-      <div className={`grid h-9 w-9 place-items-center rounded-xl ${accentClass}`}>{icon}</div>
-      <div className="mt-3 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+      <div className="relative flex items-start justify-between gap-3">
+        <div className={`grid h-9 w-9 place-items-center rounded-xl ${accentClass}`}>{icon}</div>
+        {trend && (
+          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${trendClass}`}>
+            <span aria-hidden>{trend.dir === "up" ? "▲" : trend.dir === "down" ? "▼" : "•"}</span>
+            {trend.value}
+          </span>
+        )}
+      </div>
+      <div className="relative mt-3 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
         {display}
       </div>
-      <div className="mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      <div className="relative mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
         {label}
       </div>
-      {hint && <div className="mt-1 text-[11px] text-muted-foreground">{hint}</div>}
+      {hint && <div className="relative mt-1 text-[11px] text-muted-foreground">{hint}</div>}
     </div>
   );
 }
