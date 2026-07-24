@@ -80,6 +80,31 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
   const listRef = useRef<HTMLUListElement | null>(null);
   const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
   const [puck, setPuck] = useState<{ x: number; w: number; ready: boolean }>({ x: 0, w: 0, ready: false });
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+
+  // Hide on scroll-down, reappear on scroll-up.
+  useEffect(() => {
+    lastY.current = window.scrollY;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const dy = y - lastY.current;
+        if (Math.abs(dy) < 6) return;
+        if (y < 40) setHidden(false);
+        else if (dy > 0) setHidden(true);
+        else setHidden(false);
+        lastY.current = y;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -122,8 +147,11 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
       role="navigation"
       aria-label="Primary"
       data-testid="bottom-dock"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
+      className={`pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6 motion-safe:transition-[transform,opacity] motion-safe:duration-[420ms] motion-safe:ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+        hidden ? "translate-y-[130%] opacity-0" : "translate-y-0 opacity-100"
+      }`}
     >
+
       <span aria-live="polite" aria-atomic="true" className="sr-only">
         {activeItem ? `${activeItem.label} section active` : "Navigation ready"}
       </span>
