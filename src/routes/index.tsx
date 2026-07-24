@@ -256,7 +256,7 @@ function Hero() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              sizes="(min-width: 768px) 26rem, (min-width: 640px) 22rem, 72vw"
+              sizes="(min-width: 768px) 34rem, (min-width: 640px) 30rem, 92vw"
               className="relative h-full w-full select-none object-contain object-center drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_22%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
             />
           </div>
