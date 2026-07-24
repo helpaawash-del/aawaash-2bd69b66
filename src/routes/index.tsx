@@ -373,7 +373,7 @@ function Hero() {
 
         {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
-          <div className="relative w-full max-w-[20rem]">
+          <div className="relative w-[min(30vw,22rem)] xl:w-[min(26vw,24rem)]">
             <img
               src={heroTowerTrees}
               alt="Aawash biophilic residence"
@@ -381,7 +381,8 @@ function Hero() {
               height={1024}
               loading="lazy"
               decoding="async"
-              className="mx-auto h-auto w-full select-none object-contain drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_24%,transparent)] animate-[float_10s_ease-in-out_infinite]"
+              sizes="(min-width: 1280px) 24rem, 30vw"
+              className="mx-auto h-auto w-full select-none object-contain object-center drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_24%,transparent)] animate-[float_10s_ease-in-out_infinite]"
             />
           </div>
         </div>
