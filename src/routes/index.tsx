@@ -89,22 +89,22 @@ function Landing() {
   }, [loading, user, role, navigate]);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen overflow-x-hidden">
       <Splash />
       <AmbientBackground />
       <LandingNav />
 
-      <main className="relative">
+      <main className="relative overflow-x-hidden">
         <Hero />
         <Categories />
         <Projects />
+        <Commission />
         <Stats />
         <Lifestyle />
         <SmartPanels />
         <Features />
         <BookVisit />
         <HowItWorks />
-        <Commission />
         <WhyChoose />
         <Testimonials />
         <FAQ />
@@ -121,6 +121,8 @@ function Landing() {
 function Hero() {
   const [scrollY, setScrollY] = useState(0);
   useEffect(() => {
+    // Skip parallax + scroll listener on small screens to keep scrolling smooth.
+    if (typeof window === "undefined" || window.matchMedia("(max-width: 1023px)").matches) return;
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -136,7 +138,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-[100svh] overflow-hidden px-5 pb-[54vh] pt-28 sm:px-8 sm:pt-32 md:pb-[46vh] md:pt-36"
+      className="relative overflow-hidden px-5 pt-24 pb-8 sm:px-8 sm:pt-28 lg:min-h-[100svh] lg:pb-[46vh] lg:pt-36"
     >
       {/* Layer 1-2 — atmospheric wash */}
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -168,7 +170,7 @@ function Hero() {
       </svg>
 
       {/* Layer 6 — floating particles + leaves */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden lg:block">
         {Array.from({ length: 18 }).map((_, i) => {
           const left = (i * 53) % 100;
           const top = (i * 37) % 90;
@@ -213,6 +215,32 @@ function Hero() {
             It's a feeling.
           </span>
         </h1>
+        {/* Mobile / tablet: image directly below the title */}
+        <div className="mt-6 lg:hidden">
+          <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 shadow-[var(--shadow-float)]">
+            <img
+              src={heroResidence}
+              alt="Aawash luxury residential architecture render"
+              width={1408}
+              height={1408}
+              loading="eager"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/70 to-transparent" />
+          </div>
+          <div className="mt-5 flex justify-center">
+            <a
+              href="#projects"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] active:scale-[0.98]"
+            >
+              Explore Projects <ArrowRight size={15} />
+            </a>
+          </div>
+        </div>
+
+        {/* Desktop-only: description, search pill, chips, CTAs, trust */}
+        <div className="hidden lg:block">
         <p className="mx-auto mt-5 max-w-xl text-balance text-[15px] leading-relaxed text-muted-foreground sm:text-lg">
           Aawash brings together premium residential projects, a professional team system, and
           transparent commission tracking — all in one elegant, mobile-first experience.
@@ -297,12 +325,14 @@ function Hero() {
             </span>
           ))}
         </div>
+        </div>
+
       </div>
 
       {/* Building emerging from the bottom + floating stat chips */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[58vh] md:h-[50vh]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[50vh] lg:block lg:h-[50vh]"
         style={{ transform: `translateY(${scrollY * 0.08}px)` }}
       >
         {/* Soft bloom behind building */}
@@ -469,11 +499,14 @@ const CATEGORIES: { label: string; icon: typeof Home; hue: string; count: string
 ];
 
 function Categories() {
+  const mobileCats = CATEGORIES.filter((c) =>
+    ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
+  );
   return (
     <section aria-labelledby="cats-title" className="px-5 py-10 sm:px-8 sm:py-14">
       <div className="mx-auto max-w-6xl">
         <div className="flex items-end justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Explore</div>
             <h2 id="cats-title" className="mt-1 text-2xl font-bold text-foreground sm:text-3xl">
               Browse by category
@@ -485,8 +518,28 @@ function Categories() {
           </Link>
         </div>
 
-        {/* Premium horizontally scrollable swipe cards */}
-        <div className="-mx-5 mt-6 overflow-x-auto px-5 pb-3 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
+        {/* Mobile / tablet: compact 4-icon grid */}
+        <ul className="mt-6 grid grid-cols-4 gap-3 lg:hidden">
+          {mobileCats.map((c, i) => (
+            <li key={c.label}>
+              <Link
+                to="/projects"
+                style={{ animationDelay: `${i * 60}ms` }}
+                className="group flex aspect-square flex-col items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/70 p-2 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95"
+              >
+                <span
+                  className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
+                >
+                  <c.icon size={20} className="motion-safe:animate-[float_6s_ease-in-out_infinite]" />
+                </span>
+                <span className="text-[11px] font-semibold text-foreground">{c.label}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* Desktop: premium horizontally scrollable swipe cards */}
+        <div className="-mx-5 mt-6 hidden overflow-x-auto px-5 pb-3 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:block [&::-webkit-scrollbar]:hidden">
           <ul className="flex snap-x snap-mandatory gap-4">
             {CATEGORIES.map((c, i) => (
               <li key={c.label} className="snap-start">
@@ -814,17 +867,17 @@ function Projects() {
           </Link>
         </div>
 
-        {/* Horizontal swipe rail with overlapping cards on desktop */}
+        {/* Horizontal swipe rail — clean spacing, no overlap on mobile */}
         <div className="-mx-5 mt-8 overflow-x-auto pb-6 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 [&::-webkit-scrollbar]:hidden">
-          <ul className="flex snap-x snap-mandatory gap-4 px-5 sm:px-8 lg:gap-0">
+          <ul className="flex snap-x snap-mandatory gap-5 px-5 sm:gap-6 sm:px-8 lg:gap-8">
             {PROJECTS.map((p, i) => {
               const wished = wishlist.has(p.name);
               return (
                 <li
                   key={p.name}
-                  className="snap-start shrink-0 basis-[85%] sm:basis-[60%] md:basis-[46%] lg:basis-[38%]"
-                  style={{ marginLeft: i > 0 ? "-2.5rem" : undefined, zIndex: PROJECTS.length - i }}
+                  className="snap-start shrink-0 basis-[82%] sm:basis-[55%] md:basis-[44%] lg:basis-[32%]"
                 >
+
                   <Reveal variant="up" delay={i * 100}>
                     <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out [transform-style:preserve-3d] hover:-translate-y-2 hover:rotate-[-0.6deg] hover:shadow-[var(--shadow-glow)]">
                       <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
