@@ -87,6 +87,12 @@ function Content() {
       }),
   });
 
+  useRealtimeInvalidate(
+    "admin-customers-live",
+    ["customers", "customer_timeline"],
+    [["admin", "customers"], ["admin", "customers", "filters"]],
+  );
+
   const filtered = useMemo(() => {
     const rows = list.data ?? [];
     if (!q.trim()) return rows;
