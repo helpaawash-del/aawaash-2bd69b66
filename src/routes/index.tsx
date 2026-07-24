@@ -526,15 +526,16 @@ function Categories() {
             <li key={c.label}>
               <Link
                 to="/projects"
+                aria-label={`Browse ${c.label}`}
                 style={{ animationDelay: `${i * 60}ms` }}
-                className="group flex aspect-square flex-col items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/70 p-2 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95"
+                className="group flex min-h-[104px] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/70 p-3 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
               >
                 <span
-                  className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
+                  className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
                 >
-                  <c.icon size={20} className="motion-safe:animate-[float_6s_ease-in-out_infinite]" />
+                  <c.icon size={22} className="motion-safe:animate-[float_6s_ease-in-out_infinite]" />
                 </span>
-                <span className="text-[11px] font-semibold text-foreground">{c.label}</span>
+                <span className="text-[12px] font-semibold text-foreground">{c.label}</span>
               </Link>
             </li>
           ))}
