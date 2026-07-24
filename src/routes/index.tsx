@@ -31,6 +31,13 @@ import {
   Dumbbell,
   Coffee,
   Bike,
+  Mic,
+  Calculator,
+  Wand2,
+  Gauge,
+  GitCompare,
+  Bookmark,
+  ChevronRight,
 } from "lucide-react";
 import heroResidence from "@/assets/hero-residence.jpg";
 
