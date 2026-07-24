@@ -496,7 +496,17 @@ export const adminListFlatStatusAudit = createServerFn({ method: "GET" })
 
     const flatMap = new Map((flats ?? []).map((f) => [f.id as string, f.unit_code as string]));
     const flatIds = Array.from(flatMap.keys());
-    if (flatIds.length === 0) return { entries: [] as Array<Record<string, unknown>> };
+    type AuditEntry = {
+      id: string;
+      created_at: string;
+      actor_id: string | null;
+      actor_name: string | null;
+      flat_id: string;
+      unit_code: string;
+      from_status: string | null;
+      to_status: string | null;
+    };
+    if (flatIds.length === 0) return { entries: [] as AuditEntry[] };
 
     const { data: rows, error } = await context.supabase
       .from("audit_logs")
