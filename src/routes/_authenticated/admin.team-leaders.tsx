@@ -19,6 +19,7 @@ import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { listTeamLeaders, getTeamLimits, updateTeamLimits } from "@/lib/team-leaders.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
+import { WalletEditButton } from "@/components/aawash/admin/WalletAdjustDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders")({
   component: Page,
@@ -259,7 +260,14 @@ function Content() {
                   </div>
                 </div>
                 <div className="rounded-xl bg-gold/15 px-3 py-2">
-                  <div className="text-muted-foreground">Wallet</div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-muted-foreground">Wallet</div>
+                    <WalletEditButton
+                      userId={l.id}
+                      userName={l.full_name ?? "Team Leader"}
+                      currentBalance={Number(l.wallet_balance ?? 0)}
+                    />
+                  </div>
                   <div className="mt-0.5 font-bold text-foreground">
                     {formatINR(Number(l.wallet_balance ?? 0), { compact: true })}
                   </div>

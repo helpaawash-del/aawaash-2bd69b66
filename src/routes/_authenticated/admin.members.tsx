@@ -9,6 +9,7 @@ import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { listAllMembers } from "@/lib/members-admin.functions";
 import { getTeamLimits } from "@/lib/team-leaders.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
+import { WalletEditButton } from "@/components/aawash/admin/WalletAdjustDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/members")({
   component: Page,
@@ -252,12 +253,7 @@ function Content() {
 
 function MemberRow({ m }: { m: any }) {
   return (
-    <Link
-      to="/admin/members/$id"
-      params={{ id: m.id }}
-      aria-label={`Open ${m.full_name} (${m.login_id})`}
-      className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 p-3 transition-colors hover:bg-surface focus:outline-none focus-visible:bg-surface sm:gap-4 sm:p-4"
-    >
+    <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 p-3 transition-colors hover:bg-surface sm:gap-4 sm:p-4">
       <div className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-2xl bg-primary-soft text-sm font-bold text-primary">
         {m.avatar_url ? (
           <img src={m.avatar_url} alt="" className="h-full w-full object-cover" />
@@ -290,16 +286,28 @@ function MemberRow({ m }: { m: any }) {
             <TrendingUp size={12} aria-hidden="true" /> {m.sales_count} sales
           </span>
           <span className="inline-flex items-center gap-1">
-            <Wallet size={12} aria-hidden="true" /> {formatINR(Number(m.wallet_balance ?? 0), { compact: true })}
+            <Wallet size={12} aria-hidden="true" />
+            {formatINR(Number(m.wallet_balance ?? 0), { compact: true })}
+            <WalletEditButton
+              userId={m.id}
+              userName={m.full_name ?? "Member"}
+              currentBalance={Number(m.wallet_balance ?? 0)}
+              className="ml-1 inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary-soft px-2 py-0.5 text-[10px] font-bold text-primary hover:bg-primary hover:text-primary-foreground"
+            />
           </span>
           <span>Rev {formatINR(m.total_revenue, { compact: true })}</span>
           <span className="hidden sm:inline">Comm {formatINR(m.member_commission, { compact: true })}</span>
         </div>
       </div>
-      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold text-primary-foreground shadow-[var(--shadow-glow)] sm:px-4 sm:py-2 sm:text-xs">
+      <Link
+        to="/admin/members/$id"
+        params={{ id: m.id }}
+        aria-label={`Manage ${m.full_name} (${m.login_id})`}
+        className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold text-primary-foreground shadow-[var(--shadow-glow)] sm:px-4 sm:py-2 sm:text-xs"
+      >
         Manage
         <ArrowRight size={14} aria-hidden="true" />
-      </span>
-    </Link>
+      </Link>
+    </div>
   );
 }
