@@ -1888,6 +1888,7 @@ export type Database = {
           display_priority: number
           extra: Json
           floor_plan_count: number
+          gallery: string[]
           gallery_count: number
           google_map_url: string | null
           hero_banner_url: string | null
@@ -1923,6 +1924,7 @@ export type Database = {
           total_units: number
           updated_at: string
           video_count: number
+          videos: string[]
           virtual_walkthrough_url: string | null
           visibility: string
         }
@@ -1940,6 +1942,7 @@ export type Database = {
           display_priority?: number
           extra?: Json
           floor_plan_count?: number
+          gallery?: string[]
           gallery_count?: number
           google_map_url?: string | null
           hero_banner_url?: string | null
@@ -1975,6 +1978,7 @@ export type Database = {
           total_units?: number
           updated_at?: string
           video_count?: number
+          videos?: string[]
           virtual_walkthrough_url?: string | null
           visibility?: string
         }
@@ -1992,6 +1996,7 @@ export type Database = {
           display_priority?: number
           extra?: Json
           floor_plan_count?: number
+          gallery?: string[]
           gallery_count?: number
           google_map_url?: string | null
           hero_banner_url?: string | null
@@ -2027,6 +2032,7 @@ export type Database = {
           total_units?: number
           updated_at?: string
           video_count?: number
+          videos?: string[]
           virtual_walkthrough_url?: string | null
           visibility?: string
         }
