@@ -86,7 +86,6 @@ function ProjectDetailPage() {
     { pollMs: 45_000 },
   );
 
-  const [tab, setTab] = useState<TabId>("overview");
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   if (!isLoading && !project) throw notFound();
@@ -136,12 +135,11 @@ function ProjectDetailPage() {
     document.head.appendChild(s);
   }, [isGlb]);
 
-  const tabs: Array<{ id: TabId; label: string; icon: React.ElementType }> = [
-    { id: "overview", label: "Overview", icon: Info },
-    { id: "gallery", label: "Gallery", icon: Images },
-    { id: "tour", label: "3D & Video", icon: Box },
-    { id: "availability", label: "Availability", icon: Grid3x3 },
-    { id: "location", label: "Location", icon: MapPin },
+  const dockItems: Array<{ id: string; label: string; icon: React.ElementType; href: string }> = [
+    { id: "home", label: "Home", icon: HomeIcon, href: "/" },
+    { id: "gallery", label: "Gallery", icon: Images, href: "#gallery" },
+    { id: "flats", label: "Total Flats", icon: Layers, href: "#flats" },
+    { id: "availability", label: "Availability", icon: Grid3x3, href: "#availability" },
   ];
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : `/projects/${slug}`;
@@ -524,32 +522,6 @@ function OverviewPanel({
         </Reveal>
       ) : null}
 
-      <Reveal>
-        <section className="glass-card rounded-3xl p-6 shadow-[var(--shadow-soft)]">
-          <h2 className="inline-flex items-center gap-2 text-lg font-bold text-foreground">
-            <CalendarClock size={16} /> Timeline
-          </h2>
-          <ol className="relative mt-4 border-l-2 border-dashed border-border pl-4">
-            <TimelineItem
-              label="Project Launch"
-              value={
-                (p.launch_date as string)
-                  ? new Date(p.launch_date as string).toLocaleDateString()
-                  : "TBA"
-              }
-            />
-            <TimelineItem label="Construction" value={`${buildPct}% complete`} highlight />
-            <TimelineItem
-              label="Expected Possession"
-              value={
-                (p.possession_date as string)
-                  ? new Date(p.possession_date as string).toLocaleDateString()
-                  : "TBA"
-              }
-            />
-          </ol>
-        </section>
-      </Reveal>
     </div>
   );
 }
