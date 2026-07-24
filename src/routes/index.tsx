@@ -884,11 +884,20 @@ function Projects() {
                   <Reveal variant="up" delay={i * 100}>
                     <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out [transform-style:preserve-3d] hover:-translate-y-2 hover:rotate-[-0.6deg] hover:shadow-[var(--shadow-glow)]">
                       <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
+                        {/* Skeleton shimmer beneath image */}
+                        <div
+                          aria-hidden
+                          className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${p.hue} motion-safe:animate-pulse`}
+                        />
                         <img
                           src={heroResidence}
                           alt={p.name}
                           loading="lazy"
-                          className="h-full w-full scale-105 object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.14]"
+                          decoding="async"
+                          width={1408}
+                          height={1760}
+                          onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
+                          className="relative h-full w-full scale-105 object-cover opacity-0 transition-[transform,opacity] duration-[1400ms] ease-out group-hover:scale-[1.14] [transition-property:opacity,transform] [&:not(.opacity-0)]:opacity-100"
                         />
                         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/10 to-transparent" />
 
@@ -903,7 +912,7 @@ function Projects() {
                           aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
                           aria-pressed={wished}
                           onClick={() => toggleWish(p.name)}
-                          className={`glass-card absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-0.5 active:scale-90 ${
+                          className={`glass-card absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
                             wished ? "text-destructive" : "text-primary"
                           }`}
                         >
