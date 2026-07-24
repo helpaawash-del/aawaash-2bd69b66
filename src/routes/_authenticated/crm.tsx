@@ -10,7 +10,6 @@ import {
   ChevronRight,
   Phone,
   MapPin,
-  Sparkles,
   Flame,
   Clock,
   CheckCircle2,
