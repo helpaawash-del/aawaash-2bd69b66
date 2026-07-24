@@ -142,17 +142,27 @@ function Hero() {
             {/* App-style search */}
             <form
               onSubmit={(e) => e.preventDefault()}
-              className="mt-8 flex items-center gap-2 rounded-full border border-border bg-surface/90 py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-float)] backdrop-blur-xl"
+              className="group mt-8 flex items-center gap-2 rounded-full border border-border bg-surface/90 py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-float)] backdrop-blur-xl transition-shadow focus-within:shadow-[var(--shadow-glow)]"
               role="search"
               aria-label="Search projects"
             >
-              <Search size={18} className="shrink-0 text-muted-foreground" />
+              <Search size={18} className="shrink-0 text-muted-foreground transition-colors group-focus-within:text-primary" />
               <input
                 type="search"
                 placeholder="Search by city, project, or 3 BHK…"
                 className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
                 aria-label="Search"
               />
+              <span className="hidden items-center gap-1 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-semibold text-primary md:inline-flex">
+                <MapPin size={11} /> Bengaluru
+              </span>
+              <button
+                type="button"
+                aria-label="Voice search"
+                className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:inline-flex"
+              >
+                <Mic size={16} />
+              </button>
               <button
                 type="button"
                 aria-label="Filters"
@@ -162,12 +172,25 @@ function Hero() {
               </button>
               <button
                 type="submit"
-                className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]"
+                className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform active:scale-95"
               >
                 <Search size={14} />
                 <span className="hidden sm:inline">Search</span>
               </button>
             </form>
+
+            {/* Quick suggestion chips */}
+            <div className="mt-3 -mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+              {["3 BHK · Whitefield", "Sea-view · Andheri", "Ready to move", "Under ₹1.5 Cr", "Rooftop pool"].map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  className="shrink-0 rounded-full border border-border bg-surface/80 px-3 py-1.5 text-[11px] font-semibold text-muted-foreground backdrop-blur transition-colors hover:border-primary/40 hover:text-primary"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <a
