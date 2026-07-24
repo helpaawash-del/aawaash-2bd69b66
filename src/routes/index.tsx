@@ -237,7 +237,7 @@ function Hero() {
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
         <div className="mt-4 lg:hidden">
-          <div className="relative mx-auto aspect-square w-[min(72vw,20rem)] sm:w-[min(60vw,22rem)] md:w-[min(52vw,26rem)]">
+          <div className="relative mx-auto aspect-square w-[min(92vw,26rem)] sm:w-[min(78vw,30rem)] md:w-[min(65vw,34rem)]">
             {/* Soft ground bloom to seat the building */}
             <div
               aria-hidden
@@ -256,7 +256,7 @@ function Hero() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              sizes="(min-width: 768px) 26rem, (min-width: 640px) 22rem, 72vw"
+              sizes="(min-width: 768px) 34rem, (min-width: 640px) 30rem, 92vw"
               className="relative h-full w-full select-none object-contain object-center drop-shadow-[0_30px_40px_color-mix(in_oklab,var(--primary)_22%,transparent)] motion-safe:animate-[float_9s_ease-in-out_infinite]"
             />
           </div>
@@ -363,7 +363,7 @@ function Hero() {
       {/* Building emerging from the bottom + floating stat chips */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[38vh] lg:block"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[54vh] lg:block"
         style={{ transform: `translateY(${scrollY * 0.08}px)` }}
       >
         {/* Soft bloom behind building */}
@@ -373,7 +373,7 @@ function Hero() {
 
         {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
-          <div className="relative w-[min(30vw,22rem)] xl:w-[min(26vw,24rem)]">
+          <div className="relative w-[min(46vw,34rem)] xl:w-[min(40vw,38rem)]">
             <img
               src={heroTowerTrees}
               alt="Aawash biophilic residence"
@@ -381,7 +381,7 @@ function Hero() {
               height={1024}
               loading="lazy"
               decoding="async"
-              sizes="(min-width: 1280px) 24rem, 30vw"
+              sizes="(min-width: 1280px) 38rem, 46vw"
               className="mx-auto h-auto w-full select-none object-contain object-center drop-shadow-[0_40px_60px_color-mix(in_oklab,var(--primary)_24%,transparent)] animate-[float_10s_ease-in-out_infinite]"
             />
           </div>
