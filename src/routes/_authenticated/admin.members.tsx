@@ -296,8 +296,8 @@ function MemberRow({ m }: { m: any }) {
           <span className="hidden sm:inline">Comm {formatINR(m.member_commission, { compact: true })}</span>
         </div>
       </div>
-      <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-border px-2.5 py-1 text-[11px] font-semibold text-foreground sm:px-3">
-        <span className="hidden sm:inline">Open</span>
+      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold text-primary-foreground shadow-[var(--shadow-glow)] sm:px-4 sm:py-2 sm:text-xs">
+        Manage
         <ArrowRight size={14} aria-hidden="true" />
       </span>
     </Link>
