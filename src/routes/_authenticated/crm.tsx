@@ -30,7 +30,10 @@ import {
 import { getCrmOverview, listCustomers, listFollowups } from "@/lib/crm.functions";
 import { CUSTOMER_STATUS_META, priorityStyle } from "@/components/aawash/crm/status";
 import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
-import { Parallax3DBuilding } from "@/components/aawash/Parallax3DBuilding";
+import { lazy, Suspense } from "react";
+const Parallax3DBuilding = lazy(() =>
+  import("@/components/aawash/Parallax3DBuilding").then((m) => ({ default: m.Parallax3DBuilding })),
+);
 
 export const Route = createFileRoute("/_authenticated/crm")({
   component: CrmHome,
