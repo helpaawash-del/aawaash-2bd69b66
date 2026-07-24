@@ -31,6 +31,13 @@ import {
   Dumbbell,
   Coffee,
   Bike,
+  Mic,
+  Calculator,
+  Wand2,
+  Gauge,
+  GitCompare,
+  Bookmark,
+  ChevronRight,
 } from "lucide-react";
 import heroResidence from "@/assets/hero-residence.jpg";
 
@@ -94,6 +101,7 @@ function Landing() {
         <Features />
         <Projects />
         <Lifestyle />
+        <SmartPanels />
         <BookVisit />
         <HowItWorks />
         <Commission />
@@ -135,17 +143,27 @@ function Hero() {
             {/* App-style search */}
             <form
               onSubmit={(e) => e.preventDefault()}
-              className="mt-8 flex items-center gap-2 rounded-full border border-border bg-surface/90 py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-float)] backdrop-blur-xl"
+              className="group mt-8 flex items-center gap-2 rounded-full border border-border bg-surface/90 py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-float)] backdrop-blur-xl transition-shadow focus-within:shadow-[var(--shadow-glow)]"
               role="search"
               aria-label="Search projects"
             >
-              <Search size={18} className="shrink-0 text-muted-foreground" />
+              <Search size={18} className="shrink-0 text-muted-foreground transition-colors group-focus-within:text-primary" />
               <input
                 type="search"
                 placeholder="Search by city, project, or 3 BHK…"
                 className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
                 aria-label="Search"
               />
+              <span className="hidden items-center gap-1 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-semibold text-primary md:inline-flex">
+                <MapPin size={11} /> Bengaluru
+              </span>
+              <button
+                type="button"
+                aria-label="Voice search"
+                className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:inline-flex"
+              >
+                <Mic size={16} />
+              </button>
               <button
                 type="button"
                 aria-label="Filters"
@@ -155,12 +173,25 @@ function Hero() {
               </button>
               <button
                 type="submit"
-                className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]"
+                className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform active:scale-95"
               >
                 <Search size={14} />
                 <span className="hidden sm:inline">Search</span>
               </button>
             </form>
+
+            {/* Quick suggestion chips */}
+            <div className="mt-3 -mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+              {["3 BHK · Whitefield", "Sea-view · Andheri", "Ready to move", "Under ₹1.5 Cr", "Rooftop pool"].map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  className="shrink-0 rounded-full border border-border bg-surface/80 px-3 py-1.5 text-[11px] font-semibold text-muted-foreground backdrop-blur transition-colors hover:border-primary/40 hover:text-primary"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <a
@@ -571,59 +602,136 @@ function Projects() {
   return (
     <section id="projects" className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-6xl">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+              Featured Projects
+            </div>
+            <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl">
+              Homes worth coming home to.
+            </h2>
+            <p className="mt-2 max-w-lg text-sm text-muted-foreground sm:text-base">
+              A preview of the curated projects Aawash partners are actively selling.
+            </p>
+          </div>
+          <Link
+            to="/projects"
+            className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-primary sm:inline-flex"
+          >
+            View all <ChevronRight size={14} />
+          </Link>
+        </div>
+
+        {/* Horizontal swipe rail with overlapping cards on desktop */}
+        <div className="-mx-5 mt-8 overflow-x-auto pb-6 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 [&::-webkit-scrollbar]:hidden">
+          <ul className="flex snap-x snap-mandatory gap-4 px-5 sm:px-8 lg:gap-0">
+            {PROJECTS.map((p, i) => (
+              <li
+                key={p.name}
+                className="snap-start shrink-0 basis-[85%] sm:basis-[60%] md:basis-[46%] lg:basis-[38%]"
+                style={{ marginLeft: i > 0 ? "-2.5rem" : undefined, zIndex: PROJECTS.length - i }}
+              >
+                <Reveal variant="up" delay={i * 100}>
+                  <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-glow)]">
+                    <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
+                      <img
+                        src={heroResidence}
+                        alt={p.name}
+                        loading="lazy"
+                        className="h-full w-full scale-105 object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
+
+                      <span className="glass-card absolute left-4 top-4 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                        {p.tag}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label="Save to wishlist"
+                        className="glass-card absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full text-primary transition-transform active:scale-90"
+                      >
+                        <Heart size={16} />
+                      </button>
+
+                      {/* Info glass overlay */}
+                      <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/30 bg-white/85 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+                        <h3 className="text-base font-bold text-foreground">{p.name}</h3>
+                        <div className="mt-0.5 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                          <MapPin size={11} /> {p.location}
+                        </div>
+                        <div className="mt-3 flex items-end justify-between gap-2">
+                          <div className="min-w-0">
+                            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+                              Starting
+                            </div>
+                            <div className="truncate text-sm font-extrabold text-foreground">{p.price}</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+                              Units
+                            </div>
+                            <div className="text-xs font-semibold text-foreground">{p.units}</div>
+                          </div>
+                          <Link
+                            to="/auth"
+                            aria-label={`Explore ${p.name}`}
+                            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] transition-transform active:scale-95"
+                          >
+                            <ArrowRight size={14} />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </Reveal>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------ SMART PANELS ------------------------------ */
+
+const SMART_PANELS: { icon: typeof Calculator; title: string; body: string; tone: string; iconTone: string }[] = [
+  { icon: Calculator, title: "EMI Calculator", body: "Model monthly payments across tenures and rates.", tone: "from-primary-soft to-primary-soft/40", iconTone: "bg-primary/15 text-primary" },
+  { icon: Wand2, title: "AI Property Match", body: "Tell us your lifestyle — we surface the right homes.", tone: "from-leaf/20 to-primary-soft/30", iconTone: "bg-leaf/25 text-primary" },
+  { icon: CalendarCheck, title: "Site Visit Booking", body: "Pick a slot. Concierge handles the rest.", tone: "from-gold/20 to-primary-soft/30", iconTone: "bg-gold/25 text-gold-foreground" },
+  { icon: Gauge, title: "Investment Score", body: "See appreciation & rental yield at a glance.", tone: "from-primary-soft to-leaf/25", iconTone: "bg-primary/15 text-primary" },
+  { icon: GitCompare, title: "Compare Projects", body: "Side-by-side view — specs, price, timelines.", tone: "from-leaf/25 to-gold/15", iconTone: "bg-leaf/25 text-primary" },
+  { icon: Bookmark, title: "Saved Properties", body: "Your wishlist, synced across every device.", tone: "from-primary-soft to-gold/15", iconTone: "bg-primary/15 text-primary" },
+];
+
+function SmartPanels() {
+  return (
+    <section aria-labelledby="smart-title" className="px-5 py-20 sm:px-8">
+      <div className="mx-auto max-w-6xl">
         <SectionHeader
-          eyebrow="Featured Projects"
-          title="Homes worth coming home to."
-          subtitle="A preview of the curated projects Aawash partners are actively selling."
+          eyebrow="Smart Tools"
+          title="Everything a modern buyer needs."
+          subtitle="Native app widgets — designed for tapping, not scrolling."
         />
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {PROJECTS.map((p, i) => (
-            <Reveal key={p.name} variant="up" delay={i * 100}>
-              <article className="glass-card group flex h-full flex-col overflow-hidden rounded-3xl shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-float)]">
-                <div
-                  className={`relative aspect-[16/11] w-full bg-gradient-to-br ${p.hue}`}
-                >
-                  <div className="absolute inset-0 opacity-40">
-                    <svg viewBox="0 0 400 250" className="h-full w-full" preserveAspectRatio="xMidYMid slice" aria-hidden>
-                      <g fill="oklch(0.42 0.09 155 / 0.6)">
-                        <rect x="30" y="110" width="70" height="120" rx="6" />
-                        <rect x="115" y="70" width="90" height="160" rx="8" />
-                        <rect x="220" y="90" width="70" height="140" rx="6" />
-                        <rect x="300" y="50" width="80" height="180" rx="8" />
-                      </g>
-                    </svg>
-                  </div>
-                  <span className="glass-card absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
-                    {p.tag}
-                  </span>
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SMART_PANELS.map((panel, i) => (
+            <Reveal key={panel.title} variant="up" delay={(i % 3) * 80}>
+              <button
+                type="button"
+                className={`group relative flex h-full w-full flex-col items-start gap-3 overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br ${panel.tone} p-5 text-left shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-float)]`}
+              >
+                <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/40 blur-2xl transition-opacity group-hover:opacity-70" />
+                <div className={`grid h-12 w-12 place-items-center rounded-2xl ${panel.iconTone} shadow-[var(--shadow-soft)]`}>
+                  <panel.icon size={22} />
                 </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="text-lg font-bold text-foreground">{p.name}</h3>
-                  <div className="mt-1 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <MapPin size={12} /> {p.location}
-                  </div>
-                  <div className="mt-4 flex items-end justify-between">
-                    <div>
-                      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        Starting
-                      </div>
-                      <div className="text-base font-extrabold text-foreground">{p.price}</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        Units
-                      </div>
-                      <div className="text-sm font-semibold text-foreground">{p.units}</div>
-                    </div>
-                  </div>
-                  <Link
-                    to="/auth"
-                    className="mt-5 inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all group-hover:-translate-y-0.5"
-                  >
-                    Explore <ArrowRight size={14} />
-                  </Link>
+                <div className="relative">
+                  <h3 className="text-base font-bold text-foreground">{panel.title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{panel.body}</p>
                 </div>
-              </article>
+                <span className="relative mt-1 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                  Open <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </button>
             </Reveal>
           ))}
         </div>
