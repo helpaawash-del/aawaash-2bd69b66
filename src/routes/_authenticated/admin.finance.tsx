@@ -608,9 +608,7 @@ function ReconciliationTab() {
             icon={<ScrollText size={18} />}
             label="Ledger delta"
             value={formatINR(totals?.delta_total ?? 0, { compact: true })}
-            accent={
-              totals && Math.abs(totals.delta_total) > 0.01 ? "warn" : "cool"
-            }
+            accent={totals && Math.abs(totals.delta_total) > 0.01 ? "destructive" : "leaf"}
           />
         </div>
 
