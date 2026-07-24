@@ -157,7 +157,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden px-5 pt-24 pb-8 sm:px-8 sm:pt-28 lg:min-h-[100svh] lg:pb-[46vh] lg:pt-36"
+      className="relative overflow-hidden px-5 pt-24 pb-8 sm:px-8 sm:pt-28 lg:min-h-[92svh] lg:pb-[34vh] lg:pt-32"
     >
       {/* Layer 1-2 — atmospheric wash */}
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -236,7 +236,7 @@ function Hero() {
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
         <div className="mt-4 lg:hidden">
-          <div className="relative mx-auto aspect-[3/4] w-full max-w-[22rem]">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem]">
             {/* Soft ground bloom to seat the building */}
             <div
               aria-hidden
@@ -361,7 +361,7 @@ function Hero() {
       {/* Building emerging from the bottom + floating stat chips */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[60vh] lg:block"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 hidden h-[46vh] lg:block"
         style={{ transform: `translateY(${scrollY * 0.08}px)` }}
       >
         {/* Soft bloom behind building */}
@@ -371,7 +371,7 @@ function Hero() {
 
         {/* The building itself — transparent cutout, no frame */}
         <div className="absolute inset-x-0 bottom-0 mx-auto flex h-full max-w-5xl items-end justify-center px-4">
-          <div className="relative w-full max-w-[26rem]">
+          <div className="relative w-full max-w-[22rem]">
             <img
               src={heroTowerTrees}
               alt="Aawash biophilic skyscraper residence"
