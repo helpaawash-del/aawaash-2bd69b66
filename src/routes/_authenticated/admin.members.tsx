@@ -9,6 +9,7 @@ import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { listAllMembers } from "@/lib/members-admin.functions";
 import { getTeamLimits } from "@/lib/team-leaders.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
+import { WalletEditButton } from "@/components/aawash/admin/WalletAdjustDialog";
 
 export const Route = createFileRoute("/_authenticated/admin/members")({
   component: Page,
