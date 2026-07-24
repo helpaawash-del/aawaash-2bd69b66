@@ -243,7 +243,7 @@ function Content() {
             {(p.status ?? "active") === "suspended" ? (
               <button
                 type="button"
-                onClick={() => onChangeStatus("activate")}
+                onClick={() => setConfirmKind("activate")}
                 disabled={busy !== null}
                 className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-semibold text-emerald-700 disabled:opacity-60"
               >
@@ -253,7 +253,7 @@ function Content() {
             ) : (
               <button
                 type="button"
-                onClick={() => onChangeStatus("suspend")}
+                onClick={() => setConfirmKind("suspend")}
                 disabled={busy !== null}
                 className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-xs font-semibold text-amber-700 disabled:opacity-60"
               >
@@ -269,7 +269,7 @@ function Content() {
             </button>
             <button
               type="button"
-              onClick={onDelete}
+              onClick={() => setConfirmKind("delete")}
               disabled={busy !== null}
               className="inline-flex items-center gap-2 rounded-full border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-700 disabled:opacity-60"
             >
@@ -279,11 +279,38 @@ function Content() {
           </div>
         </div>
 
-        {(actionMsg || actionErr) && (
-          <div className={`mt-4 rounded-2xl px-4 py-2 text-xs font-semibold ${actionErr ? "bg-rose-500/10 text-rose-700" : "bg-emerald-500/10 text-emerald-700"}`}>
-            {actionErr ?? actionMsg}
-          </div>
-        )}
+        <ConfirmDialog
+          open={confirmKind !== null}
+          onOpenChange={(next) => (!next ? setConfirmKind(null) : null)}
+          destructive={confirmKind === "delete" || confirmKind === "suspend"}
+          title={
+            confirmKind === "delete"
+              ? "Delete this Team Leader?"
+              : confirmKind === "suspend"
+                ? "Suspend this Team Leader?"
+                : "Activate this Team Leader?"
+          }
+          description={
+            confirmKind === "delete"
+              ? "This bans their account and archives the profile. This cannot be undone from the UI."
+              : confirmKind === "suspend"
+                ? "They won't be able to sign in until you reactivate the account."
+                : "They will regain full access to the leader dashboard immediately."
+          }
+          confirmLabel={
+            confirmKind === "delete"
+              ? "Delete leader"
+              : confirmKind === "suspend"
+                ? "Suspend"
+                : "Activate"
+          }
+          onConfirm={async () => {
+            if (confirmKind === "delete") await confirmDelete();
+            else if (confirmKind) await confirmChangeStatus(confirmKind);
+          }}
+        />
+
+
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatMini icon={<Users size={14} />} label="Members" value={String(data.members.length)} />
