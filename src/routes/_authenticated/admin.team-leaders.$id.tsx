@@ -398,20 +398,38 @@ function Content() {
       )}
 
       {tab === "members" && (
-        <Card title={`Team members (${data.members.length})`}>
+        <Card
+          title={
+            <span className="inline-flex items-center gap-2">
+              Team members ({data.members.length})
+              {isFetching && (
+                <span
+                  className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary"
+                  aria-live="polite"
+                >
+                  <RefreshCw size={10} className="animate-spin" /> Syncing
+                </span>
+              )}
+            </span>
+          }
+        >
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-surface px-4 py-3">
             <div>
               <div className="text-sm font-extrabold text-foreground">Members section</div>
-              <div className="text-xs text-muted-foreground">Add new members and open any member account from this team.</div>
+              <div className="text-xs text-muted-foreground">
+                Live updates on • Add new members or open any member account from this team.
+              </div>
             </div>
             <Link
               to="/admin/members/new"
+              search={{ leaderId: id }}
               className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)]"
             >
               <Users size={14} />
               Create member
             </Link>
           </div>
+
           {data.members.length === 0 ? (
             <Empty>No members yet — create the first member for this team.</Empty>
           ) : (
