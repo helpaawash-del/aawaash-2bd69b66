@@ -43,6 +43,12 @@ import heroResidence from "@/assets/hero-residence.jpg";
 import heroResidenceCutout from "@/assets/hero-residence.png.asset.json";
 import savitriHero from "@/assets/savitri-hero.jpg.asset.json";
 import savitriFacade from "@/assets/savitri-facade.jpg.asset.json";
+import savitriRender from "@/assets/savitri-render.jpg";
+import savitriSitePlan from "@/assets/savitri-siteplan.jpg";
+import savitriFloorPlan from "@/assets/savitri-floorplan.jpg";
+import savitriLocationMap from "@/assets/savitri-location.jpg";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+
 
 
 import { AmbientBackground } from "@/components/aawash/AmbientBackground";
