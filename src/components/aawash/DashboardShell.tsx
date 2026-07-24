@@ -123,3 +123,65 @@ export function DashboardShell({
     </div>
   );
 }
+
+/**
+ * FloatingSideRail
+ * ----------------
+ * Desktop-only glass navigation rail. Collapsed at 64px showing icons only,
+ * hover-expands to 232px revealing labels with a spring transition. A single
+ * emerald active indicator glides between items via translateY, powered by
+ * the current route path.
+ */
+function FloatingSideRail({ role }: { role: AppRole }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const items = itemsForRole(role);
+  const activeIndex = items.findIndex(
+    ({ to, activePrefix }) => pathname === to || (activePrefix ? pathname.startsWith(activePrefix) : false),
+  );
+  const cell = 52; // px per item (h-11 + gap)
+
+  return (
+    <aside
+      aria-label="Primary navigation rail"
+      className="pointer-events-none fixed left-4 top-1/2 z-40 hidden -translate-y-1/2 lg:block"
+    >
+      <div className="group pointer-events-auto relative">
+        <nav
+          className="glass-card relative flex w-16 flex-col gap-1 rounded-[28px] p-2 shadow-[var(--shadow-float)] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:w-58"
+          style={{ width: undefined }}
+        >
+          {/* animated active indicator */}
+          {activeIndex >= 0 && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute left-2 right-2 h-11 rounded-2xl bg-gradient-to-br from-primary to-leaf shadow-[var(--shadow-glow)] transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+              style={{ transform: `translateY(${activeIndex * cell}px)` }}
+            />
+          )}
+          {items.map((item, i) => {
+            const Icon = item.icon;
+            const active = i === activeIndex;
+            return (
+              <Link
+                key={item.label}
+                to={item.to}
+                aria-label={item.description}
+                className={`relative z-10 flex h-11 items-center gap-3 rounded-2xl px-2.5 text-sm font-semibold transition-colors ${
+                  active ? "text-primary-foreground" : "text-foreground hover:text-primary"
+                }`}
+              >
+                <span className="grid h-8 w-8 shrink-0 place-items-center">
+                  <Icon size={18} />
+                </span>
+                <span className="whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+    </aside>
+  );
+}
+
