@@ -18,56 +18,7 @@ export function BottomNav({ role }: { role: AppRole }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const items = itemsForRole(role);
 
-  return (
-    <nav
-      role="navigation"
-      aria-label="Primary"
-      data-testid="bottom-dock"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-6"
-    >
-      <ul className="pointer-events-auto mx-auto flex w-full max-w-lg items-stretch justify-between gap-0.5 rounded-[28px] border border-border/60 bg-surface/85 p-1 shadow-[var(--shadow-float)] backdrop-blur-2xl ring-1 ring-inset ring-white/40 sm:gap-1 sm:p-1.5">
-        {items.map(({ label, icon: Icon, to, activePrefix, description }) => {
-          const active =
-            pathname === to || (activePrefix ? pathname.startsWith(activePrefix) : false);
-          return (
-            <li key={label} className="flex min-w-0 flex-1">
-              <Link
-                to={to}
-                aria-label={`${label} — ${description}`}
-                aria-current={active ? "page" : undefined}
-                data-testid={`dock-link-${label.toLowerCase()}`}
-                className={`group relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl px-1 py-1.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:px-2 sm:py-2 ${
-                  active
-                    ? "bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)]"
-                    : "text-muted-foreground hover:bg-primary-soft/60 hover:text-foreground"
-                }`}
-              >
-                <Icon
-                  size={18}
-                  strokeWidth={active ? 2.5 : 2}
-                  aria-hidden="true"
-                  className="shrink-0 transition-transform group-active:scale-90"
-                />
-                <span
-                  className={`w-full truncate text-center text-[9px] font-bold leading-none tracking-wide sm:text-[10px] ${
-                    active ? "text-primary-foreground" : ""
-                  }`}
-                >
-                  {label}
-                </span>
-                {active && (
-                  <span
-                    className="absolute -bottom-0.5 h-1 w-6 rounded-full bg-white/70"
-                    aria-hidden="true"
-                  />
-                )}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  );
+  return <DockList items={items} pathname={pathname} />;
 }
 
 export function PublicBottomNav() {
