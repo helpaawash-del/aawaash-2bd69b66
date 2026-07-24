@@ -701,6 +701,15 @@ const PROJECTS = [
 ];
 
 function Projects() {
+  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
+  const toggleWish = (name: string) =>
+    setWishlist((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+
   return (
     <section id="projects" className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-6xl">
@@ -727,73 +736,95 @@ function Projects() {
         {/* Horizontal swipe rail with overlapping cards on desktop */}
         <div className="-mx-5 mt-8 overflow-x-auto pb-6 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 [&::-webkit-scrollbar]:hidden">
           <ul className="flex snap-x snap-mandatory gap-4 px-5 sm:px-8 lg:gap-0">
-            {PROJECTS.map((p, i) => (
-              <li
-                key={p.name}
-                className="snap-start shrink-0 basis-[85%] sm:basis-[60%] md:basis-[46%] lg:basis-[38%]"
-                style={{ marginLeft: i > 0 ? "-2.5rem" : undefined, zIndex: PROJECTS.length - i }}
-              >
-                <Reveal variant="up" delay={i * 100}>
-                  <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-glow)]">
-                    <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
-                      <img
-                        src={heroResidence}
-                        alt={p.name}
-                        loading="lazy"
-                        className="h-full w-full scale-105 object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
-                      />
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
+            {PROJECTS.map((p, i) => {
+              const wished = wishlist.has(p.name);
+              return (
+                <li
+                  key={p.name}
+                  className="snap-start shrink-0 basis-[85%] sm:basis-[60%] md:basis-[46%] lg:basis-[38%]"
+                  style={{ marginLeft: i > 0 ? "-2.5rem" : undefined, zIndex: PROJECTS.length - i }}
+                >
+                  <Reveal variant="up" delay={i * 100}>
+                    <article className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out [transform-style:preserve-3d] hover:-translate-y-2 hover:rotate-[-0.6deg] hover:shadow-[var(--shadow-glow)]">
+                      <div className={`relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br ${p.hue}`}>
+                        <img
+                          src={heroResidence}
+                          alt={p.name}
+                          loading="lazy"
+                          className="h-full w-full scale-105 object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.14]"
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/10 to-transparent" />
 
-                      <span className="glass-card absolute left-4 top-4 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
-                        {p.tag}
-                      </span>
-                      <button
-                        type="button"
-                        aria-label="Save to wishlist"
-                        className="glass-card absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full text-primary transition-transform active:scale-90"
-                      >
-                        <Heart size={16} />
-                      </button>
+                        {/* subtle sheen sweep on hover */}
+                        <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-1000 ease-out group-hover:translate-x-full group-hover:opacity-100" />
 
-                      {/* Info glass overlay */}
-                      <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/30 bg-white/85 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
-                        <h3 className="text-base font-bold text-foreground">{p.name}</h3>
-                        <div className="mt-0.5 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                          <MapPin size={11} /> {p.location}
-                        </div>
-                        <div className="mt-3 flex items-end justify-between gap-2">
-                          <div className="min-w-0">
-                            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
-                              Starting
+                        <span className="glass-card absolute left-4 top-4 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                          {p.tag}
+                        </span>
+                        <button
+                          type="button"
+                          aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
+                          aria-pressed={wished}
+                          onClick={() => toggleWish(p.name)}
+                          className={`glass-card absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-0.5 active:scale-90 ${
+                            wished ? "text-destructive" : "text-primary"
+                          }`}
+                        >
+                          <Heart
+                            size={17}
+                            fill={wished ? "currentColor" : "none"}
+                            className={`transition-transform duration-300 ${wished ? "scale-110" : ""}`}
+                          />
+                        </button>
+
+                        {/* Rating chip */}
+                        <span className="glass-card absolute bottom-[9.5rem] left-4 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold text-foreground sm:bottom-[10.5rem]">
+                          <Star size={11} className="fill-gold text-gold" /> 4.9 · Concierge
+                        </span>
+
+                        {/* Info glass overlay — richer */}
+                        <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/40 bg-white/85 p-4 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <h3 className="truncate text-base font-bold text-foreground">{p.name}</h3>
+                              <div className="mt-0.5 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                                <MapPin size={11} /> {p.location}
+                              </div>
                             </div>
-                            <div className="truncate text-sm font-extrabold text-foreground">{p.price}</div>
+                            <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-primary">
+                              {p.units}
+                            </span>
                           </div>
-                          <div className="text-right">
-                            <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
-                              Units
+
+                          <div className="mt-3 flex items-end justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                Starting
+                              </div>
+                              <div className="truncate text-sm font-extrabold text-foreground">{p.price}</div>
                             </div>
-                            <div className="text-xs font-semibold text-foreground">{p.units}</div>
+                            <Link
+                              to="/auth"
+                              aria-label={`Explore ${p.name}`}
+                              className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:-translate-y-0.5 hover:rotate-6 active:scale-95"
+                            >
+                              <ArrowRight size={14} />
+                            </Link>
                           </div>
-                          <Link
-                            to="/auth"
-                            aria-label={`Explore ${p.name}`}
-                            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)] transition-transform active:scale-95"
-                          >
-                            <ArrowRight size={14} />
-                          </Link>
                         </div>
                       </div>
-                    </div>
-                  </article>
-                </Reveal>
-              </li>
-            ))}
+                    </article>
+                  </Reveal>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
     </section>
   );
 }
+
 
 /* ------------------------------ SMART PANELS ------------------------------ */
 
