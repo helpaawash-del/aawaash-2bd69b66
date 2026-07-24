@@ -725,8 +725,24 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
   }) {
     if (pendingId) return;
     const next = CYCLE[fl.status] ?? "available";
+    const prevStatus = fl.status;
     setPendingId(fl.id);
     setErr(null);
+
+    // Optimistic: flip the flat in every cached inventory shape immediately.
+    const optimisticKeys: Array<readonly unknown[]> = [
+      ["admin", "inv-view", projectId],
+      ["project-inventory", slug],
+    ];
+    const snapshots = optimisticKeys.map((k) => [k, qc.getQueryData(k as unknown[])] as const);
+    for (const [k] of snapshots) {
+      qc.setQueryData(k as unknown[], (old: unknown) => {
+        const data = old as { flats?: Array<{ id: string; status: string }> } | undefined;
+        if (!data?.flats) return old;
+        return { ...data, flats: data.flats.map((f) => (f.id === fl.id ? { ...f, status: next } : f)) };
+      });
+    }
+
     try {
       await upsertFlat({ data: {
         id: fl.id,
@@ -750,8 +766,13 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
         qc.invalidateQueries({ queryKey: ["admin", "project", projectId] }),
         qc.invalidateQueries({ queryKey: ["project-inventory", slug] }),
         qc.invalidateQueries({ queryKey: ["public-project", slug] }),
+        qc.invalidateQueries({ queryKey: ["admin", "flat-audit", projectId] }),
       ]);
     } catch (e) {
+      // Roll back optimistic writes on failure.
+      for (const [k, snap] of snapshots) qc.setQueryData(k as unknown[], snap);
+      // Extra safety: reflect the original status if the snapshot was empty.
+      void prevStatus;
       setErr(e instanceof Error ? e.message : "Status update failed");
     } finally {
       setPendingId(null);
