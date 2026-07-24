@@ -150,7 +150,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      {role ? <BottomNav role={role} /> : <PublicBottomNav />}
+      {sessionLoading ? <BottomNavSkeleton /> : role ? <BottomNav role={role} /> : <PublicBottomNav />}
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
