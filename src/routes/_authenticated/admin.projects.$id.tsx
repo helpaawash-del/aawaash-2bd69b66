@@ -30,6 +30,7 @@ import {
   adminUpsertFlatFull,
   adminDeleteFlat,
   adminBulkCreateFlats,
+  adminListFlatStatusAudit,
 } from "@/lib/project-admin.functions";
 import { getProjectInventory } from "@/lib/inventory.functions";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -724,8 +725,24 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
   }) {
     if (pendingId) return;
     const next = CYCLE[fl.status] ?? "available";
+    const prevStatus = fl.status;
     setPendingId(fl.id);
     setErr(null);
+
+    // Optimistic: flip the flat in every cached inventory shape immediately.
+    const optimisticKeys: Array<readonly unknown[]> = [
+      ["admin", "inv-view", projectId],
+      ["project-inventory", slug],
+    ];
+    const snapshots = optimisticKeys.map((k) => [k, qc.getQueryData(k as unknown[])] as const);
+    for (const [k] of snapshots) {
+      qc.setQueryData(k as unknown[], (old: unknown) => {
+        const data = old as { flats?: Array<{ id: string; status: string }> } | undefined;
+        if (!data?.flats) return old;
+        return { ...data, flats: data.flats.map((f) => (f.id === fl.id ? { ...f, status: next } : f)) };
+      });
+    }
+
     try {
       await upsertFlat({ data: {
         id: fl.id,
@@ -749,8 +766,13 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
         qc.invalidateQueries({ queryKey: ["admin", "project", projectId] }),
         qc.invalidateQueries({ queryKey: ["project-inventory", slug] }),
         qc.invalidateQueries({ queryKey: ["public-project", slug] }),
+        qc.invalidateQueries({ queryKey: ["admin", "flat-audit", projectId] }),
       ]);
     } catch (e) {
+      // Roll back optimistic writes on failure.
+      for (const [k, snap] of snapshots) qc.setQueryData(k as unknown[], snap);
+      // Extra safety: reflect the original status if the snapshot was empty.
+      void prevStatus;
       setErr(e instanceof Error ? e.message : "Status update failed");
     } finally {
       setPendingId(null);
@@ -849,6 +871,61 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
           </div>
         );
       })}
+
+      <FlatStatusAuditPanel projectId={projectId} />
+    </div>
+  );
+}
+
+function FlatStatusAuditPanel({ projectId }: { projectId: string }) {
+  const listFn = useServerFn(adminListFlatStatusAudit);
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin", "flat-audit", projectId],
+    queryFn: () => listFn({ data: { project_id: projectId, limit: 50 } }),
+  });
+  const entries = data?.entries ?? [];
+
+  const fmt = (iso: string) => {
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  };
+
+  return (
+    <div className="rounded-3xl border border-border bg-surface p-5 shadow-[var(--shadow-soft)]">
+      <div className="mb-3 flex items-center gap-2">
+        <FileText size={16} className="text-primary" />
+        <h3 className="text-base font-bold text-foreground">Flat status audit log</h3>
+        <span className="text-xs text-muted-foreground">· last 50 changes</span>
+      </div>
+      {isLoading ? (
+        <div className="h-24 animate-pulse rounded-2xl bg-muted/40" />
+      ) : entries.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No status changes yet.</p>
+      ) : (
+        <ul className="divide-y divide-border">
+          {entries.map((e) => (
+            <li key={e.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2 text-sm">
+              <span className="rounded-md bg-primary-soft px-2 py-0.5 text-[11px] font-bold text-primary">
+                {e.unit_code}
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-xs">
+                <span className={`rounded-full border px-2 py-0.5 font-semibold ${STATUS_STYLES[e.from_status ?? ""] ?? "border-border"}`}>
+                  {e.from_status ?? "—"}
+                </span>
+                <span className="text-muted-foreground">→</span>
+                <span className={`rounded-full border px-2 py-0.5 font-semibold ${STATUS_STYLES[e.to_status ?? ""] ?? "border-border"}`}>
+                  {e.to_status ?? "—"}
+                </span>
+              </span>
+              <span className="ml-auto text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">{e.actor_name ?? "System"}</span>
+                {" · "}
+                {fmt(e.created_at)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
