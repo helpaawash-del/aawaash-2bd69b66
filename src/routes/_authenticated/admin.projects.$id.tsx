@@ -35,6 +35,7 @@ import { getProjectInventory } from "@/lib/inventory.functions";
 import { formatINR } from "@/components/aawash/dashboard-kit";
 import { canEdit, type Role } from "@/lib/permissions";
 import { ImageUploadField, ImageGalleryUploader, Model3DUploadField } from "@/components/aawash/admin/MediaUploaders";
+import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
 
 export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
   component: EditProjectPage,
