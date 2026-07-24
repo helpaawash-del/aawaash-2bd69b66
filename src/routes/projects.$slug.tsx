@@ -527,24 +527,43 @@ function GalleryPanel({ images, onOpen }: { images: string[]; onOpen: (i: number
       <section className="glass-card rounded-3xl p-4 shadow-[var(--shadow-soft)] sm:p-6">
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
           {images.map((src, i) => (
-            <button
-              key={`${src}-${i}`}
-              type="button"
-              onClick={() => onOpen(i)}
-              className="group relative aspect-square overflow-hidden rounded-2xl border border-border/60 bg-muted/30"
-            >
-              <img
-                src={src}
-                alt=""
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-            </button>
+            <GalleryTile key={`${src}-${i}`} src={src} index={i} onOpen={onOpen} />
           ))}
         </div>
       </section>
     </Reveal>
+  );
+}
+
+function GalleryTile({ src, index, onOpen }: { src: string; index: number; onOpen: (i: number) => void }) {
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(index)}
+      className="group relative aspect-square overflow-hidden rounded-2xl border border-border/60 bg-muted/30"
+    >
+      {!loaded && !errored && (
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-muted/60 to-muted/30" />
+      )}
+      {errored ? (
+        <div className="absolute inset-0 grid place-items-center text-muted-foreground">
+          <Images size={18} />
+        </div>
+      ) : (
+        <img
+          src={src}
+          alt=""
+          className={`h-full w-full object-cover transition-all duration-500 group-hover:scale-[1.05] ${loaded ? "opacity-100" : "opacity-0"}`}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setLoaded(true)}
+          onError={() => setErrored(true)}
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+    </button>
   );
 }
 
