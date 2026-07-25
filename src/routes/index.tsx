@@ -1019,6 +1019,7 @@ function Projects() {
             const idx = activeImg[p.name] ?? 0;
             return (
               <Reveal key={p.name} variant="up" delay={i * 100}>
+                <div className="rounded-[2.5rem] bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20 p-[1.5px] shadow-[var(--shadow-float)]">
                 <article
                   role="link"
                   tabIndex={0}
@@ -1032,20 +1033,21 @@ function Projects() {
                     event.preventDefault();
                     navigate({ to: "/projects/$slug", params: { slug: p.slug } });
                   }}
-                  className="group relative cursor-pointer overflow-hidden rounded-[2.25rem] border border-border/50 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                  className="group relative cursor-pointer overflow-hidden rounded-[2.4rem] bg-surface transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[var(--shadow-glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                 >
                   {/* Image — clean, no overlaid copy */}
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10 sm:aspect-[16/10]">
+                  <div className="relative m-2 aspect-[4/3] overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary/10 to-leaf/10 sm:m-2.5 sm:aspect-[16/10]">
                     <img
                       src={p.images[idx]}
                       alt={`${p.name} — view ${idx + 1}`}
                       loading="lazy"
                       decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.04]"
+                      className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.05]"
                     />
                     {/* Soft top vignette so chips read on any image */}
-                    <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/25 to-transparent" />
-                    <span className="absolute left-5 top-5 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary shadow-sm backdrop-blur">
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
+                    <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-primary shadow-sm backdrop-blur">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary motion-safe:animate-pulse" />
                       {p.tag}
                     </span>
                     <button
@@ -1053,7 +1055,7 @@ function Projects() {
                       aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
                       aria-pressed={wished}
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWish(p.name); }}
-                      className={`absolute right-5 top-5 z-30 grid h-11 w-11 place-items-center rounded-full bg-white/95 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
+                      className={`absolute right-4 top-4 z-30 grid h-11 w-11 place-items-center rounded-full bg-white/95 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
                         wished ? "text-destructive" : "text-primary"
                       }`}
                     >
@@ -1061,60 +1063,76 @@ function Projects() {
                     </button>
 
                     {p.images.length > 1 && (
-                      <div className="absolute inset-x-0 bottom-5 z-30 flex justify-center gap-1.5">
-                        {p.images.map((_, ii) => (
-                          <button
-                            key={ii}
-                            type="button"
-                            aria-label={`View image ${ii + 1}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setActiveImg((prev) => ({ ...prev, [p.name]: ii }));
-                            }}
-                            className={`h-1.5 rounded-full transition-all ${
-                              ii === idx ? "w-7 bg-white" : "w-1.5 bg-white/70 hover:bg-white/90"
-                            }`}
-                          />
-                        ))}
+                      <div className="absolute inset-x-0 bottom-4 z-30 flex justify-center">
+                        <div className="flex items-center gap-1.5 rounded-full bg-black/25 px-2.5 py-1.5 backdrop-blur-md">
+                          {p.images.map((_, ii) => (
+                            <button
+                              key={ii}
+                              type="button"
+                              aria-label={`View image ${ii + 1}`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setActiveImg((prev) => ({ ...prev, [p.name]: ii }));
+                              }}
+                              className={`h-1.5 rounded-full transition-all ${
+                                ii === idx ? "w-7 bg-white" : "w-1.5 bg-white/60 hover:bg-white/90"
+                              }`}
+                            />
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
 
-                  {/* Minimal info block */}
-                  <div className="relative z-20 flex flex-col gap-5 px-6 pb-7 pt-6 sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:pb-8 sm:pt-7">
-                    <div className="min-w-0">
-                      <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
-                        <MapPin size={12} className="text-primary" /> Darbhanga, Bihar
+                  {/* Info block */}
+                  <div className="relative z-20 px-6 pb-7 pt-4 sm:px-8 sm:pb-8 sm:pt-5">
+                    <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                      <div className="min-w-0">
+                        <div className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                          <MapPin size={12} className="text-primary" /> Darbhanga, Bihar
+                        </div>
+                        <Link
+                          to="/projects/$slug"
+                          params={{ slug: p.slug }}
+                          className="mt-2 block truncate text-2xl font-semibold tracking-tight text-foreground transition-colors hover:text-primary sm:text-[1.75rem]"
+                        >
+                          {p.name}
+                        </Link>
+                        <p className="mt-1.5 truncate text-sm text-muted-foreground">{p.tagline}</p>
                       </div>
-                      <Link
-                        to="/projects/$slug"
-                        params={{ slug: p.slug }}
-                        className="mt-1.5 block truncate text-xl font-semibold tracking-tight text-foreground transition-colors hover:text-primary sm:text-2xl"
-                      >
-                        {p.name}
-                      </Link>
+                      <div className="flex items-center justify-between gap-4 sm:justify-end">
+                        <div className="sm:text-right">
+                          <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                            From
+                          </div>
+                          <div className="text-lg font-bold tracking-tight text-foreground">
+                            {p.price}
+                          </div>
+                        </div>
+                        <Link
+                          to="/projects/$slug"
+                          params={{ slug: p.slug }}
+                          aria-label={`Explore ${p.name}`}
+                          className="inline-flex h-12 items-center gap-2 rounded-full bg-gradient-to-r from-primary to-leaf px-5 text-xs font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[var(--shadow-glow)] transition-all hover:-translate-y-0.5 hover:brightness-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                        >
+                          Explore <ArrowRight size={14} />
+                        </Link>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between gap-4 sm:justify-end">
-                      <div className="sm:text-right">
-                        <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                          From
-                        </div>
-                        <div className="text-base font-bold text-foreground sm:text-lg">
-                          {p.price}
-                        </div>
-                      </div>
-                      <Link
-                        to="/projects/$slug"
-                        params={{ slug: p.slug }}
-                        aria-label={`Explore ${p.name}`}
-                        className="inline-flex h-11 items-center gap-1.5 rounded-full bg-foreground px-4 text-xs font-semibold text-background transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
-                      >
-                        Explore <ArrowRight size={14} />
-                      </Link>
+
+                    {/* Spec strip */}
+                    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border/50 pt-5">
+                      <SpecPill icon={<Ruler size={13} />} label={p.units} />
+                      <SpecPill icon={<Building2 size={13} />} label={p.developer} />
                     </div>
                   </div>
                 </article>
+                </div>
+              </Reveal>
+            );
+          })}
+
               </Reveal>
             );
           })}
