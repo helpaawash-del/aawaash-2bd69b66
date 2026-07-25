@@ -738,8 +738,31 @@ function Lightbox({
         onClick={(e) => e.stopPropagation()}
         className="max-h-[85vh] max-w-[92vw] rounded-2xl object-contain shadow-2xl"
       />
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white">
-        {index + 1} / {images.length}
+      <div
+        className="absolute bottom-3 left-1/2 flex max-w-[92vw] -translate-x-1/2 flex-col items-center gap-2"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white">
+          {index + 1} / {images.length}
+        </div>
+        {images.length > 1 && (
+          <div className="flex max-w-[92vw] gap-2 overflow-x-auto rounded-2xl bg-white/10 p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {images.map((src, i) => (
+              <button
+                key={`thumb-${src}-${i}`}
+                type="button"
+                onClick={() => onIndex(i)}
+                aria-label={`View photo ${i + 1}`}
+                aria-current={i === index}
+                className={`relative h-12 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition ${
+                  i === index ? "border-white" : "border-transparent opacity-60 hover:opacity-100"
+                }`}
+              >
+                <img src={src} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
