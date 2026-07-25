@@ -34,6 +34,9 @@ function AdminLoginPage() {
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [shake, setShake] = useState(0);
+
   const { data, isLoading } = useQuery({ queryKey: ["admin", "passcode"], queryFn: () => check() });
 
   // Normalize any redirect target to an internal path. Older links may have
@@ -51,16 +54,28 @@ function AdminLoginPage() {
     e.preventDefault();
     setError(null);
     if (!/^\d{4}$/.test(passcode)) {
-      setError("Enter the 4-digit admin passcode.");
+      setError(
+        passcode.length === 0
+          ? "Enter your 4-digit admin passcode to continue."
+          : `Passcode must be exactly 4 digits — you entered ${passcode.length}.`,
+      );
+      setShake((n) => n + 1);
       return;
     }
     setSubmitting(true);
     try {
       const result = await unlock({ data: { passcode } });
       if (!result.ok) {
-        setError("Invalid admin passcode.");
+        const next = attempts + 1;
+        setAttempts(next);
+        setError(
+          `Incorrect passcode. Please try again.${next >= 3 ? " Check with your administrator for the correct 4-digit code." : ""}`,
+        );
+        setPasscode("");
+        setShake((n) => n + 1);
         return;
       }
+      setAttempts(0);
 
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
@@ -78,10 +93,13 @@ function AdminLoginPage() {
         }
       }
       navigate({ to: safeRedirect, replace: true });
+    } catch {
+      setError("Something went wrong while verifying the passcode. Please try again.");
     } finally {
       setSubmitting(false);
     }
   }
+
 
 
   return (
@@ -112,14 +130,24 @@ function AdminLoginPage() {
         <form onSubmit={onSubmit} className="mt-6 space-y-4 text-left">
           <label className="block">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Admin passcode</span>
-            <div className="mt-2 flex items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3 focus-within:border-primary">
-              <Lock size={16} className="text-muted-foreground" />
+            <div
+              key={shake}
+              className={`mt-2 flex items-center gap-3 rounded-2xl border bg-surface px-4 py-3 ${
+                error ? "animate-[shake_0.35s_ease-in-out] border-destructive/60" : "border-border focus-within:border-primary"
+              }`}
+            >
+              <Lock size={16} className={error ? "text-destructive" : "text-muted-foreground"} />
               <input
                 autoFocus
                 inputMode="numeric"
                 autoComplete="one-time-code"
+                aria-invalid={error ? true : undefined}
+                aria-describedby={error ? "admin-passcode-error" : undefined}
                 value={passcode}
-                onChange={(e) => setPasscode(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                onChange={(e) => {
+                  setPasscode(e.target.value.replace(/\D/g, "").slice(0, 4));
+                  if (error) setError(null);
+                }}
                 placeholder="0000"
                 className="w-full bg-transparent text-center font-mono text-2xl font-extrabold tracking-[0.5em] text-foreground outline-none placeholder:text-muted-foreground/30"
               />
@@ -127,11 +155,18 @@ function AdminLoginPage() {
           </label>
 
           {error && (
-            <div className="flex items-center gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
-              <AlertCircle size={16} />
-              {error}
+            <div
+              id="admin-passcode-error"
+              role="alert"
+              aria-live="assertive"
+              className="flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive"
+            >
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
+              <span>{error}</span>
             </div>
           )}
+
+
 
           <button type="submit" disabled={submitting || isLoading} className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3.5 text-sm font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5 disabled:opacity-70">
             {submitting ? <Loader2 size={16} className="animate-spin" /> : <KeyRound size={16} />}
