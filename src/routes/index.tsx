@@ -527,88 +527,118 @@ function Categories() {
     ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
   );
   return (
-    <section aria-labelledby="cats-title" className="px-5 py-10 sm:px-8 sm:py-14">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex items-end justify-between gap-4">
+    <section aria-labelledby="cats-title" className="relative px-5 py-14 sm:px-8 sm:py-20">
+      {/* soft ambient wash */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(70%_100%_at_50%_0%,color-mix(in_oklab,var(--primary)_7%,transparent),transparent_70%)]"
+      />
+      <div className="relative mx-auto max-w-6xl">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">
-            <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Explore</div>
-            <h2 id="cats-title" className="mt-1 text-2xl font-bold text-foreground sm:text-3xl">
-              Browse by category
+            <div className="glass-card inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
+              <Sparkles size={12} /> Explore
+            </div>
+            <h2
+              id="cats-title"
+              className="mt-4 text-3xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-[2.75rem]"
+            >
+              Browse by{" "}
+              <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
+                category
+              </span>
             </h2>
-            <p className="mt-1 text-sm text-muted-foreground">Find the home that fits your lifestyle.</p>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Six curated collections — from skyline towers to garden villas. Find the home that
+              fits your lifestyle.
+            </p>
           </div>
-          <Link to="/projects" className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-primary sm:inline-flex">
+          <Link
+            to="/projects"
+            className="glass-card inline-flex h-11 shrink-0 items-center gap-1.5 self-start rounded-full px-5 text-sm font-semibold text-primary transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] sm:self-auto"
+          >
             View all <ChevronRight size={14} />
           </Link>
         </div>
 
         {/* Mobile / tablet: compact 4-icon grid */}
-        <ul className="mt-6 grid grid-cols-4 gap-3 lg:hidden">
+        <ul className="mt-8 grid grid-cols-4 gap-2.5 lg:hidden">
           {mobileCats.map((c, i) => (
             <li key={c.label}>
               <Link
                 to="/projects"
                 aria-label={`Browse ${c.label}`}
                 style={{ animationDelay: `${i * 60}ms` }}
-                className="group flex min-h-[104px] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/70 p-3 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                className="group relative flex min-h-[112px] w-full flex-col items-center justify-center gap-2.5 overflow-hidden rounded-[22px] border border-white/70 bg-white/75 p-3 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
               >
                 <span
-                  className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
+                  aria-hidden
+                  className={`absolute -top-6 left-1/2 h-16 w-16 -translate-x-1/2 rounded-full bg-gradient-to-br ${c.hue} opacity-50 blur-2xl`}
+                />
+                <span
+                  className={`relative grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
                 >
                   <c.icon size={22} className="motion-safe:animate-[float_6s_ease-in-out_infinite]" />
                 </span>
-                <span className="text-[12px] font-semibold text-foreground">{c.label}</span>
+                <span className="relative text-[12px] font-semibold tracking-tight text-foreground">
+                  {c.label}
+                </span>
               </Link>
             </li>
           ))}
         </ul>
 
-        {/* Desktop: premium horizontally scrollable swipe cards */}
-        <div className="-mx-5 mt-6 hidden overflow-x-auto px-5 pb-3 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:block [&::-webkit-scrollbar]:hidden">
-          <ul className="flex snap-x snap-mandatory gap-4">
-            {CATEGORIES.map((c, i) => (
-              <li key={c.label} className="snap-start">
-                <button
-                  type="button"
-                  style={{ animationDelay: `${i * 60}ms` }}
-                  className="group relative flex h-48 w-40 shrink-0 flex-col justify-between overflow-hidden rounded-[26px] border border-white/60 bg-white/70 p-4 text-left shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] active:scale-[0.97] sm:h-52 sm:w-44"
-                >
-                  {/* Illustrative gradient blob */}
-                  <span
-                    aria-hidden
-                    className={`absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br ${c.hue} opacity-70 blur-2xl transition-transform duration-700 group-hover:scale-125`}
-                  />
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_50%_100%,color-mix(in_oklab,var(--primary)_10%,transparent),transparent_70%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  />
+        {/* Desktop: editorial category grid */}
+        <ul className="mt-10 hidden gap-5 lg:grid lg:grid-cols-3">
+          {CATEGORIES.map((c, i) => (
+            <li key={c.label}>
+              <Link
+                to="/projects"
+                aria-label={`Browse ${c.label}`}
+                style={{ animationDelay: `${i * 60}ms` }}
+                className="group relative flex h-full min-h-[188px] flex-col justify-between overflow-hidden rounded-[28px] border border-white/70 bg-white/70 p-6 text-left shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary/30 hover:shadow-[var(--shadow-float)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+              >
+                {/* ambient blob */}
+                <span
+                  aria-hidden
+                  className={`absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br ${c.hue} opacity-60 blur-3xl transition-transform duration-700 group-hover:scale-125`}
+                />
+                {/* diagonal sheen */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 transition-all duration-[900ms] ease-out group-hover:translate-x-full group-hover:opacity-100"
+                />
 
-                  <div className="relative">
-                    <span
-                      className={`inline-grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110`}
-                    >
-                      <c.icon size={22} />
-                    </span>
-                  </div>
+                <div className="relative flex items-start justify-between">
+                  <span
+                    className={`inline-grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110`}
+                  >
+                    <c.icon size={24} />
+                  </span>
+                  <span className="grid h-9 w-9 place-items-center rounded-full border border-border/50 text-muted-foreground transition-all duration-300 group-hover:border-primary/40 group-hover:bg-primary group-hover:text-primary-foreground">
+                    <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </div>
 
-                  <div className="relative">
-                    <div className="text-sm font-bold text-foreground">{c.label}</div>
-                    <div className={`mt-1 inline-flex items-center gap-1 rounded-full ${c.accent} px-2 py-0.5 text-[10px] font-semibold text-primary`}>
-                      {c.count}
-                    </div>
-                    <div className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      Explore <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
-                    </div>
+                <div className="relative mt-6">
+                  <div className="text-lg font-semibold tracking-tight text-foreground">
+                    {c.label}
                   </div>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  <div
+                    className={`mt-2 inline-flex items-center gap-1 rounded-full ${c.accent} px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary`}
+                  >
+                    {c.count}
+                  </div>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
 }
+
 
 
 /* ------------------------------ LIFESTYLE ------------------------------ */
@@ -947,28 +977,40 @@ function Projects() {
     });
 
   return (
-    <section id="projects" className="px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-3xl">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-              Featured Residence
-            </div>
-            <h2 className="mt-3 text-3xl font-bold leading-[1.1] text-foreground sm:text-5xl">
-              A home to come home to.
-            </h2>
-            <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
-              One curated residence, hand-picked by Aawash — every specification, plan and
-              amenity, transparent up front.
-            </p>
+    <section id="projects" className="relative px-5 py-24 sm:px-8 sm:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-10 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,color-mix(in_oklab,var(--leaf)_8%,transparent),transparent_72%)]"
+      />
+      <div className="relative mx-auto max-w-3xl">
+        <div className="flex flex-col items-center text-center">
+          <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
+            <Sparkles size={12} className="text-gold" /> Featured Residence
           </div>
+          <h2 className="mt-5 text-[2rem] font-bold leading-[1.05] tracking-tight text-foreground sm:text-[3.25rem]">
+            A home to{" "}
+            <span className="relative inline-block">
+              <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
+                come home to.
+              </span>
+              <span
+                aria-hidden
+                className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-gradient-to-r from-primary/60 via-leaf/50 to-transparent"
+              />
+            </span>
+          </h2>
+          <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
+            One curated residence, hand-picked by Aawash — every specification, plan and
+            amenity, transparent up front.
+          </p>
           <Link
             to="/projects"
-            className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-primary sm:inline-flex"
+            className="mt-7 inline-flex h-11 items-center gap-1.5 rounded-full border border-border/60 bg-surface/70 px-5 text-sm font-semibold text-primary backdrop-blur transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
           >
-            View all <ChevronRight size={14} />
+            View all projects <ChevronRight size={14} />
           </Link>
         </div>
+
 
         {/* One project per row — spacious, editorial */}
         <div className="mt-14 flex flex-col gap-16">
@@ -977,6 +1019,7 @@ function Projects() {
             const idx = activeImg[p.name] ?? 0;
             return (
               <Reveal key={p.name} variant="up" delay={i * 100}>
+                <div className="rounded-[2.5rem] bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20 p-[1.5px] shadow-[var(--shadow-float)]">
                 <article
                   role="link"
                   tabIndex={0}
@@ -990,20 +1033,21 @@ function Projects() {
                     event.preventDefault();
                     navigate({ to: "/projects/$slug", params: { slug: p.slug } });
                   }}
-                  className="group relative cursor-pointer overflow-hidden rounded-[2.25rem] border border-border/50 bg-surface shadow-[var(--shadow-float)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                  className="group relative cursor-pointer overflow-hidden rounded-[2.4rem] bg-surface transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[var(--shadow-glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                 >
                   {/* Image — clean, no overlaid copy */}
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-primary/10 to-leaf/10 sm:aspect-[16/10]">
+                  <div className="relative m-2 aspect-[4/3] overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary/10 to-leaf/10 sm:m-2.5 sm:aspect-[16/10]">
                     <img
                       src={p.images[idx]}
                       alt={`${p.name} — view ${idx + 1}`}
                       loading="lazy"
                       decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.04]"
+                      className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.05]"
                     />
                     {/* Soft top vignette so chips read on any image */}
-                    <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/25 to-transparent" />
-                    <span className="absolute left-5 top-5 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary shadow-sm backdrop-blur">
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
+                    <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-primary shadow-sm backdrop-blur">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary motion-safe:animate-pulse" />
                       {p.tag}
                     </span>
                     <button
@@ -1011,7 +1055,7 @@ function Projects() {
                       aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
                       aria-pressed={wished}
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWish(p.name); }}
-                      className={`absolute right-5 top-5 z-30 grid h-11 w-11 place-items-center rounded-full bg-white/95 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
+                      className={`absolute right-4 top-4 z-30 grid h-11 w-11 place-items-center rounded-full bg-white/95 shadow-[var(--shadow-soft)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
                         wished ? "text-destructive" : "text-primary"
                       }`}
                     >
@@ -1019,60 +1063,72 @@ function Projects() {
                     </button>
 
                     {p.images.length > 1 && (
-                      <div className="absolute inset-x-0 bottom-5 z-30 flex justify-center gap-1.5">
-                        {p.images.map((_, ii) => (
-                          <button
-                            key={ii}
-                            type="button"
-                            aria-label={`View image ${ii + 1}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setActiveImg((prev) => ({ ...prev, [p.name]: ii }));
-                            }}
-                            className={`h-1.5 rounded-full transition-all ${
-                              ii === idx ? "w-7 bg-white" : "w-1.5 bg-white/70 hover:bg-white/90"
-                            }`}
-                          />
-                        ))}
+                      <div className="absolute inset-x-0 bottom-4 z-30 flex justify-center">
+                        <div className="flex items-center gap-1.5 rounded-full bg-black/25 px-2.5 py-1.5 backdrop-blur-md">
+                          {p.images.map((_, ii) => (
+                            <button
+                              key={ii}
+                              type="button"
+                              aria-label={`View image ${ii + 1}`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setActiveImg((prev) => ({ ...prev, [p.name]: ii }));
+                              }}
+                              className={`h-1.5 rounded-full transition-all ${
+                                ii === idx ? "w-7 bg-white" : "w-1.5 bg-white/60 hover:bg-white/90"
+                              }`}
+                            />
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
 
-                  {/* Minimal info block */}
-                  <div className="relative z-20 flex flex-col gap-5 px-6 pb-7 pt-6 sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:pb-8 sm:pt-7">
-                    <div className="min-w-0">
-                      <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
-                        <MapPin size={12} className="text-primary" /> Darbhanga, Bihar
+                  {/* Info block */}
+                  <div className="relative z-20 px-6 pb-7 pt-4 sm:px-8 sm:pb-8 sm:pt-5">
+                    <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                      <div className="min-w-0">
+                        <div className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                          <MapPin size={12} className="text-primary" /> Darbhanga, Bihar
+                        </div>
+                        <Link
+                          to="/projects/$slug"
+                          params={{ slug: p.slug }}
+                          className="mt-2 block truncate text-2xl font-semibold tracking-tight text-foreground transition-colors hover:text-primary sm:text-[1.75rem]"
+                        >
+                          {p.name}
+                        </Link>
+                        <p className="mt-1.5 truncate text-sm text-muted-foreground">{p.tagline}</p>
                       </div>
-                      <Link
-                        to="/projects/$slug"
-                        params={{ slug: p.slug }}
-                        className="mt-1.5 block truncate text-xl font-semibold tracking-tight text-foreground transition-colors hover:text-primary sm:text-2xl"
-                      >
-                        {p.name}
-                      </Link>
+                      <div className="flex items-center justify-between gap-4 sm:justify-end">
+                        <div className="sm:text-right">
+                          <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                            From
+                          </div>
+                          <div className="text-lg font-bold tracking-tight text-foreground">
+                            {p.price}
+                          </div>
+                        </div>
+                        <Link
+                          to="/projects/$slug"
+                          params={{ slug: p.slug }}
+                          aria-label={`Explore ${p.name}`}
+                          className="inline-flex h-12 items-center gap-2 rounded-full bg-gradient-to-r from-primary to-leaf px-5 text-xs font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[var(--shadow-glow)] transition-all hover:-translate-y-0.5 hover:brightness-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                        >
+                          Explore <ArrowRight size={14} />
+                        </Link>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between gap-4 sm:justify-end">
-                      <div className="sm:text-right">
-                        <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                          From
-                        </div>
-                        <div className="text-base font-bold text-foreground sm:text-lg">
-                          {p.price}
-                        </div>
-                      </div>
-                      <Link
-                        to="/projects/$slug"
-                        params={{ slug: p.slug }}
-                        aria-label={`Explore ${p.name}`}
-                        className="inline-flex h-11 items-center gap-1.5 rounded-full bg-foreground px-4 text-xs font-semibold text-background transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
-                      >
-                        Explore <ArrowRight size={14} />
-                      </Link>
+
+                    {/* Spec strip */}
+                    <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border/50 pt-5">
+                      <SpecPill icon={<Ruler size={13} />} label={p.units} />
+                      <SpecPill icon={<Building2 size={13} />} label={p.developer} />
                     </div>
                   </div>
                 </article>
+                </div>
               </Reveal>
             );
           })}
@@ -1086,6 +1142,19 @@ function Projects() {
     </section>
   );
 }
+
+function SpecPill({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <div className="inline-flex min-w-0 items-center gap-2 text-xs font-medium text-muted-foreground">
+      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+        {icon}
+      </span>
+      <span className="truncate">{label}</span>
+    </div>
+  );
+}
+
+
 
 /* -------------------- Project Detail Modal -------------------- */
 
