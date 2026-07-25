@@ -80,9 +80,54 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
   const [puck, setPuck] = useState<{ x: number; w: number; ready: boolean }>({ x: 0, w: 0, ready: false });
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
+  const pinnedUntil = useRef(0);
+  const [focusIndex, setFocusIndex] = useState(-1);
 
   const activeIndex = items.findIndex((item) => isActive(pathname, item));
   const activeItem = activeIndex >= 0 ? items[activeIndex] : undefined;
+
+  /** Roving keyboard navigation: ←/→ move, Home/End jump, Enter/Space activate. */
+  const focusAt = (i: number) => {
+    const next = (i + items.length) % items.length;
+    setFocusIndex(next);
+    const link = itemRefs.current[next]?.querySelector("a");
+    (link as HTMLAnchorElement | null)?.focus();
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>, i: number) => {
+    switch (e.key) {
+      case "ArrowRight":
+      case "ArrowDown":
+        e.preventDefault();
+        focusAt(i + 1);
+        break;
+      case "ArrowLeft":
+      case "ArrowUp":
+        e.preventDefault();
+        focusAt(i - 1);
+        break;
+      case "Home":
+        e.preventDefault();
+        focusAt(0);
+        break;
+      case "End":
+        e.preventDefault();
+        focusAt(items.length - 1);
+        break;
+      case " ":
+      case "Spacebar":
+        e.preventDefault();
+        (e.currentTarget as HTMLAnchorElement).click();
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Always reveal the dock after a route change.
+  useEffect(() => {
+    setHidden(false);
+  }, [pathname]);
 
   // Hide on scroll-down, reappear on scroll-up.
   useEffect(() => {
@@ -93,10 +138,15 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
         const dy = y - lastY.current;
+        lastY.current = y;
+        // Keep the dock pinned right after a dock activation (e.g. hash jumps).
+        if (Date.now() < pinnedUntil.current) {
+          setHidden(false);
+          return;
+        }
         if (Math.abs(dy) < 6) return;
         if (y < 40) setHidden(false);
         else setHidden(dy > 0);
-        lastY.current = y;
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -155,6 +205,9 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
 
       <ul
         ref={listRef}
+        role="toolbar"
+        aria-orientation="horizontal"
+        aria-label="Dock destinations"
         className="pointer-events-auto relative mx-auto flex h-[66px] w-full max-w-[420px] items-stretch justify-between gap-0.5 rounded-[30px] border border-white/60 bg-white/72 p-1.5 shadow-[0_24px_60px_-18px_rgba(46,125,91,0.45),0_4px_14px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-black/5 backdrop-blur-2xl"
       >
         {/* Magnetic emerald puck */}
@@ -175,12 +228,14 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
         {items.map((item, i) => {
           const { label, icon: Icon, to, hash, description, key } = item;
           const active = i === activeIndex;
+          const tabbable = i === (focusIndex >= 0 ? focusIndex : activeIndex >= 0 ? activeIndex : 0);
           return (
             <li
               key={key}
               ref={(el) => {
                 itemRefs.current[i] = el;
               }}
+              role="none"
               className={`relative z-10 flex min-w-0 transition-[flex] duration-300 ${active ? "flex-[1.5]" : "flex-1"}`}
             >
               <Link
@@ -190,8 +245,18 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 resetScroll={!hash}
                 aria-label={`${label} — ${description}`}
                 aria-current={active ? "page" : undefined}
+                tabIndex={tabbable ? 0 : -1}
+                onFocus={() => {
+                  setFocusIndex(i);
+                  setHidden(false);
+                }}
+                onClick={() => {
+                  pinnedUntil.current = Date.now() + 1200;
+                  setHidden(false);
+                }}
+                onKeyDown={(e) => onKeyDown(e, i)}
                 data-testid={`dock-link-${label.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`group relative flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-[22px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[#2E7D5B]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white/60 ${
+                className={`group relative flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-[22px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[#2E7D5B]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                   active ? "text-white" : "text-slate-500 hover:text-[#2E7D5B]"
                 }`}
               >
@@ -209,7 +274,6 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 >
                   {label}
                 </span>
-                
               </Link>
             </li>
           );
