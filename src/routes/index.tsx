@@ -935,6 +935,22 @@ function Projects() {
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
   const [activeImg, setActiveImg] = useState<Record<string, number>>({});
   const [openProject, setOpenProject] = useState<ProjectDetail | null>(null);
+  const [filter, setFilter] = useState("All");
+  const [page, setPage] = useState(0);
+
+  const catalogueFilters = useMemo(
+    () => ["All", ...Array.from(new Set(PROJECTS.map((p) => p.tag)))],
+    [],
+  );
+  const filtered = useMemo(
+    () => (filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.tag === filter)),
+    [filter],
+  );
+  const PAGE_SIZE = 6;
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageItems = filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
+
+  const [openProject, setOpenProject] = useState<ProjectDetail | null>(null);
   const toggleWish = (name: string) =>
     setWishlist((prev) => {
       const next = new Set(prev);
