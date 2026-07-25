@@ -96,19 +96,31 @@ export const getLeaderOverview = createServerFn({ method: "GET" })
       .filter((r) => r.status === "pending")
       .reduce((s, r) => s + Number(r.amount || 0), 0);
 
+    // Admin-set overrides (profiles.metrics_override) win over computed values
+    // so anything edited in the admin console shows up here immediately.
+    const { data: meRow } = await context.supabase
+      .from("profiles")
+      .select("metrics_override, wallet_balance")
+      .eq("id", context.userId)
+      .maybeSingle();
+    const ov = ((meRow?.metrics_override ?? {}) as Record<string, unknown>) || {};
+    const pick = (key: string, fallback: number) =>
+      ov[key] === undefined || ov[key] === null ? fallback : Number(ov[key]);
+
     return {
       teamId,
       teamLetter,
-      memberCount: membersRes.count ?? 0,
-      totalSales: totalRevenue,
-      salesCount: (salesRes.data ?? []).length,
-      totalRevenue,
-      totalCommission,
+      memberCount: pick("member_count", membersRes.count ?? 0),
+      totalSales: pick("total_revenue", totalRevenue),
+      salesCount: pick("sales_count", (salesRes.data ?? []).length),
+      totalRevenue: pick("total_revenue", totalRevenue),
+      totalCommission: pick("total_commission", totalCommission),
       pendingCommission,
       monthlyRevenue,
       monthlyCommission,
       approvedWithdrawals,
       pendingWithdrawals,
+      walletBalance: Number(meRow?.wallet_balance ?? 0),
       projectCount: projRes.count ?? 0,
     };
   });
