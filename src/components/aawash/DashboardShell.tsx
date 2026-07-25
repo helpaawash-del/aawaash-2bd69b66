@@ -63,7 +63,7 @@ export function DashboardShell({
 
       <FloatingSideRail role={role} />
 
-      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-32 pt-6 sm:max-w-lg md:max-w-3xl md:px-8 md:pb-32 lg:max-w-6xl lg:px-12 lg:pl-24">
+      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-32 pt-6 sm:max-w-lg md:max-w-3xl md:px-10 md:pb-32 lg:max-w-6xl lg:px-12 lg:pl-28 xl:max-w-7xl xl:px-16 xl:pl-32">
 
         <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:gap-4">
           <BrandMark size="sm" />
@@ -87,7 +87,7 @@ export function DashboardShell({
             <Link
               to={`/${role}/notifications` as never}
               aria-label="Notifications"
-              className="group relative grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-border bg-surface text-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary"
+              className="group relative grid h-11 w-11 min-h-11 min-w-11 shrink-0 place-items-center rounded-2xl border border-border bg-surface text-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <Bell size={17} />
               <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_0_2px_var(--card)]" />
@@ -96,7 +96,8 @@ export function DashboardShell({
             {/* User chip */}
             <Link
               to={`/${role}/profile` as never}
-              className="glass-card hidden items-center gap-2.5 rounded-full py-1 pl-1 pr-3 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] sm:inline-flex"
+              aria-label="Open your profile"
+              className="glass-card hidden min-h-11 items-center gap-2.5 rounded-full py-1 pl-1 pr-3 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] sm:inline-flex outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-primary to-leaf text-xs font-bold text-primary-foreground ring-2 ring-white/70">
                 {initials}
@@ -115,7 +116,7 @@ export function DashboardShell({
               <AlertDialogTrigger asChild>
                 <button
                   disabled={signingOut}
-                  className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-border bg-surface text-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
+                  className="grid h-11 w-11 min-h-11 min-w-11 shrink-0 place-items-center rounded-2xl border border-border bg-surface text-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-destructive/30 hover:text-destructive disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   aria-label="Sign out"
                 >
                   {signingOut ? (
@@ -147,7 +148,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main className="mt-8 flex-1">{children}</main>
+        <main id="main-content" className="mt-8 flex-1 md:mt-9 lg:mt-10">{children}</main>
       </div>
     </div>
   );
@@ -193,8 +194,10 @@ function FloatingSideRail({ role }: { role: AppRole }) {
               <Link
                 key={item.label}
                 to={item.to}
-                aria-label={item.description}
-                className={`relative z-10 flex h-11 items-center gap-3 rounded-2xl px-2.5 text-sm font-semibold transition-colors ${
+                aria-label={item.label}
+                aria-current={active ? "page" : undefined}
+                title={item.description}
+                className={`relative z-10 flex h-11 min-h-11 items-center gap-3 rounded-2xl px-2.5 text-sm font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   active ? "text-primary-foreground" : "text-foreground hover:text-primary"
                 }`}
               >
