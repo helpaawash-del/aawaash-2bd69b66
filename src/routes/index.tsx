@@ -1143,6 +1143,19 @@ function Projects() {
   );
 }
 
+function SpecPill({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <div className="inline-flex min-w-0 items-center gap-2 text-xs font-medium text-muted-foreground">
+      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+        {icon}
+      </span>
+      <span className="truncate">{label}</span>
+    </div>
+  );
+}
+
+
+
 /* -------------------- Project Detail Modal -------------------- */
 
 function ProjectDetailModal({
