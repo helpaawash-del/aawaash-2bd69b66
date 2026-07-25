@@ -80,6 +80,7 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
   const [puck, setPuck] = useState<{ x: number; w: number; ready: boolean }>({ x: 0, w: 0, ready: false });
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
+  const pinnedUntil = useRef(0);
   const [focusIndex, setFocusIndex] = useState(-1);
 
   const activeIndex = items.findIndex((item) => isActive(pathname, item));
