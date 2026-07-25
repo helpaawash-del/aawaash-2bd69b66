@@ -34,6 +34,9 @@ function AdminLoginPage() {
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [shake, setShake] = useState(0);
+
   const { data, isLoading } = useQuery({ queryKey: ["admin", "passcode"], queryFn: () => check() });
 
   // Normalize any redirect target to an internal path. Older links may have
