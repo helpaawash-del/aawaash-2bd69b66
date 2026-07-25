@@ -8,7 +8,6 @@ const NAV_ITEMS: { label: string; href: string; route?: boolean }[] = [
   { label: "Home", href: "/", route: true },
   { label: "Projects", href: "/projects", route: true },
   { label: "How It Works", href: "/#how-it-works" },
-  { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
 ];
 

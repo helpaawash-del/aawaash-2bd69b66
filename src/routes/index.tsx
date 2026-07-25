@@ -122,11 +122,8 @@ function Landing() {
         <Stats />
         <Lifestyle />
         <SmartPanels />
-        <Features />
         <BookVisit />
         <HowItWorks />
-        <WhyChoose />
-        <Testimonials />
         <FAQ />
         <Contact />
       </main>
@@ -527,7 +524,7 @@ function Categories() {
     ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
   );
   return (
-    <section aria-labelledby="cats-title" className="relative px-5 py-14 sm:px-8 sm:py-20">
+    <section aria-labelledby="cats-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
       {/* soft ambient wash */}
       <div
         aria-hidden
@@ -652,7 +649,7 @@ const AMENITIES: { label: string; icon: typeof Waves; desc: string }[] = [
 
 function Lifestyle() {
   return (
-    <section aria-labelledby="lifestyle-title" className="relative px-5 py-14 sm:px-8 sm:py-20">
+    <section aria-labelledby="lifestyle-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
       <div className="mx-auto max-w-6xl">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <Reveal variant="left">
@@ -719,7 +716,7 @@ function Lifestyle() {
 
 function BookVisit() {
   return (
-    <section aria-labelledby="visit-title" className="px-5 py-10 sm:px-8 sm:py-14">
+    <section aria-labelledby="visit-title" className="px-5 py-8 sm:px-8 sm:py-11">
       <div className="mx-auto max-w-6xl">
         <div className="relative overflow-hidden rounded-[2rem] border border-border bg-gradient-to-br from-primary via-primary to-leaf p-8 text-primary-foreground shadow-[var(--shadow-glow)] sm:p-12">
           <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
@@ -775,7 +772,7 @@ const STATS = [
 
 function Stats() {
   return (
-    <section className="px-5 py-12 sm:px-8">
+    <section className="px-5 py-9 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="glass-card grid grid-cols-2 gap-3 rounded-3xl p-4 shadow-[var(--shadow-float)] sm:grid-cols-4 sm:gap-6 sm:p-6">
           {STATS.map((s, i) => (
@@ -820,45 +817,6 @@ function Counter({ value, suffix, label }: { value: number; suffix: string; labe
   );
 }
 
-/* ------------------------------ FEATURES ------------------------------ */
-
-const FEATURES = [
-  { icon: Building2, title: "Premium Residences", body: "Hand-picked luxury projects across India's most sought-after neighbourhoods." },
-  { icon: ShieldCheck, title: "Transparent Commissions", body: "Every rupee tracked. Every slab defined. No hidden math." },
-  { icon: BarChart3, title: "Live Performance", body: "Real-time sales, referrals, and earnings — beautifully visualised." },
-  { icon: Users, title: "Team System", body: "Structured hierarchy of leaders and members with clear roles." },
-  { icon: Wallet, title: "Wallet & Payouts", body: "Track earnings and payouts with a native, mobile-first wallet." },
-  { icon: Smartphone, title: "Mobile-first", body: "Designed for your thumb. Optimised for on-the-go teams." },
-  { icon: LineChart, title: "Deep Analytics", body: "Understand what's converting — projects, members, months." },
-  { icon: Leaf, title: "Eco-forward Design", body: "A calmer, greener aesthetic across every screen." },
-];
-
-function Features() {
-  return (
-    <section className="px-5 py-20 sm:px-8" id="features">
-      <div className="mx-auto max-w-6xl">
-        <SectionHeader
-          eyebrow="Why Aawash"
-          title="Built for premium real estate teams."
-          subtitle="Every detail crafted for clarity, speed, and trust — from the first tap to the final payout."
-        />
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURES.map((f, i) => (
-            <Reveal key={f.title} variant="up" delay={(i % 4) * 80}>
-              <div className="glass-card group relative flex h-full flex-col rounded-3xl p-5 shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-float)]">
-                <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-primary-soft to-primary-soft/40 text-primary">
-                  <f.icon size={20} />
-                </div>
-                <h3 className="mt-4 text-base font-bold text-foreground">{f.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ------------------------------ PROJECTS ------------------------------ */
 
@@ -977,7 +935,7 @@ function Projects() {
     });
 
   return (
-    <section id="projects" className="relative px-5 py-24 sm:px-8 sm:py-28">
+    <section id="projects" className="relative px-5 py-16 sm:px-8 sm:py-20">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-10 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,color-mix(in_oklab,var(--leaf)_8%,transparent),transparent_72%)]"
@@ -987,7 +945,7 @@ function Projects() {
           <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
             <Sparkles size={12} className="text-gold" /> Featured Residence
           </div>
-          <h2 className="mt-5 text-[2rem] font-bold leading-[1.05] tracking-tight text-foreground sm:text-[3.25rem]">
+          <h2 className="mt-5 font-serif text-[1.6rem] font-medium leading-[1.15] tracking-[0.015em] text-foreground sm:text-[2.35rem]">
             A home to{" "}
             <span className="relative inline-block">
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
@@ -999,17 +957,8 @@ function Projects() {
               />
             </span>
           </h2>
-          <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
-            One curated residence, hand-picked by Aawash — every specification, plan and
-            amenity, transparent up front.
-          </p>
-          <Link
-            to="/projects"
-            className="mt-7 inline-flex h-11 items-center gap-1.5 rounded-full border border-border/60 bg-surface/70 px-5 text-sm font-semibold text-primary backdrop-blur transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
-          >
-            View all projects <ChevronRight size={14} />
-          </Link>
         </div>
+
 
 
         {/* One project per row — spacious, editorial */}
@@ -1448,7 +1397,7 @@ const SMART_PANELS: { icon: typeof Calculator; title: string; body: string; tone
 
 function SmartPanels() {
   return (
-    <section aria-labelledby="smart-title" className="px-5 py-20 sm:px-8">
+    <section aria-labelledby="smart-title" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Smart Tools"
@@ -1494,7 +1443,7 @@ const STEPS = [
 
 function HowItWorks() {
   return (
-    <section id="how-it-works" className="px-5 py-20 sm:px-8">
+    <section id="how-it-works" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Team System"
@@ -1543,27 +1492,53 @@ const SLABS = [
 
 function Commission() {
   return (
-    <section id="commission" className="px-5 py-20 sm:px-8">
-      <div className="mx-auto max-w-6xl">
-        <SectionHeader
-          eyebrow="Commission Slabs"
-          title="Simple, tiered, transparent."
-          subtitle="Commission ladders scale with deal value — clearly defined and visible in your dashboard."
-        />
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
+    <section id="commission" className="relative px-5 py-16 sm:px-8">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-6 h-64 bg-[radial-gradient(55%_100%_at_50%_0%,color-mix(in_oklab,var(--primary)_9%,transparent),transparent_72%)]"
+      />
+      <div className="relative mx-auto max-w-6xl">
+        <Reveal variant="up">
+          <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+            <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
+              <Sparkles size={12} className="text-gold" /> Commission Slabs
+            </div>
+            <h2 className="mt-5 text-[1.75rem] font-semibold leading-[1.12] tracking-[0.005em] text-foreground sm:text-[2.5rem]">
+              Simple, tiered,{" "}
+              <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
+                transparent.
+              </span>
+            </h2>
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+              Ladders scale with deal value — clearly defined, always visible in your dashboard.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mt-12 grid grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-5 lg:grid-cols-6">
           {SLABS.map((slab, i) => (
             <Reveal key={slab.range} variant="scale" delay={i * 60}>
-              <div
-                className={`glass-card flex aspect-square flex-col items-center justify-center rounded-3xl bg-gradient-to-br ${slab.tone} p-3 text-center shadow-[var(--shadow-soft)]`}
-              >
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Deal Value
-                </div>
-                <div className="mt-1.5 text-base font-extrabold tracking-tight text-foreground sm:text-lg">
-                  {slab.range}
-                </div>
-                <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-surface/70 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                  <Sparkles size={10} /> Tier {i + 1}
+              <div className="group relative h-full rounded-[1.75rem] bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20 p-[1.2px] transition-transform duration-500 hover:-translate-y-1.5">
+                <div
+                  className={`relative flex h-full flex-col items-center justify-center overflow-hidden rounded-[1.7rem] bg-gradient-to-br ${slab.tone} px-3 py-7 text-center shadow-[var(--shadow-soft)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-float)]`}
+                >
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/40 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+                  />
+                  <span className="relative text-[10px] font-bold uppercase tracking-[0.18em] text-primary/70">
+                    Tier {i + 1}
+                  </span>
+                  <div className="relative mt-3 text-[17px] font-semibold tracking-tight text-foreground sm:text-lg">
+                    {slab.range}
+                  </div>
+                  <span
+                    aria-hidden
+                    className="relative mt-3 h-px w-8 rounded-full bg-gradient-to-r from-transparent via-primary/60 to-transparent"
+                  />
+                  <div className="relative mt-3 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                    Deal Value
+                  </div>
                 </div>
               </div>
             </Reveal>
@@ -1574,110 +1549,7 @@ function Commission() {
   );
 }
 
-/* ------------------------------ WHY CHOOSE ------------------------------ */
 
-const WHY = [
-  { icon: ShieldCheck, title: "Trusted Platform", body: "Built for professionals who value clarity and consistency." },
-  { icon: Building2, title: "Luxury Projects", body: "Only well-vetted developments — nothing filler." },
-  { icon: Users, title: "Team Structure", body: "Roles that mirror how your teams actually operate." },
-  { icon: LineChart, title: "Fast Tracking", body: "See sales and commissions the moment they happen." },
-  { icon: Wallet, title: "Secure Accounts", body: "Invite-only access. RBAC and audit trails, always on." },
-  { icon: Leaf, title: "Eco-Forward Vision", body: "Calmer aesthetics, quieter animations, cleaner UX." },
-];
-
-function WhyChoose() {
-  return (
-    <section id="about" className="px-5 py-20 sm:px-8">
-      <div className="mx-auto max-w-6xl">
-        <SectionHeader eyebrow="Why Choose Aawash" title="An experience worth signing in to." />
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {WHY.map((w, i) => (
-            <Reveal key={w.title} variant="up" delay={(i % 3) * 80}>
-              <div className="glass-card flex h-full items-start gap-4 rounded-3xl p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gold/20 text-gold-foreground">
-                  <w.icon size={20} />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-base font-bold text-foreground">{w.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{w.body}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------ TESTIMONIALS ------------------------------ */
-
-const REVIEWS = [
-  {
-    name: "Ritu Malhotra",
-    role: "Team Leader — Bengaluru",
-    review:
-      "Aawash finally makes commission tracking feel like a modern app. My members onboard in minutes.",
-    rating: 5,
-  },
-  {
-    name: "Aditya Rao",
-    role: "Member — Team A",
-    review:
-      "The dashboard is calm, fast, and beautiful. It's the first CRM my team actually wants to open.",
-    rating: 5,
-  },
-  {
-    name: "Sneha Iyer",
-    role: "Homebuyer",
-    review:
-      "Every step of the purchase felt transparent. It's what buying a home should feel like.",
-    rating: 5,
-  },
-];
-
-function Testimonials() {
-  return (
-    <section className="px-5 py-20 sm:px-8" id="testimonials">
-      <div className="mx-auto max-w-6xl">
-        <SectionHeader
-          eyebrow="Testimonials"
-          title="Loved by teams and buyers alike."
-          subtitle="A preview of stories we're gathering as Aawash expands city by city."
-        />
-        <div className="mt-10 -mx-5 overflow-x-auto pb-4 sm:mx-0">
-          <div className="flex gap-4 px-5 sm:grid sm:grid-cols-3 sm:gap-5 sm:px-0">
-            {REVIEWS.map((r, i) => (
-              <Reveal key={r.name} variant="up" delay={i * 100} className="w-[85%] shrink-0 sm:w-auto">
-                <div className="glass-card flex h-full flex-col gap-4 rounded-3xl p-5 shadow-[var(--shadow-soft)]">
-                  <div className="flex items-center gap-1 text-gold">
-                    {Array.from({ length: r.rating }).map((_, k) => (
-                      <Star key={k} size={14} fill="currentColor" strokeWidth={0} />
-                    ))}
-                  </div>
-                  <p className="text-sm leading-relaxed text-foreground">"{r.review}"</p>
-                  <div className="mt-auto flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-primary to-leaf text-xs font-bold text-primary-foreground">
-                      {r.name
-                        .split(" ")
-                        .map((s) => s[0])
-                        .slice(0, 2)
-                        .join("")}
-                    </div>
-                    <div className="leading-tight">
-                      <div className="text-sm font-semibold text-foreground">{r.name}</div>
-                      <div className="text-[11px] text-muted-foreground">{r.role}</div>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ------------------------------ FAQ ------------------------------ */
 
@@ -1706,7 +1578,7 @@ const FAQS = [
 
 function FAQ() {
   return (
-    <section id="faq" className="px-5 py-20 sm:px-8">
+    <section id="faq" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-3xl">
         <SectionHeader eyebrow="Frequently Asked" title="Answers, in plain words." />
         <Reveal variant="up" className="mt-8">
@@ -1739,7 +1611,7 @@ function FAQ() {
 function Contact() {
   const [sent, setSent] = useState(false);
   return (
-    <section id="contact" className="px-5 py-20 sm:px-8">
+    <section id="contact" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Contact"
@@ -1751,7 +1623,7 @@ function Contact() {
             <div className="glass-card flex h-full flex-col gap-5 rounded-3xl p-6 shadow-[var(--shadow-soft)]">
               <ContactRow icon={Phone} label="Phone" value="+91 90000 00000" />
               <ContactRow icon={Mail} label="Email" value="hello@aawash.app" />
-              <ContactRow icon={MapPinned} label="Office" value="Bengaluru · Mumbai · Delhi NCR" />
+              <ContactRow icon={MapPinned} label="Office" value="Darbhanga, Bihar — 846004" />
               <div className="mt-2 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-primary-soft to-leaf/20">
                 <div className="grid h-full w-full place-items-center text-xs font-semibold text-muted-foreground">
                   Map preview
@@ -1847,7 +1719,7 @@ function Field({
 
 function Footer() {
   return (
-    <footer className="border-t border-border/60 bg-surface-warm/50 px-5 py-12 sm:px-8">
+    <footer className="border-t border-border/60 bg-surface-warm/50 px-5 py-9 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -1869,7 +1741,6 @@ function Footer() {
           <FooterCol
             title="Company"
             links={[
-              { label: "About", href: "#about" },
               { label: "Contact", href: "#contact" },
               { label: "Privacy", href: "#" },
               { label: "Terms", href: "#" },
