@@ -524,7 +524,7 @@ function Categories() {
     ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
   );
   return (
-    <section aria-labelledby="cats-title" className="relative px-5 py-14 sm:px-8 sm:py-20">
+    <section aria-labelledby="cats-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
       {/* soft ambient wash */}
       <div
         aria-hidden
@@ -649,7 +649,7 @@ const AMENITIES: { label: string; icon: typeof Waves; desc: string }[] = [
 
 function Lifestyle() {
   return (
-    <section aria-labelledby="lifestyle-title" className="relative px-5 py-14 sm:px-8 sm:py-20">
+    <section aria-labelledby="lifestyle-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
       <div className="mx-auto max-w-6xl">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <Reveal variant="left">
@@ -716,7 +716,7 @@ function Lifestyle() {
 
 function BookVisit() {
   return (
-    <section aria-labelledby="visit-title" className="px-5 py-10 sm:px-8 sm:py-14">
+    <section aria-labelledby="visit-title" className="px-5 py-8 sm:px-8 sm:py-11">
       <div className="mx-auto max-w-6xl">
         <div className="relative overflow-hidden rounded-[2rem] border border-border bg-gradient-to-br from-primary via-primary to-leaf p-8 text-primary-foreground shadow-[var(--shadow-glow)] sm:p-12">
           <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
@@ -772,7 +772,7 @@ const STATS = [
 
 function Stats() {
   return (
-    <section className="px-5 py-12 sm:px-8">
+    <section className="px-5 py-9 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="glass-card grid grid-cols-2 gap-3 rounded-3xl p-4 shadow-[var(--shadow-float)] sm:grid-cols-4 sm:gap-6 sm:p-6">
           {STATS.map((s, i) => (
@@ -935,7 +935,7 @@ function Projects() {
     });
 
   return (
-    <section id="projects" className="relative px-5 py-24 sm:px-8 sm:py-28">
+    <section id="projects" className="relative px-5 py-16 sm:px-8 sm:py-20">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-10 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,color-mix(in_oklab,var(--leaf)_8%,transparent),transparent_72%)]"
@@ -1397,7 +1397,7 @@ const SMART_PANELS: { icon: typeof Calculator; title: string; body: string; tone
 
 function SmartPanels() {
   return (
-    <section aria-labelledby="smart-title" className="px-5 py-20 sm:px-8">
+    <section aria-labelledby="smart-title" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Smart Tools"
@@ -1443,7 +1443,7 @@ const STEPS = [
 
 function HowItWorks() {
   return (
-    <section id="how-it-works" className="px-5 py-20 sm:px-8">
+    <section id="how-it-works" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Team System"
@@ -1578,7 +1578,7 @@ const FAQS = [
 
 function FAQ() {
   return (
-    <section id="faq" className="px-5 py-20 sm:px-8">
+    <section id="faq" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-3xl">
         <SectionHeader eyebrow="Frequently Asked" title="Answers, in plain words." />
         <Reveal variant="up" className="mt-8">
@@ -1611,7 +1611,7 @@ function FAQ() {
 function Contact() {
   const [sent, setSent] = useState(false);
   return (
-    <section id="contact" className="px-5 py-20 sm:px-8">
+    <section id="contact" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Contact"
@@ -1719,7 +1719,7 @@ function Field({
 
 function Footer() {
   return (
-    <footer className="border-t border-border/60 bg-surface-warm/50 px-5 py-12 sm:px-8">
+    <footer className="border-t border-border/60 bg-surface-warm/50 px-5 py-9 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
