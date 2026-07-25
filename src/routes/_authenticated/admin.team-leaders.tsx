@@ -13,6 +13,8 @@ import {
   Settings2,
   ArrowRight,
   Circle,
+  Trash2,
+  Sliders,
 } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
@@ -20,6 +22,12 @@ import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { listTeamLeaders, getTeamLimits, updateTeamLimits } from "@/lib/team-leaders.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
 import { WalletEditButton } from "@/components/aawash/admin/WalletAdjustDialog";
+import {
+  AddLeaderDialog,
+  LeaderMetricsDialog,
+  DeleteLeaderDialog,
+  type LeaderMetrics,
+} from "@/components/aawash/admin/AdminLeaderDialogs";
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders")({
   component: Page,
@@ -59,6 +67,9 @@ function Content() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<"all" | "active" | "suspended">("all");
   const [showLimits, setShowLimits] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const [metricsFor, setMetricsFor] = useState<LeaderMetrics | null>(null);
+  const [deleteFor, setDeleteFor] = useState<{ id: string; full_name: string } | null>(null);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin", "team-leaders"],
@@ -122,13 +133,14 @@ function Content() {
               Limits
             </button>
             {canAdd ? (
-              <Link
-                to="/admin/team-leaders/new"
+              <button
+                type="button"
+                onClick={() => setShowAdd(true)}
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5"
               >
                 <Plus size={16} />
                 Add Team Leader
-              </Link>
+              </button>
             ) : (
               <span
                 title={`Team Leader cap reached (${cap}). Raise the limit in Limits.`}
@@ -210,10 +222,8 @@ function Content() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {filtered.map((l) => (
-            <Link
+            <div
               key={l.id}
-              to="/admin/team-leaders/$id"
-              params={{ id: l.id }}
               className="group relative flex flex-col gap-4 overflow-hidden rounded-4xl border border-border bg-surface p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-float)]"
             >
               <div className="flex items-start gap-3">
@@ -244,6 +254,14 @@ function Content() {
                     {l.login_id} · {l.mobile_number}
                   </div>
                 </div>
+                <button
+                  type="button"
+                  aria-label={`Delete ${l.full_name}`}
+                  onClick={() => setDeleteFor({ id: l.id, full_name: l.full_name })}
+                  className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full bg-destructive/10 text-destructive transition-colors hover:bg-destructive/20"
+                >
+                  <Trash2 size={15} />
+                </button>
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-center">
@@ -274,10 +292,33 @@ function Content() {
                 </div>
               </div>
 
-              <div className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform group-hover:-translate-y-0.5">
-                Manage leader <ArrowRight size={12} />
+              <div className="mt-auto grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setMetricsFor({
+                      id: l.id,
+                      full_name: l.full_name,
+                      sales_count: l.sales_count ?? 0,
+                      wallet_balance: Number(l.wallet_balance ?? 0),
+                      total_commission: l.total_commission ?? 0,
+                      total_revenue: l.total_revenue ?? 0,
+                      member_count: l.member_count ?? 0,
+                    })
+                  }
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5"
+                >
+                  <Sliders size={12} /> Manage leader
+                </button>
+                <Link
+                  to="/admin/team-leaders/$id"
+                  params={{ id: l.id }}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 text-xs font-bold text-foreground transition-transform hover:-translate-y-0.5"
+                >
+                  Full profile <ArrowRight size={12} />
+                </Link>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
@@ -290,6 +331,36 @@ function Content() {
             await updateLimitsFn({ data: payload });
             await Promise.all([refetch(), refetchLimits()]);
             setShowLimits(false);
+          }}
+        />
+      )}
+
+      {showAdd && (
+        <AddLeaderDialog
+          teams={(data?.teams ?? []) as { id: string; letter: string; name: string; leader_id: string | null }[]}
+          onClose={() => {
+            setShowAdd(false);
+            void refetch();
+          }}
+        />
+      )}
+
+      {metricsFor && (
+        <LeaderMetricsDialog
+          leader={metricsFor}
+          onClose={() => {
+            setMetricsFor(null);
+            void refetch();
+          }}
+        />
+      )}
+
+      {deleteFor && (
+        <DeleteLeaderDialog
+          leader={deleteFor}
+          onClose={() => {
+            setDeleteFor(null);
+            void refetch();
           }}
         />
       )}

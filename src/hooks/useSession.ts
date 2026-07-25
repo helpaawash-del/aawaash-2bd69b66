@@ -43,6 +43,35 @@ export function useSession(): SessionState {
 
   useEffect(() => {
     let cancelled = false;
+    let profileChannel: ReturnType<typeof supabase.channel> | null = null;
+    let pollTimer: number | undefined;
+
+    async function refreshProfile(userId: string) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+      if (cancelled || !profile) return;
+      setState((prev) => ({ ...prev, profile: profile as AawashProfile }));
+    }
+
+    /** Live-follow the signed-in user's own profile row so admin-side
+     *  wallet / status edits appear on their dashboard immediately. */
+    function watchProfile(userId: string) {
+      if (profileChannel) return;
+      profileChannel = supabase
+        .channel(`self-profile-${userId}`)
+        .on(
+          "postgres_changes" as never,
+          { event: "UPDATE", schema: "public", table: "profiles", filter: `id=eq.${userId}` } as never,
+          () => void refreshProfile(userId),
+        )
+        .subscribe();
+      pollTimer = window.setInterval(() => void refreshProfile(userId), 20_000);
+      window.addEventListener("focus", () => void refreshProfile(userId));
+    }
+
 
     async function loadProfileAndRole(userId: string) {
       const [{ data: profile }, { data: roleRow }] = await Promise.all([
@@ -62,6 +91,7 @@ export function useSession(): SessionState {
         profile: (profile as AawashProfile | null) ?? null,
         role: (roleRow?.role as AppRole | null) ?? null,
       }));
+      watchProfile(userId);
     }
 
     // Register listener FIRST
@@ -101,6 +131,8 @@ export function useSession(): SessionState {
 
     return () => {
       cancelled = true;
+      if (pollTimer) window.clearInterval(pollTimer);
+      if (profileChannel) supabase.removeChannel(profileChannel);
       sub.subscription.unsubscribe();
     };
   }, []);
