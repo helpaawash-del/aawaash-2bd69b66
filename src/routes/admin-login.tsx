@@ -43,11 +43,7 @@ function AdminLoginPage() {
   useEffect(() => {
     if (!data?.unlocked) return;
     supabase.auth.getUser().then(({ data: userData }) => {
-      if (userData.user) {
-        navigate({ to: safeRedirect, replace: true });
-      } else {
-        navigate({ to: "/auth", search: { redirect: safeRedirect }, replace: true });
-      }
+      if (userData.user) navigate({ to: safeRedirect, replace: true });
     });
   }, [data?.unlocked, navigate, safeRedirect]);
 
@@ -65,16 +61,28 @@ function AdminLoginPage() {
         setError("Invalid admin passcode.");
         return;
       }
+
       const { data: userData } = await supabase.auth.getUser();
-      if (userData.user) {
-        navigate({ to: safeRedirect, replace: true });
-      } else {
-        navigate({ to: "/auth", search: { redirect: safeRedirect }, replace: true });
+      if (!userData.user) {
+        if (!result.tokenHash) {
+          setError("Admin account is not configured yet. Contact support.");
+          return;
+        }
+        const { error: otpError } = await supabase.auth.verifyOtp({
+          token_hash: result.tokenHash,
+          type: "magiclink",
+        });
+        if (otpError) {
+          setError("Could not start the admin session. Please try again.");
+          return;
+        }
       }
+      navigate({ to: safeRedirect, replace: true });
     } finally {
       setSubmitting(false);
     }
   }
+
 
   return (
     <main className="relative grid min-h-dvh place-items-center overflow-hidden bg-background px-4 py-10 text-foreground">
