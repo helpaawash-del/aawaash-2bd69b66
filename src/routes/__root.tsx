@@ -148,8 +148,12 @@ function RootComponent() {
   const router = useRouter();
   const { role, loading: sessionLoading } = useSession();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  // Project detail pages use their own contextual dock; suppress the global one.
-  const hideGlobalDock = /^\/projects\/[^/]+$/.test(pathname);
+  // Project detail pages use their own contextual dock; sign-in surfaces show none.
+  const hideGlobalDock =
+    /^\/projects\/[^/]+$/.test(pathname) ||
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/admin-login") ||
+    pathname.startsWith("/unauthorized");
 
   useEffect(() => {
     // Import inside effect to keep the browser client out of any SSR path.
