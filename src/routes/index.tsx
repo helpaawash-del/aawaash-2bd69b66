@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -76,18 +76,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-/* ---------------- Shared typography + spacing scale ---------------- */
-/** One padding rhythm for every homepage section (mobile-first, tightened). */
-const SECTION_PAD = "px-4 py-10 sm:px-8 sm:py-14 lg:py-16";
-/** Eyebrow chip */
-const EYEBROW = "glass-card inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-primary";
-/** Section heading */
-const H2 = "mt-4 text-balance text-[1.6rem] font-semibold leading-[1.16] tracking-[0.01em] text-foreground sm:mt-5 sm:text-[2.2rem]";
-/** Section subheading */
-const SUB = "mt-3 text-balance text-sm leading-relaxed text-muted-foreground sm:text-[15px]";
-/** Gap between a section header and its content */
-const HEADER_GAP = "mt-8 sm:mt-12";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -536,7 +524,7 @@ function Categories() {
     ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
   );
   return (
-    <section aria-labelledby="cats-title" className={`relative ${SECTION_PAD}`}>
+    <section aria-labelledby="cats-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
       {/* soft ambient wash */}
       <div
         aria-hidden
@@ -545,16 +533,19 @@ function Categories() {
       <div className="relative mx-auto max-w-6xl">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">
-            <div className={EYEBROW}>
+            <div className="glass-card inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
               <Sparkles size={12} /> Explore
             </div>
-            <h2 id="cats-title" className={H2}>
+            <h2
+              id="cats-title"
+              className="mt-4 text-3xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-[2.75rem]"
+            >
               Browse by{" "}
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
                 category
               </span>
             </h2>
-            <p className={`${SUB} max-w-md`}>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
               Six curated collections — from skyline towers to garden villas. Find the home that
               fits your lifestyle.
             </p>
@@ -658,7 +649,7 @@ const AMENITIES: { label: string; icon: typeof Waves; desc: string }[] = [
 
 function Lifestyle() {
   return (
-    <section aria-labelledby="lifestyle-title" className={`relative ${SECTION_PAD}`}>
+    <section aria-labelledby="lifestyle-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
       <div className="mx-auto max-w-6xl">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <Reveal variant="left">
@@ -725,7 +716,7 @@ function Lifestyle() {
 
 function BookVisit() {
   return (
-    <section aria-labelledby="visit-title" className={SECTION_PAD}>
+    <section aria-labelledby="visit-title" className="px-5 py-8 sm:px-8 sm:py-11">
       <div className="mx-auto max-w-6xl">
         <div className="relative overflow-hidden rounded-[2rem] border border-border bg-gradient-to-br from-primary via-primary to-leaf p-8 text-primary-foreground shadow-[var(--shadow-glow)] sm:p-12">
           <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
@@ -781,7 +772,7 @@ const STATS = [
 
 function Stats() {
   return (
-    <section className={SECTION_PAD}>
+    <section className="px-5 py-9 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="glass-card grid grid-cols-2 gap-3 rounded-3xl p-4 shadow-[var(--shadow-float)] sm:grid-cols-4 sm:gap-6 sm:p-6">
           {STATS.map((s, i) => (
@@ -935,21 +926,6 @@ function Projects() {
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
   const [activeImg, setActiveImg] = useState<Record<string, number>>({});
   const [openProject, setOpenProject] = useState<ProjectDetail | null>(null);
-  const [filter, setFilter] = useState("All");
-  const [page, setPage] = useState(0);
-
-  const catalogueFilters = useMemo(
-    () => ["All", ...Array.from(new Set(PROJECTS.map((p) => p.tag)))],
-    [],
-  );
-  const filtered = useMemo(
-    () => (filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.tag === filter)),
-    [filter],
-  );
-  const PAGE_SIZE = 6;
-  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const pageItems = filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
-
   const toggleWish = (name: string) =>
     setWishlist((prev) => {
       const next = new Set(prev);
@@ -959,17 +935,17 @@ function Projects() {
     });
 
   return (
-    <section id="projects" className={`relative ${SECTION_PAD}`}>
+    <section id="projects" className="relative px-5 py-16 sm:px-8 sm:py-20">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-10 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,color-mix(in_oklab,var(--leaf)_8%,transparent),transparent_72%)]"
       />
       <div className="relative mx-auto max-w-3xl">
         <div className="flex flex-col items-center text-center">
-          <div className={EYEBROW}>
+          <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
             <Sparkles size={12} className="text-gold" /> Featured Residence
           </div>
-          <h2 className={`${H2} font-serif font-medium`}>
+          <h2 className="mt-5 font-serif text-[1.6rem] font-medium leading-[1.15] tracking-[0.015em] text-foreground sm:text-[2.35rem]">
             A home to{" "}
             <span className="relative inline-block">
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
@@ -1107,122 +1083,6 @@ function Projects() {
           })}
         </div>
       </div>
-
-      {/* Explore all residences — filters + paginated grid */}
-      <div className="relative mx-auto mt-14 max-w-6xl sm:mt-16">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:flex sm:justify-between">
-          <h3 className="min-w-0 truncate text-base font-semibold tracking-tight text-foreground sm:text-lg">
-            Explore all residences
-          </h3>
-          <Link
-            to="/projects"
-            className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
-          >
-            View catalogue <ArrowRight size={13} />
-          </Link>
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {catalogueFilters.map((f: string) => (
-            <button
-              key={f}
-              type="button"
-              onClick={() => {
-                setFilter(f);
-                setPage(0);
-              }}
-              aria-pressed={filter === f}
-              className={`rounded-full px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.12em] transition-all ${
-                filter === f
-                  ? "bg-gradient-to-r from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)]"
-                  : "glass-card text-muted-foreground hover:text-primary"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-
-        {pageItems.length === 0 ? (
-          <div className="glass-card mt-5 rounded-3xl p-8 text-center text-sm text-muted-foreground">
-            No residences match this filter yet.
-          </div>
-        ) : (
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {pageItems.map((p: ProjectDetail) => (
-              <Link
-                key={p.slug}
-                to="/projects/$slug"
-                params={{ slug: p.slug }}
-                className="group glass-card overflow-hidden rounded-3xl p-2 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)]"
-              >
-                <div className="relative aspect-[16/11] overflow-hidden rounded-[1.35rem] bg-primary-soft">
-                  <img
-                    src={p.images[0]}
-                    alt={p.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
-                  <span className="absolute left-3 top-3 rounded-full bg-surface/90 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-primary backdrop-blur">
-                    {p.tag}
-                  </span>
-                </div>
-                <div className="px-3 pb-3 pt-3.5">
-                  <div className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                    <MapPin size={11} className="text-primary" />
-                    <span className="truncate">{p.location}</span>
-                  </div>
-                  <div className="mt-1.5 truncate text-[15px] font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
-                    {p.name}
-                  </div>
-                  <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
-                    <span className="text-sm font-bold tracking-tight text-foreground">{p.price}</span>
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
-                      Details <ArrowRight size={12} />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {pageCount > 1 && (
-          <div className="mt-6 flex items-center justify-center gap-2">
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
-              disabled={page === 0}
-              aria-label="Previous page"
-              className="glass-card grid h-10 w-10 place-items-center rounded-full text-primary transition-all disabled:opacity-40"
-            >
-              <ArrowRight size={15} className="rotate-180" />
-            </button>
-            {Array.from({ length: pageCount }).map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setPage(i)}
-                aria-label={`Page ${i + 1}`}
-                aria-current={page === i}
-                className={`h-2.5 rounded-full transition-all ${
-                  page === i ? "w-7 bg-primary" : "w-2.5 bg-primary/25 hover:bg-primary/50"
-                }`}
-              />
-            ))}
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-              disabled={page >= pageCount - 1}
-              aria-label="Next page"
-              className="glass-card grid h-10 w-10 place-items-center rounded-full text-primary transition-all disabled:opacity-40"
-            >
-              <ArrowRight size={15} />
-            </button>
-          </div>
-        )}
-      </div>
-
 
       <ProjectDetailModal
         project={openProject}
@@ -1537,7 +1397,7 @@ const SMART_PANELS: { icon: typeof Calculator; title: string; body: string; tone
 
 function SmartPanels() {
   return (
-    <section aria-labelledby="smart-title" className={SECTION_PAD}>
+    <section aria-labelledby="smart-title" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Smart Tools"
@@ -1583,7 +1443,7 @@ const STEPS = [
 
 function HowItWorks() {
   return (
-    <section id="how-it-works" className={SECTION_PAD}>
+    <section id="how-it-works" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Team System"
@@ -1621,63 +1481,18 @@ function HowItWorks() {
 
 /* ------------------------------ COMMISSION ------------------------------ */
 
-const SLABS: {
-  range: string;
-  rate: string;
-  tone: string;
-  featured?: boolean;
-  perks: string[];
-  cta: string;
-}[] = [
-  {
-    range: "₹0 – 1 Cr",
-    rate: "1.0%",
-    tone: "from-primary-soft to-primary-soft/30",
-    perks: ["Instant wallet credit", "Live deal tracking", "Standard payout cycle"],
-    cta: "Start earning",
-  },
-  {
-    range: "₹1 – 3 Cr",
-    rate: "1.25%",
-    tone: "from-primary-soft to-leaf/20",
-    perks: ["Priority CRM follow-ups", "Team leaderboard entry", "Standard payout cycle"],
-    cta: "Start earning",
-  },
-  {
-    range: "₹3 – 5 Cr",
-    rate: "1.5%",
-    tone: "from-leaf/25 to-primary-soft",
-    featured: true,
-    perks: ["Bonus eligibility unlocked", "Dedicated leader support", "Faster payout review"],
-    cta: "Most chosen tier",
-  },
-  {
-    range: "₹5 – 7 Cr",
-    rate: "1.75%",
-    tone: "from-leaf/30 to-gold/15",
-    perks: ["Bonus + tip sharing", "Advanced analytics access", "Faster payout review"],
-    cta: "Talk to us",
-  },
-  {
-    range: "₹7 – 10 Cr",
-    rate: "2.0%",
-    tone: "from-gold/20 to-primary-soft",
-    perks: ["Premium inventory first look", "Custom slab negotiation", "Priority payouts"],
-    cta: "Talk to us",
-  },
-  {
-    range: "₹10 Cr+",
-    rate: "Custom",
-    tone: "from-gold/30 to-leaf/20",
-    perks: ["Bespoke commission plan", "Named account manager", "Same-week settlement"],
-    cta: "Request a plan",
-  },
+const SLABS = [
+  { range: "₹0 – 1 Cr", tone: "from-primary-soft to-primary-soft/30" },
+  { range: "₹1 – 3 Cr", tone: "from-primary-soft to-leaf/20" },
+  { range: "₹3 – 5 Cr", tone: "from-leaf/25 to-primary-soft" },
+  { range: "₹5 – 7 Cr", tone: "from-leaf/30 to-gold/15" },
+  { range: "₹7 – 10 Cr", tone: "from-gold/20 to-primary-soft" },
+  { range: "₹10 Cr+", tone: "from-gold/30 to-leaf/20" },
 ];
-
 
 function Commission() {
   return (
-    <section id="commission" className={`relative ${SECTION_PAD}`}>
+    <section id="commission" className="relative px-5 py-16 sm:px-8">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-6 h-64 bg-[radial-gradient(55%_100%_at_50%_0%,color-mix(in_oklab,var(--primary)_9%,transparent),transparent_72%)]"
@@ -1685,89 +1500,50 @@ function Commission() {
       <div className="relative mx-auto max-w-6xl">
         <Reveal variant="up">
           <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
-            <div className={EYEBROW}>
+            <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
               <Sparkles size={12} className="text-gold" /> Commission Slabs
             </div>
-            <h2 className={H2}>
+            <h2 className="mt-5 text-[1.75rem] font-semibold leading-[1.12] tracking-[0.005em] text-foreground sm:text-[2.5rem]">
               Simple, tiered,{" "}
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
                 transparent.
               </span>
             </h2>
-            <p className={`${SUB} max-w-lg`}>
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
               Ladders scale with deal value — clearly defined, always visible in your dashboard.
             </p>
           </div>
         </Reveal>
 
-        <div className={`${HEADER_GAP} grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3`}>
+        <div className="mt-12 grid grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-5 lg:grid-cols-6">
           {SLABS.map((slab, i) => (
             <Reveal key={slab.range} variant="scale" delay={i * 60}>
-              <div
-                className={`group relative h-full rounded-[1.75rem] p-[1.2px] transition-transform duration-500 hover:-translate-y-1.5 ${
-                  slab.featured
-                    ? "bg-gradient-to-br from-primary via-leaf to-gold shadow-[var(--shadow-glow)]"
-                    : "bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20"
-                }`}
-              >
+              <div className="group relative h-full rounded-[1.75rem] bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20 p-[1.2px] transition-transform duration-500 hover:-translate-y-1.5">
                 <div
-                  className={`relative flex h-full flex-col overflow-hidden rounded-[1.7rem] bg-gradient-to-br ${slab.tone} p-5 shadow-[var(--shadow-soft)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-float)] sm:p-6`}
+                  className={`relative flex h-full flex-col items-center justify-center overflow-hidden rounded-[1.7rem] bg-gradient-to-br ${slab.tone} px-3 py-7 text-center shadow-[var(--shadow-soft)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-float)]`}
                 >
                   <div
                     aria-hidden
                     className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/40 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
                   />
-                  <div className="relative flex items-center justify-between gap-3">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary/70">
-                      Tier {i + 1}
-                    </span>
-                    {slab.featured && (
-                      <span className="rounded-full bg-primary px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-primary-foreground">
-                        Popular
-                      </span>
-                    )}
+                  <span className="relative text-[10px] font-bold uppercase tracking-[0.18em] text-primary/70">
+                    Tier {i + 1}
+                  </span>
+                  <div className="relative mt-3 text-[17px] font-semibold tracking-tight text-foreground sm:text-lg">
+                    {slab.range}
                   </div>
-
-                  <div className="relative mt-3 flex items-end justify-between gap-3">
-                    <div className="text-xl font-semibold tracking-tight text-foreground sm:text-[1.4rem]">
-                      {slab.range}
-                    </div>
-                    <div className="text-right">
-                      <div className="text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                        Payout
-                      </div>
-                      <div className="text-base font-bold tracking-tight text-primary">
-                        {slab.rate}
-                      </div>
-                    </div>
-                  </div>
-
                   <span
                     aria-hidden
-                    className="relative mt-4 h-px w-full rounded-full bg-gradient-to-r from-primary/50 via-leaf/30 to-transparent"
+                    className="relative mt-3 h-px w-8 rounded-full bg-gradient-to-r from-transparent via-primary/60 to-transparent"
                   />
-
-                  <ul className="relative mt-4 flex flex-1 flex-col gap-2.5">
-                    {slab.perks.map((perk) => (
-                      <li key={perk} className="flex items-start gap-2 text-[13px] leading-snug text-foreground/80">
-                        <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-primary" />
-                        <span>{perk}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link
-                    to="/auth"
-                    className="relative mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-surface/90 px-4 text-xs font-bold uppercase tracking-[0.12em] text-primary shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-surface"
-                  >
-                    {slab.cta} <ArrowRight size={14} />
-                  </Link>
+                  <div className="relative mt-3 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                    Deal Value
+                  </div>
                 </div>
               </div>
             </Reveal>
           ))}
         </div>
-
       </div>
     </section>
   );
@@ -1802,7 +1578,7 @@ const FAQS = [
 
 function FAQ() {
   return (
-    <section id="faq" className={SECTION_PAD}>
+    <section id="faq" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-3xl">
         <SectionHeader eyebrow="Frequently Asked" title="Answers, in plain words." />
         <Reveal variant="up" className="mt-8">
@@ -1832,134 +1608,50 @@ function FAQ() {
 
 /* ------------------------------ CONTACT ------------------------------ */
 
-const MAP_QUERY = "Darbhanga, Bihar 846004, India";
-
 function Contact() {
   const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", mobile: "", message: "" });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validate = () => {
-    const next: Record<string, string> = {};
-    if (!form.name.trim()) next.name = "Name is required";
-    else if (form.name.trim().length > 100) next.name = "Name must be under 100 characters";
-    if (!form.email.trim()) next.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim()))
-      next.email = "Enter a valid email address";
-    if (!form.mobile.trim()) next.mobile = "Mobile is required";
-    else if (!/^[0-9]{10}$/.test(form.mobile.replace(/\D/g, "").slice(-10)))
-      next.mobile = "Enter a 10-digit mobile number";
-    if (!form.message.trim()) next.message = "Message is required";
-    else if (form.message.trim().length > 1000) next.message = "Message must be under 1000 characters";
-    return next;
-  };
-
-  const set = (key: keyof typeof form) => (value: string) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-    setErrors((prev) => (prev[key] ? { ...prev, [key]: "" } : prev));
-    setSent(false);
-  };
-
   return (
-    <section id="contact" className={SECTION_PAD}>
+    <section id="contact" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Contact"
           title="Let's build your team on Aawash."
           subtitle="Reach out — we'll help you onboard leaders, members, and your first project."
         />
-        <div className={`${HEADER_GAP} grid gap-4 sm:gap-5 lg:grid-cols-2`}>
+        <div className="mt-10 grid gap-5 lg:grid-cols-2">
           <Reveal variant="left">
-            <div className="glass-card flex h-full flex-col gap-5 rounded-3xl p-5 shadow-[var(--shadow-soft)] sm:p-6">
+            <div className="glass-card flex h-full flex-col gap-5 rounded-3xl p-6 shadow-[var(--shadow-soft)]">
               <ContactRow icon={Phone} label="Phone" value="+91 90000 00000" />
               <ContactRow icon={Mail} label="Email" value="hello@aawash.app" />
               <ContactRow icon={MapPinned} label="Office" value="Darbhanga, Bihar — 846004" />
-              <div className="mt-auto aspect-[16/10] w-full overflow-hidden rounded-2xl border border-border/60 bg-primary-soft sm:aspect-[16/9]">
-                <iframe
-                  title="Aawash office location — Darbhanga, Bihar 846004"
-                  src={`https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}&output=embed`}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="h-full w-full border-0"
-                />
+              <div className="mt-2 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-primary-soft to-leaf/20">
+                <div className="grid h-full w-full place-items-center text-xs font-semibold text-muted-foreground">
+                  Map preview
+                </div>
               </div>
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAP_QUERY)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
-              >
-                Open in Google Maps <ArrowRight size={13} />
-              </a>
             </div>
           </Reveal>
 
           <Reveal variant="right">
             <form
-              noValidate
               onSubmit={(e) => {
                 e.preventDefault();
-                const next = validate();
-                setErrors(next);
-                if (Object.keys(next).length > 0) {
-                  setSent(false);
-                  return;
-                }
                 setSent(true);
               }}
-              className="glass-card flex h-full flex-col gap-4 rounded-3xl p-5 shadow-[var(--shadow-soft)] sm:p-6"
+              className="glass-card flex h-full flex-col gap-4 rounded-3xl p-6 shadow-[var(--shadow-soft)]"
             >
-              <Field
-                label="Your Name"
-                placeholder="e.g. Ritu Malhotra"
-                required
-                value={form.name}
-                onChange={set("name")}
-                error={errors.name}
-              />
-              <Field
-                label="Email"
-                type="email"
-                placeholder="you@example.com"
-                required
-                value={form.email}
-                onChange={set("email")}
-                error={errors.email}
-              />
-              <Field
-                label="Mobile"
-                type="tel"
-                placeholder="10-digit mobile"
-                required
-                value={form.mobile}
-                onChange={set("mobile")}
-                error={errors.mobile}
-              />
+              <Field label="Your Name" placeholder="e.g. Ritu Malhotra" />
+              <Field label="Email" type="email" placeholder="you@example.com" />
+              <Field label="Mobile" type="tel" placeholder="10-digit mobile" />
               <div>
-                <label
-                  htmlFor="contact-message"
-                  className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
-                >
-                  Message <span className="text-destructive">*</span>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Message
                 </label>
                 <textarea
-                  id="contact-message"
                   rows={4}
-                  required
-                  maxLength={1000}
-                  value={form.message}
-                  onChange={(e) => set("message")(e.target.value)}
-                  aria-invalid={Boolean(errors.message)}
                   placeholder="Tell us a little about your team…"
-                  className={`mt-1.5 w-full resize-none rounded-2xl border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 ${
-                    errors.message
-                      ? "border-destructive focus:ring-destructive/40"
-                      : "border-input focus:ring-ring"
-                  }`}
+                  className="mt-1.5 w-full resize-none rounded-2xl border border-input bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring"
                 />
-                {errors.message && (
-                  <p className="mt-1.5 text-xs font-medium text-destructive">{errors.message}</p>
-                )}
               </div>
               <button
                 type="submit"
@@ -2004,46 +1696,24 @@ function Field({
   label,
   type = "text",
   placeholder,
-  required,
-  value,
-  onChange,
-  error,
 }: {
   label: string;
   type?: string;
   placeholder: string;
-  required?: boolean;
-  value?: string;
-  onChange?: (value: string) => void;
-  error?: string;
 }) {
-  const id = `contact-${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <div>
-      <label
-        htmlFor={id}
-        className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
-      >
-        {label} {required && <span className="text-destructive">*</span>}
+      <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
       </label>
       <input
-        id={id}
         type={type}
-        required={required}
-        maxLength={type === "tel" ? 15 : 255}
-        value={value}
-        onChange={(e) => onChange?.(e.target.value)}
-        aria-invalid={Boolean(error)}
         placeholder={placeholder}
-        className={`mt-1.5 w-full rounded-2xl border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 ${
-          error ? "border-destructive focus:ring-destructive/40" : "border-input focus:ring-ring"
-        }`}
+        className="mt-1.5 w-full rounded-2xl border border-input bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring"
       />
-      {error && <p className="mt-1.5 text-xs font-medium text-destructive">{error}</p>}
     </div>
   );
 }
-
 
 /* ------------------------------ FOOTER ------------------------------ */
 
@@ -2139,9 +1809,17 @@ function SectionHeader({
   return (
     <Reveal variant="up">
       <div className="mx-auto max-w-2xl text-center">
-        <div className={EYEBROW}>{eyebrow}</div>
-        <h2 className={H2}>{title}</h2>
-        {subtitle && <p className={SUB}>{subtitle}</p>}
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+          {eyebrow}
+        </div>
+        <h2 className="mt-4 text-balance text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="mt-3 text-balance text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {subtitle}
+          </p>
+        )}
       </div>
     </Reveal>
   );
