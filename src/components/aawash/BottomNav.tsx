@@ -236,7 +236,11 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 aria-label={`${label} — ${description}`}
                 aria-current={active ? "page" : undefined}
                 tabIndex={tabbable ? 0 : -1}
-                onFocus={() => setFocusIndex(i)}
+                onFocus={() => {
+                  setFocusIndex(i);
+                  setHidden(false);
+                }}
+                onClick={() => setHidden(false)}
                 onKeyDown={(e) => onKeyDown(e, i)}
                 data-testid={`dock-link-${label.toLowerCase().replace(/\s+/g, "-")}`}
                 className={`group relative flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-[22px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[#2E7D5B]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
