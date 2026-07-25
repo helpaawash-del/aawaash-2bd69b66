@@ -1132,10 +1132,6 @@ function Projects() {
               </Reveal>
             );
           })}
-
-              </Reveal>
-            );
-          })}
         </div>
       </div>
 
