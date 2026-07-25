@@ -1093,6 +1093,122 @@ function Projects() {
         </div>
       </div>
 
+      {/* Explore all residences — filters + paginated grid */}
+      <div className="relative mx-auto mt-14 max-w-6xl sm:mt-16">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:flex sm:justify-between">
+          <h3 className="min-w-0 truncate text-base font-semibold tracking-tight text-foreground sm:text-lg">
+            Explore all residences
+          </h3>
+          <Link
+            to="/projects"
+            className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+          >
+            View catalogue <ArrowRight size={13} />
+          </Link>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {catalogueFilters.map((f) => (
+            <button
+              key={f}
+              type="button"
+              onClick={() => {
+                setFilter(f);
+                setPage(0);
+              }}
+              aria-pressed={filter === f}
+              className={`rounded-full px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.12em] transition-all ${
+                filter === f
+                  ? "bg-gradient-to-r from-primary to-leaf text-primary-foreground shadow-[var(--shadow-glow)]"
+                  : "glass-card text-muted-foreground hover:text-primary"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+
+        {pageItems.length === 0 ? (
+          <div className="glass-card mt-5 rounded-3xl p-8 text-center text-sm text-muted-foreground">
+            No residences match this filter yet.
+          </div>
+        ) : (
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {pageItems.map((p) => (
+              <Link
+                key={p.slug}
+                to="/projects/$slug"
+                params={{ slug: p.slug }}
+                className="group glass-card overflow-hidden rounded-3xl p-2 shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)]"
+              >
+                <div className="relative aspect-[16/11] overflow-hidden rounded-[1.35rem] bg-primary-soft">
+                  <img
+                    src={p.images[0]}
+                    alt={p.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                  <span className="absolute left-3 top-3 rounded-full bg-surface/90 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-primary backdrop-blur">
+                    {p.tag}
+                  </span>
+                </div>
+                <div className="px-3 pb-3 pt-3.5">
+                  <div className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                    <MapPin size={11} className="text-primary" />
+                    <span className="truncate">{p.location}</span>
+                  </div>
+                  <div className="mt-1.5 truncate text-[15px] font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+                    {p.name}
+                  </div>
+                  <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
+                    <span className="text-sm font-bold tracking-tight text-foreground">{p.price}</span>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
+                      Details <ArrowRight size={12} />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {pageCount > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+              aria-label="Previous page"
+              className="glass-card grid h-10 w-10 place-items-center rounded-full text-primary transition-all disabled:opacity-40"
+            >
+              <ArrowRight size={15} className="rotate-180" />
+            </button>
+            {Array.from({ length: pageCount }).map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setPage(i)}
+                aria-label={`Page ${i + 1}`}
+                aria-current={page === i}
+                className={`h-2.5 rounded-full transition-all ${
+                  page === i ? "w-7 bg-primary" : "w-2.5 bg-primary/25 hover:bg-primary/50"
+                }`}
+              />
+            ))}
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+              disabled={page >= pageCount - 1}
+              aria-label="Next page"
+              className="glass-card grid h-10 w-10 place-items-center rounded-full text-primary transition-all disabled:opacity-40"
+            >
+              <ArrowRight size={15} />
+            </button>
+          </div>
+        )}
+      </div>
+
+
       <ProjectDetailModal
         project={openProject}
         onClose={() => setOpenProject(null)}
