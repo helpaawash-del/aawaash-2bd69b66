@@ -334,6 +334,36 @@ function Content() {
           }}
         />
       )}
+
+      {showAdd && (
+        <AddLeaderDialog
+          teams={(data?.teams ?? []) as { id: string; letter: string; name: string; leader_id: string | null }[]}
+          onClose={() => {
+            setShowAdd(false);
+            void refetch();
+          }}
+        />
+      )}
+
+      {metricsFor && (
+        <LeaderMetricsDialog
+          leader={metricsFor}
+          onClose={() => {
+            setMetricsFor(null);
+            void refetch();
+          }}
+        />
+      )}
+
+      {deleteFor && (
+        <DeleteLeaderDialog
+          leader={deleteFor}
+          onClose={() => {
+            setDeleteFor(null);
+            void refetch();
+          }}
+        />
+      )}
     </AdminShell>
   );
 }
