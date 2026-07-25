@@ -45,6 +45,7 @@ export const getLeaderOverview = createServerFn({ method: "GET" })
         monthlyCommission: 0,
         approvedWithdrawals: 0,
         pendingWithdrawals: 0,
+        walletBalance: 0,
         projectCount: 0,
       };
     }
