@@ -51,16 +51,28 @@ function AdminLoginPage() {
     e.preventDefault();
     setError(null);
     if (!/^\d{4}$/.test(passcode)) {
-      setError("Enter the 4-digit admin passcode.");
+      setError(
+        passcode.length === 0
+          ? "Enter your 4-digit admin passcode to continue."
+          : `Passcode must be exactly 4 digits — you entered ${passcode.length}.`,
+      );
+      setShake((n) => n + 1);
       return;
     }
     setSubmitting(true);
     try {
       const result = await unlock({ data: { passcode } });
       if (!result.ok) {
-        setError("Invalid admin passcode.");
+        const next = attempts + 1;
+        setAttempts(next);
+        setError(
+          `Incorrect passcode. Please try again.${next >= 3 ? " Check with your administrator for the correct 4-digit code." : ""}`,
+        );
+        setPasscode("");
+        setShake((n) => n + 1);
         return;
       }
+      setAttempts(0);
 
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
@@ -78,10 +90,13 @@ function AdminLoginPage() {
         }
       }
       navigate({ to: safeRedirect, replace: true });
+    } catch {
+      setError("Something went wrong while verifying the passcode. Please try again.");
     } finally {
       setSubmitting(false);
     }
   }
+
 
 
   return (
