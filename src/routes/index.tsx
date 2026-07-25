@@ -1569,35 +1569,74 @@ function Commission() {
           </div>
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-5 lg:grid-cols-6">
+        <div className={`${HEADER_GAP} grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3`}>
           {SLABS.map((slab, i) => (
             <Reveal key={slab.range} variant="scale" delay={i * 60}>
-              <div className="group relative h-full rounded-[1.75rem] bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20 p-[1.2px] transition-transform duration-500 hover:-translate-y-1.5">
+              <div
+                className={`group relative h-full rounded-[1.75rem] p-[1.2px] transition-transform duration-500 hover:-translate-y-1.5 ${
+                  slab.featured
+                    ? "bg-gradient-to-br from-primary via-leaf to-gold shadow-[var(--shadow-glow)]"
+                    : "bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20"
+                }`}
+              >
                 <div
-                  className={`relative flex h-full flex-col items-center justify-center overflow-hidden rounded-[1.7rem] bg-gradient-to-br ${slab.tone} px-3 py-7 text-center shadow-[var(--shadow-soft)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-float)]`}
+                  className={`relative flex h-full flex-col overflow-hidden rounded-[1.7rem] bg-gradient-to-br ${slab.tone} p-5 shadow-[var(--shadow-soft)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-float)] sm:p-6`}
                 >
                   <div
                     aria-hidden
                     className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/40 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
                   />
-                  <span className="relative text-[10px] font-bold uppercase tracking-[0.18em] text-primary/70">
-                    Tier {i + 1}
-                  </span>
-                  <div className="relative mt-3 text-[17px] font-semibold tracking-tight text-foreground sm:text-lg">
-                    {slab.range}
+                  <div className="relative flex items-center justify-between gap-3">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary/70">
+                      Tier {i + 1}
+                    </span>
+                    {slab.featured && (
+                      <span className="rounded-full bg-primary px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-primary-foreground">
+                        Popular
+                      </span>
+                    )}
                   </div>
+
+                  <div className="relative mt-3 flex items-end justify-between gap-3">
+                    <div className="text-xl font-semibold tracking-tight text-foreground sm:text-[1.4rem]">
+                      {slab.range}
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                        Payout
+                      </div>
+                      <div className="text-base font-bold tracking-tight text-primary">
+                        {slab.rate}
+                      </div>
+                    </div>
+                  </div>
+
                   <span
                     aria-hidden
-                    className="relative mt-3 h-px w-8 rounded-full bg-gradient-to-r from-transparent via-primary/60 to-transparent"
+                    className="relative mt-4 h-px w-full rounded-full bg-gradient-to-r from-primary/50 via-leaf/30 to-transparent"
                   />
-                  <div className="relative mt-3 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                    Deal Value
-                  </div>
+
+                  <ul className="relative mt-4 flex flex-1 flex-col gap-2.5">
+                    {slab.perks.map((perk) => (
+                      <li key={perk} className="flex items-start gap-2 text-[13px] leading-snug text-foreground/80">
+                        <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-primary" />
+                        <span>{perk}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    to="/auth"
+                    className="relative mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-surface/90 px-4 text-xs font-bold uppercase tracking-[0.12em] text-primary shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-surface"
+                  >
+                    {slab.cta} <ArrowRight size={14} />
+                  </Link>
                 </div>
               </div>
             </Reveal>
           ))}
         </div>
+
       </div>
     </section>
   );
