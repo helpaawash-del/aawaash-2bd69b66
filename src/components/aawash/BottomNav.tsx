@@ -123,6 +123,10 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
     }
   };
 
+  // Always reveal the dock after a route change.
+  useEffect(() => {
+    setHidden(false);
+  }, [pathname]);
 
   // Hide on scroll-down, reappear on scroll-up.
   useEffect(() => {
