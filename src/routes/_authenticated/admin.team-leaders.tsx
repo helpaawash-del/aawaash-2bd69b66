@@ -133,13 +133,14 @@ function Content() {
               Limits
             </button>
             {canAdd ? (
-              <Link
-                to="/admin/team-leaders/new"
+              <button
+                type="button"
+                onClick={() => setShowAdd(true)}
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5"
               >
                 <Plus size={16} />
                 Add Team Leader
-              </Link>
+              </button>
             ) : (
               <span
                 title={`Team Leader cap reached (${cap}). Raise the limit in Limits.`}
