@@ -130,19 +130,42 @@ function AdminLoginPage() {
         <form onSubmit={onSubmit} className="mt-6 space-y-4 text-left">
           <label className="block">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Admin passcode</span>
-            <div className="mt-2 flex items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3 focus-within:border-primary">
-              <Lock size={16} className="text-muted-foreground" />
+            <div
+              key={shake}
+              className={`mt-2 flex items-center gap-3 rounded-2xl border bg-surface px-4 py-3 ${
+                error ? "animate-[shake_0.35s_ease-in-out] border-destructive/60" : "border-border focus-within:border-primary"
+              }`}
+            >
+              <Lock size={16} className={error ? "text-destructive" : "text-muted-foreground"} />
               <input
                 autoFocus
                 inputMode="numeric"
                 autoComplete="one-time-code"
+                aria-invalid={error ? true : undefined}
+                aria-describedby={error ? "admin-passcode-error" : undefined}
                 value={passcode}
-                onChange={(e) => setPasscode(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                onChange={(e) => {
+                  setPasscode(e.target.value.replace(/\D/g, "").slice(0, 4));
+                  if (error) setError(null);
+                }}
                 placeholder="0000"
                 className="w-full bg-transparent text-center font-mono text-2xl font-extrabold tracking-[0.5em] text-foreground outline-none placeholder:text-muted-foreground/30"
               />
             </div>
           </label>
+
+          {error && (
+            <div
+              id="admin-passcode-error"
+              role="alert"
+              aria-live="assertive"
+              className="flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive"
+            >
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
 
           {error && (
             <div className="flex items-center gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
