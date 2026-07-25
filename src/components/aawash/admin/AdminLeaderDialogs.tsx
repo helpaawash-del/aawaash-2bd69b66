@@ -85,6 +85,7 @@ export function AddLeaderDialog({ teams, onClose }: { teams: Team[]; onClose: ()
     if (form.password.length < 8) return toast.error("Password must be at least 8 characters");
     if (!form.teamId) return toast.error("Select an available team");
     setBusy(true);
+    const t = toast.loading("Creating Team Leader…");
     try {
       const res = await create({
         data: {
@@ -96,11 +97,11 @@ export function AddLeaderDialog({ teams, onClose }: { teams: Team[]; onClose: ()
           email: form.email.trim(),
         },
       });
-      toast.success(`Team Leader created — login ID ${res.loginId}`);
+      toast.success(`Team Leader created — login ID ${res.loginId}`, { id: t });
       await invalidateAdmin(qc, "leader");
       onClose();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not create Team Leader");
+      toast.error(err instanceof Error ? err.message : "Could not create Team Leader", { id: t });
     } finally {
       setBusy(false);
     }
@@ -108,7 +109,7 @@ export function AddLeaderDialog({ teams, onClose }: { teams: Team[]; onClose: ()
 
   return (
     <Shell title="Add Team Leader" subtitle="Creates the login, the role, and the team assignment." onClose={onClose}>
-      <form onSubmit={submit} className="grid gap-3">
+      <fieldset disabled={busy} className="contents"><form onSubmit={submit} className="grid gap-3">
         <label className="grid gap-1">
           <span className={labelCls}>Full name</span>
           <input className={field} value={form.fullName} onChange={set("fullName")} placeholder="Ravi Kumar" />
@@ -150,9 +151,10 @@ export function AddLeaderDialog({ teams, onClose }: { teams: Team[]; onClose: ()
           className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-60"
         >
           {busy ? <Loader2 size={16} className="animate-spin" /> : <UserPlus size={16} />}
-          Create Team Leader
+          {busy ? "Creating…" : "Create Team Leader"}
         </button>
       </form>
+      </fieldset>
     </Shell>
   );
 }
@@ -192,6 +194,7 @@ export function LeaderMetricsDialog({ leader, onClose }: { leader: LeaderMetrics
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
+    const t = toast.loading("Saving leader analytics…");
     try {
       await save({
         data: {
@@ -203,11 +206,11 @@ export function LeaderMetricsDialog({ leader, onClose }: { leader: LeaderMetrics
           memberCount: num(form.memberCount),
         },
       });
-      toast.success("Leader analytics updated — live on their dashboard");
+      toast.success("Leader analytics updated — live on their dashboard", { id: t });
       await invalidateAdmin(qc, "leader");
       onClose();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not save changes");
+      toast.error(err instanceof Error ? err.message : "Could not save changes", { id: t });
     } finally {
       setBusy(false);
     }
@@ -227,7 +230,7 @@ export function LeaderMetricsDialog({ leader, onClose }: { leader: LeaderMetrics
       subtitle="Edit the headline analytics. Leave a field blank to fall back to the computed value."
       onClose={onClose}
     >
-      <form onSubmit={submit} className="grid gap-3">
+      <fieldset disabled={busy} className="contents"><form onSubmit={submit} className="grid gap-3">
         {rows.map(([k, label]) => (
           <label key={k} className="grid gap-1">
             <span className={labelCls}>{label}</span>
@@ -240,9 +243,10 @@ export function LeaderMetricsDialog({ leader, onClose }: { leader: LeaderMetrics
           className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-60"
         >
           {busy ? <Loader2 size={16} className="animate-spin" /> : <Sliders size={16} />}
-          Save changes
+          {busy ? "Saving…" : "Save changes"}
         </button>
       </form>
+      </fieldset>
     </Shell>
   );
 }
@@ -262,13 +266,14 @@ export function DeleteLeaderDialog({
 
   const confirm = async () => {
     setBusy(true);
+    const t = toast.loading("Deleting Team Leader…");
     try {
       await del({ data: { userId: leader.id } });
-      toast.success(`${leader.full_name} removed`);
+      toast.success(`${leader.full_name} removed`, { id: t });
       await invalidateAdmin(qc, "leader");
       onClose();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not delete Team Leader");
+      toast.error(err instanceof Error ? err.message : "Could not delete Team Leader", { id: t });
     } finally {
       setBusy(false);
     }
@@ -294,7 +299,7 @@ export function DeleteLeaderDialog({
           className="inline-flex items-center gap-2 rounded-full bg-destructive px-4 py-2 text-sm font-bold text-destructive-foreground disabled:opacity-60"
         >
           {busy ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
-          Delete leader
+          {busy ? "Deleting…" : "Delete leader"}
         </button>
       </div>
     </Shell>
