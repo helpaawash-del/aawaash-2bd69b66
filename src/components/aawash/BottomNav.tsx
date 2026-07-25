@@ -209,7 +209,7 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 >
                   {label}
                 </span>
-                <span className="sr-only">{active ? "" : label}</span>
+                
               </Link>
             </li>
           );
