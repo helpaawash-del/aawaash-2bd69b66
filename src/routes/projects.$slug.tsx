@@ -20,7 +20,6 @@ import {
   Link2,
   MapPin,
   Phone,
-  Play,
   Share2,
   Sparkles,
   X,
@@ -105,12 +104,6 @@ function ProjectDetailPage() {
     if (Array.isArray(raw)) return raw.filter((v): v is string => typeof v === "string" && !!v);
     return [];
   }, [p.gallery]);
-  const videos = useMemo<string[]>(() => {
-    const raw = p.videos;
-    if (Array.isArray(raw)) return raw.filter((v): v is string => typeof v === "string" && !!v);
-    const wt = p.virtual_walkthrough_url as string | null | undefined;
-    return wt ? [wt] : [];
-  }, [p.videos, p.virtual_walkthrough_url]);
 
   const heroImages = useMemo<string[]>(() => {
     const arr = [
@@ -573,28 +566,6 @@ function TourPanel({
 }
 
 
-function VideoTile({ url }: { url: string }) {
-  const embed = toEmbedUrl(url);
-  return (
-    <Reveal>
-      <section className="glass-card overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
-        <div className="aspect-video w-full bg-black">
-          {embed ? (
-            <iframe
-              title="Video walkthrough"
-              src={embed}
-              className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-              allowFullScreen
-            />
-          ) : (
-            <video src={url} controls className="h-full w-full" />
-          )}
-        </div>
-      </section>
-    </Reveal>
-  );
-}
 
 function ModelViewerFrame({ src }: { src: string }) {
   const [ready, setReady] = useState(false);
