@@ -590,9 +590,9 @@ export function MetricRowSkeleton({ count = 4 }: { count?: number }) {
 
 export function ChartSkeleton({ className = "h-56 sm:h-64" }: { className?: string }) {
   return (
-    <div role="status" aria-label="Loading chart" className={`flex w-full items-end gap-2 ${className}`}>
-      {[42, 68, 54, 82, 60, 92].map((h, i) => (
-        <Shimmer key={i} className="flex-1" style={undefined as never} />
+    <div role="status" aria-label="Loading chart" className={`flex w-full items-end gap-2.5 ${className}`}>
+      {["h-[42%]", "h-[68%]", "h-[54%]", "h-[82%]", "h-[60%]", "h-[92%]"].map((h, i) => (
+        <Shimmer key={i} className={`flex-1 rounded-xl ${h}`} />
       ))}
     </div>
   );
