@@ -67,6 +67,9 @@ function Content() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<"all" | "active" | "suspended">("all");
   const [showLimits, setShowLimits] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const [metricsFor, setMetricsFor] = useState<LeaderMetrics | null>(null);
+  const [deleteFor, setDeleteFor] = useState<{ id: string; full_name: string } | null>(null);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin", "team-leaders"],
