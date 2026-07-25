@@ -189,14 +189,17 @@ export const listTeamLeaders = createServerFn({ method: "GET" })
 
     const leaders = (profiles ?? []).map((p) => {
       const team = p.team_id ? teamById.get(p.team_id) : null;
+      const ov = ((p as { metrics_override?: Record<string, unknown> }).metrics_override ?? {}) as Record<string, unknown>;
+      const pick = (key: string, fallback: number) =>
+        ov[key] === undefined || ov[key] === null ? fallback : Number(ov[key]);
       return {
         ...p,
         team_letter: team?.letter ?? null,
         team_name: team?.name ?? null,
-        member_count: p.team_id ? memberCounts.get(p.team_id) ?? 0 : 0,
-        sales_count: salesCountMap.get(p.id) ?? 0,
-        total_revenue: revenueMap.get(p.id) ?? 0,
-        total_commission: commissionMap.get(p.id) ?? 0,
+        member_count: pick("member_count", p.team_id ? memberCounts.get(p.team_id) ?? 0 : 0),
+        sales_count: pick("sales_count", salesCountMap.get(p.id) ?? 0),
+        total_revenue: pick("total_revenue", revenueMap.get(p.id) ?? 0),
+        total_commission: pick("total_commission", commissionMap.get(p.id) ?? 0),
       };
     });
 
