@@ -31,12 +31,7 @@ import {
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { DashboardShell } from "@/components/aawash/DashboardShell";
-import {
-  EmptyState,
-  SkeletonBlock,
-  formatINR,
-  greeting,
-} from "@/components/aawash/dashboard-kit";
+import { formatINR, greeting } from "@/components/aawash/dashboard-kit";
 import {
   Panel,
   PanelLink,
@@ -49,6 +44,12 @@ import {
   Portrait,
   RankChip,
   Progress,
+  WalletHeroSkeleton,
+  MetricRowSkeleton,
+  ChartSkeleton,
+  ListRowSkeleton,
+  CardGridSkeleton,
+  ZeroState,
 } from "@/components/aawash/dashboard/PremiumKit";
 import {
   getLeaderOverview,
@@ -137,6 +138,9 @@ function LeaderContent() {
 
       {/* ---------------- Wallet hero ---------------- */}
       <section className="mt-6">
+        {overview.isLoading ? (
+          <WalletHeroSkeleton />
+        ) : (
         <WalletHeroCard
           label="Wallet balance"
           balance={formatINR(profile?.wallet_balance)}
@@ -145,6 +149,7 @@ function LeaderContent() {
           footLeft={`Lifetime ${formatINR(profile?.total_earnings ?? 0, { compact: true })}`}
           footRight={`+${formatINR(o?.monthlyCommission ?? 0, { compact: true })} this month`}
         />
+        )}
       </section>
 
       {/* ---------------- Quick actions ---------------- */}
@@ -164,7 +169,11 @@ function LeaderContent() {
       </section>
 
       {/* ---------------- Metrics ---------------- */}
-      <section className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <section className="mt-4">
+        {overview.isLoading ? (
+          <MetricRowSkeleton />
+        ) : (
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         <MetricTile icon={<Users size={17} />} label="Members" value={o?.memberCount ?? 0} hint="Active on your team" />
         <MetricTile
           icon={<TrendingUp size={17} />}
@@ -187,10 +196,12 @@ function LeaderContent() {
           hint="Available to sell"
           accent="violet"
         />
+        </div>
+        )}
       </section>
 
       {/* ---------------- Trend + payouts ---------------- */}
-      <section className="mt-5 grid gap-4 lg:grid-cols-[1.6fr_1fr]">
+      <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-[1.65fr_1fr] xl:gap-6">
         <Panel
           title="Performance trend"
           subtitle="Team revenue and commission across the last 6 months."
@@ -202,12 +213,14 @@ function LeaderContent() {
         >
           <div className="h-56 w-full sm:h-64">
             {trend.isLoading ? (
-              <SkeletonBlock className="h-full" />
+              <ChartSkeleton className="h-full" />
             ) : months.every((m) => m.revenue === 0 && m.commission === 0) ? (
-              <EmptyState
-                icon={<TrendingUp size={22} />}
+              <ZeroState
+                icon={<TrendingUp size={26} />}
                 title="No performance data yet"
-                body="Once your team's first sales roll in, you'll see trends here."
+                body="Once your team's first sales roll in, revenue and commission trends appear here."
+                cta={{ label: "Open analytics", to: "/leader/analytics" }}
+                accent="cyan"
               />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
@@ -253,7 +266,7 @@ function LeaderContent() {
         </Panel>
 
         <Panel title="Wallet & payouts" subtitle="Snapshot of your earnings.">
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2.5 md:gap-3">
             <MiniKV label="Available" value={formatINR(profile?.wallet_balance)} />
             <MiniKV label="Pending" value={formatINR(o?.pendingCommission ?? 0, { compact: true })} />
             <MiniKV label="Approved" value={formatINR(o?.approvedWithdrawals ?? 0, { compact: true })} />
@@ -271,23 +284,21 @@ function LeaderContent() {
       </section>
 
       {/* ---------------- Leaderboard + activity ---------------- */}
-      <section className="mt-5 grid gap-4 lg:grid-cols-2">
+      <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
         <Panel
           title="Team leaderboard"
           subtitle="Top performers this cycle."
           action={<PanelLink to="/leader/leaderboard">View all</PanelLink>}
         >
           {board.isLoading ? (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <SkeletonBlock key={i} className="h-16" />
-              ))}
-            </div>
+            <ListRowSkeleton rows={4} />
           ) : topMembers.length === 0 ? (
-            <EmptyState
-              icon={<Trophy size={22} />}
+            <ZeroState
+              icon={<Trophy size={26} />}
               title="No rankings yet"
               body="Members appear here as soon as they close their first sale."
+              cta={{ label: "View members", to: "/leader/members" }}
+              accent="gold"
             />
           ) : (
             <ol className="flex flex-col gap-2.5">
@@ -321,11 +332,14 @@ function LeaderContent() {
           subtitle="Newest sales and commissions."
           action={<PanelLink to="/leader/members">Team</PanelLink>}
         >
-          {recentSales.length === 0 && recentComms.length === 0 ? (
-            <EmptyState
-              icon={<Activity size={22} />}
+          {sales.isLoading || comms.isLoading ? (
+            <ListRowSkeleton rows={4} />
+          ) : recentSales.length === 0 && recentComms.length === 0 ? (
+            <ZeroState
+              icon={<Activity size={26} />}
               title="Nothing here yet"
-              body="Sales and commissions will show up here automatically."
+              body="Sales and commissions from your team show up here automatically, in real time."
+              accent="violet"
             />
           ) : (
             <ul className="flex flex-col gap-2.5">
@@ -378,19 +392,16 @@ function LeaderContent() {
           action={<PanelLink to="/leader/members">View all</PanelLink>}
         >
           {members.isLoading ? (
-            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <SkeletonBlock key={i} className="h-[68px]" />
-              ))}
-            </div>
+            <CardGridSkeleton count={6} height="h-[68px]" className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3" />
           ) : memberList.length === 0 ? (
-            <EmptyState
-              icon={<Users size={22} />}
+            <ZeroState
+              icon={<Users size={26} />}
               title="No members yet"
-              body="Ask your Super Admin to add members to your team."
+              body="Ask your Super Admin to add members to your team — they'll show up here instantly."
+              cta={{ label: "Team page", to: "/leader/members" }}
             />
           ) : (
-            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-2.5 sm:grid-cols-2 md:gap-3 lg:grid-cols-3">
               {memberList.slice(0, 6).map((m) => (
                 <Link
                   key={m.id}
@@ -425,27 +436,25 @@ function LeaderContent() {
           action={<PanelLink to="/leader/projects">All projects</PanelLink>}
         >
           {projects.isLoading ? (
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <SkeletonBlock key={i} className="h-44" />
-              ))}
-            </div>
+            <CardGridSkeleton count={3} height="h-56" />
           ) : projectList.length === 0 ? (
-            <EmptyState
-              icon={<Building2 size={22} />}
+            <ZeroState
+              icon={<Building2 size={26} />}
               title="No projects yet"
-              body="Once Admin publishes projects they will appear here."
+              body="Once Admin publishes projects, live inventory will appear here for your team to sell."
+              cta={{ label: "All projects", to: "/leader/projects" }}
+              accent="sky"
             />
           ) : (
             <>
-              <Rail className="lg:hidden">
+              <Rail className="md:hidden" aria-label="Project quick access">
                 {projectList.map((p) => (
                   <div key={p.id} className="w-[78%] shrink-0 snap-start sm:w-[48%]">
                     <ProjectMiniCard project={p} />
                   </div>
                 ))}
               </Rail>
-              <div className="hidden gap-3 lg:grid lg:grid-cols-3">
+              <div className="hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-3">
                 {projectList.map((p) => (
                   <ProjectMiniCard key={p.id} project={p} />
                 ))}
@@ -475,7 +484,7 @@ function LeaderContent() {
       </section>
 
       {overview.isLoading && (
-        <div className="glass-card fixed bottom-28 right-6 hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-soft)] md:inline-flex">
+        <div role="status" className="glass-card fixed bottom-28 right-6 hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-soft)] md:inline-flex">
           <Loader2 size={12} className="animate-spin" /> Refreshing
         </div>
       )}
