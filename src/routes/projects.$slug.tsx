@@ -20,7 +20,6 @@ import {
   Link2,
   MapPin,
   Phone,
-  Play,
   Share2,
   Sparkles,
   X,
@@ -105,12 +104,6 @@ function ProjectDetailPage() {
     if (Array.isArray(raw)) return raw.filter((v): v is string => typeof v === "string" && !!v);
     return [];
   }, [p.gallery]);
-  const videos = useMemo<string[]>(() => {
-    const raw = p.videos;
-    if (Array.isArray(raw)) return raw.filter((v): v is string => typeof v === "string" && !!v);
-    const wt = p.virtual_walkthrough_url as string | null | undefined;
-    return wt ? [wt] : [];
-  }, [p.videos, p.virtual_walkthrough_url]);
 
   const heroImages = useMemo<string[]>(() => {
     const arr = [
@@ -348,11 +341,11 @@ function ProjectDetailPage() {
               </div>
             </section>
 
-            {/* 3D MODEL & VIDEO */}
+            {/* 3D MODEL */}
             <section id="tour" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Box size={16} />} title="3D Model & Video" subtitle="Explore in immersive detail" />
+              <SectionHeader icon={<Box size={16} />} title="3D Model" subtitle="Explore in immersive detail" />
               <div className="mt-4">
-                <TourPanel modelUrl={modelUrl} isGlb={isGlb} videos={videos} />
+                <TourPanel modelUrl={modelUrl} isGlb={isGlb} />
               </div>
             </section>
 
@@ -450,42 +443,6 @@ function OverviewPanel({
         <ProgressCard label="Availability" pct={availPct} tone="leaf" />
       </section>
 
-      <Reveal>
-        <section className="glass-card rounded-3xl p-6 shadow-[var(--shadow-soft)]">
-          <h2 className="text-lg font-bold text-foreground">About this project</h2>
-          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-            {(p.description as string) ||
-              (p.short_description as string) ||
-              "Details coming soon."}
-          </p>
-
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <MiniStat label="Buildings" value={(p.total_buildings as number) ?? 0} />
-            <MiniStat label="Floors" value={(p.total_floors as number) ?? 0} />
-            <MiniStat label="Total" value={total} />
-            <MiniStat label="Available" value={available} />
-            <MiniStat label="Reserved" value={reserved} />
-            <MiniStat label="Sold" value={sold} />
-            <MiniStat
-              label="Price Range"
-              value={
-                (p.price_min as number) && (p.price_max as number)
-                  ? `${formatINR(p.price_min as number, { compact: true })} – ${formatINR(
-                      p.price_max as number,
-                      { compact: true },
-                    )}`
-                  : formatINR((p.price_from as number) ?? 0, { compact: true })
-              }
-            />
-            {(p.possession_date as string) && (
-              <MiniStat
-                label="Possession"
-                value={new Date(p.possession_date as string).toLocaleDateString()}
-              />
-            )}
-          </div>
-        </section>
-      </Reveal>
 
       {(p.amenities as string[] | undefined)?.length ? (
         <Reveal>
@@ -570,15 +527,12 @@ function GalleryTile({ src, index, onOpen }: { src: string; index: number; onOpe
 function TourPanel({
   modelUrl,
   isGlb,
-  videos,
 }: {
   modelUrl: string | null;
   isGlb: boolean;
-  videos: string[];
 }) {
   return (
     <div className="space-y-4">
-      {/* 3D Model */}
       <Reveal>
         <section className="glass-card overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
           <div className="flex items-center justify-between border-b border-border/50 p-4 sm:p-5">
@@ -607,44 +561,11 @@ function TourPanel({
           </div>
         </section>
       </Reveal>
-
-      {/* Videos */}
-      {videos.length > 0 ? (
-        videos.map((v, idx) => <VideoTile key={`${v}-${idx}`} url={v} />)
-      ) : (
-        <Reveal>
-          <section className="glass-card rounded-3xl p-6 text-center shadow-[var(--shadow-soft)]">
-            <Play size={22} className="mx-auto text-muted-foreground" />
-            <p className="mt-2 text-sm font-semibold text-foreground">No walkthrough video yet</p>
-          </section>
-        </Reveal>
-      )}
     </div>
   );
 }
 
-function VideoTile({ url }: { url: string }) {
-  const embed = toEmbedUrl(url);
-  return (
-    <Reveal>
-      <section className="glass-card overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
-        <div className="aspect-video w-full bg-black">
-          {embed ? (
-            <iframe
-              title="Video walkthrough"
-              src={embed}
-              className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-              allowFullScreen
-            />
-          ) : (
-            <video src={url} controls className="h-full w-full" />
-          )}
-        </div>
-      </section>
-    </Reveal>
-  );
-}
+
 
 function ModelViewerFrame({ src }: { src: string }) {
   const [ready, setReady] = useState(false);

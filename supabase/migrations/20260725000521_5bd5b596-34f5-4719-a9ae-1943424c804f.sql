@@ -1,0 +1,1 @@
+UPDATE public.projects SET hero_banner_url = '/__l5e/assets-v1/587f22f1-7078-45c7-9234-e19ed65c653c/savitri-enclave-hero.png', cover_url = '/__l5e/assets-v1/587f22f1-7078-45c7-9234-e19ed65c653c/savitri-enclave-hero.png', thumbnail_url = '/__l5e/assets-v1/587f22f1-7078-45c7-9234-e19ed65c653c/savitri-enclave-hero.png' WHERE slug = 'savitri-enclave';
