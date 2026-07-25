@@ -167,12 +167,6 @@ function AdminLoginPage() {
           )}
 
 
-          {error && (
-            <div className="flex items-center gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
-              <AlertCircle size={16} />
-              {error}
-            </div>
-          )}
 
           <button type="submit" disabled={submitting || isLoading} className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3.5 text-sm font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5 disabled:opacity-70">
             {submitting ? <Loader2 size={16} className="animate-spin" /> : <KeyRound size={16} />}
