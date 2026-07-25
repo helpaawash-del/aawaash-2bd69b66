@@ -10,27 +10,36 @@ import {
   Trophy,
   Bell,
   Activity,
-  ArrowUpRight,
-  ChevronRight,
   Users,
   Building2,
   Handshake,
-  Leaf,
   Phone,
   Calendar,
+  ChevronRight,
+  BarChart3,
+  Award,
 } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { DashboardShell } from "@/components/aawash/DashboardShell";
 import {
-  SectionCard,
-  StatCard,
   EmptyState,
   SkeletonBlock,
   formatINR,
   greeting,
-  initials,
 } from "@/components/aawash/dashboard-kit";
+import {
+  Panel,
+  PanelLink,
+  GreetingHeader,
+  WalletHeroCard,
+  QuickActionGrid,
+  QuickAction,
+  MetricTile,
+  Portrait,
+  RankChip,
+  AchievementCard,
+} from "@/components/aawash/dashboard/PremiumKit";
 import {
   getMemberOverview,
   getMyActivity,
@@ -40,7 +49,23 @@ import { listMyNotifications } from "@/lib/leader.functions";
 
 export const Route = createFileRoute("/_authenticated/member")({
   component: MemberHome,
-  head: () => ({ meta: [{ title: "Member Dashboard — Aawash" }] }),
+  head: () => ({
+    meta: [
+      { title: "Member Dashboard — Aawaash" },
+      {
+        name: "description",
+        content:
+          "Track your Aawaash sales, commissions, referrals, wallet balance and team rank from one calm, app-like dashboard.",
+      },
+      { property: "og:title", content: "Member Dashboard — Aawaash" },
+      {
+        property: "og:description",
+        content: "Your sales, commissions, referrals, wallet and team rank in one place.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
 });
 
 function MemberHome() {
@@ -66,139 +91,158 @@ function MemberContent() {
 
   const o = overview.data;
   const stats = o?.stats;
-  const team = o?.team as { name?: string; letter?: string; leader?: { full_name?: string; mobile_number?: string } } | null | undefined;
+  const team = o?.team as
+    | { name?: string; letter?: string; leader?: { full_name?: string; mobile_number?: string } }
+    | null
+    | undefined;
 
   const unread = (notifs.data ?? []).filter((n) => !n.is_read).length;
   const myId = board.data?.meId;
   const rank = board.data?.members.find((m) => m.id === myId)?.rank ?? null;
+  const myScore = board.data?.members.find((m) => m.id === myId)?.score ?? 0;
   const topBoard = (board.data?.members ?? []).slice(0, 5);
   const recent = (activity.data ?? []).slice(0, 6);
 
   return (
     <DashboardShell role="member" profile={profile}>
-      {/* Welcome */}
-      <section className="glass-card relative overflow-hidden rounded-4xl p-5 shadow-[var(--shadow-float)] sm:p-8">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/12 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -left-14 h-56 w-56 rounded-full bg-gold/15 blur-3xl" />
-        <div className="pointer-events-none absolute right-6 top-6 hidden sm:block">
-          <Leaf size={36} className="text-primary/40" />
-        </div>
-        <div className="relative grid gap-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-          <div className="min-w-0">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
-              <Sparkles size={12} /> Team {team?.letter ?? "—"}
-            </div>
-            <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              {greeting()},{" "}
-              <span className="bg-gradient-to-br from-primary to-leaf bg-clip-text text-transparent">
-                {profile?.full_name?.split(" ")[0] || "Member"}.
-              </span>
-            </h1>
-            <p className="mt-2 max-w-xl text-sm text-muted-foreground sm:text-base">
-              A calm space to track every sale, referral, and rupee earned.
-            </p>
-            <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-              <Link
-                to="/member/referrals"
-                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-br from-primary to-leaf px-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]"
-              >
-                <UserPlus size={14} /> Add referral
-              </Link>
-              <Link
-                to="/member/tips"
-                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-2xl border border-border bg-surface px-4 text-sm font-semibold text-foreground shadow-[var(--shadow-soft)]"
-              >
-                <Handshake size={14} /> Tip lead
-              </Link>
-              <Link
-                to="/member/withdrawals"
-                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-2xl border border-border bg-surface px-4 text-sm font-semibold text-foreground shadow-[var(--shadow-soft)]"
-              >
-                <Wallet size={14} /> Withdraw
-              </Link>
-            </div>
-          </div>
-          <div className="flex sm:justify-end">
-            <div className="glass-card w-full rounded-3xl p-4 shadow-[var(--shadow-soft)] sm:w-[260px]">
-              <div className="flex items-center gap-3">
-                {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt="" className="h-12 w-12 rounded-2xl object-cover" />
-                ) : (
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-bold text-primary-foreground">
-                    {initials(profile?.full_name)}
-                  </div>
-                )}
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-bold text-foreground">
-                    {profile?.full_name || "—"}
-                  </div>
-                  <div className="font-mono text-[10px] text-muted-foreground">{profile?.login_id}</div>
-                </div>
+      {/* ---------------- Greeting ---------------- */}
+      <GreetingHeader
+        eyebrow={
+          <span className="inline-flex items-center gap-1.5">
+            <Sparkles size={11} /> Team {team?.letter ?? "—"}
+          </span>
+        }
+        greeting={greeting()}
+        name={`${profile?.full_name?.split(" ")[0] || "Member"}.`}
+        caption="A calm space to track every sale, referral, and rupee earned."
+        right={
+          <div className="glass-card flex items-center gap-3 rounded-[22px] p-3 shadow-[var(--shadow-soft)]">
+            <Portrait name={profile?.full_name} src={profile?.avatar_url} size={44} online />
+            <div className="min-w-0">
+              <div className="truncate text-sm font-semibold text-foreground">
+                {profile?.full_name || "—"}
               </div>
-              <div className="mt-3 flex items-end justify-between">
-                <div>
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    This month
-                  </div>
-                  <div className="mt-0.5 text-2xl font-extrabold tracking-tight text-foreground">
-                    {formatINR(stats?.monthCommission ?? 0, { compact: true })}
-                  </div>
-                </div>
-                <div className="rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gold-foreground">
-                  Rank {rank ?? "—"}
-                </div>
+              <div className="truncate font-mono text-[10px] text-muted-foreground">
+                {profile?.login_id}
               </div>
             </div>
+            <span className="ml-1 shrink-0 rounded-full bg-gold/20 px-2.5 py-1 text-[9.5px] font-bold uppercase tracking-[0.14em] text-gold-foreground">
+              Rank {rank ?? "—"}
+            </span>
           </div>
-        </div>
+        }
+      />
+
+      {/* ---------------- Wallet hero ---------------- */}
+      <section className="mt-6">
+        <WalletHeroCard
+          label="Available balance"
+          balance={formatINR(profile?.wallet_balance)}
+          to="/member/wallet"
+          footLeft={`Pending ${formatINR(stats?.pendingCommission ?? 0, { compact: true })}`}
+          footRight={`+${formatINR(stats?.monthCommission ?? 0, { compact: true })} this month`}
+        />
       </section>
 
-      {/* Today's summary */}
-      <section className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard
-          icon={<TrendingUp size={18} />}
+      {/* ---------------- Quick actions ---------------- */}
+      <section className="mt-4">
+        <QuickActionGrid>
+          <QuickAction icon={<UserPlus size={18} />} label="Referral" to="/member/referrals" />
+          <QuickAction icon={<Handshake size={18} />} label="Tip lead" to="/member/tips" accent="cyan" />
+          <QuickAction icon={<Wallet size={18} />} label="Withdraw" to="/member/withdrawals" accent="gold" />
+          <QuickAction
+            icon={<Bell size={18} />}
+            label="Alerts"
+            to="/member/notifications"
+            accent="sky"
+            badge={unread > 0 ? unread : undefined}
+          />
+        </QuickActionGrid>
+      </section>
+
+      {/* ---------------- Today ---------------- */}
+      <section className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <MetricTile
+          icon={<TrendingUp size={17} />}
           label="Today's sales"
           value={formatINR(stats?.todaySalesValue ?? 0, { compact: true })}
           hint={`${stats?.todaySalesCount ?? 0} deals`}
         />
-        <StatCard
-          icon={<IndianRupee size={18} />}
-          label="Today's commission"
+        <MetricTile
+          icon={<IndianRupee size={17} />}
+          label="Today's comm."
           value={formatINR(stats?.todayCommission ?? 0, { compact: true })}
           accent="gold"
         />
-        <StatCard
-          icon={<Wallet size={18} />}
+        <MetricTile
+          icon={<Wallet size={17} />}
           label="Wallet"
           value={formatINR(profile?.wallet_balance)}
+          accent="cyan"
         />
-        <StatCard
-          icon={<Trophy size={18} />}
+        <MetricTile
+          icon={<Trophy size={17} />}
           label="Rank"
           value={rank ? `#${rank}` : "—"}
           hint={team?.name || "—"}
-          accent="leaf"
+          accent="violet"
         />
       </section>
 
-      {/* All stats */}
-      <section className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard icon={<TrendingUp size={18} />} label="Total sales" value={formatINR(stats?.totalSales ?? 0, { compact: true })} hint={`${stats?.salesCount ?? 0} deals`} />
-        <StatCard icon={<TrendingUp size={18} />} label="This month" value={formatINR(stats?.monthSalesValue ?? 0, { compact: true })} hint={`${stats?.monthSalesCount ?? 0} deals`} />
-        <StatCard icon={<IndianRupee size={18} />} label="Commission" value={formatINR(stats?.totalCommission ?? 0, { compact: true })} hint={`Pending ${formatINR(stats?.pendingCommission ?? 0, { compact: true })}`} accent="gold" />
-        <StatCard icon={<UserPlus size={18} />} label="Referrals & tips" value={String((stats?.referralCount ?? 0) + (stats?.tipCount ?? 0))} hint={`${stats?.referralCount ?? 0} referrals · ${stats?.tipCount ?? 0} tips`} />
+      {/* ---------------- Lifetime ---------------- */}
+      <section className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <MetricTile
+          icon={<TrendingUp size={17} />}
+          label="Total sales"
+          value={formatINR(stats?.totalSales ?? 0, { compact: true })}
+          hint={`${stats?.salesCount ?? 0} deals`}
+        />
+        <MetricTile
+          icon={<Calendar size={17} />}
+          label="This month"
+          value={formatINR(stats?.monthSalesValue ?? 0, { compact: true })}
+          hint={`${stats?.monthSalesCount ?? 0} deals`}
+          accent="sky"
+        />
+        <MetricTile
+          icon={<IndianRupee size={17} />}
+          label="Commission"
+          value={formatINR(stats?.totalCommission ?? 0, { compact: true })}
+          hint={`Pending ${formatINR(stats?.pendingCommission ?? 0, { compact: true })}`}
+          accent="gold"
+        />
+        <MetricTile
+          icon={<UserPlus size={17} />}
+          label="Referrals & tips"
+          value={String((stats?.referralCount ?? 0) + (stats?.tipCount ?? 0))}
+          hint={`${stats?.referralCount ?? 0} referrals · ${stats?.tipCount ?? 0} tips`}
+          accent="orange"
+        />
       </section>
 
-      {/* Team + Wallet quick */}
-      <section className="mt-6 grid gap-5 lg:grid-cols-2">
-        <SectionCard
+      {/* ---------------- Achievement ---------------- */}
+      <section className="mt-5">
+        <AchievementCard
+          icon={<Award size={26} />}
+          title={rank ? `Rank #${rank} in ${team?.name || "your team"}` : "Your journey begins"}
+          subtitle="Close sales, add referrals and tip leads to climb the ladder."
+          level={rank === 1 ? "Champion" : rank && rank <= 3 ? "Elite" : "Riser"}
+          xp={Math.round(Number(myScore) || 0)}
+          xpGoal={Math.max(100, Math.round((Number(myScore) || 0) * 1.6) || 100)}
+          chips={[
+            `${stats?.salesCount ?? 0} deals closed`,
+            `${stats?.referralCount ?? 0} referrals`,
+            `${stats?.tipCount ?? 0} tips`,
+          ]}
+        />
+      </section>
+
+      {/* ---------------- Team + wallet detail ---------------- */}
+      <section className="mt-5 grid gap-4 lg:grid-cols-2">
+        <Panel
           title="My team"
-          subtitle="Your workspace at Aawash."
-          action={
-            <Link to="/member/leaderboard" className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
-              Leaderboard <ChevronRight size={12} />
-            </Link>
-          }
+          subtitle="Your workspace at Aawaash."
+          action={<PanelLink to="/member/leaderboard">Leaderboard</PanelLink>}
         >
           {overview.isLoading ? (
             <SkeletonBlock className="h-40" />
@@ -210,137 +254,142 @@ function MemberContent() {
             />
           ) : (
             <div className="grid gap-3">
-              <div className="flex items-center gap-3 rounded-2xl border border-border/50 bg-surface p-3">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-extrabold text-primary-foreground">
+              <div className="flex items-center gap-3 rounded-[22px] border border-border/60 bg-surface/70 p-3">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-bold text-primary-foreground">
                   {team.letter}
-                </div>
+                </span>
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-bold text-foreground">{team.name || "—"}</div>
-                  <div className="text-[11px] text-muted-foreground">Team code · {team.letter}</div>
+                  <div className="truncate text-sm font-semibold text-foreground">{team.name || "—"}</div>
+                  <div className="text-[11px] font-light text-muted-foreground">
+                    Team code · {team.letter}
+                  </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <MiniKV icon={<Users size={12} />} label="Leader" value={team.leader?.full_name || o?.leaderName || "—"} />
-                <MiniKV icon={<Phone size={12} />} label="Contact" value={team.leader?.mobile_number || "—"} mono />
-                <MiniKV icon={<Trophy size={12} />} label="Rank" value={rank ? `#${rank}` : "—"} />
-                <MiniKV icon={<Calendar size={12} />} label="Joined" value={o?.profile?.created_at ? new Date(o.profile.created_at).toLocaleDateString("en-IN") : "—"} />
+              <div className="grid grid-cols-2 gap-2.5">
+                <MiniKV icon={<Users size={11} />} label="Leader" value={team.leader?.full_name || o?.leaderName || "—"} />
+                <MiniKV icon={<Phone size={11} />} label="Contact" value={team.leader?.mobile_number || "—"} mono />
+                <MiniKV icon={<Trophy size={11} />} label="Rank" value={rank ? `#${rank}` : "—"} />
+                <MiniKV
+                  icon={<Calendar size={11} />}
+                  label="Joined"
+                  value={o?.profile?.created_at ? new Date(o.profile.created_at).toLocaleDateString("en-IN") : "—"}
+                />
               </div>
             </div>
           )}
-        </SectionCard>
+        </Panel>
 
-        <SectionCard
+        <Panel
           title="Wallet"
           subtitle="Snapshot of your earnings."
-          action={
-            <Link to="/member/wallet" className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
-              Open wallet <ChevronRight size={12} />
-            </Link>
-          }
+          action={<PanelLink to="/member/wallet">Open wallet</PanelLink>}
         >
-          <div className="glass-card rounded-3xl border border-primary/20 bg-gradient-to-br from-primary-soft/60 to-gold/10 p-5 shadow-[var(--shadow-soft)]">
-            <div className="flex items-center justify-between">
-              <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-primary">
-                Available balance
-              </div>
-              <Wallet size={16} className="text-primary" />
-            </div>
-            <div className="mt-2 text-4xl font-extrabold tracking-tight text-foreground">
-              {formatINR(profile?.wallet_balance)}
-            </div>
-            <div className="mt-3 flex items-center justify-between text-[11px] text-muted-foreground">
-              <span>Pending {formatINR(stats?.pendingCommission ?? 0, { compact: true })}</span>
-              <span className="inline-flex items-center gap-1 font-semibold text-success">
-                <ArrowUpRight size={12} /> {formatINR(stats?.monthCommission ?? 0, { compact: true })} this month
-              </span>
-            </div>
+          <div className="grid grid-cols-2 gap-2.5">
+            <MiniKV icon={<Wallet size={11} />} label="Available" value={formatINR(profile?.wallet_balance)} />
+            <MiniKV
+              icon={<IndianRupee size={11} />}
+              label="Pending"
+              value={formatINR(stats?.pendingCommission ?? 0, { compact: true })}
+            />
+            <MiniKV
+              icon={<TrendingUp size={11} />}
+              label="This month"
+              value={formatINR(stats?.monthCommission ?? 0, { compact: true })}
+            />
+            <MiniKV
+              icon={<Award size={11} />}
+              label="Lifetime"
+              value={formatINR(stats?.totalCommission ?? 0, { compact: true })}
+            />
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="mt-4 grid grid-cols-2 gap-2.5">
             <Link
               to="/member/withdrawals"
-              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)]"
+              className="inline-flex h-12 items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform will-change-transform hover:-translate-y-0.5 active:scale-[0.98]"
             >
               <Wallet size={14} /> Withdraw
             </Link>
             <Link
               to="/member/commission"
-              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-2xl border border-border bg-surface text-sm font-semibold text-foreground shadow-[var(--shadow-soft)]"
+              className="glass-card inline-flex h-12 items-center justify-center gap-1.5 rounded-2xl text-sm font-semibold text-foreground shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-0.5 active:scale-[0.98]"
             >
               <IndianRupee size={14} /> Commissions
             </Link>
           </div>
-        </SectionCard>
+        </Panel>
       </section>
 
-      {/* Leaderboard + Activity */}
-      <section className="mt-6 grid gap-5 lg:grid-cols-2">
-        <SectionCard
+      {/* ---------------- Leaderboard + activity ---------------- */}
+      <section className="mt-5 grid gap-4 lg:grid-cols-2">
+        <Panel
           title="Team leaderboard"
           subtitle="Top performers in your team."
-          action={
-            <Link to="/member/leaderboard" className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
-              View all <ChevronRight size={12} />
-            </Link>
-          }
+          action={<PanelLink to="/member/leaderboard">View all</PanelLink>}
         >
           {board.isLoading ? (
             <div className="flex flex-col gap-2">
               {Array.from({ length: 4 }).map((_, i) => (
-                <SkeletonBlock key={i} className="h-14" />
+                <SkeletonBlock key={i} className="h-16" />
               ))}
             </div>
           ) : topBoard.length === 0 ? (
-            <EmptyState icon={<Trophy size={22} />} title="No rankings yet" body="Rankings appear after the first team sale." />
+            <EmptyState
+              icon={<Trophy size={22} />}
+              title="No rankings yet"
+              body="Rankings appear after the first team sale."
+            />
           ) : (
-            <ol className="flex flex-col gap-2">
+            <ol className="flex flex-col gap-2.5">
               {topBoard.map((m) => {
                 const me = m.id === myId;
                 return (
                   <li
                     key={m.id}
-                    className={`flex items-center gap-3 rounded-2xl border p-3 ${
-                      me ? "border-primary/30 bg-primary-soft/40" : "border-border/50 bg-surface"
+                    className={`flex items-center gap-3 rounded-[22px] border p-3 transition-all ${
+                      me
+                        ? "border-primary/30 bg-primary-soft/50 shadow-[var(--shadow-soft)]"
+                        : "border-border/60 bg-surface/70 hover:border-primary/20"
                     }`}
                   >
-                    <div
-                      className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl text-xs font-bold ${
-                        m.rank === 1
-                          ? "bg-gradient-to-br from-gold to-primary-soft text-gold-foreground"
-                          : m.rank <= 3
-                            ? "bg-primary-soft text-primary"
-                            : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {m.rank <= 3 ? <Trophy size={16} /> : m.rank}
-                    </div>
-                    <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-leaf text-[10px] font-bold text-primary-foreground">
-                      {initials(m.full_name)}
-                    </div>
+                    <RankChip rank={m.rank} icon={<Trophy size={15} />} />
+                    <Portrait name={m.full_name} size={36} />
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-semibold text-foreground">
-                        {m.full_name} {me && <span className="ml-1 rounded-full bg-primary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary-foreground">You</span>}
+                      <div className="flex min-w-0 items-center gap-1.5">
+                        <span className="truncate text-sm font-semibold text-foreground">{m.full_name}</span>
+                        {me && (
+                          <span className="shrink-0 rounded-full bg-primary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-primary-foreground">
+                            You
+                          </span>
+                        )}
                       </div>
-                      <div className="text-[11px] text-muted-foreground">Score {m.score}</div>
+                      <div className="text-[11px] font-light text-muted-foreground">Score {m.score}</div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-sm font-bold text-foreground">{formatINR(m.total_sales, { compact: true })}</div>
-                      <div className="text-[10px] text-muted-foreground">Sales</div>
+                    <div className="shrink-0 text-right">
+                      <div className="text-sm font-semibold text-foreground">
+                        {formatINR(m.total_sales, { compact: true })}
+                      </div>
+                      <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                        Sales
+                      </div>
                     </div>
                   </li>
                 );
               })}
             </ol>
           )}
-        </SectionCard>
+        </Panel>
 
-        <SectionCard
+        <Panel
           title="Recent activity"
           subtitle="Everything in one timeline."
           action={
-            <Link to="/member/notifications" className="relative inline-flex items-center gap-1 text-xs font-semibold text-primary">
+            <Link
+              to="/member/notifications"
+              className="inline-flex h-8 items-center gap-1 rounded-full border border-border/70 bg-surface px-3 text-[11px] font-semibold text-primary shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5"
+            >
               <Bell size={12} /> Alerts
               {unread > 0 && (
-                <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground">
+                <span className="ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-bold text-destructive-foreground">
                   {unread}
                 </span>
               )}
@@ -354,9 +403,13 @@ function MemberContent() {
               ))}
             </div>
           ) : recent.length === 0 ? (
-            <EmptyState icon={<Activity size={22} />} title="Quiet for now" body="Your activity will appear here in real time." />
+            <EmptyState
+              icon={<Activity size={22} />}
+              title="Quiet for now"
+              body="Your activity will appear here in real time."
+            />
           ) : (
-            <ol className="relative flex flex-col gap-3 border-l border-border/50 pl-5">
+            <ol className="relative flex flex-col gap-3.5 border-l border-border/60 pl-5">
               {recent.map((a) => (
                 <li key={a.id} className="relative">
                   <span
@@ -367,12 +420,14 @@ function MemberContent() {
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <div className="truncate text-sm font-semibold text-foreground">{a.title}</div>
-                      <div className="text-[11px] text-muted-foreground">
+                      <div className="text-[11px] font-light text-muted-foreground">
                         {new Date(a.date).toLocaleString("en-IN")}
                       </div>
                     </div>
                     {a.amount !== 0 && (
-                      <div className={`shrink-0 text-sm font-bold ${a.amount < 0 ? "text-destructive" : "text-success"}`}>
+                      <div
+                        className={`shrink-0 text-sm font-semibold ${a.amount < 0 ? "text-destructive" : "text-success"}`}
+                      >
                         {a.amount < 0 ? "" : "+"}
                         {formatINR(Math.abs(a.amount), { compact: true })}
                       </div>
@@ -382,22 +437,36 @@ function MemberContent() {
               ))}
             </ol>
           )}
-        </SectionCard>
+        </Panel>
       </section>
 
-      <section className="mt-6">
+      {/* ---------------- Footer CTAs ---------------- */}
+      <section className="mt-5 grid gap-3 sm:grid-cols-2">
         <Link
           to="/leader/projects"
-          className="glass-card flex items-center gap-3 rounded-3xl p-4 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
+          className="glass-card flex items-center gap-3 rounded-[24px] p-4 shadow-[var(--shadow-soft)] transition-all will-change-transform hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] active:scale-[0.99]"
         >
-          <div className="grid h-11 w-11 place-items-center rounded-2xl bg-primary-soft text-primary">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary-soft text-primary">
             <Building2 size={18} />
-          </div>
+          </span>
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-bold text-foreground">Explore projects</div>
-            <div className="text-[11px] text-muted-foreground">Live inventory available to sell.</div>
+            <div className="text-sm font-semibold text-foreground">Explore projects</div>
+            <div className="text-[11px] font-light text-muted-foreground">Live inventory available to sell.</div>
           </div>
-          <ChevronRight size={16} className="text-muted-foreground" />
+          <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
+        </Link>
+        <Link
+          to="/member/analytics"
+          className="glass-card flex items-center gap-3 rounded-[24px] p-4 shadow-[var(--shadow-soft)] transition-all will-change-transform hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] active:scale-[0.99]"
+        >
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-violet-100 text-violet-700">
+            <BarChart3 size={18} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="text-sm font-semibold text-foreground">My analytics</div>
+            <div className="text-[11px] font-light text-muted-foreground">Trends, funnel and earnings history.</div>
+          </div>
+          <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
         </Link>
       </section>
     </DashboardShell>
@@ -433,11 +502,13 @@ function MiniKV({
   mono?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-border/50 bg-surface p-3">
-      <div className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+    <div className="rounded-[18px] border border-border/60 bg-surface/70 p-3">
+      <div className="inline-flex items-center gap-1 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         {icon} {label}
       </div>
-      <div className={`mt-1 truncate text-sm font-semibold text-foreground ${mono ? "font-mono" : ""}`}>
+      <div
+        className={`mt-1 truncate text-sm font-semibold tracking-[-0.01em] text-foreground ${mono ? "font-mono" : ""}`}
+      >
         {value}
       </div>
     </div>
