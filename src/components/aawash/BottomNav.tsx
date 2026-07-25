@@ -195,6 +195,9 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
 
       <ul
         ref={listRef}
+        role="toolbar"
+        aria-orientation="horizontal"
+        aria-label="Dock destinations"
         className="pointer-events-auto relative mx-auto flex h-[66px] w-full max-w-[420px] items-stretch justify-between gap-0.5 rounded-[30px] border border-white/60 bg-white/72 p-1.5 shadow-[0_24px_60px_-18px_rgba(46,125,91,0.45),0_4px_14px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-black/5 backdrop-blur-2xl"
       >
         {/* Magnetic emerald puck */}
