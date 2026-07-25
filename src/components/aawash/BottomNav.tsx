@@ -138,10 +138,15 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
         const dy = y - lastY.current;
+        lastY.current = y;
+        // Keep the dock pinned right after a dock activation (e.g. hash jumps).
+        if (Date.now() < pinnedUntil.current) {
+          setHidden(false);
+          return;
+        }
         if (Math.abs(dy) < 6) return;
         if (y < 40) setHidden(false);
         else setHidden(dy > 0);
-        lastY.current = y;
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
