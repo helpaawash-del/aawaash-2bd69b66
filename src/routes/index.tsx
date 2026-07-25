@@ -1701,8 +1701,34 @@ function FAQ() {
 
 /* ------------------------------ CONTACT ------------------------------ */
 
+const MAP_QUERY = "Darbhanga, Bihar 846004, India";
+
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", mobile: "", message: "" });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const next: Record<string, string> = {};
+    if (!form.name.trim()) next.name = "Name is required";
+    else if (form.name.trim().length > 100) next.name = "Name must be under 100 characters";
+    if (!form.email.trim()) next.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim()))
+      next.email = "Enter a valid email address";
+    if (!form.mobile.trim()) next.mobile = "Mobile is required";
+    else if (!/^[0-9]{10}$/.test(form.mobile.replace(/\D/g, "").slice(-10)))
+      next.mobile = "Enter a 10-digit mobile number";
+    if (!form.message.trim()) next.message = "Message is required";
+    else if (form.message.trim().length > 1000) next.message = "Message must be under 1000 characters";
+    return next;
+  };
+
+  const set = (key: keyof typeof form) => (value: string) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+    setErrors((prev) => (prev[key] ? { ...prev, [key]: "" } : prev));
+    setSent(false);
+  };
+
   return (
     <section id="contact" className={SECTION_PAD}>
       <div className="mx-auto max-w-6xl">
@@ -1711,40 +1737,98 @@ function Contact() {
           title="Let's build your team on Aawash."
           subtitle="Reach out — we'll help you onboard leaders, members, and your first project."
         />
-        <div className="mt-10 grid gap-5 lg:grid-cols-2">
+        <div className={`${HEADER_GAP} grid gap-4 sm:gap-5 lg:grid-cols-2`}>
           <Reveal variant="left">
-            <div className="glass-card flex h-full flex-col gap-5 rounded-3xl p-6 shadow-[var(--shadow-soft)]">
+            <div className="glass-card flex h-full flex-col gap-5 rounded-3xl p-5 shadow-[var(--shadow-soft)] sm:p-6">
               <ContactRow icon={Phone} label="Phone" value="+91 90000 00000" />
               <ContactRow icon={Mail} label="Email" value="hello@aawash.app" />
               <ContactRow icon={MapPinned} label="Office" value="Darbhanga, Bihar — 846004" />
-              <div className="mt-2 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-primary-soft to-leaf/20">
-                <div className="grid h-full w-full place-items-center text-xs font-semibold text-muted-foreground">
-                  Map preview
-                </div>
+              <div className="mt-auto aspect-[16/10] w-full overflow-hidden rounded-2xl border border-border/60 bg-primary-soft sm:aspect-[16/9]">
+                <iframe
+                  title="Aawash office location — Darbhanga, Bihar 846004"
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}&output=embed`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="h-full w-full border-0"
+                />
               </div>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAP_QUERY)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+              >
+                Open in Google Maps <ArrowRight size={13} />
+              </a>
             </div>
           </Reveal>
 
           <Reveal variant="right">
             <form
+              noValidate
               onSubmit={(e) => {
                 e.preventDefault();
+                const next = validate();
+                setErrors(next);
+                if (Object.keys(next).length > 0) {
+                  setSent(false);
+                  return;
+                }
                 setSent(true);
               }}
-              className="glass-card flex h-full flex-col gap-4 rounded-3xl p-6 shadow-[var(--shadow-soft)]"
+              className="glass-card flex h-full flex-col gap-4 rounded-3xl p-5 shadow-[var(--shadow-soft)] sm:p-6"
             >
-              <Field label="Your Name" placeholder="e.g. Ritu Malhotra" />
-              <Field label="Email" type="email" placeholder="you@example.com" />
-              <Field label="Mobile" type="tel" placeholder="10-digit mobile" />
+              <Field
+                label="Your Name"
+                placeholder="e.g. Ritu Malhotra"
+                required
+                value={form.name}
+                onChange={set("name")}
+                error={errors.name}
+              />
+              <Field
+                label="Email"
+                type="email"
+                placeholder="you@example.com"
+                required
+                value={form.email}
+                onChange={set("email")}
+                error={errors.email}
+              />
+              <Field
+                label="Mobile"
+                type="tel"
+                placeholder="10-digit mobile"
+                required
+                value={form.mobile}
+                onChange={set("mobile")}
+                error={errors.mobile}
+              />
               <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Message
+                <label
+                  htmlFor="contact-message"
+                  className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
+                >
+                  Message <span className="text-destructive">*</span>
                 </label>
                 <textarea
+                  id="contact-message"
                   rows={4}
+                  required
+                  maxLength={1000}
+                  value={form.message}
+                  onChange={(e) => set("message")(e.target.value)}
+                  aria-invalid={Boolean(errors.message)}
                   placeholder="Tell us a little about your team…"
-                  className="mt-1.5 w-full resize-none rounded-2xl border border-input bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring"
+                  className={`mt-1.5 w-full resize-none rounded-2xl border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 ${
+                    errors.message
+                      ? "border-destructive focus:ring-destructive/40"
+                      : "border-input focus:ring-ring"
+                  }`}
                 />
+                {errors.message && (
+                  <p className="mt-1.5 text-xs font-medium text-destructive">{errors.message}</p>
+                )}
               </div>
               <button
                 type="submit"
@@ -1789,24 +1873,46 @@ function Field({
   label,
   type = "text",
   placeholder,
+  required,
+  value,
+  onChange,
+  error,
 }: {
   label: string;
   type?: string;
   placeholder: string;
+  required?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
+  error?: string;
 }) {
+  const id = `contact-${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <div>
-      <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-        {label}
+      <label
+        htmlFor={id}
+        className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
+      >
+        {label} {required && <span className="text-destructive">*</span>}
       </label>
       <input
+        id={id}
         type={type}
+        required={required}
+        maxLength={type === "tel" ? 15 : 255}
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        aria-invalid={Boolean(error)}
         placeholder={placeholder}
-        className="mt-1.5 w-full rounded-2xl border border-input bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring"
+        className={`mt-1.5 w-full rounded-2xl border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 ${
+          error ? "border-destructive focus:ring-destructive/40" : "border-input focus:ring-ring"
+        }`}
       />
+      {error && <p className="mt-1.5 text-xs font-medium text-destructive">{error}</p>}
     </div>
   );
 }
+
 
 /* ------------------------------ FOOTER ------------------------------ */
 
