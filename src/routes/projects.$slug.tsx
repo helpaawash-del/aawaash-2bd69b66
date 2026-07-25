@@ -348,11 +348,11 @@ function ProjectDetailPage() {
               </div>
             </section>
 
-            {/* 3D MODEL & VIDEO */}
+            {/* 3D MODEL */}
             <section id="tour" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Box size={16} />} title="3D Model & Video" subtitle="Explore in immersive detail" />
+              <SectionHeader icon={<Box size={16} />} title="3D Model" subtitle="Explore in immersive detail" />
               <div className="mt-4">
-                <TourPanel modelUrl={modelUrl} isGlb={isGlb} videos={videos} />
+                <TourPanel modelUrl={modelUrl} isGlb={isGlb} />
               </div>
             </section>
 
@@ -534,15 +534,12 @@ function GalleryTile({ src, index, onOpen }: { src: string; index: number; onOpe
 function TourPanel({
   modelUrl,
   isGlb,
-  videos,
 }: {
   modelUrl: string | null;
   isGlb: boolean;
-  videos: string[];
 }) {
   return (
     <div className="space-y-4">
-      {/* 3D Model */}
       <Reveal>
         <section className="glass-card overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
           <div className="flex items-center justify-between border-b border-border/50 p-4 sm:p-5">
@@ -571,21 +568,10 @@ function TourPanel({
           </div>
         </section>
       </Reveal>
-
-      {/* Videos */}
-      {videos.length > 0 ? (
-        videos.map((v, idx) => <VideoTile key={`${v}-${idx}`} url={v} />)
-      ) : (
-        <Reveal>
-          <section className="glass-card rounded-3xl p-6 text-center shadow-[var(--shadow-soft)]">
-            <Play size={22} className="mx-auto text-muted-foreground" />
-            <p className="mt-2 text-sm font-semibold text-foreground">No walkthrough video yet</p>
-          </section>
-        </Reveal>
-      )}
     </div>
   );
 }
+
 
 function VideoTile({ url }: { url: string }) {
   const embed = toEmbedUrl(url);
