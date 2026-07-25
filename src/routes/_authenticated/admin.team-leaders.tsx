@@ -13,6 +13,8 @@ import {
   Settings2,
   ArrowRight,
   Circle,
+  Trash2,
+  Sliders,
 } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
@@ -20,6 +22,12 @@ import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { listTeamLeaders, getTeamLimits, updateTeamLimits } from "@/lib/team-leaders.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
 import { WalletEditButton } from "@/components/aawash/admin/WalletAdjustDialog";
+import {
+  AddLeaderDialog,
+  LeaderMetricsDialog,
+  DeleteLeaderDialog,
+  type LeaderMetrics,
+} from "@/components/aawash/admin/AdminLeaderDialogs";
 
 export const Route = createFileRoute("/_authenticated/admin/team-leaders")({
   component: Page,
