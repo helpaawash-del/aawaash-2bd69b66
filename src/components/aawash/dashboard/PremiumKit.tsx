@@ -372,9 +372,18 @@ function useCountUpText(value: string | number) {
 /* ------------------------------------------------------------------ *
  * Horizontal snap rail
  * ------------------------------------------------------------------ */
-export function Rail({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function Rail({
+  children,
+  className = "",
+  "aria-label": ariaLabel,
+}: {
+  children: ReactNode;
+  className?: string;
+  "aria-label"?: string;
+}) {
   return (
     <div
+      aria-label={ariaLabel}
       className={`-mx-5 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:px-6 [&::-webkit-scrollbar]:hidden ${className}`}
     >
       {children}
