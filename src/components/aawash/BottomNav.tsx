@@ -175,12 +175,14 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
         {items.map((item, i) => {
           const { label, icon: Icon, to, hash, description, key } = item;
           const active = i === activeIndex;
+          const tabbable = i === (focusIndex >= 0 ? focusIndex : activeIndex >= 0 ? activeIndex : 0);
           return (
             <li
               key={key}
               ref={(el) => {
                 itemRefs.current[i] = el;
               }}
+              role="none"
               className={`relative z-10 flex min-w-0 transition-[flex] duration-300 ${active ? "flex-[1.5]" : "flex-1"}`}
             >
               <Link
@@ -190,8 +192,11 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 resetScroll={!hash}
                 aria-label={`${label} — ${description}`}
                 aria-current={active ? "page" : undefined}
+                tabIndex={tabbable ? 0 : -1}
+                onFocus={() => setFocusIndex(i)}
+                onKeyDown={(e) => onKeyDown(e, i)}
                 data-testid={`dock-link-${label.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`group relative flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-[22px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[#2E7D5B]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white/60 ${
+                className={`group relative flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-[22px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[#2E7D5B]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                   active ? "text-white" : "text-slate-500 hover:text-[#2E7D5B]"
                 }`}
               >
@@ -209,7 +214,6 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 >
                   {label}
                 </span>
-                
               </Link>
             </li>
           );
