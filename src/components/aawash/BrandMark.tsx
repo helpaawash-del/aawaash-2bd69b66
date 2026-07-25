@@ -3,9 +3,9 @@ import logoAsset from "@/assets/aawaash-logo.png.asset.json";
 type Size = "sm" | "md" | "lg";
 
 const SIZES: Record<Size, { box: string; text: string; gap: string }> = {
-  sm: { box: "h-16 w-16 md:h-20 md:w-20", text: "text-lg md:text-xl", gap: "gap-2" },
-  md: { box: "h-24 w-24 md:h-28 md:w-28", text: "text-xl md:text-2xl", gap: "gap-2.5" },
-  lg: { box: "h-32 w-32 md:h-36 md:w-36", text: "text-2xl md:text-3xl", gap: "gap-3" },
+  sm: { box: "h-11 w-11 sm:h-14 sm:w-14 md:h-16 md:w-16", text: "text-sm sm:text-base md:text-lg", gap: "gap-1.5 sm:gap-2" },
+  md: { box: "h-14 w-14 sm:h-20 sm:w-20 md:h-24 md:w-24", text: "text-base sm:text-lg md:text-xl", gap: "gap-2" },
+  lg: { box: "h-20 w-20 sm:h-28 sm:w-28 md:h-32 md:w-32", text: "text-lg sm:text-xl md:text-2xl", gap: "gap-2.5" },
 };
 
 /**

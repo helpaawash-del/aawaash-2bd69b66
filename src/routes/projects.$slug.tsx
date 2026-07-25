@@ -450,42 +450,6 @@ function OverviewPanel({
         <ProgressCard label="Availability" pct={availPct} tone="leaf" />
       </section>
 
-      <Reveal>
-        <section className="glass-card rounded-3xl p-6 shadow-[var(--shadow-soft)]">
-          <h2 className="text-lg font-bold text-foreground">About this project</h2>
-          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-            {(p.description as string) ||
-              (p.short_description as string) ||
-              "Details coming soon."}
-          </p>
-
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <MiniStat label="Buildings" value={(p.total_buildings as number) ?? 0} />
-            <MiniStat label="Floors" value={(p.total_floors as number) ?? 0} />
-            <MiniStat label="Total" value={total} />
-            <MiniStat label="Available" value={available} />
-            <MiniStat label="Reserved" value={reserved} />
-            <MiniStat label="Sold" value={sold} />
-            <MiniStat
-              label="Price Range"
-              value={
-                (p.price_min as number) && (p.price_max as number)
-                  ? `${formatINR(p.price_min as number, { compact: true })} – ${formatINR(
-                      p.price_max as number,
-                      { compact: true },
-                    )}`
-                  : formatINR((p.price_from as number) ?? 0, { compact: true })
-              }
-            />
-            {(p.possession_date as string) && (
-              <MiniStat
-                label="Possession"
-                value={new Date(p.possession_date as string).toLocaleDateString()}
-              />
-            )}
-          </div>
-        </section>
-      </Reveal>
 
       {(p.amenities as string[] | undefined)?.length ? (
         <Reveal>
