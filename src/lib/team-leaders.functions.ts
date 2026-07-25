@@ -562,3 +562,127 @@ export const getTeamLeaderDetail = createServerFn({ method: "GET" })
       audit: audit ?? [],
     };
   });
+
+/* ================================================================== */
+/* Admin metric overrides + delete                                     */
+/* ================================================================== */
+
+const metricsSchema = z.object({
+  userId: z.string().uuid(),
+  salesCount: z.number().min(0).max(1_000_000).nullable().optional(),
+  walletBalance: z.number().min(0).max(1_000_000_000).nullable().optional(),
+  totalCommission: z.number().min(0).max(1_000_000_000).nullable().optional(),
+  totalRevenue: z.number().min(0).max(1_000_000_000_000).nullable().optional(),
+  memberCount: z.number().min(0).max(10_000).nullable().optional(),
+});
+
+/**
+ * Super-admin override of a Team Leader's headline analytics.
+ * Values are stored in `profiles.metrics_override`; `null` clears the
+ * override and falls back to the computed value. Wallet balance is a real
+ * balance, so it is written straight to the profile and audited.
+ */
+export const setLeaderMetrics = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => metricsSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("id, metrics_override, wallet_balance")
+      .eq("id", data.userId)
+      .maybeSingle();
+    if (!profile) throw new Error("Team Leader not found");
+
+    const prev = ((profile as { metrics_override?: Record<string, unknown> }).metrics_override ?? {}) as Record<string, unknown>;
+    const next: Record<string, unknown> = { ...prev };
+    const apply = (key: string, value: number | null | undefined) => {
+      if (value === undefined) return;
+      if (value === null) delete next[key];
+      else next[key] = value;
+    };
+    apply("sales_count", data.salesCount);
+    apply("total_commission", data.totalCommission);
+    apply("total_revenue", data.totalRevenue);
+    apply("member_count", data.memberCount);
+
+    const updates: Record<string, unknown> = {
+      metrics_override: next,
+      updated_by: context.userId,
+    };
+    if (data.walletBalance !== undefined && data.walletBalance !== null) {
+      updates.wallet_balance = data.walletBalance;
+    }
+
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update(updates as never)
+      .eq("id", data.userId);
+    if (error) throw new Error(error.message);
+
+    await supabaseAdmin.from("audit_logs").insert({
+      actor_id: context.userId,
+      action: "set_leader_metrics",
+      entity_type: "profile",
+      entity_id: data.userId,
+      previous_value: { metrics_override: prev, wallet_balance: profile.wallet_balance } as never,
+      new_value: updates as never,
+    });
+
+    return { ok: true as const };
+  });
+
+/**
+ * Soft-delete a Team Leader: revokes the role, detaches the team, and
+ * deactivates the profile. History (sales, commissions) is preserved.
+ */
+export const deleteTeamLeader = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ userId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context);
+    if (data.userId === context.userId) throw new Error("You cannot delete your own account.");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("id, full_name, team_id, login_id")
+      .eq("id", data.userId)
+      .maybeSingle();
+    if (!profile) throw new Error("Team Leader not found");
+
+    if (profile.team_id) {
+      await supabaseAdmin
+        .from("teams")
+        .update({ leader_id: null, updated_by: context.userId } as never)
+        .eq("id", profile.team_id);
+    }
+
+    await supabaseAdmin.from("user_roles").delete().eq("user_id", data.userId).eq("role", "team_leader");
+
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({
+        is_deleted: true,
+        is_active: false,
+        status: "suspended",
+        team_id: null,
+        updated_by: context.userId,
+      } as never)
+      .eq("id", data.userId);
+    if (error) throw new Error(error.message);
+
+    await supabaseAdmin.auth.admin.updateUserById(data.userId, { ban_duration: "876000h" }).catch(() => undefined);
+
+    await supabaseAdmin.from("audit_logs").insert({
+      actor_id: context.userId,
+      action: "delete_team_leader",
+      entity_type: "profile",
+      entity_id: data.userId,
+      previous_value: profile as never,
+    });
+
+    return { ok: true as const };
+  });
