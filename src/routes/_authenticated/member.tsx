@@ -22,12 +22,7 @@ import {
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { DashboardShell } from "@/components/aawash/DashboardShell";
-import {
-  EmptyState,
-  SkeletonBlock,
-  formatINR,
-  greeting,
-} from "@/components/aawash/dashboard-kit";
+import { formatINR, greeting } from "@/components/aawash/dashboard-kit";
 import {
   Panel,
   PanelLink,
@@ -39,6 +34,10 @@ import {
   Portrait,
   RankChip,
   AchievementCard,
+  WalletHeroSkeleton,
+  MetricRowSkeleton,
+  ListRowSkeleton,
+  ZeroState,
 } from "@/components/aawash/dashboard/PremiumKit";
 import {
   getMemberOverview,
@@ -135,6 +134,9 @@ function MemberContent() {
 
       {/* ---------------- Wallet hero ---------------- */}
       <section className="mt-6">
+        {overview.isLoading ? (
+          <WalletHeroSkeleton />
+        ) : (
         <WalletHeroCard
           label="Available balance"
           balance={formatINR(profile?.wallet_balance)}
@@ -142,6 +144,7 @@ function MemberContent() {
           footLeft={`Pending ${formatINR(stats?.pendingCommission ?? 0, { compact: true })}`}
           footRight={`+${formatINR(stats?.monthCommission ?? 0, { compact: true })} this month`}
         />
+        )}
       </section>
 
       {/* ---------------- Quick actions ---------------- */}
@@ -161,7 +164,11 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Today ---------------- */}
-      <section className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <section className="mt-4">
+        {overview.isLoading ? (
+          <MetricRowSkeleton />
+        ) : (
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         <MetricTile
           icon={<TrendingUp size={17} />}
           label="Today's sales"
@@ -187,10 +194,16 @@ function MemberContent() {
           hint={team?.name || "—"}
           accent="violet"
         />
+        </div>
+        )}
       </section>
 
       {/* ---------------- Lifetime ---------------- */}
-      <section className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <section className="mt-3">
+        {overview.isLoading ? (
+          <MetricRowSkeleton />
+        ) : (
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         <MetricTile
           icon={<TrendingUp size={17} />}
           label="Total sales"
@@ -218,6 +231,8 @@ function MemberContent() {
           hint={`${stats?.referralCount ?? 0} referrals · ${stats?.tipCount ?? 0} tips`}
           accent="orange"
         />
+        </div>
+        )}
       </section>
 
       {/* ---------------- Achievement ---------------- */}
@@ -238,19 +253,19 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Team + wallet detail ---------------- */}
-      <section className="mt-5 grid gap-4 lg:grid-cols-2">
+      <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
         <Panel
           title="My team"
           subtitle="Your workspace at Aawaash."
           action={<PanelLink to="/member/leaderboard">Leaderboard</PanelLink>}
         >
           {overview.isLoading ? (
-            <SkeletonBlock className="h-40" />
+            <ListRowSkeleton rows={3} height="h-14" />
           ) : !team ? (
-            <EmptyState
-              icon={<Users size={22} />}
+            <ZeroState
+              icon={<Users size={26} />}
               title="No team yet"
-              body="Ask your Super Admin to assign you to a team."
+              body="Ask your Super Admin to assign you to a team — your leader and rank appear here."
             />
           ) : (
             <div className="grid gap-3">
@@ -265,7 +280,7 @@ function MemberContent() {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-2 gap-2.5 md:gap-3">
                 <MiniKV icon={<Users size={11} />} label="Leader" value={team.leader?.full_name || o?.leaderName || "—"} />
                 <MiniKV icon={<Phone size={11} />} label="Contact" value={team.leader?.mobile_number || "—"} mono />
                 <MiniKV icon={<Trophy size={11} />} label="Rank" value={rank ? `#${rank}` : "—"} />
@@ -284,7 +299,7 @@ function MemberContent() {
           subtitle="Snapshot of your earnings."
           action={<PanelLink to="/member/wallet">Open wallet</PanelLink>}
         >
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2.5 md:gap-3">
             <MiniKV icon={<Wallet size={11} />} label="Available" value={formatINR(profile?.wallet_balance)} />
             <MiniKV
               icon={<IndianRupee size={11} />}
@@ -320,23 +335,21 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Leaderboard + activity ---------------- */}
-      <section className="mt-5 grid gap-4 lg:grid-cols-2">
+      <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
         <Panel
           title="Team leaderboard"
           subtitle="Top performers in your team."
           action={<PanelLink to="/member/leaderboard">View all</PanelLink>}
         >
           {board.isLoading ? (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <SkeletonBlock key={i} className="h-16" />
-              ))}
-            </div>
+            <ListRowSkeleton rows={4} />
           ) : topBoard.length === 0 ? (
-            <EmptyState
-              icon={<Trophy size={22} />}
+            <ZeroState
+              icon={<Trophy size={26} />}
               title="No rankings yet"
-              body="Rankings appear after the first team sale."
+              body="Rankings appear right after the first team sale. Add a referral to get moving."
+              cta={{ label: "Add referral", to: "/member/referrals" }}
+              accent="gold"
             />
           ) : (
             <ol className="flex flex-col gap-2.5">
@@ -397,16 +410,14 @@ function MemberContent() {
           }
         >
           {activity.isLoading ? (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <SkeletonBlock key={i} className="h-14" />
-              ))}
-            </div>
+            <ListRowSkeleton rows={4} height="h-14" />
           ) : recent.length === 0 ? (
-            <EmptyState
-              icon={<Activity size={22} />}
+            <ZeroState
+              icon={<Activity size={26} />}
               title="Quiet for now"
-              body="Your activity will appear here in real time."
+              body="Sales, commissions, referrals and payouts land in this timeline in real time."
+              cta={{ label: "Tip a lead", to: "/member/tips" }}
+              accent="cyan"
             />
           ) : (
             <ol className="relative flex flex-col gap-3.5 border-l border-border/60 pl-5">
@@ -441,7 +452,7 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Footer CTAs ---------------- */}
-      <section className="mt-5 grid gap-3 sm:grid-cols-2">
+      <section className="mt-5 grid gap-3 sm:grid-cols-2 md:gap-4">
         <Link
           to="/leader/projects"
           className="glass-card flex items-center gap-3 rounded-[24px] p-4 shadow-[var(--shadow-soft)] transition-all will-change-transform hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] active:scale-[0.99]"

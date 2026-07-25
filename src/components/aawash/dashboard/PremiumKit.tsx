@@ -86,7 +86,7 @@ export function PanelLink({ to, params, children }: { to: string; params?: Recor
     <Link
       to={to as never}
       params={params as never}
-      className="inline-flex h-8 items-center gap-1 rounded-full border border-border/70 bg-surface px-3 text-[11px] font-semibold text-primary shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-primary/30"
+      className="inline-flex h-9 min-h-9 items-center gap-1 rounded-full border border-border/70 bg-surface px-3.5 text-[11px] font-semibold text-primary shadow-[var(--shadow-soft)] outline-none transition-all hover:-translate-y-0.5 hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {children} <ChevronRight size={12} />
     </Link>
@@ -167,7 +167,7 @@ export function WalletHeroCard({
           <Link
             to={to as never}
             aria-label="Open wallet"
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/20 text-primary-foreground ring-1 ring-inset ring-white/35 backdrop-blur transition-transform will-change-transform hover:scale-105 active:scale-95"
+            className="grid h-11 w-11 min-h-11 min-w-11 shrink-0 place-items-center rounded-2xl bg-white/20 text-primary-foreground ring-1 ring-inset ring-white/35 backdrop-blur outline-none transition-transform will-change-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary active:scale-95"
           >
             <ArrowUpRight size={18} />
           </Link>
@@ -259,7 +259,8 @@ export function QuickAction({
   return (
     <Link
       to={to as never}
-      className="group glass-card relative flex flex-col items-center gap-2 rounded-[22px] px-1.5 py-3.5 text-center shadow-[var(--shadow-soft)] transition-all duration-300 will-change-transform hover:-translate-y-1 hover:shadow-[var(--shadow-float)] active:scale-95"
+      aria-label={badge ? `${label} (${badge} new)` : label}
+      className="group glass-card relative flex min-h-[84px] flex-col items-center justify-center gap-2 rounded-[22px] px-1.5 py-3.5 text-center shadow-[var(--shadow-soft)] outline-none transition-all duration-300 will-change-transform hover:-translate-y-1 hover:shadow-[var(--shadow-float)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-95 md:min-h-[92px] md:gap-2.5"
     >
       <span
         className={`grid h-11 w-11 place-items-center rounded-2xl transition-transform duration-300 group-hover:scale-105 ${ACCENT_CHIP[accent]}`}
@@ -371,9 +372,18 @@ function useCountUpText(value: string | number) {
 /* ------------------------------------------------------------------ *
  * Horizontal snap rail
  * ------------------------------------------------------------------ */
-export function Rail({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function Rail({
+  children,
+  className = "",
+  "aria-label": ariaLabel,
+}: {
+  children: ReactNode;
+  className?: string;
+  "aria-label"?: string;
+}) {
   return (
     <div
+      aria-label={ariaLabel}
       className={`-mx-5 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:px-6 [&::-webkit-scrollbar]:hidden ${className}`}
     >
       {children}
@@ -407,7 +417,7 @@ export function Portrait({
       {src ? (
         <img
           src={src}
-          alt=""
+          alt={name ? `${name} avatar` : ""}
           loading="lazy"
           decoding="async"
           className="rounded-2xl object-cover ring-1 ring-border/70"
@@ -451,8 +461,16 @@ export function RankChip({ rank, icon }: { rank: number; icon?: ReactNode }) {
  * ------------------------------------------------------------------ */
 export function Progress({ value, className = "" }: { value: number; className?: string }) {
   const { ref, revealed } = useReveal<HTMLDivElement>();
+  const pct = Math.max(0, Math.min(100, Math.round(value)));
   return (
-    <div ref={ref} className={`h-1.5 w-full overflow-hidden rounded-full bg-muted ${className}`}>
+    <div
+      ref={ref}
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={pct}
+      className={`h-1.5 w-full overflow-hidden rounded-full bg-muted ${className}`}
+    >
       <div
         className="h-full rounded-full bg-gradient-to-r from-primary to-leaf transition-[width] duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
         style={{ width: `${revealed ? Math.max(0, Math.min(100, value)) : 0}%` }}
@@ -519,6 +537,140 @@ export function AchievementCard({
             </span>
           ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Loading skeletons — shape-matched to their live counterparts
+ * ------------------------------------------------------------------ */
+function Shimmer({ className = "" }: { className?: string }) {
+  return <div className={`animate-pulse rounded-2xl bg-muted/70 ${className}`} aria-hidden />;
+}
+
+export function WalletHeroSkeleton() {
+  return (
+    <div
+      role="status"
+      aria-label="Loading wallet balance"
+      className="glass-card overflow-hidden rounded-[30px] p-5 shadow-[var(--shadow-soft)] sm:p-6"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <Shimmer className="h-3 w-28 rounded-full" />
+          <Shimmer className="mt-3 h-9 w-44" />
+        </div>
+        <Shimmer className="h-11 w-11 shrink-0" />
+      </div>
+      <Shimmer className="mt-5 h-12 w-full" />
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <Shimmer className="h-3 w-24 rounded-full" />
+        <Shimmer className="h-3 w-28 rounded-full" />
+      </div>
+    </div>
+  );
+}
+
+export function MetricTileSkeleton() {
+  return (
+    <div
+      role="status"
+      aria-label="Loading metric"
+      className="glass-card rounded-[24px] p-4 shadow-[var(--shadow-soft)] sm:p-5"
+    >
+      <Shimmer className="h-9 w-9 rounded-xl" />
+      <Shimmer className="mt-4 h-7 w-24" />
+      <Shimmer className="mt-2.5 h-2.5 w-20 rounded-full" />
+      <Shimmer className="mt-2 h-2.5 w-16 rounded-full" />
+    </div>
+  );
+}
+
+export function MetricRowSkeleton({ count = 4 }: { count?: number }) {
+  return (
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+      {Array.from({ length: count }).map((_, i) => (
+        <MetricTileSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
+
+export function ChartSkeleton({ className = "h-56 sm:h-64" }: { className?: string }) {
+  return (
+    <div role="status" aria-label="Loading chart" className={`flex w-full items-end gap-2.5 ${className}`}>
+      {["h-[42%]", "h-[68%]", "h-[54%]", "h-[82%]", "h-[60%]", "h-[92%]"].map((h, i) => (
+        <Shimmer key={i} className={`flex-1 rounded-xl ${h}`} />
+      ))}
+    </div>
+  );
+}
+
+export function ListRowSkeleton({ rows = 4, height = "h-16" }: { rows?: number; height?: string }) {
+  return (
+    <div role="status" aria-label="Loading list" className="flex flex-col gap-2.5">
+      {Array.from({ length: rows }).map((_, i) => (
+        <Shimmer key={i} className={`w-full ${height} rounded-[22px]`} />
+      ))}
+    </div>
+  );
+}
+
+export function CardGridSkeleton({
+  count = 3,
+  height = "h-44",
+  className = "grid gap-3 sm:grid-cols-2 lg:grid-cols-3",
+}: {
+  count?: number;
+  height?: string;
+  className?: string;
+}) {
+  return (
+    <div role="status" aria-label="Loading cards" className={className}>
+      {Array.from({ length: count }).map((_, i) => (
+        <Shimmer key={i} className={`w-full ${height} rounded-[24px]`} />
+      ))}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Zero-state — polished, illustrated empty state with optional CTA
+ * ------------------------------------------------------------------ */
+export function ZeroState({
+  icon,
+  title,
+  body,
+  cta,
+  accent = "emerald",
+}: {
+  icon: ReactNode;
+  title: string;
+  body: string;
+  cta?: { label: string; to: string };
+  accent?: Accent;
+}) {
+  return (
+    <div className="relative flex flex-col items-center overflow-hidden rounded-[24px] border border-dashed border-border/80 bg-gradient-to-b from-surface-warm/60 to-surface px-5 py-10 text-center">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-40 w-40 rounded-full bg-primary/10 blur-3xl"
+      />
+      <span
+        className={`relative grid h-16 w-16 place-items-center rounded-[22px] shadow-[var(--shadow-soft)] ${ACCENT_CHIP[accent]}`}
+      >
+        {icon}
+      </span>
+      <h3 className="relative mt-4 text-sm font-semibold tracking-[-0.01em] text-foreground">{title}</h3>
+      <p className="relative mt-1.5 max-w-xs text-xs font-light leading-relaxed text-muted-foreground">{body}</p>
+      {cta && (
+        <Link
+          to={cta.to as never}
+          className="relative mt-5 inline-flex h-11 min-h-11 items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-br from-primary to-leaf px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98]"
+        >
+          {cta.label} <ChevronRight size={14} />
+        </Link>
       )}
     </div>
   );
