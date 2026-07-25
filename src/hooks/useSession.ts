@@ -91,6 +91,7 @@ export function useSession(): SessionState {
         profile: (profile as AawashProfile | null) ?? null,
         role: (roleRow?.role as AppRole | null) ?? null,
       }));
+      watchProfile(userId);
     }
 
     // Register listener FIRST
