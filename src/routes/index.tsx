@@ -950,7 +950,6 @@ function Projects() {
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageItems = filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
 
-  const [openProject, setOpenProject] = useState<ProjectDetail | null>(null);
   const toggleWish = (name: string) =>
     setWishlist((prev) => {
       const next = new Set(prev);
