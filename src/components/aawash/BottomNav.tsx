@@ -80,9 +80,49 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
   const [puck, setPuck] = useState<{ x: number; w: number; ready: boolean }>({ x: 0, w: 0, ready: false });
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
+  const [focusIndex, setFocusIndex] = useState(-1);
 
   const activeIndex = items.findIndex((item) => isActive(pathname, item));
   const activeItem = activeIndex >= 0 ? items[activeIndex] : undefined;
+
+  /** Roving keyboard navigation: ←/→ move, Home/End jump, Enter/Space activate. */
+  const focusAt = (i: number) => {
+    const next = (i + items.length) % items.length;
+    setFocusIndex(next);
+    const link = itemRefs.current[next]?.querySelector("a");
+    (link as HTMLAnchorElement | null)?.focus();
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>, i: number) => {
+    switch (e.key) {
+      case "ArrowRight":
+      case "ArrowDown":
+        e.preventDefault();
+        focusAt(i + 1);
+        break;
+      case "ArrowLeft":
+      case "ArrowUp":
+        e.preventDefault();
+        focusAt(i - 1);
+        break;
+      case "Home":
+        e.preventDefault();
+        focusAt(0);
+        break;
+      case "End":
+        e.preventDefault();
+        focusAt(items.length - 1);
+        break;
+      case " ":
+      case "Spacebar":
+        e.preventDefault();
+        (e.currentTarget as HTMLAnchorElement).click();
+        break;
+      default:
+        break;
+    }
+  };
+
 
   // Hide on scroll-down, reappear on scroll-up.
   useEffect(() => {
