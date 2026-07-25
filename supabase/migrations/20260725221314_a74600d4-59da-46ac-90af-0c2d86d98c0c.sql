@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS metrics_override jsonb NOT NULL DEFAULT '{}'::jsonb;

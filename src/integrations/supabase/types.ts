@@ -1764,6 +1764,7 @@ export type Database = {
           lifetime_withdrawals: number
           locked_balance: number
           login_id: string
+          metrics_override: Json
           mobile_number: string
           pending_balance: number
           referral_count: number
@@ -1793,6 +1794,7 @@ export type Database = {
           lifetime_withdrawals?: number
           locked_balance?: number
           login_id: string
+          metrics_override?: Json
           mobile_number: string
           pending_balance?: number
           referral_count?: number
@@ -1822,6 +1824,7 @@ export type Database = {
           lifetime_withdrawals?: number
           locked_balance?: number
           login_id?: string
+          metrics_override?: Json
           mobile_number?: string
           pending_balance?: number
           referral_count?: number
