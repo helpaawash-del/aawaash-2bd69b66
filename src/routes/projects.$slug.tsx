@@ -234,34 +234,34 @@ function ProjectDetailPage() {
                       <Images size={12} /> {heroImages.length} photos
                     </button>
                   )}
+                </div>
 
-
-                  <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-3 bg-gradient-to-t from-background/95 via-background/50 to-transparent p-5 sm:p-8">
-                    <div className="min-w-0 max-w-full">
-                      {(p.tag as string) && (
-                        <span className="glass-card rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
-                          {p.tag as string}
-                        </span>
-                      )}
-                      <h1 className="mt-2 truncate text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl">
-                        {p.name as string}
-                      </h1>
-                      <div className="mt-1 inline-flex items-center gap-1 text-sm text-muted-foreground">
-                        <MapPin size={14} />
-                        <span className="truncate">
-                          {(p.address as string) || (p.location as string)}
-                        </span>
-                      </div>
+                {/* Title + Price sit BELOW the image, never overlapping */}
+                <div className="flex flex-wrap items-end justify-between gap-4 border-t border-border/60 bg-surface/60 p-5 sm:p-8">
+                  <div className="min-w-0 max-w-full flex-1">
+                    {(p.tag as string) && (
+                      <span className="inline-block rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                        {p.tag as string}
+                      </span>
+                    )}
+                    <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+                      {p.name as string}
+                    </h1>
+                    <div className="mt-1 inline-flex items-center gap-1 text-sm text-muted-foreground">
+                      <MapPin size={14} />
+                      <span className="truncate">
+                        {(p.address as string) || (p.location as string)}
+                      </span>
                     </div>
-                    <div className="glass-card rounded-2xl px-4 py-3">
-                      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        Starting Price
-                      </div>
-                      <div className="text-xl font-extrabold text-foreground sm:text-2xl">
-                        {formatINR((p.price_min as number) ?? (p.price_from as number), {
-                          compact: true,
-                        })}
-                      </div>
+                  </div>
+                  <div className="rounded-2xl border border-border/60 bg-white/80 px-4 py-3 shadow-[var(--shadow-soft)]">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      Starting Price
+                    </div>
+                    <div className="text-xl font-extrabold text-foreground sm:text-2xl">
+                      {formatINR((p.price_min as number) ?? (p.price_from as number), {
+                        compact: true,
+                      })}
                     </div>
                   </div>
                 </div>
@@ -283,6 +283,7 @@ function ProjectDetailPage() {
                   </div>
                 )}
               </section>
+
             </Reveal>
 
             {/* Quick facts row — always visible */}
