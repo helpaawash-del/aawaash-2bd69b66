@@ -77,6 +77,18 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+/* ---------------- Shared typography + spacing scale ---------------- */
+/** One padding rhythm for every homepage section (mobile-first, tightened). */
+const SECTION_PAD = "px-4 py-10 sm:px-8 sm:py-14 lg:py-16";
+/** Eyebrow chip */
+const EYEBROW = "glass-card inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-primary";
+/** Section heading */
+const H2 = "mt-4 text-balance text-[1.6rem] font-semibold leading-[1.16] tracking-[0.01em] text-foreground sm:mt-5 sm:text-[2.2rem]";
+/** Section subheading */
+const SUB = "mt-3 text-balance text-sm leading-relaxed text-muted-foreground sm:text-[15px]";
+/** Gap between a section header and its content */
+const HEADER_GAP = "mt-8 sm:mt-12";
+
 export const Route = createFileRoute("/")({
   component: Landing,
   head: () => ({
@@ -524,7 +536,7 @@ function Categories() {
     ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
   );
   return (
-    <section aria-labelledby="cats-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
+    <section aria-labelledby="cats-title" className={`relative ${SECTION_PAD}`}>
       {/* soft ambient wash */}
       <div
         aria-hidden
@@ -533,19 +545,16 @@ function Categories() {
       <div className="relative mx-auto max-w-6xl">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">
-            <div className="glass-card inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
+            <div className={EYEBROW}>
               <Sparkles size={12} /> Explore
             </div>
-            <h2
-              id="cats-title"
-              className="mt-4 text-3xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-[2.75rem]"
-            >
+            <h2 id="cats-title" className={H2}>
               Browse by{" "}
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
                 category
               </span>
             </h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <p className={`${SUB} max-w-md`}>
               Six curated collections — from skyline towers to garden villas. Find the home that
               fits your lifestyle.
             </p>
@@ -649,7 +658,7 @@ const AMENITIES: { label: string; icon: typeof Waves; desc: string }[] = [
 
 function Lifestyle() {
   return (
-    <section aria-labelledby="lifestyle-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
+    <section aria-labelledby="lifestyle-title" className={`relative ${SECTION_PAD}`}>
       <div className="mx-auto max-w-6xl">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <Reveal variant="left">
@@ -716,7 +725,7 @@ function Lifestyle() {
 
 function BookVisit() {
   return (
-    <section aria-labelledby="visit-title" className="px-5 py-8 sm:px-8 sm:py-11">
+    <section aria-labelledby="visit-title" className={SECTION_PAD}>
       <div className="mx-auto max-w-6xl">
         <div className="relative overflow-hidden rounded-[2rem] border border-border bg-gradient-to-br from-primary via-primary to-leaf p-8 text-primary-foreground shadow-[var(--shadow-glow)] sm:p-12">
           <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold/25 blur-3xl" />
@@ -772,7 +781,7 @@ const STATS = [
 
 function Stats() {
   return (
-    <section className="px-5 py-9 sm:px-8">
+    <section className={SECTION_PAD}>
       <div className="mx-auto max-w-6xl">
         <div className="glass-card grid grid-cols-2 gap-3 rounded-3xl p-4 shadow-[var(--shadow-float)] sm:grid-cols-4 sm:gap-6 sm:p-6">
           {STATS.map((s, i) => (
@@ -935,17 +944,17 @@ function Projects() {
     });
 
   return (
-    <section id="projects" className="relative px-5 py-16 sm:px-8 sm:py-20">
+    <section id="projects" className={`relative ${SECTION_PAD}`}>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-10 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,color-mix(in_oklab,var(--leaf)_8%,transparent),transparent_72%)]"
       />
       <div className="relative mx-auto max-w-3xl">
         <div className="flex flex-col items-center text-center">
-          <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
+          <div className={EYEBROW}>
             <Sparkles size={12} className="text-gold" /> Featured Residence
           </div>
-          <h2 className="mt-5 font-serif text-[1.6rem] font-medium leading-[1.15] tracking-[0.015em] text-foreground sm:text-[2.35rem]">
+          <h2 className={`${H2} font-serif font-medium`}>
             A home to{" "}
             <span className="relative inline-block">
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
@@ -1397,7 +1406,7 @@ const SMART_PANELS: { icon: typeof Calculator; title: string; body: string; tone
 
 function SmartPanels() {
   return (
-    <section aria-labelledby="smart-title" className="px-5 py-14 sm:px-8">
+    <section aria-labelledby="smart-title" className={SECTION_PAD}>
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Smart Tools"
@@ -1443,7 +1452,7 @@ const STEPS = [
 
 function HowItWorks() {
   return (
-    <section id="how-it-works" className="px-5 py-14 sm:px-8">
+    <section id="how-it-works" className={SECTION_PAD}>
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Team System"
@@ -1492,7 +1501,7 @@ const SLABS = [
 
 function Commission() {
   return (
-    <section id="commission" className="relative px-5 py-16 sm:px-8">
+    <section id="commission" className={`relative ${SECTION_PAD}`}>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-6 h-64 bg-[radial-gradient(55%_100%_at_50%_0%,color-mix(in_oklab,var(--primary)_9%,transparent),transparent_72%)]"
@@ -1500,16 +1509,16 @@ function Commission() {
       <div className="relative mx-auto max-w-6xl">
         <Reveal variant="up">
           <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
-            <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
+            <div className={EYEBROW}>
               <Sparkles size={12} className="text-gold" /> Commission Slabs
             </div>
-            <h2 className="mt-5 text-[1.75rem] font-semibold leading-[1.12] tracking-[0.005em] text-foreground sm:text-[2.5rem]">
+            <h2 className={H2}>
               Simple, tiered,{" "}
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
                 transparent.
               </span>
             </h2>
-            <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+            <p className={`${SUB} max-w-lg`}>
               Ladders scale with deal value — clearly defined, always visible in your dashboard.
             </p>
           </div>
@@ -1578,7 +1587,7 @@ const FAQS = [
 
 function FAQ() {
   return (
-    <section id="faq" className="px-5 py-14 sm:px-8">
+    <section id="faq" className={SECTION_PAD}>
       <div className="mx-auto max-w-3xl">
         <SectionHeader eyebrow="Frequently Asked" title="Answers, in plain words." />
         <Reveal variant="up" className="mt-8">
@@ -1611,7 +1620,7 @@ function FAQ() {
 function Contact() {
   const [sent, setSent] = useState(false);
   return (
-    <section id="contact" className="px-5 py-14 sm:px-8">
+    <section id="contact" className={SECTION_PAD}>
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow="Contact"
@@ -1809,17 +1818,9 @@ function SectionHeader({
   return (
     <Reveal variant="up">
       <div className="mx-auto max-w-2xl text-center">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
-          {eyebrow}
-        </div>
-        <h2 className="mt-4 text-balance text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-          {title}
-        </h2>
-        {subtitle && (
-          <p className="mt-3 text-balance text-sm leading-relaxed text-muted-foreground sm:text-base">
-            {subtitle}
-          </p>
-        )}
+        <div className={EYEBROW}>{eyebrow}</div>
+        <h2 className={H2}>{title}</h2>
+        {subtitle && <p className={SUB}>{subtitle}</p>}
       </div>
     </Reveal>
   );
