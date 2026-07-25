@@ -1123,7 +1123,7 @@ function Projects() {
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {catalogueFilters.map((f) => (
+          {catalogueFilters.map((f: string) => (
             <button
               key={f}
               type="button"
@@ -1149,7 +1149,7 @@ function Projects() {
           </div>
         ) : (
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {pageItems.map((p) => (
+            {pageItems.map((p: ProjectDetail) => (
               <Link
                 key={p.slug}
                 to="/projects/$slug"
