@@ -977,28 +977,40 @@ function Projects() {
     });
 
   return (
-    <section id="projects" className="px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-3xl">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-              Featured Residence
-            </div>
-            <h2 className="mt-3 text-3xl font-bold leading-[1.1] text-foreground sm:text-5xl">
-              A home to come home to.
-            </h2>
-            <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
-              One curated residence, hand-picked by Aawash — every specification, plan and
-              amenity, transparent up front.
-            </p>
+    <section id="projects" className="relative px-5 py-24 sm:px-8 sm:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-10 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,color-mix(in_oklab,var(--leaf)_8%,transparent),transparent_72%)]"
+      />
+      <div className="relative mx-auto max-w-3xl">
+        <div className="flex flex-col items-center text-center">
+          <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
+            <Sparkles size={12} className="text-gold" /> Featured Residence
           </div>
+          <h2 className="mt-5 text-[2rem] font-bold leading-[1.05] tracking-tight text-foreground sm:text-[3.25rem]">
+            A home to{" "}
+            <span className="relative inline-block">
+              <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
+                come home to.
+              </span>
+              <span
+                aria-hidden
+                className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-gradient-to-r from-primary/60 via-leaf/50 to-transparent"
+              />
+            </span>
+          </h2>
+          <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
+            One curated residence, hand-picked by Aawash — every specification, plan and
+            amenity, transparent up front.
+          </p>
           <Link
             to="/projects"
-            className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-primary sm:inline-flex"
+            className="mt-7 inline-flex h-11 items-center gap-1.5 rounded-full border border-border/60 bg-surface/70 px-5 text-sm font-semibold text-primary backdrop-blur transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
           >
-            View all <ChevronRight size={14} />
+            View all projects <ChevronRight size={14} />
           </Link>
         </div>
+
 
         {/* One project per row — spacious, editorial */}
         <div className="mt-14 flex flex-col gap-16">
