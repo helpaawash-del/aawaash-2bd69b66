@@ -222,10 +222,8 @@ function Content() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {filtered.map((l) => (
-            <Link
+            <div
               key={l.id}
-              to="/admin/team-leaders/$id"
-              params={{ id: l.id }}
               className="group relative flex flex-col gap-4 overflow-hidden rounded-4xl border border-border bg-surface p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-float)]"
             >
               <div className="flex items-start gap-3">
@@ -256,6 +254,14 @@ function Content() {
                     {l.login_id} · {l.mobile_number}
                   </div>
                 </div>
+                <button
+                  type="button"
+                  aria-label={`Delete ${l.full_name}`}
+                  onClick={() => setDeleteFor({ id: l.id, full_name: l.full_name })}
+                  className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full bg-destructive/10 text-destructive transition-colors hover:bg-destructive/20"
+                >
+                  <Trash2 size={15} />
+                </button>
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-center">
@@ -286,10 +292,33 @@ function Content() {
                 </div>
               </div>
 
-              <div className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform group-hover:-translate-y-0.5">
-                Manage leader <ArrowRight size={12} />
+              <div className="mt-auto grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setMetricsFor({
+                      id: l.id,
+                      full_name: l.full_name,
+                      sales_count: l.sales_count ?? 0,
+                      wallet_balance: Number(l.wallet_balance ?? 0),
+                      total_commission: l.total_commission ?? 0,
+                      total_revenue: l.total_revenue ?? 0,
+                      member_count: l.member_count ?? 0,
+                    })
+                  }
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5"
+                >
+                  <Sliders size={12} /> Manage leader
+                </button>
+                <Link
+                  to="/admin/team-leaders/$id"
+                  params={{ id: l.id }}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 text-xs font-bold text-foreground transition-transform hover:-translate-y-0.5"
+                >
+                  Full profile <ArrowRight size={12} />
+                </Link>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
