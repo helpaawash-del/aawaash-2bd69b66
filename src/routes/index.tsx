@@ -1490,14 +1490,59 @@ function HowItWorks() {
 
 /* ------------------------------ COMMISSION ------------------------------ */
 
-const SLABS = [
-  { range: "₹0 – 1 Cr", tone: "from-primary-soft to-primary-soft/30" },
-  { range: "₹1 – 3 Cr", tone: "from-primary-soft to-leaf/20" },
-  { range: "₹3 – 5 Cr", tone: "from-leaf/25 to-primary-soft" },
-  { range: "₹5 – 7 Cr", tone: "from-leaf/30 to-gold/15" },
-  { range: "₹7 – 10 Cr", tone: "from-gold/20 to-primary-soft" },
-  { range: "₹10 Cr+", tone: "from-gold/30 to-leaf/20" },
+const SLABS: {
+  range: string;
+  rate: string;
+  tone: string;
+  featured?: boolean;
+  perks: string[];
+  cta: string;
+}[] = [
+  {
+    range: "₹0 – 1 Cr",
+    rate: "1.0%",
+    tone: "from-primary-soft to-primary-soft/30",
+    perks: ["Instant wallet credit", "Live deal tracking", "Standard payout cycle"],
+    cta: "Start earning",
+  },
+  {
+    range: "₹1 – 3 Cr",
+    rate: "1.25%",
+    tone: "from-primary-soft to-leaf/20",
+    perks: ["Priority CRM follow-ups", "Team leaderboard entry", "Standard payout cycle"],
+    cta: "Start earning",
+  },
+  {
+    range: "₹3 – 5 Cr",
+    rate: "1.5%",
+    tone: "from-leaf/25 to-primary-soft",
+    featured: true,
+    perks: ["Bonus eligibility unlocked", "Dedicated leader support", "Faster payout review"],
+    cta: "Most chosen tier",
+  },
+  {
+    range: "₹5 – 7 Cr",
+    rate: "1.75%",
+    tone: "from-leaf/30 to-gold/15",
+    perks: ["Bonus + tip sharing", "Advanced analytics access", "Faster payout review"],
+    cta: "Talk to us",
+  },
+  {
+    range: "₹7 – 10 Cr",
+    rate: "2.0%",
+    tone: "from-gold/20 to-primary-soft",
+    perks: ["Premium inventory first look", "Custom slab negotiation", "Priority payouts"],
+    cta: "Talk to us",
+  },
+  {
+    range: "₹10 Cr+",
+    rate: "Custom",
+    tone: "from-gold/30 to-leaf/20",
+    perks: ["Bespoke commission plan", "Named account manager", "Same-week settlement"],
+    cta: "Request a plan",
+  },
 ];
+
 
 function Commission() {
   return (
