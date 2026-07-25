@@ -125,7 +125,7 @@ export const listTeamLeaders = createServerFn({ method: "GET" })
     const { data: profiles, error } = await supabaseAdmin
       .from("profiles")
       .select(
-        "id, display_code, full_name, mobile_number, login_id, email, avatar_url, team_id, status, is_active, is_deleted, joining_date, wallet_balance, total_earnings, total_sales, last_login_at, created_at",
+        "id, display_code, full_name, mobile_number, login_id, email, avatar_url, team_id, status, is_active, is_deleted, joining_date, wallet_balance, total_earnings, total_sales, metrics_override, last_login_at, created_at",
       )
       .in("id", leaderIds)
       .order("created_at", { ascending: false });
