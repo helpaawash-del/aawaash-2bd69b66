@@ -9,7 +9,6 @@ const NAV_ITEMS: { label: string; href: string; route?: boolean }[] = [
   { label: "Projects", href: "/projects", route: true },
   { label: "How It Works", href: "/#how-it-works" },
   { label: "Contact", href: "/#contact" },
-  { label: "Contact", href: "/#contact" },
 ];
 
 export function LandingNav() {
