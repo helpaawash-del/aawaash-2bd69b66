@@ -527,88 +527,118 @@ function Categories() {
     ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
   );
   return (
-    <section aria-labelledby="cats-title" className="px-5 py-10 sm:px-8 sm:py-14">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex items-end justify-between gap-4">
+    <section aria-labelledby="cats-title" className="relative px-5 py-14 sm:px-8 sm:py-20">
+      {/* soft ambient wash */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(70%_100%_at_50%_0%,color-mix(in_oklab,var(--primary)_7%,transparent),transparent_70%)]"
+      />
+      <div className="relative mx-auto max-w-6xl">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">
-            <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Explore</div>
-            <h2 id="cats-title" className="mt-1 text-2xl font-bold text-foreground sm:text-3xl">
-              Browse by category
+            <div className="glass-card inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
+              <Sparkles size={12} /> Explore
+            </div>
+            <h2
+              id="cats-title"
+              className="mt-4 text-3xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-[2.75rem]"
+            >
+              Browse by{" "}
+              <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
+                category
+              </span>
             </h2>
-            <p className="mt-1 text-sm text-muted-foreground">Find the home that fits your lifestyle.</p>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Six curated collections — from skyline towers to garden villas. Find the home that
+              fits your lifestyle.
+            </p>
           </div>
-          <Link to="/projects" className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-primary sm:inline-flex">
+          <Link
+            to="/projects"
+            className="glass-card inline-flex h-11 shrink-0 items-center gap-1.5 self-start rounded-full px-5 text-sm font-semibold text-primary transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] sm:self-auto"
+          >
             View all <ChevronRight size={14} />
           </Link>
         </div>
 
         {/* Mobile / tablet: compact 4-icon grid */}
-        <ul className="mt-6 grid grid-cols-4 gap-3 lg:hidden">
+        <ul className="mt-8 grid grid-cols-4 gap-2.5 lg:hidden">
           {mobileCats.map((c, i) => (
             <li key={c.label}>
               <Link
                 to="/projects"
                 aria-label={`Browse ${c.label}`}
                 style={{ animationDelay: `${i * 60}ms` }}
-                className="group flex min-h-[104px] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/70 p-3 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+                className="group relative flex min-h-[112px] w-full flex-col items-center justify-center gap-2.5 overflow-hidden rounded-[22px] border border-white/70 bg-white/75 p-3 text-center shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
               >
                 <span
-                  className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
+                  aria-hidden
+                  className={`absolute -top-6 left-1/2 h-16 w-16 -translate-x-1/2 rounded-full bg-gradient-to-br ${c.hue} opacity-50 blur-2xl`}
+                />
+                <span
+                  className={`relative grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-active:scale-110`}
                 >
                   <c.icon size={22} className="motion-safe:animate-[float_6s_ease-in-out_infinite]" />
                 </span>
-                <span className="text-[12px] font-semibold text-foreground">{c.label}</span>
+                <span className="relative text-[12px] font-semibold tracking-tight text-foreground">
+                  {c.label}
+                </span>
               </Link>
             </li>
           ))}
         </ul>
 
-        {/* Desktop: premium horizontally scrollable swipe cards */}
-        <div className="-mx-5 mt-6 hidden overflow-x-auto px-5 pb-3 pt-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:block [&::-webkit-scrollbar]:hidden">
-          <ul className="flex snap-x snap-mandatory gap-4">
-            {CATEGORIES.map((c, i) => (
-              <li key={c.label} className="snap-start">
-                <button
-                  type="button"
-                  style={{ animationDelay: `${i * 60}ms` }}
-                  className="group relative flex h-48 w-40 shrink-0 flex-col justify-between overflow-hidden rounded-[26px] border border-white/60 bg-white/70 p-4 text-left shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[var(--shadow-float)] active:scale-[0.97] sm:h-52 sm:w-44"
-                >
-                  {/* Illustrative gradient blob */}
-                  <span
-                    aria-hidden
-                    className={`absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br ${c.hue} opacity-70 blur-2xl transition-transform duration-700 group-hover:scale-125`}
-                  />
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_50%_100%,color-mix(in_oklab,var(--primary)_10%,transparent),transparent_70%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  />
+        {/* Desktop: editorial category grid */}
+        <ul className="mt-10 hidden gap-5 lg:grid lg:grid-cols-3">
+          {CATEGORIES.map((c, i) => (
+            <li key={c.label}>
+              <Link
+                to="/projects"
+                aria-label={`Browse ${c.label}`}
+                style={{ animationDelay: `${i * 60}ms` }}
+                className="group relative flex h-full min-h-[188px] flex-col justify-between overflow-hidden rounded-[28px] border border-white/70 bg-white/70 p-6 text-left shadow-[var(--shadow-soft)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary/30 hover:shadow-[var(--shadow-float)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+              >
+                {/* ambient blob */}
+                <span
+                  aria-hidden
+                  className={`absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br ${c.hue} opacity-60 blur-3xl transition-transform duration-700 group-hover:scale-125`}
+                />
+                {/* diagonal sheen */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 transition-all duration-[900ms] ease-out group-hover:translate-x-full group-hover:opacity-100"
+                />
 
-                  <div className="relative">
-                    <span
-                      className={`inline-grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110`}
-                    >
-                      <c.icon size={22} />
-                    </span>
-                  </div>
+                <div className="relative flex items-start justify-between">
+                  <span
+                    className={`inline-grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${c.hue} shadow-[var(--shadow-soft)] transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110`}
+                  >
+                    <c.icon size={24} />
+                  </span>
+                  <span className="grid h-9 w-9 place-items-center rounded-full border border-border/50 text-muted-foreground transition-all duration-300 group-hover:border-primary/40 group-hover:bg-primary group-hover:text-primary-foreground">
+                    <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </div>
 
-                  <div className="relative">
-                    <div className="text-sm font-bold text-foreground">{c.label}</div>
-                    <div className={`mt-1 inline-flex items-center gap-1 rounded-full ${c.accent} px-2 py-0.5 text-[10px] font-semibold text-primary`}>
-                      {c.count}
-                    </div>
-                    <div className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      Explore <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
-                    </div>
+                <div className="relative mt-6">
+                  <div className="text-lg font-semibold tracking-tight text-foreground">
+                    {c.label}
                   </div>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  <div
+                    className={`mt-2 inline-flex items-center gap-1 rounded-full ${c.accent} px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary`}
+                  >
+                    {c.count}
+                  </div>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
 }
+
 
 
 /* ------------------------------ LIFESTYLE ------------------------------ */
