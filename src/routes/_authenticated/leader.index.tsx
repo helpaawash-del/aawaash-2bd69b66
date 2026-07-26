@@ -74,7 +74,8 @@ export const Route = createFileRoute("/_authenticated/leader/")({
       { property: "og:title", content: "Team Leader Dashboard — Aawaash" },
       {
         property: "og:description",
-        content: "Live team revenue, commissions, leaderboard and inventory for Aawaash team leaders.",
+        content:
+          "Live team revenue, commissions, leaderboard and inventory for Aawaash team leaders.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -127,7 +128,8 @@ function LeaderContent() {
     ? Math.round((memberList.filter((m) => m.status === "active").length / o.memberCount) * 100)
     : 0;
 
-  const zeroTrend = months.length === 0 || months.every((m) => m.revenue === 0 && m.commission === 0);
+  const zeroTrend =
+    months.length === 0 || months.every((m) => m.revenue === 0 && m.commission === 0);
 
   return (
     <EcoShell role="team_leader" profile={profile}>
@@ -194,19 +196,31 @@ function LeaderContent() {
 
       {/* ---------------- Quick pods ---------------- */}
       <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <LightPod icon={<Users size={15} />} label="Members" value={String(o?.memberCount ?? 0)} to="/leader/members" />
+        <LightPod
+          icon={<Users size={15} />}
+          label="Members"
+          value={String(o?.memberCount ?? 0)}
+          to="/leader/members"
+        />
         <LightPod
           icon={<Wallet size={15} />}
           label="Withdraw"
           value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })}
           to="/leader/withdrawals"
         />
-        <LightPod icon={<BarChart3 size={15} />} label="Analytics" value="Open" to="/leader/analytics" />
-        <LightPod icon={<Bell size={15} />} label="Alerts" value={String(unread)} to="/leader/notifications" />
+        <LightPod
+          icon={<BarChart3 size={15} />}
+          label="Analytics"
+          value="Open"
+          to="/leader/analytics"
+        />
+        <LightPod
+          icon={<Bell size={15} />}
+          label="Alerts"
+          value={String(unread)}
+          to="/leader/notifications"
+        />
       </section>
-
-
-
 
       {/* ---------------- Overview + schedule ---------------- */}
       <section className="mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
@@ -274,7 +288,10 @@ function LeaderContent() {
 
       {/* ---------------- Trend + wallet ---------------- */}
       <section className="mt-5 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-        <LightPanel title="Performance Trend" action={<span className="text-[11px] font-semibold text-primary">6M</span>}>
+        <LightPanel
+          title="Performance Trend"
+          action={<span className="text-[11px] font-semibold text-primary">6M</span>}
+        >
           <div className="h-56 w-full">
             {trend.isLoading ? (
               <EcoSkeleton className="h-full w-full" />
@@ -297,7 +314,13 @@ function LeaderContent() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                  <XAxis dataKey="label" tickLine={false} axisLine={false} fontSize={11} stroke="var(--muted-foreground)" />
+                  <XAxis
+                    dataKey="label"
+                    tickLine={false}
+                    axisLine={false}
+                    fontSize={11}
+                    stroke="var(--muted-foreground)"
+                  />
                   <YAxis
                     tickLine={false}
                     axisLine={false}
@@ -318,22 +341,49 @@ function LeaderContent() {
                       name === "revenue" ? "Revenue" : "Commission",
                     ]}
                   />
-                  <Area type="monotone" dataKey="revenue" stroke="var(--forest)" strokeWidth={2} fill="url(#eco-rev)" />
-                  <Area type="monotone" dataKey="commission" stroke="var(--leaf)" strokeWidth={2} fill="url(#eco-com)" />
+                  <Area
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="var(--forest)"
+                    strokeWidth={2}
+                    fill="url(#eco-rev)"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="commission"
+                    stroke="var(--leaf)"
+                    strokeWidth={2}
+                    fill="url(#eco-com)"
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             )}
           </div>
         </LightPanel>
 
-        <LightPanel title="Wallet & Payouts" footer={{ label: "Open wallet", to: "/leader/withdrawals" }}>
+        <LightPanel
+          title="Wallet & Payouts"
+          footer={{ label: "Open wallet", to: "/leader/withdrawals" }}
+        >
           <div className="grid grid-cols-2 gap-2.5">
             <KV label="Available" value={formatINR(profile?.wallet_balance)} />
             <KV label="Pending" value={formatINR(o?.pendingCommission ?? 0, { compact: true })} />
-            <KV label="Approved" value={formatINR(o?.approvedWithdrawals ?? 0, { compact: true })} />
-            <KV label="Pending WD" value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })} />
-            <KV label="Lifetime" value={formatINR(profile?.total_earnings ?? 0, { compact: true })} />
-            <KV label="This month" value={formatINR(o?.monthlyCommission ?? 0, { compact: true })} />
+            <KV
+              label="Approved"
+              value={formatINR(o?.approvedWithdrawals ?? 0, { compact: true })}
+            />
+            <KV
+              label="Pending WD"
+              value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })}
+            />
+            <KV
+              label="Lifetime"
+              value={formatINR(profile?.total_earnings ?? 0, { compact: true })}
+            />
+            <KV
+              label="This month"
+              value={formatINR(o?.monthlyCommission ?? 0, { compact: true })}
+            />
           </div>
           <Link
             to="/leader/withdrawals"
@@ -372,8 +422,12 @@ function LeaderContent() {
                   </span>
                   <Avatar name={m.full_name} src={m.avatar_url} size={36} />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-[13.5px] font-semibold text-foreground">{m.full_name}</div>
-                    <div className="truncate text-[11px] font-light text-muted-foreground">{m.login_id}</div>
+                    <div className="truncate text-[13.5px] font-semibold text-foreground">
+                      {m.full_name}
+                    </div>
+                    <div className="truncate text-[11px] font-light text-muted-foreground">
+                      {m.login_id}
+                    </div>
                   </div>
                   <div className="shrink-0 text-[13px] font-bold text-foreground">
                     {formatINR(m.total_sales, { compact: true })}
@@ -412,8 +466,12 @@ function LeaderContent() {
                   >
                     <Avatar name={m.full_name} size={34} online={m.status === "active"} />
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-[13px] font-semibold text-foreground">{m.full_name}</div>
-                      <div className="truncate text-[10.5px] font-light text-muted-foreground">{m.login_id}</div>
+                      <div className="truncate text-[13px] font-semibold text-foreground">
+                        {m.full_name}
+                      </div>
+                      <div className="truncate text-[10.5px] font-light text-muted-foreground">
+                        {m.login_id}
+                      </div>
                     </div>
                   </Link>
                 </li>
@@ -448,8 +506,12 @@ function LeaderContent() {
 function KV({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[18px] bg-surface-warm p-3">
-      <div className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</div>
-      <div className="mt-1 truncate text-[14px] font-bold tracking-[-0.01em] text-foreground">{value}</div>
+      <div className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+        {label}
+      </div>
+      <div className="mt-1 truncate text-[14px] font-bold tracking-[-0.01em] text-foreground">
+        {value}
+      </div>
     </div>
   );
 }

@@ -1,14 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import {
-  Home,
-  Building2,
-  Users,
-  TrendingUp,
-  Wallet,
-  BarChart3,
-  Bell,
-  User,
-} from "lucide-react";
+import { Home, Building2, Users, TrendingUp, Wallet, BarChart3, Bell, User } from "lucide-react";
 
 import type { AppRole } from "@/lib/auth";
 
@@ -32,28 +23,101 @@ export function ecoDockItems(role: AppRole): EcoDockItem[] {
   if (role === "team_leader") {
     return [
       { key: "home", label: "Home", icon: Home, to: "/leader", exact: true },
-      { key: "projects", label: "Projects", icon: Building2, to: "/leader/projects", activePrefix: "/leader/projects" },
-      { key: "members", label: "Members", icon: Users, to: "/leader/members", activePrefix: "/leader/members" },
-      { key: "wallet", label: "Wallet", icon: Wallet, to: "/leader/withdrawals", activePrefix: "/leader/withdrawals" },
-      { key: "analytics", label: "Analytics", icon: BarChart3, to: "/leader/analytics", activePrefix: "/leader/analytics" },
-      { key: "alerts", label: "Alerts", icon: Bell, to: "/leader/notifications", activePrefix: "/leader/notifications" },
-      { key: "account", label: "Account", icon: User, to: "/leader/profile", activePrefix: "/leader/profile" },
+      {
+        key: "projects",
+        label: "Projects",
+        icon: Building2,
+        to: "/leader/projects",
+        activePrefix: "/leader/projects",
+      },
+      {
+        key: "members",
+        label: "Members",
+        icon: Users,
+        to: "/leader/members",
+        activePrefix: "/leader/members",
+      },
+      {
+        key: "wallet",
+        label: "Wallet",
+        icon: Wallet,
+        to: "/leader/withdrawals",
+        activePrefix: "/leader/withdrawals",
+      },
+      {
+        key: "analytics",
+        label: "Analytics",
+        icon: BarChart3,
+        to: "/leader/analytics",
+        activePrefix: "/leader/analytics",
+      },
+      {
+        key: "alerts",
+        label: "Alerts",
+        icon: Bell,
+        to: "/leader/notifications",
+        activePrefix: "/leader/notifications",
+      },
+      {
+        key: "account",
+        label: "Account",
+        icon: User,
+        to: "/leader/profile",
+        activePrefix: "/leader/profile",
+      },
     ];
   }
   return [
     { key: "home", label: "Home", icon: Home, to: "/member", exact: true },
-    { key: "projects", label: "Projects", icon: Building2, to: "/projects", activePrefix: "/projects" },
-    { key: "sales", label: "Sales", icon: TrendingUp, to: "/member/sales", activePrefix: "/member/sales" },
-    { key: "wallet", label: "Wallet", icon: Wallet, to: "/member/wallet", activePrefix: "/member/wallet" },
-    { key: "analytics", label: "Analytics", icon: BarChart3, to: "/member/analytics", activePrefix: "/member/analytics" },
-    { key: "alerts", label: "Alerts", icon: Bell, to: "/member/notifications", activePrefix: "/member/notifications" },
-    { key: "account", label: "Account", icon: User, to: "/member/profile", activePrefix: "/member/profile" },
+    {
+      key: "projects",
+      label: "Projects",
+      icon: Building2,
+      to: "/projects",
+      activePrefix: "/projects",
+    },
+    {
+      key: "sales",
+      label: "Sales",
+      icon: TrendingUp,
+      to: "/member/sales",
+      activePrefix: "/member/sales",
+    },
+    {
+      key: "wallet",
+      label: "Wallet",
+      icon: Wallet,
+      to: "/member/wallet",
+      activePrefix: "/member/wallet",
+    },
+    {
+      key: "analytics",
+      label: "Analytics",
+      icon: BarChart3,
+      to: "/member/analytics",
+      activePrefix: "/member/analytics",
+    },
+    {
+      key: "alerts",
+      label: "Alerts",
+      icon: Bell,
+      to: "/member/notifications",
+      activePrefix: "/member/notifications",
+    },
+    {
+      key: "account",
+      label: "Account",
+      icon: User,
+      to: "/member/profile",
+      activePrefix: "/member/profile",
+    },
   ];
 }
 
 function isActive(pathname: string, item: EcoDockItem) {
   if (item.exact) return pathname === item.to;
-  if (item.activePrefix) return pathname === item.activePrefix || pathname.startsWith(`${item.activePrefix}/`);
+  if (item.activePrefix)
+    return pathname === item.activePrefix || pathname.startsWith(`${item.activePrefix}/`);
   return pathname === item.to;
 }
 

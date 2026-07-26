@@ -99,14 +99,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Aawaash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://aawaash.lovable.app/__l5e/assets-v1/2e2ee34c-9ded-47cc-bd04-a31b7312c5e1/aawaash-og.png" },
+      {
+        property: "og:image",
+        content:
+          "https://aawaash.lovable.app/__l5e/assets-v1/2e2ee34c-9ded-47cc-bd04-a31b7312c5e1/aawaash-og.png",
+      },
       { property: "og:image:width", content: "512" },
       { property: "og:image:height", content: "512" },
       { property: "og:image:alt", content: "Aawaash logo" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Aawaash — Premium Real Estate, Reimagined" },
-      { name: "twitter:description", content: "Aawaash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team." },
-      { name: "twitter:image", content: "https://aawaash.lovable.app/__l5e/assets-v1/2e2ee34c-9ded-47cc-bd04-a31b7312c5e1/aawaash-og.png" },
+      {
+        name: "twitter:description",
+        content:
+          "Aawaash is a luxury real estate ecosystem — curated residential projects, transparent commissions, and a mobile-first dashboard for your entire team.",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://aawaash.lovable.app/__l5e/assets-v1/2e2ee34c-9ded-47cc-bd04-a31b7312c5e1/aawaash-og.png",
+      },
       { name: "twitter:image:alt", content: "Aawaash logo" },
     ],
     links: [
@@ -204,15 +216,26 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      {isEcoDashboard
-        ? !ecoHome && (role === "team_leader" || role === "member" || role === "super_admin") && (
-            <EcoDock role={role === "super_admin" ? (pathname.startsWith("/leader") ? "team_leader" : "member") : role} />
-          )
-        : hideGlobalDock
-          ? null
-          : sessionLoading
-            ? <BottomNavSkeleton />
-            : role ? <BottomNav role={role} /> : <PublicBottomNav />}
+      {isEcoDashboard ? (
+        !ecoHome &&
+        (role === "team_leader" || role === "member" || role === "super_admin") && (
+          <EcoDock
+            role={
+              role === "super_admin"
+                ? pathname.startsWith("/leader")
+                  ? "team_leader"
+                  : "member"
+                : role
+            }
+          />
+        )
+      ) : hideGlobalDock ? null : sessionLoading ? (
+        <BottomNavSkeleton />
+      ) : role ? (
+        <BottomNav role={role} />
+      ) : (
+        <PublicBottomNav />
+      )}
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );

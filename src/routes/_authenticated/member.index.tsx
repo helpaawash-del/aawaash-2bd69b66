@@ -181,18 +181,25 @@ function MemberContent() {
           value={String(stats?.referralCount ?? 0)}
           to="/member/referrals"
         />
-        <LightPod icon={<Handshake size={15} />} label="Tips" value={String(stats?.tipCount ?? 0)} to="/member/tips" />
+        <LightPod
+          icon={<Handshake size={15} />}
+          label="Tips"
+          value={String(stats?.tipCount ?? 0)}
+          to="/member/tips"
+        />
         <LightPod
           icon={<Wallet size={15} />}
           label="Withdraw"
           value={formatINR(stats?.pendingCommission ?? 0, { compact: true })}
           to="/member/withdrawals"
         />
-        <LightPod icon={<Bell size={15} />} label="Alerts" value={String(unread)} to="/member/notifications" />
+        <LightPod
+          icon={<Bell size={15} />}
+          label="Alerts"
+          value={String(unread)}
+          to="/member/notifications"
+        />
       </section>
-
-
-
 
       {/* ---------------- Overview + activity ---------------- */}
       <section className="mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
@@ -275,18 +282,35 @@ function MemberContent() {
                   {team.letter}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-[13.5px] font-bold text-foreground">{team.name || "—"}</div>
-                  <div className="text-[11px] font-light text-muted-foreground">Team code · {team.letter}</div>
+                  <div className="truncate text-[13.5px] font-bold text-foreground">
+                    {team.name || "—"}
+                  </div>
+                  <div className="text-[11px] font-light text-muted-foreground">
+                    Team code · {team.letter}
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2.5">
-                <KV icon={<Users size={11} />} label="Leader" value={team.leader?.full_name || o?.leaderName || "—"} />
-                <KV icon={<Phone size={11} />} label="Contact" value={team.leader?.mobile_number || "—"} mono />
+                <KV
+                  icon={<Users size={11} />}
+                  label="Leader"
+                  value={team.leader?.full_name || o?.leaderName || "—"}
+                />
+                <KV
+                  icon={<Phone size={11} />}
+                  label="Contact"
+                  value={team.leader?.mobile_number || "—"}
+                  mono
+                />
                 <KV icon={<Trophy size={11} />} label="Rank" value={rank ? `#${rank}` : "—"} />
                 <KV
                   icon={<Calendar size={11} />}
                   label="Joined"
-                  value={o?.profile?.created_at ? new Date(o.profile.created_at).toLocaleDateString("en-IN") : "—"}
+                  value={
+                    o?.profile?.created_at
+                      ? new Date(o.profile.created_at).toLocaleDateString("en-IN")
+                      : "—"
+                  }
                 />
               </div>
             </div>
@@ -302,7 +326,11 @@ function MemberContent() {
           }
         >
           <div className="grid grid-cols-2 gap-2.5">
-            <KV icon={<Wallet size={11} />} label="Available" value={formatINR(profile?.wallet_balance)} />
+            <KV
+              icon={<Wallet size={11} />}
+              label="Available"
+              value={formatINR(profile?.wallet_balance)}
+            />
             <KV
               icon={<IndianRupee size={11} />}
               label="Pending"
@@ -370,14 +398,18 @@ function MemberContent() {
                     <Avatar name={m.full_name} size={34} />
                     <div className="min-w-0 flex-1">
                       <div className="flex min-w-0 items-center gap-1.5">
-                        <span className="truncate text-[13px] font-semibold text-foreground">{m.full_name}</span>
+                        <span className="truncate text-[13px] font-semibold text-foreground">
+                          {m.full_name}
+                        </span>
                         {me && (
                           <span className="shrink-0 rounded-full bg-forest px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-forest-foreground">
                             You
                           </span>
                         )}
                       </div>
-                      <div className="text-[10.5px] font-light text-muted-foreground">Score {m.score}</div>
+                      <div className="text-[10.5px] font-light text-muted-foreground">
+                        Score {m.score}
+                      </div>
                     </div>
                     <div className="shrink-0 text-[12.5px] font-bold text-foreground">
                       {formatINR(m.total_sales, { compact: true })}
@@ -401,7 +433,9 @@ function MemberContent() {
           </span>
           <div className="min-w-0 flex-1">
             <div className="text-[13.5px] font-bold text-foreground">Explore projects</div>
-            <div className="truncate text-[11px] font-light text-muted-foreground">Live inventory available to sell.</div>
+            <div className="truncate text-[11px] font-light text-muted-foreground">
+              Live inventory available to sell.
+            </div>
           </div>
           <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
         </Link>
@@ -414,7 +448,9 @@ function MemberContent() {
           </span>
           <div className="min-w-0 flex-1">
             <div className="text-[13.5px] font-bold text-foreground">My analytics</div>
-            <div className="truncate text-[11px] font-light text-muted-foreground">Trends, funnel and earnings history.</div>
+            <div className="truncate text-[11px] font-light text-muted-foreground">
+              Trends, funnel and earnings history.
+            </div>
           </div>
           <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
         </Link>
@@ -469,7 +505,9 @@ function KV({
       <div className="inline-flex items-center gap-1 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         {icon} {label}
       </div>
-      <div className={`mt-1 truncate text-[14px] font-bold tracking-[-0.01em] text-foreground ${mono ? "font-mono" : ""}`}>
+      <div
+        className={`mt-1 truncate text-[14px] font-bold tracking-[-0.01em] text-foreground ${mono ? "font-mono" : ""}`}
+      >
         {value}
       </div>
     </div>
