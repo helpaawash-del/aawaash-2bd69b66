@@ -27,6 +27,7 @@ import {
 } from "recharts";
 
 import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
+import { BlankChart } from "@/components/aawash/dashboard/BlankChart";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -230,11 +231,8 @@ function LeaderContent() {
           {sales.isLoading || comms.isLoading ? (
             <EcoRows rows={4} />
           ) : recentSales.length === 0 && recentComms.length === 0 ? (
-            <EcoZero
-              icon={<Activity size={22} />}
-              title="Quiet for now"
-              body="Team sales and commissions stream into this timeline the moment they're approved."
-            />
+            <BlankChart />
+
           ) : (
             <ul className="flex flex-col gap-4">
               {recentSales.map((s) => (
