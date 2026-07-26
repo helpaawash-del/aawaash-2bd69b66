@@ -136,9 +136,11 @@ export function useSession(): SessionState {
     return () => {
       cancelled = true;
       if (pollTimer) window.clearInterval(pollTimer);
+      if (onFocus) window.removeEventListener("focus", onFocus);
       if (profileChannel) supabase.removeChannel(profileChannel);
       sub.subscription.unsubscribe();
     };
+
   }, []);
 
   return state;
