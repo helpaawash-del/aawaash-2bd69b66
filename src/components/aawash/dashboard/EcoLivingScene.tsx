@@ -1,21 +1,21 @@
+import { useEffect, useRef, useState } from "react";
 import ecoBuilding from "@/assets/eco-hero-tower.png";
 
 /* ------------------------------------------------------------------ *
  * EcoLivingScene — the dashboard hero artwork.
- * A transparent tower PNG that gently levitates, with lightweight,
- * GIF-like motion layered on top in pure SVG/CSS:
- *   · birds gliding across the sky (with flapping wings)
- *   · leaves drifting down through the frame
- *   · a neighbour waving hello from a balcony
- * Everything lives inside one fixed-aspect box, so the scene can never
- * overlap the text around it. All motion is disabled under
- * prefers-reduced-motion.
+ * A transparent tower PNG on a clean, background-free frame, with
+ * birds that roam freely across the whole page (overlapping any
+ * section) and leaves drifting down through the frame.
+ * The birds regularly swing back near the building, linger for a
+ * moment, then head off in another direction.
+ * All motion is disabled under prefers-reduced-motion.
  * ------------------------------------------------------------------ */
 
 const BIRDS = [
-  { top: "16%", delay: "0s", duration: "12s", scale: 1 },
-  { top: "26%", delay: "3.6s", duration: "14s", scale: 0.72 },
-  { top: "9%", delay: "7.2s", duration: "16s", scale: 0.55 },
+  { anim: "animate-bird-roam-a", delay: "0s", scale: 1, opacity: 0.55 },
+  { anim: "animate-bird-roam-b", delay: "-6s", scale: 0.72, opacity: 0.45 },
+  { anim: "animate-bird-roam-c", delay: "-13s", scale: 0.85, opacity: 0.5 },
+  { anim: "animate-bird-roam-b", delay: "-19s", scale: 0.55, opacity: 0.35 },
 ];
 
 const LEAVES = [
@@ -33,7 +33,7 @@ function Bird({ scale }: { scale: number }) {
       height={12 * scale}
       viewBox="0 0 26 12"
       fill="none"
-      className="text-forest/60"
+      className="text-forest"
     >
       <g className="animate-scene-wing motion-reduce:animate-none">
         <path
@@ -67,66 +67,75 @@ function Leaf({ size }: { size: number }) {
 }
 
 export function EcoLivingScene() {
+  const towerRef = useRef<HTMLImageElement>(null);
+  const [hub, setHub] = useState<{ x: string; y: string }>({ x: "40vw", y: "40vh" });
+
+  useEffect(() => {
+    const measure = () => {
+      const el = towerRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setHub({
+        x: `${Math.round(r.left + r.width * 0.5)}px`,
+        y: `${Math.round(r.top + r.height * 0.28)}px`,
+      });
+    };
+    measure();
+    window.addEventListener("resize", measure, { passive: true });
+    window.addEventListener("scroll", measure, { passive: true });
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure);
+    };
+  }, []);
+
   return (
-    <div
-      aria-hidden
-      className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] bg-gradient-to-br from-primary/8 via-transparent to-leaf/10 ring-1 ring-border/50 sm:aspect-[16/10]"
-    >
-      {/* ambient washes */}
-      <span className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
-      <span className="animate-hero-glow pointer-events-none absolute bottom-[8%] left-1/2 h-8 w-[58%] rounded-[50%] bg-forest/25 blur-2xl motion-reduce:animate-none" />
+    <>
+      {/* page-wide roaming birds — overlap every section, never clickable */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-40 overflow-hidden motion-reduce:hidden"
+        style={
+          { "--hub-x": hub.x, "--hub-y": hub.y } as React.CSSProperties
+        }
+      >
+        {BIRDS.map((b, i) => (
+          <span
+            key={`bird-${i}`}
+            className={`${b.anim} absolute left-0 top-0`}
+            style={{ animationDelay: b.delay, opacity: b.opacity }}
+          >
+            <Bird scale={b.scale} />
+          </span>
+        ))}
+      </div>
 
-      {/* birds */}
-      {BIRDS.map((b, i) => (
-        <span
-          key={`bird-${i}`}
-          className="animate-scene-bird pointer-events-none absolute left-0 motion-reduce:hidden"
-          style={{ top: b.top, animationDelay: b.delay, animationDuration: b.duration }}
-        >
-          <Bird scale={b.scale} />
-        </span>
-      ))}
+      <div
+        aria-hidden
+        className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] sm:aspect-[16/10]"
+      >
+        {/* tower */}
+        <img
+          ref={towerRef}
+          src={ecoBuilding}
+          alt=""
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="absolute inset-x-0 bottom-[1%] mx-auto block h-[96%] w-auto max-w-[98%] object-contain drop-shadow-[0_22px_36px_rgba(16,50,36,0.16)]"
+        />
 
-      {/* tower */}
-      <img
-        src={ecoBuilding}
-        alt=""
-        loading="lazy"
-        width={1024}
-        height={1024}
-        className="animate-hero-levitate absolute inset-x-0 bottom-[6%] mx-auto block h-[88%] w-auto max-w-[92%] object-contain drop-shadow-[0_22px_36px_rgba(16,50,36,0.16)] motion-reduce:animate-none"
-      />
-
-      {/* neighbour waving from a balcony */}
-      <span className="pointer-events-none absolute bottom-[38%] left-1/2 -translate-x-[128%]">
-        <svg width="30" height="34" viewBox="0 0 30 34" fill="none">
-          <circle cx="15" cy="9" r="4.4" className="fill-forest/75" />
-          <path
-            d="M9 33v-9a6 6 0 0 1 12 0v9"
-            className="fill-forest/65"
-          />
-          <g className="animate-scene-wave motion-reduce:animate-none" style={{ transformOrigin: "21px 22px" }}>
-            <path
-              d="M21 22 27 12"
-              className="stroke-forest/75"
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
-            <circle cx="27.5" cy="10.5" r="2.6" className="fill-forest/75" />
-          </g>
-        </svg>
-      </span>
-
-      {/* drifting leaves */}
-      {LEAVES.map((l, i) => (
-        <span
-          key={`leaf-${i}`}
-          className="animate-scene-leaf pointer-events-none absolute top-0 motion-reduce:hidden"
-          style={{ left: l.left, animationDelay: l.delay, animationDuration: l.duration }}
-        >
-          <Leaf size={l.size} />
-        </span>
-      ))}
-    </div>
+        {/* drifting leaves */}
+        {LEAVES.map((l, i) => (
+          <span
+            key={`leaf-${i}`}
+            className="animate-scene-leaf pointer-events-none absolute top-0 motion-reduce:hidden"
+            style={{ left: l.left, animationDelay: l.delay, animationDuration: l.duration }}
+          >
+            <Leaf size={l.size} />
+          </span>
+        ))}
+      </div>
+    </>
   );
 }
