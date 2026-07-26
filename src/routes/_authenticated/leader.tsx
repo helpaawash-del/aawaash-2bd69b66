@@ -515,6 +515,21 @@ function LeaderContent() {
   );
 }
 
+function PulseChip({ label, value, tone }: { label: string; value: string; tone?: "live" }) {
+  return (
+    <span className="glass-card inline-flex shrink-0 snap-start items-center gap-2 rounded-full px-3.5 py-2 text-[11px] shadow-[var(--shadow-soft)]">
+      {tone === "live" && (
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-70 motion-safe:animate-ping" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
+        </span>
+      )}
+      <span className="font-medium uppercase tracking-[0.14em] text-muted-foreground">{label}</span>
+      <span className="font-semibold text-foreground">{value}</span>
+    </span>
+  );
+}
+
 function Rise({ delay = 0, children }: { delay?: number; children: React.ReactNode }) {
   return (
     <div
