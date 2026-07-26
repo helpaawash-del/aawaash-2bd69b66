@@ -84,7 +84,6 @@ export function EcoShell({
         >
           <WelcomeHeader role={role} profile={profile} />
           <main id="main-content" className="mt-9 flex-1 sm:mt-11">
-
             {children}
           </main>
         </div>
