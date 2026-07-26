@@ -27,6 +27,7 @@ import {
 } from "recharts";
 
 import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
+import { BlankChart } from "@/components/aawash/dashboard/BlankChart";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
