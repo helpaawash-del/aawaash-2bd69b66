@@ -203,11 +203,15 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      {hideGlobalDock
-        ? null
-        : sessionLoading
-          ? <BottomNavSkeleton />
-          : role ? <BottomNav role={role} /> : <PublicBottomNav />}
+      {isEcoDashboard
+        ? !ecoHome && (role === "team_leader" || role === "member" || role === "super_admin") && (
+            <EcoDock role={role === "super_admin" ? (pathname.startsWith("/leader") ? "team_leader" : "member") : role} />
+          )
+        : hideGlobalDock
+          ? null
+          : sessionLoading
+            ? <BottomNavSkeleton />
+            : role ? <BottomNav role={role} /> : <PublicBottomNav />}
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
