@@ -9,13 +9,13 @@ import {
   Building2,
   IndianRupee,
   Bell,
-  Sparkles,
-  MapPin,
-  Loader2,
-  Calendar,
+  Leaf,
+  Droplet,
+  Zap,
+  Activity,
   BarChart3,
   ArrowDownToLine,
-  UserRound,
+  MapPin,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -29,31 +29,26 @@ import {
 
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
-import { DashboardShell } from "@/components/aawash/DashboardShell";
 import { formatINR } from "@/components/aawash/dashboard-kit";
 import { greetingName, timeGreeting } from "@/lib/greeting";
 import {
-  Panel,
-  PanelLink,
-  GreetingHeader,
-  WalletHeroCard,
-  QuickActionGrid,
-  QuickAction,
-  MetricTile,
-  Rail,
-  Portrait,
-  RankChip,
-  Progress,
-  WalletHeroSkeleton,
-  MetricRowSkeleton,
-  ChartSkeleton,
-  ListRowSkeleton,
-  CardGridSkeleton,
-  ZeroState,
-  ZeroChart,
-  ZeroRanking,
-  ZeroActivity,
-} from "@/components/aawash/dashboard/PremiumKit";
+  EcoShell,
+  ProgressRing,
+  DarkPod,
+  LightPod,
+  AskBar,
+  SectionHead,
+  DarkPanel,
+  LightPanel,
+  Orb,
+  TimelineRow,
+  EcoProjectCard,
+  EcoSkeleton,
+  EcoRows,
+  EcoZero,
+  EcoZeroChart,
+  Avatar,
+} from "@/components/aawash/dashboard/EcoKit";
 import {
   getLeaderOverview,
   getLeaderTrend,
@@ -120,157 +115,230 @@ function LeaderContent() {
   const unread = (notifs.data ?? []).filter((n) => !n.is_read).length;
   const memberList = members.data ?? [];
   const topMembers = (board.data ?? []).slice(0, 5);
-  const recentSales = (sales.data ?? []).slice(0, 5);
-  const recentComms = (comms.data ?? []).slice(0, 5);
+  const recentSales = (sales.data ?? []).slice(0, 4);
+  const recentComms = (comms.data ?? []).slice(0, 3);
   const projectList = (projects.data ?? []).slice(0, 3);
   const months = trend.data?.months ?? [];
-  const spark = months.map((m) => Number(m.revenue) || 0);
+
+  const target = Math.max(1, Number(o?.totalRevenue ?? 0) * 1.4 || 1);
+  const progressPct = o?.totalRevenue ? Math.round((Number(o.totalRevenue) / target) * 100) : 0;
+  const activePct = o?.memberCount
+    ? Math.round((memberList.filter((m) => m.status === "active").length / o.memberCount) * 100)
+    : 0;
+
+  const zeroTrend = months.length === 0 || months.every((m) => m.revenue === 0 && m.commission === 0);
 
   return (
-    <DashboardShell role="team_leader" profile={profile}>
-      {/* ---------------- Greeting ---------------- */}
-      <GreetingHeader
-        eyebrow={
-          <span className="inline-flex items-center gap-1.5">
-            <Sparkles size={11} /> Team {o?.teamLetter ?? "—"}
-          </span>
-        }
-        greeting={timeGreeting()}
-        name={displayName}
-        caption={`Here's how Team ${o?.teamLetter ?? "—"} is performing this month.`}
-      />
+    <EcoShell role="team_leader" profile={profile}>
+      {/* ---------------- Focus hero ---------------- */}
+      <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
+        <div className="min-w-0">
+          <p className="text-[12px] font-light text-muted-foreground">Today's Focus</p>
+          <h1 className="mt-0.5 text-[26px] font-extrabold leading-[1.08] tracking-[-0.03em] text-foreground sm:text-[32px]">
+            {timeGreeting()}, {displayName}.
+            <span className="block text-primary">Lead Team {o?.teamLetter ?? "—"}.</span>
+          </h1>
 
-      {/* ---------------- Live pulse strip ---------------- */}
-      <Rise delay={20}>
-        <div className="mt-5 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <PulseChip tone="live" label="Live sync" value="Realtime" />
-          <PulseChip label="Members" value={String(o?.memberCount ?? 0)} />
-          <PulseChip label="Sales" value={String(o?.salesCount ?? 0)} />
-          <PulseChip label="Alerts" value={String(unread)} />
-          <PulseChip label="Projects" value={String(o?.projectCount ?? 0)} />
+          <div className="mt-5 flex items-center gap-4">
+            {overview.isLoading ? (
+              <EcoSkeleton className="h-[132px] w-[132px] rounded-full" />
+            ) : (
+              <ProgressRing
+                value={progressPct}
+                label="Progress"
+                caption={`${o?.salesCount ?? 0} sales closed`}
+              />
+            )}
+            <div className="hidden min-w-0 flex-1 sm:block">
+              <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                Team revenue
+              </div>
+              <div className="truncate text-[24px] font-extrabold tracking-[-0.03em] text-foreground">
+                {formatINR(o?.totalRevenue ?? 0, { compact: true })}
+              </div>
+              <div className="mt-1 text-[11.5px] font-light text-muted-foreground">
+                Commission {formatINR(o?.totalCommission ?? 0, { compact: true })} · Pending{" "}
+                {formatINR(o?.pendingCommission ?? 0, { compact: true })}
+              </div>
+            </div>
+          </div>
         </div>
-      </Rise>
 
-
-
-      {/* ---------------- Wallet hero ---------------- */}
-      <Rise delay={40}>
-      <section className="mt-6">
-        {overview.isLoading ? (
-          <WalletHeroSkeleton />
-        ) : (
-        <WalletHeroCard
-          label="Wallet balance"
-          balance={formatINR(profile?.wallet_balance)}
-          to="/leader/withdrawals"
-          spark={spark.length > 1 ? spark : []}
-          footLeft={`Lifetime ${formatINR(profile?.total_earnings ?? 0, { compact: true })}`}
-          footRight={`+${formatINR(o?.monthlyCommission ?? 0, { compact: true })} this month`}
-        />
-        )}
-      </section>
-      </Rise>
-
-      {/* ---------------- Quick actions ---------------- */}
-      <Rise delay={100}>
-      <section className="mt-4">
-        <QuickActionGrid>
-          <QuickAction icon={<Users size={18} />} label="Members" to="/leader/members" />
-          <QuickAction icon={<Wallet size={18} />} label="Withdraw" to="/leader/withdrawals" accent="gold" />
-          <QuickAction icon={<BarChart3 size={18} />} label="Analytics" to="/leader/analytics" accent="violet" />
-          <QuickAction
-            icon={<Bell size={18} />}
-            label="Alerts"
-            to="/leader/notifications"
-            accent="sky"
-            badge={unread > 0 ? unread : undefined}
+        <div className="grid content-start gap-3">
+          <DarkPod
+            icon={<Leaf size={17} />}
+            label="Team health"
+            value={`${activePct}%`}
+            hint={activePct >= 70 ? "Excellent" : activePct > 0 ? "Building" : "—"}
+            to="/leader/members"
           />
-        </QuickActionGrid>
-      </section>
-      </Rise>
-
-      {/* ---------------- Metrics ---------------- */}
-      <Rise delay={160}>
-      <section className="mt-4">
-        {overview.isLoading ? (
-          <MetricRowSkeleton />
-        ) : (
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-        <MetricTile icon={<Users size={17} />} label="Members" value={o?.memberCount ?? 0} hint="Active on your team" />
-        <MetricTile
-          icon={<TrendingUp size={17} />}
-          label="Team revenue"
-          value={formatINR(o?.totalRevenue ?? 0, { compact: true })}
-          hint={`${o?.salesCount ?? 0} sales`}
-          accent="cyan"
-        />
-        <MetricTile
-          icon={<IndianRupee size={17} />}
-          label="Commission"
-          value={formatINR(o?.totalCommission ?? 0, { compact: true })}
-          hint={`Pending ${formatINR(o?.pendingCommission ?? 0, { compact: true })}`}
-          accent="gold"
-        />
-        <MetricTile
-          icon={<Building2 size={17} />}
-          label="Projects"
-          value={o?.projectCount ?? 0}
-          hint="Available to sell"
-          accent="violet"
-        />
+          <LightPod
+            icon={<Droplet size={15} />}
+            label="Wallet"
+            value={formatINR(profile?.wallet_balance, { compact: true })}
+            to="/leader/withdrawals"
+          />
+          <LightPod
+            icon={<Zap size={15} />}
+            label="This month"
+            value={formatINR(o?.monthlyCommission ?? 0, { compact: true })}
+            to="/leader/analytics"
+          />
         </div>
+      </section>
+
+      {/* ---------------- Command bar ---------------- */}
+      <section className="mt-5">
+        <AskBar to="/leader/members" placeholder="Search members, sales or projects…" />
+      </section>
+
+      {/* ---------------- Quick pods ---------------- */}
+      <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <LightPod icon={<Users size={15} />} label="Members" value={String(o?.memberCount ?? 0)} to="/leader/members" />
+        <LightPod
+          icon={<Wallet size={15} />}
+          label="Withdraw"
+          value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })}
+          to="/leader/withdrawals"
+        />
+        <LightPod icon={<BarChart3 size={15} />} label="Analytics" value="Open" to="/leader/analytics" />
+        <LightPod icon={<Bell size={15} />} label="Alerts" value={String(unread)} to="/leader/notifications" />
+      </section>
+
+      {/* ---------------- Projects rail ---------------- */}
+      <section className="mt-7">
+        <SectionHead title="Active Projects" to="/leader/projects" />
+        {projects.isLoading ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {[0, 1, 2].map((i) => (
+              <EcoSkeleton key={i} className="h-[188px]" />
+            ))}
+          </div>
+        ) : projectList.length === 0 ? (
+          <EcoZero
+            icon={<Building2 size={22} />}
+            title="No projects yet"
+            body="Once Admin publishes projects, live inventory appears here for your team to sell."
+            cta={{ label: "All projects", to: "/leader/projects" }}
+          />
+        ) : (
+          <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
+            {projectList.map((p) => (
+              <div key={p.id} className="w-[62%] shrink-0 snap-start sm:w-auto">
+                <EcoProjectCard
+                  to="/leader/projects"
+                  name={p.name}
+                  meta={p.location}
+                  hue={p.hero_hue}
+                  pct={p.total_units ? Math.round((p.sold_units / p.total_units) * 100) : 0}
+                />
+              </div>
+            ))}
+          </div>
         )}
       </section>
-      </Rise>
 
-      {/* ---------------- Trend + payouts ---------------- */}
-      <Rise delay={220}>
-      <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-[1.65fr_1fr] xl:gap-6">
-        <Panel
-          title="Performance trend"
-          subtitle="Team revenue and commission across the last 6 months."
-          action={
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary">
-              <Calendar size={10} /> 6M
-            </span>
-          }
+      {/* ---------------- Overview + schedule ---------------- */}
+      <section className="mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
+        <DarkPanel
+          title="Team Overview"
+          action={<Activity size={17} className="text-forest-foreground/70" />}
+          stats={[
+            { label: "Members", value: String(o?.memberCount ?? 0), hint: "Active" },
+            { label: "Sales", value: String(o?.salesCount ?? 0), hint: "Closed" },
+            {
+              label: "Payouts",
+              value: formatINR(o?.approvedWithdrawals ?? 0, { compact: true }),
+              hint: "Approved",
+            },
+          ]}
         >
-          <div className="h-56 w-full sm:h-64">
+          <Orb intensity={Math.min(1, (o?.salesCount ?? 0) / 10)} />
+        </DarkPanel>
+
+        <LightPanel
+          title="Recent Activity"
+          action={
+            <Link
+              to="/leader/notifications"
+              className="text-[12px] font-semibold text-primary outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              Alerts{unread > 0 ? ` (${unread})` : ""}
+            </Link>
+          }
+          footer={{ label: "View team", to: "/leader/members" }}
+        >
+          {sales.isLoading || comms.isLoading ? (
+            <EcoRows rows={4} />
+          ) : recentSales.length === 0 && recentComms.length === 0 ? (
+            <EcoZero
+              icon={<Activity size={22} />}
+              title="Quiet for now"
+              body="Team sales and commissions stream into this timeline the moment they're approved."
+            />
+          ) : (
+            <ul className="flex flex-col gap-4">
+              {recentSales.map((s) => (
+                <TimelineRow
+                  key={`s-${s.id}`}
+                  icon={<TrendingUp size={15} />}
+                  title={`Sale to ${s.buyer_name}`}
+                  subtitle={`${new Date(s.sale_date).toLocaleDateString("en-IN")} · ${s.unit_label || "Unit"}`}
+                  right={formatINR(s.deal_value, { compact: true })}
+                />
+              ))}
+              {recentComms.map((c) => (
+                <TimelineRow
+                  key={`c-${c.id}`}
+                  icon={<IndianRupee size={15} />}
+                  tone="gold"
+                  title={`Commission · Tier ${c.tier}`}
+                  subtitle={c.status}
+                  right={formatINR(c.amount, { compact: true })}
+                />
+              ))}
+            </ul>
+          )}
+        </LightPanel>
+      </section>
+
+      {/* ---------------- Trend + wallet ---------------- */}
+      <section className="mt-5 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
+        <LightPanel title="Performance Trend" action={<span className="text-[11px] font-semibold text-primary">6M</span>}>
+          <div className="h-56 w-full">
             {trend.isLoading ? (
-              <ChartSkeleton className="h-full" />
-            ) : months.length === 0 || months.every((m) => m.revenue === 0 && m.commission === 0) ? (
-              <ZeroChart
+              <EcoSkeleton className="h-full w-full" />
+            ) : zeroTrend ? (
+              <EcoZeroChart
                 labels={months.length ? months.map((m) => m.label) : ["", "", "", "", "", ""]}
                 caption="Baseline at ₹0 — your trend line starts with the first approved sale."
-                className="h-full w-full text-primary"
               />
-
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={months} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
                   <defs>
-                    <linearGradient id="grad-rev" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="oklch(0.42 0.09 155)" stopOpacity={0.4} />
-                      <stop offset="100%" stopColor="oklch(0.42 0.09 155)" stopOpacity={0} />
+                    <linearGradient id="eco-rev" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--forest)" stopOpacity={0.42} />
+                      <stop offset="100%" stopColor="var(--forest)" stopOpacity={0} />
                     </linearGradient>
-                    <linearGradient id="grad-com" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="oklch(0.78 0.12 85)" stopOpacity={0.4} />
-                      <stop offset="100%" stopColor="oklch(0.78 0.12 85)" stopOpacity={0} />
+                    <linearGradient id="eco-com" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--leaf)" stopOpacity={0.42} />
+                      <stop offset="100%" stopColor="var(--leaf)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.93 0.008 150)" vertical={false} />
-                  <XAxis dataKey="label" tickLine={false} axisLine={false} fontSize={11} stroke="oklch(0.48 0.02 155)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                  <XAxis dataKey="label" tickLine={false} axisLine={false} fontSize={11} stroke="var(--muted-foreground)" />
                   <YAxis
                     tickLine={false}
                     axisLine={false}
                     fontSize={11}
-                    stroke="oklch(0.48 0.02 155)"
+                    stroke="var(--muted-foreground)"
                     tickFormatter={(v) => (v >= 1e5 ? `${(v / 1e5).toFixed(0)}L` : String(v))}
                   />
                   <Tooltip
                     contentStyle={{
-                      background: "oklch(1 0 0)",
-                      border: "1px solid oklch(0.93 0.008 150)",
+                      background: "var(--surface)",
+                      border: "1px solid var(--border)",
                       borderRadius: 18,
                       fontSize: 12,
                       boxShadow: "var(--shadow-float)",
@@ -280,326 +348,138 @@ function LeaderContent() {
                       name === "revenue" ? "Revenue" : "Commission",
                     ]}
                   />
-                  <Area type="monotone" dataKey="revenue" stroke="oklch(0.42 0.09 155)" strokeWidth={2} fill="url(#grad-rev)" />
-                  <Area type="monotone" dataKey="commission" stroke="oklch(0.78 0.12 85)" strokeWidth={2} fill="url(#grad-com)" />
+                  <Area type="monotone" dataKey="revenue" stroke="var(--forest)" strokeWidth={2} fill="url(#eco-rev)" />
+                  <Area type="monotone" dataKey="commission" stroke="var(--leaf)" strokeWidth={2} fill="url(#eco-com)" />
                 </AreaChart>
               </ResponsiveContainer>
             )}
           </div>
-        </Panel>
+        </LightPanel>
 
-        <Panel title="Wallet & payouts" subtitle="Snapshot of your earnings.">
-          <div className="grid grid-cols-2 gap-2.5 md:gap-3">
-            <MiniKV label="Available" value={formatINR(profile?.wallet_balance)} />
-            <MiniKV label="Pending" value={formatINR(o?.pendingCommission ?? 0, { compact: true })} />
-            <MiniKV label="Approved" value={formatINR(o?.approvedWithdrawals ?? 0, { compact: true })} />
-            <MiniKV label="Pending WD" value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })} />
-            <MiniKV label="Lifetime" value={formatINR(profile?.total_earnings ?? 0, { compact: true })} />
-            <MiniKV label="This month" value={formatINR(o?.monthlyCommission ?? 0, { compact: true })} />
+        <LightPanel title="Wallet & Payouts" footer={{ label: "Open wallet", to: "/leader/withdrawals" }}>
+          <div className="grid grid-cols-2 gap-2.5">
+            <KV label="Available" value={formatINR(profile?.wallet_balance)} />
+            <KV label="Pending" value={formatINR(o?.pendingCommission ?? 0, { compact: true })} />
+            <KV label="Approved" value={formatINR(o?.approvedWithdrawals ?? 0, { compact: true })} />
+            <KV label="Pending WD" value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })} />
+            <KV label="Lifetime" value={formatINR(profile?.total_earnings ?? 0, { compact: true })} />
+            <KV label="This month" value={formatINR(o?.monthlyCommission ?? 0, { compact: true })} />
           </div>
           <Link
             to="/leader/withdrawals"
-            className="mt-4 inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform will-change-transform hover:-translate-y-0.5 active:scale-[0.98]"
+            className="mt-4 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-forest to-forest-deep text-sm font-semibold text-forest-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
           >
             <ArrowDownToLine size={15} /> Request withdrawal
           </Link>
-        </Panel>
+        </LightPanel>
       </section>
-      </Rise>
 
-      {/* ---------------- Leaderboard + activity ---------------- */}
-      <Rise delay={280}>
-      <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
-        <Panel
-          title="Team leaderboard"
-          subtitle="Top performers this cycle."
-          action={<PanelLink to="/leader/leaderboard">View all</PanelLink>}
+      {/* ---------------- Leaderboard + members ---------------- */}
+      <section className="mt-5 grid gap-4 lg:grid-cols-2">
+        <LightPanel
+          title="Team Leaderboard"
+          action={
+            <Link to="/leader/leaderboard" className="text-[12px] font-semibold text-primary">
+              View all
+            </Link>
+          }
         >
           {board.isLoading ? (
-            <ListRowSkeleton rows={4} />
+            <EcoRows rows={4} />
           ) : topMembers.length === 0 ? (
-            <ZeroRanking rows={4} caption="Ranking slots are live — they fill as members close sales." />
-
+            <EcoZero
+              icon={<Trophy size={22} />}
+              title="Ranking slots are live"
+              body="They fill the moment your members close their first sale."
+              cta={{ label: "Your members", to: "/leader/members" }}
+            />
           ) : (
-            <ol className="flex flex-col gap-2.5">
+            <ol className="flex flex-col gap-3.5">
               {topMembers.map((m) => (
-                <li
-                  key={m.id}
-                  className="flex items-center gap-3 rounded-[22px] border border-border/60 bg-surface/70 p-3 transition-all hover:border-primary/25 hover:shadow-[var(--shadow-soft)]"
-                >
-                  <RankChip rank={m.rank} icon={<Trophy size={15} />} />
-                  <Portrait name={m.full_name} src={m.avatar_url} />
+                <li key={m.id} className="flex items-center gap-3">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary-soft text-[12px] font-bold text-primary">
+                    {m.rank}
+                  </span>
+                  <Avatar name={m.full_name} src={m.avatar_url} size={36} />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-semibold text-foreground">{m.full_name}</div>
+                    <div className="truncate text-[13.5px] font-semibold text-foreground">{m.full_name}</div>
                     <div className="truncate text-[11px] font-light text-muted-foreground">{m.login_id}</div>
                   </div>
-                  <div className="shrink-0 text-right">
-                    <div className="text-sm font-semibold tracking-[-0.01em] text-foreground">
-                      {formatINR(m.total_sales, { compact: true })}
-                    </div>
-                    <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                      Sales
-                    </div>
+                  <div className="shrink-0 text-[13px] font-bold text-foreground">
+                    {formatINR(m.total_sales, { compact: true })}
                   </div>
                 </li>
               ))}
             </ol>
           )}
-        </Panel>
+        </LightPanel>
 
-        <Panel
-          title="Recent team activity"
-          subtitle="Newest sales and commissions."
-          action={<PanelLink to="/leader/members">Team</PanelLink>}
+        <LightPanel
+          title="Your Members"
+          action={
+            <Link to="/leader/members" className="text-[12px] font-semibold text-primary">
+              View all
+            </Link>
+          }
         >
-          {sales.isLoading || comms.isLoading ? (
-            <ListRowSkeleton rows={4} />
-          ) : recentSales.length === 0 && recentComms.length === 0 ? (
-            <ZeroActivity rows={3} caption="Activity streams in live — currently ₹0 across the last 12 days." />
-
+          {members.isLoading ? (
+            <EcoRows rows={4} />
+          ) : memberList.length === 0 ? (
+            <EcoZero
+              icon={<Users size={22} />}
+              title="No members yet"
+              body="Ask your Super Admin to add members to your team — they show up here instantly."
+              cta={{ label: "Team page", to: "/leader/members" }}
+            />
           ) : (
-            <ul className="flex flex-col gap-2.5">
-              {recentSales.map((s) => (
-                <li
-                  key={`s-${s.id}`}
-                  className="flex items-center gap-3 rounded-[22px] border border-border/60 bg-surface/70 p-3"
-                >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">
-                    <TrendingUp size={16} />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-semibold text-foreground">Sale to {s.buyer_name}</div>
-                    <div className="truncate text-[11px] font-light text-muted-foreground">
-                      {new Date(s.sale_date).toLocaleDateString("en-IN")} · {s.unit_label || "Unit"}
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {memberList.slice(0, 6).map((m) => (
+                <li key={m.id}>
+                  <Link
+                    to="/leader/members/$id"
+                    params={{ id: m.id }}
+                    className="flex items-center gap-3 rounded-[22px] bg-surface-warm p-2.5 transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+                  >
+                    <Avatar name={m.full_name} size={34} online={m.status === "active"} />
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-[13px] font-semibold text-foreground">{m.full_name}</div>
+                      <div className="truncate text-[10.5px] font-light text-muted-foreground">{m.login_id}</div>
                     </div>
-                  </div>
-                  <div className="shrink-0 text-sm font-semibold text-foreground">
-                    {formatINR(s.deal_value, { compact: true })}
-                  </div>
-                </li>
-              ))}
-              {recentComms.map((c) => (
-                <li
-                  key={`c-${c.id}`}
-                  className="flex items-center gap-3 rounded-[22px] border border-border/60 bg-surface/70 p-3"
-                >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gold/20 text-gold-foreground">
-                    <IndianRupee size={16} />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-semibold text-foreground">Commission · Tier {c.tier}</div>
-                    <div className="text-[11px] font-light capitalize text-muted-foreground">{c.status}</div>
-                  </div>
-                  <div className="shrink-0 text-sm font-semibold text-foreground">
-                    {formatINR(c.amount, { compact: true })}
-                  </div>
+                  </Link>
                 </li>
               ))}
             </ul>
           )}
-        </Panel>
+        </LightPanel>
       </section>
-      </Rise>
 
-      {/* ---------------- Members ---------------- */}
-      <Rise delay={340}>
-      <section className="mt-5">
-        <Panel
-          title="Your members"
-          subtitle="Tap a member to view their profile."
-          action={<PanelLink to="/leader/members">View all</PanelLink>}
-        >
-          {members.isLoading ? (
-            <CardGridSkeleton count={6} height="h-[68px]" className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3" />
-          ) : memberList.length === 0 ? (
-            <ZeroState
-              icon={<Users size={26} />}
-              title="No members yet"
-              body="Ask your Super Admin to add members to your team — they'll show up here instantly."
-              cta={{ label: "Team page", to: "/leader/members" }}
-            />
-          ) : (
-            <div className="grid gap-2.5 sm:grid-cols-2 md:gap-3 lg:grid-cols-3">
-              {memberList.slice(0, 6).map((m) => (
-                <Link
-                  key={m.id}
-                  to="/leader/members/$id"
-                  params={{ id: m.id }}
-                  className="group glass-card flex items-center gap-3 rounded-[22px] p-3 shadow-[var(--shadow-soft)] transition-all duration-300 will-change-transform hover:-translate-y-1 hover:shadow-[var(--shadow-float)] active:scale-[0.98]"
-                >
-                  <Portrait name={m.full_name} online={m.status === "active"} />
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-semibold text-foreground">{m.full_name}</div>
-                    <div className="truncate text-[11px] font-light text-muted-foreground">{m.login_id}</div>
-                  </div>
-                  <span
-                    className={`shrink-0 rounded-full px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.12em] ${
-                      m.status === "active" ? "bg-success/15 text-success" : "bg-destructive/10 text-destructive"
-                    }`}
-                  >
-                    {m.status}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          )}
-        </Panel>
-      </section>
-      </Rise>
-
-      {/* ---------------- Projects rail ---------------- */}
-      <Rise delay={400}>
-      <section className="mt-5">
-        <Panel
-          title="Projects quick access"
-          subtitle="Live inventory across your regions."
-          action={<PanelLink to="/leader/projects">All projects</PanelLink>}
-        >
-          {projects.isLoading ? (
-            <CardGridSkeleton count={3} height="h-56" />
-          ) : projectList.length === 0 ? (
-            <ZeroState
-              icon={<Building2 size={26} />}
-              title="No projects yet"
-              body="Once Admin publishes projects, live inventory will appear here for your team to sell."
-              cta={{ label: "All projects", to: "/leader/projects" }}
-              accent="sky"
-            />
-          ) : (
-            <>
-              <Rail className="md:hidden" aria-label="Project quick access">
-                {projectList.map((p) => (
-                  <div key={p.id} className="w-[78%] shrink-0 snap-start sm:w-[48%]">
-                    <ProjectMiniCard project={p} />
-                  </div>
-                ))}
-              </Rail>
-              <div className="hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-3">
-                {projectList.map((p) => (
-                  <ProjectMiniCard key={p.id} project={p} />
-                ))}
-              </div>
-            </>
-          )}
-        </Panel>
-      </section>
-      </Rise>
-
-      {/* ---------------- Member spotlight CTA ---------------- */}
-      <Rise delay={460}>
+      {/* ---------------- Footer CTA ---------------- */}
       <section className="mt-5">
         <Link
           to="/leader/analytics"
-          className="glass-card flex items-center gap-3 rounded-[24px] p-4 shadow-[var(--shadow-soft)] transition-all will-change-transform hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] active:scale-[0.99]"
+          className="flex items-center gap-3 rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
         >
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-violet-100 text-violet-700">
-            <UserRound size={18} />
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-forest to-forest-deep text-forest-foreground">
+            <BarChart3 size={18} />
           </span>
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-semibold text-foreground">Deep-dive team analytics</div>
-            <div className="text-[11px] font-light text-muted-foreground">
+            <div className="text-[13.5px] font-bold text-foreground">Deep-dive team analytics</div>
+            <div className="truncate text-[11px] font-light text-muted-foreground">
               Conversion, funnel and member-by-member performance.
             </div>
           </div>
-          <BarChart3 size={16} className="shrink-0 text-muted-foreground" />
+          <MapPin size={16} className="shrink-0 text-muted-foreground" />
         </Link>
       </section>
-      </Rise>
-
-      {overview.isLoading && (
-        <div role="status" className="glass-card fixed bottom-28 right-6 hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-soft)] md:inline-flex">
-          <Loader2 size={12} className="animate-spin" /> Refreshing
-        </div>
-      )}
-    </DashboardShell>
+    </EcoShell>
   );
 }
 
-function PulseChip({ label, value, tone }: { label: string; value: string; tone?: "live" }) {
+function KV({ label, value }: { label: string; value: string }) {
   return (
-    <span className="glass-card inline-flex shrink-0 snap-start items-center gap-2 rounded-full px-3.5 py-2 text-[11px] shadow-[var(--shadow-soft)]">
-      {tone === "live" && (
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-70 motion-safe:animate-ping" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
-        </span>
-      )}
-      <span className="font-medium uppercase tracking-[0.14em] text-muted-foreground">{label}</span>
-      <span className="font-semibold text-foreground">{value}</span>
-    </span>
-  );
-}
-
-function Rise({ delay = 0, children }: { delay?: number; children: React.ReactNode }) {
-  return (
-    <div
-      className="motion-safe:animate-fade-up"
-      style={{ animationDelay: `${delay}ms`, animationFillMode: "both" }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function MiniKV({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-[18px] border border-border/60 bg-surface/70 p-3">
+    <div className="rounded-[18px] bg-surface-warm p-3">
       <div className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</div>
-      <div className="mt-1 truncate text-sm font-semibold tracking-[-0.01em] text-foreground sm:text-[15px]">
-        {value}
-      </div>
+      <div className="mt-1 truncate text-[14px] font-bold tracking-[-0.01em] text-foreground">{value}</div>
     </div>
-  );
-}
-
-function ProjectMiniCard({
-  project,
-}: {
-  project: {
-    id: string;
-    name: string;
-    location: string;
-    price_from: number;
-    total_units: number;
-    sold_units: number;
-    hero_hue: string;
-    tag: string | null;
-  };
-}) {
-  const pct = project.total_units
-    ? Math.min(100, Math.round((project.sold_units / project.total_units) * 100))
-    : 0;
-  return (
-    <article className="glass-card h-full overflow-hidden rounded-[24px] shadow-[var(--shadow-soft)] transition-all duration-300 will-change-transform hover:-translate-y-1 hover:shadow-[var(--shadow-float)]">
-      <div className={`relative aspect-[16/10] w-full bg-gradient-to-br ${project.hero_hue}`}>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/15 to-transparent" />
-        {project.tag && (
-          <span className="glass-card absolute left-3 top-3 rounded-full px-2.5 py-1 text-[9.5px] font-bold uppercase tracking-[0.14em] text-primary">
-            {project.tag}
-          </span>
-        )}
-      </div>
-      <div className="p-4">
-        <h3 className="truncate text-sm font-semibold tracking-[-0.01em] text-foreground">{project.name}</h3>
-        <div className="mt-1 inline-flex items-center gap-1 text-[11px] font-light text-muted-foreground">
-          <MapPin size={11} /> {project.location}
-        </div>
-        <div className="mt-3.5 flex items-end justify-between gap-3">
-          <div className="min-w-0">
-            <div className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">From</div>
-            <div className="truncate text-sm font-semibold text-foreground">
-              {formatINR(project.price_from, { compact: true })}
-            </div>
-          </div>
-          <div className="shrink-0 text-right">
-            <div className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Sold</div>
-            <div className="text-sm font-semibold text-foreground">
-              {project.sold_units}/{project.total_units}
-            </div>
-          </div>
-        </div>
-        <Progress value={pct} className="mt-2.5" />
-      </div>
-    </article>
   );
 }
