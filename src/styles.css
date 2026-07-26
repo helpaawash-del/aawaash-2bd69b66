@@ -98,6 +98,11 @@
 :root {
   --radius: 1.125rem; /* 18px cards */
 
+  /* Deep forest (dark green) surfaces */
+  --forest: oklch(0.28 0.045 158);
+  --forest-deep: oklch(0.2 0.032 158);
+  --forest-foreground: oklch(0.97 0.012 158);
+
   /* Surfaces — White + Soft Sage */
   --background: oklch(1 0 0);                 /* #FFFFFF */
   --surface: oklch(1 0 0);                    /* #FFFFFF */
