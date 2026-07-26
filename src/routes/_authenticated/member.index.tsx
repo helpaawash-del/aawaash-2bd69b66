@@ -203,12 +203,8 @@ function MemberContent() {
           {activity.isLoading ? (
             <EcoRows rows={4} />
           ) : recent.length === 0 ? (
-            <EcoZero
-              icon={<Activity size={22} />}
-              title="Quiet for now"
-              body="Sales, commissions, referrals and payouts land in this timeline in real time."
-              cta={{ label: "Tip a lead", to: "/member/tips" }}
-            />
+            <BlankChart />
+
           ) : (
             <ul className="flex flex-col gap-4">
               {recent.map((a) => (
