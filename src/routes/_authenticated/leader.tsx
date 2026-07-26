@@ -297,13 +297,8 @@ function LeaderContent() {
           {board.isLoading ? (
             <ListRowSkeleton rows={4} />
           ) : topMembers.length === 0 ? (
-            <ZeroState
-              icon={<Trophy size={26} />}
-              title="No rankings yet"
-              body="Members appear here as soon as they close their first sale."
-              cta={{ label: "View members", to: "/leader/members" }}
-              accent="gold"
-            />
+            <ZeroRanking rows={4} caption="Ranking slots are live — they fill as members close sales." />
+
           ) : (
             <ol className="flex flex-col gap-2.5">
               {topMembers.map((m) => (
