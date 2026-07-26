@@ -553,13 +553,16 @@ export function EcoProjectCard({
     >
       {image ? (
         <img src={image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-      ) : hue && !hue.startsWith("from-") ? (
+      ) : (
         <div
           className="absolute inset-0"
-          style={{ background: `linear-gradient(140deg, ${hue}, color-mix(in oklab, ${hue} 45%, black))` }}
+          style={{
+            background:
+              hue && (hue.startsWith("#") || hue.startsWith("oklch") || hue.startsWith("rgb"))
+                ? `linear-gradient(140deg, ${hue}, color-mix(in oklab, ${hue} 45%, black))`
+                : `linear-gradient(140deg, color-mix(in oklab, var(--leaf) ${58 + (name.length % 5) * 8}%, var(--forest)), var(--forest-deep))`,
+          }}
         />
-      ) : (
-        <div className={`absolute inset-0 bg-gradient-to-br ${hue || "from-primary to-leaf"}`} />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/90 via-forest-deep/35 to-transparent" />
       <div className="relative">
