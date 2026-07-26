@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { BadgeCheck, Bell, LogOut, Loader2, Mic, Sparkles, ChevronRight } from "lucide-react";
+import { BadgeCheck, Bell, LogOut, Loader2, Leaf, Mic, Settings, Sparkles, ChevronRight } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { itemsForRole } from "@/components/aawash/BottomNav";
