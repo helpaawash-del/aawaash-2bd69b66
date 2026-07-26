@@ -43,6 +43,14 @@ export function initialsOf(name?: string | null, fallback = "AA") {
 
 /* ---------------------------- Shell ---------------------------- */
 
+const WelcomeContext = createContext<WelcomeState | null>(null);
+
+/** Greeting-style preference chosen in the first-run welcome banner. */
+export function useEcoWelcome() {
+  const ctx = useContext(WelcomeContext);
+  return ctx;
+}
+
 export function EcoShell({
   role,
   profile,
@@ -53,31 +61,40 @@ export function EcoShell({
   children: React.ReactNode;
 }) {
   const dock = useDock();
+  const welcome = useWelcome();
 
   return (
-    <div className="relative min-h-screen overflow-x-clip bg-surface-warm">
-      {/* ambient light */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-leaf/10 blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
-      </div>
+    <WelcomeContext.Provider value={welcome}>
+      <div className="relative min-h-screen overflow-x-clip bg-surface-warm">
+        {/* ambient light */}
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+          <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-leaf/10 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
+        </div>
 
-      <WaveRail role={role} dock={dock} />
+        <WaveRail role={role} dock={dock} />
 
-      <div
-        style={{ paddingLeft: dock.width + 10 }}
-        data-testid="dock-content"
-        className="mx-auto flex min-h-screen w-full max-w-md flex-col pr-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 transition-[padding-left] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:max-w-xl sm:pr-6 md:max-w-3xl lg:max-w-6xl lg:pb-24 lg:pr-10 xl:max-w-7xl xl:pr-14"
-      >
-        <WelcomeHeader role={role} profile={profile} />
-        <main id="main-content" className="mt-5 flex-1">
-          {children}
-        </main>
+        <div
+          style={{ paddingLeft: dock.width + 10 }}
+          data-testid="dock-content"
+          className="mx-auto flex min-h-screen w-full max-w-md flex-col pr-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 transition-[padding-left] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:max-w-xl sm:pr-6 md:max-w-3xl lg:max-w-6xl lg:pb-24 lg:pr-10 xl:max-w-7xl xl:pr-14"
+        >
+          <WelcomeHeader role={role} profile={profile} />
+          <WelcomeBanner name={firstName(profile?.full_name)} welcome={welcome} />
+          <main id="main-content" className="mt-5 flex-1">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </WelcomeContext.Provider>
   );
 }
+
+function firstName(full?: string | null) {
+  return (full || "there").trim().split(/\s+/)[0] || "there";
+}
+
 
 function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfile | null }) {
   const navigate = useNavigate();
