@@ -118,9 +118,20 @@ export function GreetingHeader({
         <h1 className="mt-4 text-[2rem] font-semibold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-[2.6rem]">
           {greeting},
           <br className="sm:hidden" />{" "}
-          <span className="bg-gradient-to-br from-primary via-leaf to-primary bg-clip-text text-transparent">
-            {name}
-          </span>
+          {name ? (
+            <span
+              data-testid="greeting-name"
+              className="bg-gradient-to-br from-primary via-leaf to-primary bg-clip-text text-transparent"
+            >
+              {name}
+            </span>
+          ) : (
+            <span
+              data-testid="greeting-name-loading"
+              aria-hidden="true"
+              className="inline-block h-[1em] w-[6.5ch] translate-y-[0.12em] animate-pulse rounded-full bg-primary-soft align-middle"
+            />
+          )}
         </h1>
         <p className="mt-2 max-w-lg text-sm font-light leading-relaxed text-muted-foreground">
           {caption}
