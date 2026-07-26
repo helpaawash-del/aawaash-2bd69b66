@@ -204,6 +204,9 @@
   --sidebar-accent-foreground: oklch(0.98 0.005 160);
   --sidebar-border: oklch(1 0 0 / 12%);
   --sidebar-ring: oklch(0.72 0.14 155);
+  --forest: oklch(0.26 0.04 158);
+  --forest-deep: oklch(0.18 0.028 158);
+  --forest-foreground: oklch(0.97 0.012 158);
 }
 
 @layer base {
