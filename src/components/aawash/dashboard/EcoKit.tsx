@@ -97,23 +97,16 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
   }
 
   return (
-    <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+    <header className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
       <Link
         to={`${base}/profile` as never}
-        className="flex min-w-0 items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex min-w-0 items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
         aria-label="Open your profile"
       >
-        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={48} />
-        <span className="min-w-0">
-          <span className="block text-[12px] font-light text-muted-foreground">Welcome back,</span>
-          <span className="flex min-w-0 items-center gap-1.5">
-            <span className="truncate text-[19px] font-bold tracking-[-0.02em] text-foreground sm:text-[21px]">
-              {profile?.full_name || "—"}
-            </span>
-            <BadgeCheck size={16} className="shrink-0 text-primary" />
-          </span>
-        </span>
+        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={44} />
       </Link>
+      <span aria-hidden />
+
 
       <div className="flex shrink-0 items-center gap-2">
         <Link
