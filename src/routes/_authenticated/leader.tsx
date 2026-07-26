@@ -10,7 +10,6 @@ import {
   IndianRupee,
   Bell,
   Sparkles,
-  Activity,
   MapPin,
   Loader2,
   Calendar,
@@ -51,6 +50,9 @@ import {
   ListRowSkeleton,
   CardGridSkeleton,
   ZeroState,
+  ZeroChart,
+  ZeroRanking,
+  ZeroActivity,
 } from "@/components/aawash/dashboard/PremiumKit";
 import {
   getLeaderOverview,
@@ -138,7 +140,21 @@ function LeaderContent() {
         caption={`Here's how Team ${o?.teamLetter ?? "—"} is performing this month.`}
       />
 
+      {/* ---------------- Live pulse strip ---------------- */}
+      <Rise delay={20}>
+        <div className="mt-5 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <PulseChip tone="live" label="Live sync" value="Realtime" />
+          <PulseChip label="Members" value={String(o?.memberCount ?? 0)} />
+          <PulseChip label="Sales" value={String(o?.salesCount ?? 0)} />
+          <PulseChip label="Alerts" value={String(unread)} />
+          <PulseChip label="Projects" value={String(o?.projectCount ?? 0)} />
+        </div>
+      </Rise>
+
+
+
       {/* ---------------- Wallet hero ---------------- */}
+      <Rise delay={40}>
       <section className="mt-6">
         {overview.isLoading ? (
           <WalletHeroSkeleton />
@@ -153,8 +169,10 @@ function LeaderContent() {
         />
         )}
       </section>
+      </Rise>
 
       {/* ---------------- Quick actions ---------------- */}
+      <Rise delay={100}>
       <section className="mt-4">
         <QuickActionGrid>
           <QuickAction icon={<Users size={18} />} label="Members" to="/leader/members" />
@@ -169,8 +187,10 @@ function LeaderContent() {
           />
         </QuickActionGrid>
       </section>
+      </Rise>
 
       {/* ---------------- Metrics ---------------- */}
+      <Rise delay={160}>
       <section className="mt-4">
         {overview.isLoading ? (
           <MetricRowSkeleton />
@@ -201,8 +221,10 @@ function LeaderContent() {
         </div>
         )}
       </section>
+      </Rise>
 
       {/* ---------------- Trend + payouts ---------------- */}
+      <Rise delay={220}>
       <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-[1.65fr_1fr] xl:gap-6">
         <Panel
           title="Performance trend"
@@ -216,14 +238,13 @@ function LeaderContent() {
           <div className="h-56 w-full sm:h-64">
             {trend.isLoading ? (
               <ChartSkeleton className="h-full" />
-            ) : months.every((m) => m.revenue === 0 && m.commission === 0) ? (
-              <ZeroState
-                icon={<TrendingUp size={26} />}
-                title="No performance data yet"
-                body="Once your team's first sales roll in, revenue and commission trends appear here."
-                cta={{ label: "Open analytics", to: "/leader/analytics" }}
-                accent="cyan"
+            ) : months.length === 0 || months.every((m) => m.revenue === 0 && m.commission === 0) ? (
+              <ZeroChart
+                labels={months.length ? months.map((m) => m.label) : ["", "", "", "", "", ""]}
+                caption="Baseline at ₹0 — your trend line starts with the first approved sale."
+                className="h-full w-full text-primary"
               />
+
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={months} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
@@ -284,8 +305,10 @@ function LeaderContent() {
           </Link>
         </Panel>
       </section>
+      </Rise>
 
       {/* ---------------- Leaderboard + activity ---------------- */}
+      <Rise delay={280}>
       <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
         <Panel
           title="Team leaderboard"
@@ -295,13 +318,8 @@ function LeaderContent() {
           {board.isLoading ? (
             <ListRowSkeleton rows={4} />
           ) : topMembers.length === 0 ? (
-            <ZeroState
-              icon={<Trophy size={26} />}
-              title="No rankings yet"
-              body="Members appear here as soon as they close their first sale."
-              cta={{ label: "View members", to: "/leader/members" }}
-              accent="gold"
-            />
+            <ZeroRanking rows={4} caption="Ranking slots are live — they fill as members close sales." />
+
           ) : (
             <ol className="flex flex-col gap-2.5">
               {topMembers.map((m) => (
@@ -337,12 +355,8 @@ function LeaderContent() {
           {sales.isLoading || comms.isLoading ? (
             <ListRowSkeleton rows={4} />
           ) : recentSales.length === 0 && recentComms.length === 0 ? (
-            <ZeroState
-              icon={<Activity size={26} />}
-              title="Nothing here yet"
-              body="Sales and commissions from your team show up here automatically, in real time."
-              accent="violet"
-            />
+            <ZeroActivity rows={3} caption="Activity streams in live — currently ₹0 across the last 12 days." />
+
           ) : (
             <ul className="flex flex-col gap-2.5">
               {recentSales.map((s) => (
@@ -385,8 +399,10 @@ function LeaderContent() {
           )}
         </Panel>
       </section>
+      </Rise>
 
       {/* ---------------- Members ---------------- */}
+      <Rise delay={340}>
       <section className="mt-5">
         <Panel
           title="Your members"
@@ -429,8 +445,10 @@ function LeaderContent() {
           )}
         </Panel>
       </section>
+      </Rise>
 
       {/* ---------------- Projects rail ---------------- */}
+      <Rise delay={400}>
       <section className="mt-5">
         <Panel
           title="Projects quick access"
@@ -465,8 +483,10 @@ function LeaderContent() {
           )}
         </Panel>
       </section>
+      </Rise>
 
       {/* ---------------- Member spotlight CTA ---------------- */}
+      <Rise delay={460}>
       <section className="mt-5">
         <Link
           to="/leader/analytics"
@@ -484,6 +504,7 @@ function LeaderContent() {
           <BarChart3 size={16} className="shrink-0 text-muted-foreground" />
         </Link>
       </section>
+      </Rise>
 
       {overview.isLoading && (
         <div role="status" className="glass-card fixed bottom-28 right-6 hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-soft)] md:inline-flex">
@@ -491,6 +512,32 @@ function LeaderContent() {
         </div>
       )}
     </DashboardShell>
+  );
+}
+
+function PulseChip({ label, value, tone }: { label: string; value: string; tone?: "live" }) {
+  return (
+    <span className="glass-card inline-flex shrink-0 snap-start items-center gap-2 rounded-full px-3.5 py-2 text-[11px] shadow-[var(--shadow-soft)]">
+      {tone === "live" && (
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-70 motion-safe:animate-ping" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
+        </span>
+      )}
+      <span className="font-medium uppercase tracking-[0.14em] text-muted-foreground">{label}</span>
+      <span className="font-semibold text-foreground">{value}</span>
+    </span>
+  );
+}
+
+function Rise({ delay = 0, children }: { delay?: number; children: React.ReactNode }) {
+  return (
+    <div
+      className="motion-safe:animate-fade-up"
+      style={{ animationDelay: `${delay}ms`, animationFillMode: "both" }}
+    >
+      {children}
+    </div>
   );
 }
 
