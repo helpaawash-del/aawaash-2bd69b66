@@ -6,7 +6,6 @@ import {
   Wallet,
   TrendingUp,
   Trophy,
-  Building2,
   IndianRupee,
   Bell,
   Leaf,
@@ -34,16 +33,13 @@ import { formatINR } from "@/components/aawash/dashboard-kit";
 import { greetingName, timeGreeting } from "@/lib/greeting";
 import {
   EcoShell,
-  ProgressRing,
   DarkPod,
   LightPod,
   AskBar,
-  SectionHead,
   DarkPanel,
   LightPanel,
   Orb,
   TimelineRow,
-  EcoProjectCard,
   EcoSkeleton,
   EcoRows,
   EcoZero,
@@ -119,11 +115,9 @@ function LeaderContent() {
   const topMembers = (board.data ?? []).slice(0, 5);
   const recentSales = (sales.data ?? []).slice(0, 4);
   const recentComms = (comms.data ?? []).slice(0, 3);
-  const projectList = (projects.data ?? []).slice(0, 3);
   const months = trend.data?.months ?? [];
 
   const target = Math.max(1, Number(o?.totalRevenue ?? 0) * 1.4 || 1);
-  const progressPct = o?.totalRevenue ? Math.round((Number(o.totalRevenue) / target) * 100) : 0;
   const activePct = o?.memberCount
     ? Math.round((memberList.filter((m) => m.status === "active").length / o.memberCount) * 100)
     : 0;

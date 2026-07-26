@@ -29,17 +29,13 @@ import { formatINR } from "@/components/aawash/dashboard-kit";
 import { greetingName, timeGreeting } from "@/lib/greeting";
 import {
   EcoShell,
-  ProgressRing,
   DarkPod,
   LightPod,
   AskBar,
-  SectionHead,
   DarkPanel,
   LightPanel,
   Orb,
   TimelineRow,
-  EcoProjectCard,
-  EcoSkeleton,
   EcoRows,
   EcoZero,
   Avatar,
@@ -105,10 +101,8 @@ function MemberContent() {
   const myScore = Number(board.data?.members.find((m) => m.id === myId)?.score ?? 0);
   const topBoard = (board.data?.members ?? []).slice(0, 5);
   const recent = (activity.data ?? []).slice(0, 5);
-  const projectList = (projects.data ?? []).slice(0, 3);
 
   const xpGoal = Math.max(100, Math.round(myScore * 1.6) || 100);
-  const progressPct = Math.min(100, Math.round((myScore / xpGoal) * 100));
 
   return (
     <EcoShell role="member" profile={profile}>
