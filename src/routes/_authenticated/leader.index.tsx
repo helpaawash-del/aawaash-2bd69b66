@@ -26,7 +26,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-import ecoBuilding from "@/assets/eco-hero-tower.png";
+import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
