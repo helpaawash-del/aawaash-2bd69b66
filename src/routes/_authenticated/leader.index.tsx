@@ -30,7 +30,7 @@ import ecoBuilding from "@/assets/eco-hero-building.png";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
-import { greetingName, timeGreeting } from "@/lib/greeting";
+import { greetingName } from "@/lib/greeting";
 import {
   EcoShell,
   EcoHeroGreeting,
