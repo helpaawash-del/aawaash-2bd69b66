@@ -152,15 +152,25 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
 }
 
 /** Deep-forest wave rail — full dock with brand, labelled nav and footer. */
-function WaveRail({ role }: { role: AppRole }) {
+function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const items = itemsForRole(role);
   const base = homePathForRole(role);
+  const { open, canExpand, expanded, toggle, section, setSection } = dock;
+
+  const pathMatch = items.find(
+    (item) =>
+      pathname === item.to || (item.activePrefix ? pathname.startsWith(item.activePrefix) : false),
+  );
+  const activeKey = pathMatch?.key ?? (section && items.some((i) => i.key === section) ? section : null);
 
   return (
     <aside
       aria-label="Primary navigation"
-      className="pointer-events-none fixed inset-y-0 left-0 z-40 block w-[64px] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:w-[76px] lg:w-[112px] xl:w-[124px]"
+      data-testid="dock"
+      data-dock-open={open ? "true" : "false"}
+      style={{ width: dock.width }}
+      className="pointer-events-none fixed inset-y-0 left-0 z-40 block transition-[width] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-[width] motion-reduce:transition-none"
     >
       <div className="pointer-events-auto relative h-full">
         <svg
@@ -175,12 +185,18 @@ function WaveRail({ role }: { role: AppRole }) {
           />
         </svg>
 
-        <div className="relative flex h-full flex-col items-center gap-3 py-5 pr-3 transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none lg:pr-6">
+        <div
+          className={`relative flex h-full flex-col items-center gap-3 py-5 transition-[padding] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
+            open ? "pr-7" : "pr-3"
+          }`}
+        >
           {/* Brand mark */}
           <Link
             to={base as never}
             aria-label="Aawaash home"
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-forest-foreground/15 text-forest-foreground backdrop-blur transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-forest-foreground/25 motion-reduce:transition-none lg:h-12 lg:w-12"
+            className={`grid shrink-0 place-items-center rounded-2xl bg-forest-foreground/15 text-forest-foreground backdrop-blur transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-forest-foreground/25 motion-reduce:transition-none ${
+              open ? "h-12 w-12" : "h-10 w-10"
+            }`}
           >
             <Leaf size={20} />
           </Link>
@@ -188,9 +204,7 @@ function WaveRail({ role }: { role: AppRole }) {
           <nav className="flex w-full flex-1 flex-col items-center justify-center gap-1.5">
             {items.map((item) => {
               const Icon = item.icon;
-              const active =
-                pathname === item.to ||
-                (item.activePrefix ? pathname.startsWith(item.activePrefix) : false);
+              const active = activeKey === item.key;
               return (
                 <Link
                   key={item.key}
@@ -200,14 +214,26 @@ function WaveRail({ role }: { role: AppRole }) {
                   title={item.description}
                   aria-label={item.label}
                   aria-current={active ? "page" : undefined}
-                  className={`group flex w-[44px] flex-col items-center gap-1 overflow-hidden rounded-[18px] px-1 py-2.5 text-[10px] font-semibold transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none sm:w-[54px] lg:w-[80px] lg:rounded-[22px] lg:py-3 ${
+                  data-dock-item={item.key}
+                  data-active={active ? "true" : "false"}
+                  onClick={() => setSection(item.key)}
+                  className={`group flex flex-col items-center gap-1 overflow-hidden rounded-[18px] px-1 py-2.5 text-[10px] font-semibold transition-[background-color,color,width,box-shadow,transform] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
+                    open ? "w-[84px] rounded-[22px] py-3" : "w-[46px]"
+                  } ${
                     active
                       ? "bg-surface text-primary shadow-[var(--shadow-float)]"
                       : "text-forest-foreground/70 hover:bg-white/10 hover:text-forest-foreground"
                   }`}
                 >
-                  <Icon size={19} className="shrink-0 transition-transform duration-500 group-hover:-translate-y-0.5 motion-reduce:transition-none" />
-                  <span className="max-h-0 w-full origin-top scale-95 truncate text-center opacity-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none lg:max-h-5 lg:scale-100 lg:opacity-100">
+                  <Icon
+                    size={19}
+                    className="shrink-0 transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-0.5 motion-reduce:transition-none"
+                  />
+                  <span
+                    className={`w-full origin-top truncate text-center transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
+                      open ? "max-h-5 scale-100 opacity-100" : "max-h-0 scale-95 opacity-0"
+                    }`}
+                  >
                     {item.label}
                   </span>
                 </Link>
@@ -215,11 +241,32 @@ function WaveRail({ role }: { role: AppRole }) {
             })}
           </nav>
 
+          {canExpand && (
+            <button
+              type="button"
+              onClick={toggle}
+              data-testid="dock-toggle"
+              aria-expanded={expanded}
+              aria-label={expanded ? "Collapse navigation" : "Expand navigation"}
+              title={expanded ? "Collapse navigation" : "Expand navigation"}
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl text-forest-foreground/70 transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/10 hover:text-forest-foreground motion-reduce:transition-none"
+            >
+              <ChevronRight
+                size={19}
+                className={`transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
+                  open ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+          )}
+
           <Link
             to={`${base}/profile` as never}
             aria-label="Account settings"
             title="Account settings"
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl text-forest-foreground/70 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-white/10 hover:text-forest-foreground motion-reduce:transition-none lg:h-12 lg:w-12"
+            className={`grid shrink-0 place-items-center rounded-2xl text-forest-foreground/70 transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/10 hover:text-forest-foreground motion-reduce:transition-none ${
+              open ? "h-12 w-12" : "h-10 w-10"
+            }`}
           >
             <Settings size={19} />
           </Link>
@@ -228,6 +275,7 @@ function WaveRail({ role }: { role: AppRole }) {
     </aside>
   );
 }
+
 
 
 /* ---------------------------- Atoms ---------------------------- */
