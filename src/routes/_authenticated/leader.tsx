@@ -502,6 +502,17 @@ function LeaderContent() {
   );
 }
 
+function Rise({ delay = 0, children }: { delay?: number; children: React.ReactNode }) {
+  return (
+    <div
+      className="motion-safe:animate-fade-up"
+      style={{ animationDelay: `${delay}ms`, animationFillMode: "both" }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function MiniKV({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[18px] border border-border/60 bg-surface/70 p-3">
