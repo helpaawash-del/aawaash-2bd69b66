@@ -305,15 +305,7 @@
   animation: hero-glow 7s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
-/* ---- Living hero scene (birds, leaves, waving neighbour) ---- */
-@keyframes scene-bird {
-  0%   { transform: translate3d(-6%, 6%, 0) scale(0.85); opacity: 0; }
-  12%  { opacity: 0.9; }
-  50%  { transform: translate3d(48%, -14%, 0) scale(1); }
-  88%  { opacity: 0.9; }
-  100% { transform: translate3d(104%, -2%, 0) scale(0.85); opacity: 0; }
-}
-
+/* ---- Living hero scene (roaming birds, leaves) ---- */
 @keyframes scene-wing {
   0%, 100% { transform: scaleY(1); }
   50%      { transform: scaleY(0.35); }
@@ -326,14 +318,41 @@
   100% { transform: translate3d(-26px, 108%, 0) rotate(220deg); opacity: 0; }
 }
 
-@keyframes scene-wave {
-  0%, 100% { transform: rotate(-12deg); }
-  50%      { transform: rotate(22deg); }
+/* Free-roaming flight paths across the whole page.
+   Each path returns to the building hub (--hub-x / --hub-y) roughly
+   every ~7s and lingers there for ~1.5s before heading off again. */
+@keyframes bird-roam-a {
+  0%   { transform: translate3d(-12vw, 18vh, 0) scaleX(1); }
+  22%  { transform: translate3d(var(--hub-x), var(--hub-y), 0) scaleX(1); }
+  29%  { transform: translate3d(calc(var(--hub-x) + 5vw), calc(var(--hub-y) - 3vh), 0) scaleX(1); }
+  50%  { transform: translate3d(88vw, 8vh, 0) scaleX(1); }
+  55%  { transform: translate3d(94vw, 30vh, 0) scaleX(-1); }
+  72%  { transform: translate3d(var(--hub-x), calc(var(--hub-y) + 2vh), 0) scaleX(-1); }
+  79%  { transform: translate3d(calc(var(--hub-x) - 6vw), var(--hub-y), 0) scaleX(-1); }
+  100% { transform: translate3d(-12vw, 18vh, 0) scaleX(-1); }
 }
 
-@utility animate-scene-bird {
-  animation: scene-bird 11s linear infinite;
-  will-change: transform, opacity;
+@keyframes bird-roam-b {
+  0%   { transform: translate3d(96vw, 62vh, 0) scaleX(-1); }
+  18%  { transform: translate3d(58vw, 78vh, 0) scaleX(-1); }
+  33%  { transform: translate3d(var(--hub-x), calc(var(--hub-y) + 6vh), 0) scaleX(-1); }
+  40%  { transform: translate3d(calc(var(--hub-x) - 4vw), calc(var(--hub-y) + 2vh), 0) scaleX(-1); }
+  62%  { transform: translate3d(-10vw, 34vh, 0) scaleX(-1); }
+  68%  { transform: translate3d(4vw, 12vh, 0) scaleX(1); }
+  85%  { transform: translate3d(var(--hub-x), calc(var(--hub-y) - 4vh), 0) scaleX(1); }
+  92%  { transform: translate3d(calc(var(--hub-x) + 8vw), calc(var(--hub-y) - 8vh), 0) scaleX(1); }
+  100% { transform: translate3d(96vw, 62vh, 0) scaleX(1); }
+}
+
+@keyframes bird-roam-c {
+  0%   { transform: translate3d(42vw, -8vh, 0) scaleX(1); }
+  16%  { transform: translate3d(80vw, 46vh, 0) scaleX(1); }
+  30%  { transform: translate3d(var(--hub-x), calc(var(--hub-y) - 8vh), 0) scaleX(-1); }
+  37%  { transform: translate3d(calc(var(--hub-x) - 3vw), calc(var(--hub-y) - 2vh), 0) scaleX(-1); }
+  58%  { transform: translate3d(6vw, 86vh, 0) scaleX(-1); }
+  74%  { transform: translate3d(var(--hub-x), calc(var(--hub-y) + 10vh), 0) scaleX(1); }
+  81%  { transform: translate3d(calc(var(--hub-x) + 4vw), calc(var(--hub-y) + 4vh), 0) scaleX(1); }
+  100% { transform: translate3d(42vw, -8vh, 0) scaleX(1); }
 }
 
 @utility animate-scene-wing {
@@ -346,10 +365,21 @@
   will-change: transform, opacity;
 }
 
-@utility animate-scene-wave {
-  animation: scene-wave 0.9s ease-in-out infinite;
-  transform-origin: bottom center;
+@utility animate-bird-roam-a {
+  animation: bird-roam-a 22s ease-in-out infinite;
+  will-change: transform;
 }
+
+@utility animate-bird-roam-b {
+  animation: bird-roam-b 26s ease-in-out infinite;
+  will-change: transform;
+}
+
+@utility animate-bird-roam-c {
+  animation: bird-roam-c 30s ease-in-out infinite;
+  will-change: transform;
+}
+
 
 
 
