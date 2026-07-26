@@ -219,14 +219,13 @@ function LeaderContent() {
           <div className="h-56 w-full sm:h-64">
             {trend.isLoading ? (
               <ChartSkeleton className="h-full" />
-            ) : months.every((m) => m.revenue === 0 && m.commission === 0) ? (
-              <ZeroState
-                icon={<TrendingUp size={26} />}
-                title="No performance data yet"
-                body="Once your team's first sales roll in, revenue and commission trends appear here."
-                cta={{ label: "Open analytics", to: "/leader/analytics" }}
-                accent="cyan"
+            ) : months.length === 0 || months.every((m) => m.revenue === 0 && m.commission === 0) ? (
+              <ZeroChart
+                labels={months.length ? months.map((m) => m.label) : ["", "", "", "", "", ""]}
+                caption="Baseline at ₹0 — your trend line starts with the first approved sale."
+                className="h-full w-full text-primary"
               />
+
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={months} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
