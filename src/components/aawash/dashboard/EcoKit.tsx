@@ -52,6 +52,8 @@ export function EcoShell({
   profile: AawashProfile | null;
   children: React.ReactNode;
 }) {
+  const dock = useDock();
+
   return (
     <div className="relative min-h-screen overflow-x-clip bg-surface-warm">
       {/* ambient light */}
@@ -61,9 +63,13 @@ export function EcoShell({
         <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
       </div>
 
-      <WaveRail role={role} />
+      <WaveRail role={role} dock={dock} />
 
-      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col pl-[72px] pr-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 sm:max-w-xl sm:pl-[88px] sm:pr-6 md:max-w-3xl lg:max-w-6xl lg:pb-24 lg:pl-32 lg:pr-10 xl:max-w-7xl xl:pl-36 xl:pr-14">
+      <div
+        style={{ paddingLeft: dock.width + 10 }}
+        data-testid="dock-content"
+        className="mx-auto flex min-h-screen w-full max-w-md flex-col pr-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 transition-[padding-left] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:max-w-xl sm:pr-6 md:max-w-3xl lg:max-w-6xl lg:pb-24 lg:pr-10 xl:max-w-7xl xl:pr-14"
+      >
         <WelcomeHeader role={role} profile={profile} />
         <main id="main-content" className="mt-5 flex-1">
           {children}
