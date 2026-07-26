@@ -133,22 +133,20 @@ function LeaderContent() {
       {/* ---------------- Focus hero ---------------- */}
       <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
         <div className="min-w-0">
-          <p className="text-[12px] font-light text-muted-foreground">Today's Focus</p>
-          <h1 className="mt-0.5 text-[26px] font-extrabold leading-[1.08] tracking-[-0.03em] text-foreground sm:text-[32px]">
-            {timeGreeting()}, {displayName}.
-            <span className="block text-primary">Lead Team {o?.teamLetter ?? "—"}.</span>
+          <h1 className="font-brand text-[20px] font-semibold leading-[1.15] tracking-[-0.015em] text-foreground sm:text-[24px]">
+            {timeGreeting()}, <span className="text-primary">{displayName}</span>
           </h1>
 
-          <div className="mt-5 flex items-center gap-4">
-            {overview.isLoading ? (
-              <EcoSkeleton className="h-[132px] w-[132px] rounded-full" />
-            ) : (
-              <ProgressRing
-                value={progressPct}
-                label="Progress"
-                caption={`${o?.salesCount ?? 0} sales closed`}
-              />
-            )}
+          <div className="mt-4 flex items-center gap-4">
+            <img
+              src={ecoBuilding}
+              alt=""
+              aria-hidden
+              loading="lazy"
+              width={1024}
+              height={1024}
+              className="h-[104px] w-[104px] shrink-0 object-contain drop-shadow-[0_14px_24px_rgba(16,50,36,0.18)] sm:h-[124px] sm:w-[124px]"
+            />
             <div className="hidden min-w-0 flex-1 sm:block">
               <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Team revenue
@@ -166,12 +164,13 @@ function LeaderContent() {
 
         <div className="grid content-start gap-3">
           <DarkPod
-            icon={<Leaf size={17} />}
-            label="Team health"
-            value={`${activePct}%`}
-            hint={activePct >= 70 ? "Excellent" : activePct > 0 ? "Building" : "—"}
-            to="/leader/members"
+            icon={<TrendingUp size={17} />}
+            label="Total sales"
+            value={formatINR(o?.totalRevenue ?? 0, { compact: true })}
+            hint={`${o?.salesCount ?? 0} closed`}
+            to="/leader/analytics"
           />
+
           <LightPod
             icon={<Droplet size={15} />}
             label="Wallet"
