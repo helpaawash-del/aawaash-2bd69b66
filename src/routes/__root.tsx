@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { BottomNav, BottomNavSkeleton, PublicBottomNav } from "@/components/aawash/BottomNav";
+import { EcoDock } from "@/components/aawash/dashboard/EcoDock";
 import { useSession } from "@/hooks/useSession";
 
 function NotFoundComponent() {
