@@ -25,6 +25,8 @@ import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedMemberIndexRouteImport } from './routes/_authenticated/member.index'
+import { Route as AuthenticatedLeaderIndexRouteImport } from './routes/_authenticated/leader.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedSalesWorkflowNewRouteImport } from './routes/_authenticated/sales-workflow.new'
@@ -162,6 +164,18 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMemberIndexRoute =
+  AuthenticatedMemberIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedMemberRoute,
+  } as any)
+const AuthenticatedLeaderIndexRoute =
+  AuthenticatedLeaderIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedLeaderRoute,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -549,6 +563,8 @@ export interface FileRoutesByFullPath {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/leader/': typeof AuthenticatedLeaderIndexRoute
+  '/member/': typeof AuthenticatedMemberIndexRoute
   '/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
   '/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
   '/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
@@ -573,8 +589,6 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/crm': typeof AuthenticatedCrmRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/leader': typeof AuthenticatedLeaderRouteWithChildren
-  '/member': typeof AuthenticatedMemberRouteWithChildren
   '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -620,6 +634,8 @@ export interface FileRoutesByTo {
   '/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/leader': typeof AuthenticatedLeaderIndexRoute
+  '/member': typeof AuthenticatedMemberIndexRoute
   '/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
   '/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
   '/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
@@ -695,6 +711,8 @@ export interface FileRoutesById {
   '/_authenticated/sales-workflow/new': typeof AuthenticatedSalesWorkflowNewRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/leader/': typeof AuthenticatedLeaderIndexRoute
+  '/_authenticated/member/': typeof AuthenticatedMemberIndexRoute
   '/_authenticated/admin/cms/brand': typeof AuthenticatedAdminCmsBrandRoute
   '/_authenticated/admin/cms/global': typeof AuthenticatedAdminCmsGlobalRoute
   '/_authenticated/admin/cms/media': typeof AuthenticatedAdminCmsMediaRoute
@@ -770,6 +788,8 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/api/public/health'
     | '/admin/'
+    | '/leader/'
+    | '/member/'
     | '/admin/cms/brand'
     | '/admin/cms/global'
     | '/admin/cms/media'
@@ -794,8 +814,6 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/crm'
     | '/dashboard'
-    | '/leader'
-    | '/member'
     | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
@@ -841,6 +859,8 @@ export interface FileRouteTypes {
     | '/sales-workflow/new'
     | '/api/public/health'
     | '/admin'
+    | '/leader'
+    | '/member'
     | '/admin/cms/brand'
     | '/admin/cms/global'
     | '/admin/cms/media'
@@ -915,6 +935,8 @@ export interface FileRouteTypes {
     | '/_authenticated/sales-workflow/new'
     | '/api/public/health'
     | '/_authenticated/admin/'
+    | '/_authenticated/leader/'
+    | '/_authenticated/member/'
     | '/_authenticated/admin/cms/brand'
     | '/_authenticated/admin/cms/global'
     | '/_authenticated/admin/cms/media'
@@ -1058,6 +1080,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/member/': {
+      id: '/_authenticated/member/'
+      path: '/'
+      fullPath: '/member/'
+      preLoaderRoute: typeof AuthenticatedMemberIndexRouteImport
+      parentRoute: typeof AuthenticatedMemberRoute
+    }
+    '/_authenticated/leader/': {
+      id: '/_authenticated/leader/'
+      path: '/'
+      fullPath: '/leader/'
+      preLoaderRoute: typeof AuthenticatedLeaderIndexRouteImport
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -1618,6 +1654,7 @@ interface AuthenticatedLeaderRouteChildren {
   AuthenticatedLeaderProjectsRoute: typeof AuthenticatedLeaderProjectsRoute
   AuthenticatedLeaderSettingsRoute: typeof AuthenticatedLeaderSettingsRoute
   AuthenticatedLeaderWithdrawalsRoute: typeof AuthenticatedLeaderWithdrawalsRoute
+  AuthenticatedLeaderIndexRoute: typeof AuthenticatedLeaderIndexRoute
 }
 
 const AuthenticatedLeaderRouteChildren: AuthenticatedLeaderRouteChildren = {
@@ -1629,6 +1666,7 @@ const AuthenticatedLeaderRouteChildren: AuthenticatedLeaderRouteChildren = {
   AuthenticatedLeaderProjectsRoute: AuthenticatedLeaderProjectsRoute,
   AuthenticatedLeaderSettingsRoute: AuthenticatedLeaderSettingsRoute,
   AuthenticatedLeaderWithdrawalsRoute: AuthenticatedLeaderWithdrawalsRoute,
+  AuthenticatedLeaderIndexRoute: AuthenticatedLeaderIndexRoute,
 }
 
 const AuthenticatedLeaderRouteWithChildren =
@@ -1660,6 +1698,7 @@ interface AuthenticatedMemberRouteChildren {
   AuthenticatedMemberTipsRoute: typeof AuthenticatedMemberTipsRoute
   AuthenticatedMemberWalletRoute: typeof AuthenticatedMemberWalletRoute
   AuthenticatedMemberWithdrawalsRoute: typeof AuthenticatedMemberWithdrawalsRoute
+  AuthenticatedMemberIndexRoute: typeof AuthenticatedMemberIndexRoute
 }
 
 const AuthenticatedMemberRouteChildren: AuthenticatedMemberRouteChildren = {
@@ -1674,6 +1713,7 @@ const AuthenticatedMemberRouteChildren: AuthenticatedMemberRouteChildren = {
   AuthenticatedMemberTipsRoute: AuthenticatedMemberTipsRoute,
   AuthenticatedMemberWalletRoute: AuthenticatedMemberWalletRoute,
   AuthenticatedMemberWithdrawalsRoute: AuthenticatedMemberWithdrawalsRoute,
+  AuthenticatedMemberIndexRoute: AuthenticatedMemberIndexRoute,
 }
 
 const AuthenticatedMemberRouteWithChildren =

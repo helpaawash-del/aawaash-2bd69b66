@@ -45,6 +45,8 @@ export function useSession(): SessionState {
     let cancelled = false;
     let profileChannel: ReturnType<typeof supabase.channel> | null = null;
     let pollTimer: number | undefined;
+    let onFocus: (() => void) | null = null;
+    const channelTopic = `self-profile-${Math.random().toString(36).slice(2)}`;
 
     async function refreshProfile(userId: string) {
       const { data: profile } = await supabase
@@ -61,7 +63,7 @@ export function useSession(): SessionState {
     function watchProfile(userId: string) {
       if (profileChannel) return;
       profileChannel = supabase
-        .channel(`self-profile-${userId}`)
+        .channel(channelTopic)
         .on(
           "postgres_changes" as never,
           { event: "UPDATE", schema: "public", table: "profiles", filter: `id=eq.${userId}` } as never,
@@ -69,8 +71,10 @@ export function useSession(): SessionState {
         )
         .subscribe();
       pollTimer = window.setInterval(() => void refreshProfile(userId), 20_000);
-      window.addEventListener("focus", () => void refreshProfile(userId));
+      onFocus = () => void refreshProfile(userId);
+      window.addEventListener("focus", onFocus);
     }
+
 
 
     async function loadProfileAndRole(userId: string) {
@@ -132,9 +136,11 @@ export function useSession(): SessionState {
     return () => {
       cancelled = true;
       if (pollTimer) window.clearInterval(pollTimer);
+      if (onFocus) window.removeEventListener("focus", onFocus);
       if (profileChannel) supabase.removeChannel(profileChannel);
       sub.subscription.unsubscribe();
     };
+
   }, []);
 
   return state;
