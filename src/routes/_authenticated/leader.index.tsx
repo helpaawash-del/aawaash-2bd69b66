@@ -65,7 +65,7 @@ import {
 } from "@/lib/leader.functions";
 import { listMyTeamMembers } from "@/lib/admin.functions";
 
-export const Route = createFileRoute("/_authenticated/leader")({
+export const Route = createFileRoute("/_authenticated/leader/")({
   component: LeaderHome,
   head: () => ({
     meta: [

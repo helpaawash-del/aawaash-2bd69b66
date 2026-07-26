@@ -47,7 +47,7 @@ import {
 } from "@/lib/member.functions";
 import { listMyNotifications } from "@/lib/leader.functions";
 
-export const Route = createFileRoute("/_authenticated/member")({
+export const Route = createFileRoute("/_authenticated/member/")({
   component: MemberHome,
   head: () => ({
     meta: [
