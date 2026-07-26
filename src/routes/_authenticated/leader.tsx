@@ -93,6 +93,7 @@ function LeaderHome() {
 
 function LeaderContent() {
   const { profile } = useSession();
+  const firstName = (profile?.full_name ?? "").trim().split(/\s+/)[0] || "";
 
   const overviewFn = useServerFn(getLeaderOverview);
   const trendFn = useServerFn(getLeaderTrend);
@@ -132,7 +133,7 @@ function LeaderContent() {
           </span>
         }
         greeting={greeting()}
-        name={`${profile?.full_name?.split(" ")[0] || "Leader"}.`}
+        name={firstName ? `${firstName}.` : "…"}
         caption={`Here's how Team ${o?.teamLetter ?? "—"} is performing this month.`}
       />
 
