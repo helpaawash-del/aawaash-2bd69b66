@@ -261,7 +261,7 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
               aria-expanded={expanded}
               aria-label={expanded ? "Collapse navigation" : "Expand navigation"}
               title={expanded ? "Collapse navigation" : "Expand navigation"}
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl text-forest-foreground/70 transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/10 hover:text-forest-foreground motion-reduce:transition-none"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl text-forest-foreground/70 transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/10 hover:text-forest-foreground outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/70 motion-reduce:transition-none"
             >
               <ChevronRight
                 size={19}
@@ -276,7 +276,7 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
             to={`${base}/profile` as never}
             aria-label="Account settings"
             title="Account settings"
-            className={`grid shrink-0 place-items-center rounded-2xl text-forest-foreground/70 transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/10 hover:text-forest-foreground motion-reduce:transition-none ${
+            className={`grid shrink-0 place-items-center rounded-2xl text-forest-foreground/70 transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/10 hover:text-forest-foreground outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/70 motion-reduce:transition-none ${
               open ? "h-12 w-12" : "h-10 w-10"
             }`}
           >
