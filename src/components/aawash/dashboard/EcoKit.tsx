@@ -83,8 +83,8 @@ export function EcoShell({
           className="mx-auto flex min-h-screen w-full max-w-md flex-col pr-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 transition-[padding-left] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:max-w-xl sm:pr-6 md:max-w-3xl lg:max-w-6xl lg:pb-24 lg:pr-10 xl:max-w-7xl xl:pr-14"
         >
           <WelcomeHeader role={role} profile={profile} />
-          <WelcomeBanner name={firstName(profile?.full_name)} welcome={welcome} />
-          <main id="main-content" className="mt-5 flex-1">
+          <main id="main-content" className="mt-9 flex-1 sm:mt-11">
+
             {children}
           </main>
         </div>
