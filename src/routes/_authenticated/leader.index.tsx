@@ -133,10 +133,14 @@ function LeaderContent() {
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
 
-          <div className="relative mt-5 w-full overflow-hidden rounded-[28px] bg-gradient-to-br from-primary/8 via-transparent to-leaf/10 ring-1 ring-border/50">
+          <div className="relative mt-7 w-full overflow-hidden rounded-[28px] bg-gradient-to-br from-primary/8 via-transparent to-leaf/10 ring-1 ring-border/50">
             <div
               aria-hidden
               className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl"
+            />
+            <div
+              aria-hidden
+              className="animate-hero-glow pointer-events-none absolute bottom-5 left-1/2 h-8 w-[58%] rounded-[50%] bg-forest/25 blur-2xl motion-reduce:animate-none"
             />
             <img
               src={ecoBuilding}
@@ -145,9 +149,10 @@ function LeaderContent() {
               loading="lazy"
               width={1024}
               height={1024}
-              className="relative mx-auto block h-auto w-full max-w-[420px] object-contain drop-shadow-[0_22px_36px_rgba(16,50,36,0.16)]"
+              className="animate-hero-levitate relative mx-auto block h-auto w-full max-w-[420px] object-contain drop-shadow-[0_22px_36px_rgba(16,50,36,0.16)] motion-reduce:animate-none"
             />
           </div>
+
         </div>
 
         <div className="grid content-start gap-3">
