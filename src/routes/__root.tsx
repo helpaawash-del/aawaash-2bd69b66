@@ -148,8 +148,13 @@ function RootComponent() {
   const router = useRouter();
   const { role, loading: sessionLoading } = useSession();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // Leader/member dashboards run their own forest dock (left rail on the
+  // homepage, bottom dock on sub-pages) — the legacy global dock is hidden there.
+  const isEcoDashboard = pathname.startsWith("/leader") || pathname.startsWith("/member");
+  const ecoHome = pathname === "/leader" || pathname === "/member";
   // Project detail pages use their own contextual dock; sign-in surfaces show none.
   const hideGlobalDock =
+    isEcoDashboard ||
     /^\/projects\/[^/]+$/.test(pathname) ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/admin-login") ||
