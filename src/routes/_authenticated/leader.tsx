@@ -132,7 +132,7 @@ function LeaderContent() {
           </span>
         }
         greeting={greeting()}
-        name={`${profile?.full_name?.split(" ")[0] || "Leader"}.`}
+        name={firstName ? `${firstName}.` : "…"}
         caption={`Here's how Team ${o?.teamLetter ?? "—"} is performing this month.`}
       />
 

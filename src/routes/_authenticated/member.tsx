@@ -112,7 +112,7 @@ function MemberContent() {
           </span>
         }
         greeting={greeting()}
-        name={`${profile?.full_name?.split(" ")[0] || "Member"}.`}
+        name={firstName ? `${firstName}.` : "…"}
         caption="A calm space to track every sale, referral, and rupee earned."
         right={
           <div className="glass-card flex items-center gap-3 rounded-[22px] p-3 shadow-[var(--shadow-soft)]">
