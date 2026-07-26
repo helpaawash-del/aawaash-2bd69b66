@@ -63,10 +63,13 @@ export function DashboardShell({
     <div className="relative min-h-screen">
       <AmbientBackground />
 
-      <FloatingSideRail role={role} />
+      {role === "super_admin" && <FloatingSideRail role={role} />}
 
-      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-32 pt-6 sm:max-w-lg md:max-w-3xl md:px-10 md:pb-32 lg:max-w-6xl lg:px-12 lg:pl-28 xl:max-w-7xl xl:px-16 xl:pl-32">
-
+      <div
+        className={`mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-32 pt-6 sm:max-w-lg md:max-w-3xl md:px-10 md:pb-32 lg:max-w-6xl lg:px-12 xl:max-w-7xl xl:px-16 ${
+          role === "super_admin" ? "lg:pl-28 xl:pl-32" : ""
+        }`}
+      >
         <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:gap-4">
           <BrandMark size="sm" />
 
@@ -132,8 +135,8 @@ export function DashboardShell({
                 <AlertDialogHeader>
                   <AlertDialogTitle>Sign out of Aawash?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Your session will end and you'll be returned to the sign-in
-                    screen. You can sign back in anytime with your Login ID.
+                    Your session will end and you'll be returned to the sign-in screen. You can sign
+                    back in anytime with your Login ID.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -150,7 +153,9 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main id="main-content" className="mt-8 flex-1 md:mt-9 lg:mt-10">{children}</main>
+        <main id="main-content" className="mt-8 flex-1 md:mt-9 lg:mt-10">
+          {children}
+        </main>
       </div>
     </div>
   );
@@ -168,7 +173,8 @@ function FloatingSideRail({ role }: { role: AppRole }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const items = itemsForRole(role);
   const activeIndex = items.findIndex(
-    ({ to, activePrefix }) => pathname === to || (activePrefix ? pathname.startsWith(activePrefix) : false),
+    ({ to, activePrefix }) =>
+      pathname === to || (activePrefix ? pathname.startsWith(activePrefix) : false),
   );
   const cell = 52; // px per item (h-11 + gap)
 
@@ -178,9 +184,7 @@ function FloatingSideRail({ role }: { role: AppRole }) {
       className="pointer-events-none fixed left-4 top-1/2 z-40 hidden -translate-y-1/2 lg:block"
     >
       <div className="group pointer-events-auto relative">
-        <nav
-          className="glass-card relative flex w-16 flex-col gap-1 rounded-[28px] p-2 shadow-[var(--shadow-float)] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:w-[232px]"
-        >
+        <nav className="glass-card relative flex w-16 flex-col gap-1 rounded-[28px] p-2 shadow-[var(--shadow-float)] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:w-[232px]">
           {/* animated active indicator */}
           {activeIndex >= 0 && (
             <span
@@ -217,4 +221,3 @@ function FloatingSideRail({ role }: { role: AppRole }) {
     </aside>
   );
 }
-

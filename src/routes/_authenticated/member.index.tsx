@@ -22,23 +22,20 @@ import {
   Zap,
 } from "lucide-react";
 
+import ecoBuilding from "@/assets/eco-hero-building.png";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
 import { greetingName, timeGreeting } from "@/lib/greeting";
 import {
   EcoShell,
-  ProgressRing,
   DarkPod,
   LightPod,
   AskBar,
-  SectionHead,
   DarkPanel,
   LightPanel,
   Orb,
   TimelineRow,
-  EcoProjectCard,
-  EcoSkeleton,
   EcoRows,
   EcoZero,
   Avatar,
@@ -104,32 +101,28 @@ function MemberContent() {
   const myScore = Number(board.data?.members.find((m) => m.id === myId)?.score ?? 0);
   const topBoard = (board.data?.members ?? []).slice(0, 5);
   const recent = (activity.data ?? []).slice(0, 5);
-  const projectList = (projects.data ?? []).slice(0, 3);
 
   const xpGoal = Math.max(100, Math.round(myScore * 1.6) || 100);
-  const progressPct = Math.min(100, Math.round((myScore / xpGoal) * 100));
 
   return (
     <EcoShell role="member" profile={profile}>
       {/* ---------------- Focus hero ---------------- */}
       <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
         <div className="min-w-0">
-          <p className="text-[12px] font-light text-muted-foreground">Today's Focus</p>
-          <h1 className="mt-0.5 text-[26px] font-extrabold leading-[1.08] tracking-[-0.03em] text-foreground sm:text-[32px]">
-            {timeGreeting()}, {displayName}.
-            <span className="block text-primary">Close the next one.</span>
+          <h1 className="font-brand text-[20px] font-semibold leading-[1.15] tracking-[-0.015em] text-foreground sm:text-[24px]">
+            {timeGreeting()}, <span className="text-primary">{displayName}</span>
           </h1>
 
-          <div className="mt-5 flex items-center gap-4">
-            {overview.isLoading ? (
-              <EcoSkeleton className="h-[132px] w-[132px] rounded-full" />
-            ) : (
-              <ProgressRing
-                value={progressPct}
-                label="Progress"
-                caption={rank ? `Rank #${rank}` : "Unranked"}
-              />
-            )}
+          <div className="mt-4 flex items-center gap-4">
+            <img
+              src={ecoBuilding}
+              alt=""
+              aria-hidden
+              loading="lazy"
+              width={1024}
+              height={1024}
+              className="h-[104px] w-[104px] shrink-0 object-contain drop-shadow-[0_14px_24px_rgba(16,50,36,0.18)] sm:h-[124px] sm:w-[124px]"
+            />
             <div className="hidden min-w-0 flex-1 sm:block">
               <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Total sales
@@ -147,12 +140,13 @@ function MemberContent() {
 
         <div className="grid content-start gap-3">
           <DarkPod
-            icon={<Leaf size={17} />}
-            label="Today"
-            value={formatINR(stats?.todaySalesValue ?? 0, { compact: true })}
-            hint={`${stats?.todaySalesCount ?? 0} deals`}
+            icon={<TrendingUp size={17} />}
+            label="Total sales"
+            value={formatINR(stats?.totalSales ?? 0, { compact: true })}
+            hint={`${stats?.salesCount ?? 0} deals`}
             to="/member/sales"
           />
+
           <LightPod
             icon={<Droplet size={15} />}
             label="Wallet"
@@ -181,47 +175,24 @@ function MemberContent() {
           value={String(stats?.referralCount ?? 0)}
           to="/member/referrals"
         />
-        <LightPod icon={<Handshake size={15} />} label="Tips" value={String(stats?.tipCount ?? 0)} to="/member/tips" />
+        <LightPod
+          icon={<Handshake size={15} />}
+          label="Tips"
+          value={String(stats?.tipCount ?? 0)}
+          to="/member/tips"
+        />
         <LightPod
           icon={<Wallet size={15} />}
           label="Withdraw"
           value={formatINR(stats?.pendingCommission ?? 0, { compact: true })}
           to="/member/withdrawals"
         />
-        <LightPod icon={<Bell size={15} />} label="Alerts" value={String(unread)} to="/member/notifications" />
-      </section>
-
-      {/* ---------------- Projects rail ---------------- */}
-      <section className="mt-7">
-        <SectionHead title="Active Projects" to="/projects" />
-        {projects.isLoading ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {[0, 1, 2].map((i) => (
-              <EcoSkeleton key={i} className="h-[188px]" />
-            ))}
-          </div>
-        ) : projectList.length === 0 ? (
-          <EcoZero
-            icon={<Building2 size={22} />}
-            title="No projects yet"
-            body="Published residences appear here so you can start selling right away."
-            cta={{ label: "Browse projects", to: "/projects" }}
-          />
-        ) : (
-          <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
-            {projectList.map((p) => (
-              <div key={p.id} className="w-[62%] shrink-0 snap-start sm:w-auto">
-                <EcoProjectCard
-                  to="/projects"
-                  name={p.name}
-                  meta={p.location}
-                  hue={p.hero_hue}
-                  pct={p.total_units ? Math.round((p.sold_units / p.total_units) * 100) : 0}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <LightPod
+          icon={<Bell size={15} />}
+          label="Alerts"
+          value={String(unread)}
+          to="/member/notifications"
+        />
       </section>
 
       {/* ---------------- Overview + activity ---------------- */}
@@ -305,18 +276,35 @@ function MemberContent() {
                   {team.letter}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-[13.5px] font-bold text-foreground">{team.name || "—"}</div>
-                  <div className="text-[11px] font-light text-muted-foreground">Team code · {team.letter}</div>
+                  <div className="truncate text-[13.5px] font-bold text-foreground">
+                    {team.name || "—"}
+                  </div>
+                  <div className="text-[11px] font-light text-muted-foreground">
+                    Team code · {team.letter}
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2.5">
-                <KV icon={<Users size={11} />} label="Leader" value={team.leader?.full_name || o?.leaderName || "—"} />
-                <KV icon={<Phone size={11} />} label="Contact" value={team.leader?.mobile_number || "—"} mono />
+                <KV
+                  icon={<Users size={11} />}
+                  label="Leader"
+                  value={team.leader?.full_name || o?.leaderName || "—"}
+                />
+                <KV
+                  icon={<Phone size={11} />}
+                  label="Contact"
+                  value={team.leader?.mobile_number || "—"}
+                  mono
+                />
                 <KV icon={<Trophy size={11} />} label="Rank" value={rank ? `#${rank}` : "—"} />
                 <KV
                   icon={<Calendar size={11} />}
                   label="Joined"
-                  value={o?.profile?.created_at ? new Date(o.profile.created_at).toLocaleDateString("en-IN") : "—"}
+                  value={
+                    o?.profile?.created_at
+                      ? new Date(o.profile.created_at).toLocaleDateString("en-IN")
+                      : "—"
+                  }
                 />
               </div>
             </div>
@@ -332,7 +320,11 @@ function MemberContent() {
           }
         >
           <div className="grid grid-cols-2 gap-2.5">
-            <KV icon={<Wallet size={11} />} label="Available" value={formatINR(profile?.wallet_balance)} />
+            <KV
+              icon={<Wallet size={11} />}
+              label="Available"
+              value={formatINR(profile?.wallet_balance)}
+            />
             <KV
               icon={<IndianRupee size={11} />}
               label="Pending"
@@ -400,14 +392,18 @@ function MemberContent() {
                     <Avatar name={m.full_name} size={34} />
                     <div className="min-w-0 flex-1">
                       <div className="flex min-w-0 items-center gap-1.5">
-                        <span className="truncate text-[13px] font-semibold text-foreground">{m.full_name}</span>
+                        <span className="truncate text-[13px] font-semibold text-foreground">
+                          {m.full_name}
+                        </span>
                         {me && (
                           <span className="shrink-0 rounded-full bg-forest px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-forest-foreground">
                             You
                           </span>
                         )}
                       </div>
-                      <div className="text-[10.5px] font-light text-muted-foreground">Score {m.score}</div>
+                      <div className="text-[10.5px] font-light text-muted-foreground">
+                        Score {m.score}
+                      </div>
                     </div>
                     <div className="shrink-0 text-[12.5px] font-bold text-foreground">
                       {formatINR(m.total_sales, { compact: true })}
@@ -431,7 +427,9 @@ function MemberContent() {
           </span>
           <div className="min-w-0 flex-1">
             <div className="text-[13.5px] font-bold text-foreground">Explore projects</div>
-            <div className="truncate text-[11px] font-light text-muted-foreground">Live inventory available to sell.</div>
+            <div className="truncate text-[11px] font-light text-muted-foreground">
+              Live inventory available to sell.
+            </div>
           </div>
           <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
         </Link>
@@ -444,7 +442,9 @@ function MemberContent() {
           </span>
           <div className="min-w-0 flex-1">
             <div className="text-[13.5px] font-bold text-foreground">My analytics</div>
-            <div className="truncate text-[11px] font-light text-muted-foreground">Trends, funnel and earnings history.</div>
+            <div className="truncate text-[11px] font-light text-muted-foreground">
+              Trends, funnel and earnings history.
+            </div>
           </div>
           <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
         </Link>
@@ -499,7 +499,9 @@ function KV({
       <div className="inline-flex items-center gap-1 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         {icon} {label}
       </div>
-      <div className={`mt-1 truncate text-[14px] font-bold tracking-[-0.01em] text-foreground ${mono ? "font-mono" : ""}`}>
+      <div
+        className={`mt-1 truncate text-[14px] font-bold tracking-[-0.01em] text-foreground ${mono ? "font-mono" : ""}`}
+      >
         {value}
       </div>
     </div>

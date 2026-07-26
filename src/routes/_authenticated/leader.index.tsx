@@ -6,7 +6,6 @@ import {
   Wallet,
   TrendingUp,
   Trophy,
-  Building2,
   IndianRupee,
   Bell,
   Leaf,
@@ -27,22 +26,20 @@ import {
   CartesianGrid,
 } from "recharts";
 
+import ecoBuilding from "@/assets/eco-hero-building.png";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
 import { greetingName, timeGreeting } from "@/lib/greeting";
 import {
   EcoShell,
-  ProgressRing,
   DarkPod,
   LightPod,
   AskBar,
-  SectionHead,
   DarkPanel,
   LightPanel,
   Orb,
   TimelineRow,
-  EcoProjectCard,
   EcoSkeleton,
   EcoRows,
   EcoZero,
@@ -73,7 +70,8 @@ export const Route = createFileRoute("/_authenticated/leader/")({
       { property: "og:title", content: "Team Leader Dashboard — Aawaash" },
       {
         property: "og:description",
-        content: "Live team revenue, commissions, leaderboard and inventory for Aawaash team leaders.",
+        content:
+          "Live team revenue, commissions, leaderboard and inventory for Aawaash team leaders.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -117,38 +115,35 @@ function LeaderContent() {
   const topMembers = (board.data ?? []).slice(0, 5);
   const recentSales = (sales.data ?? []).slice(0, 4);
   const recentComms = (comms.data ?? []).slice(0, 3);
-  const projectList = (projects.data ?? []).slice(0, 3);
   const months = trend.data?.months ?? [];
 
   const target = Math.max(1, Number(o?.totalRevenue ?? 0) * 1.4 || 1);
-  const progressPct = o?.totalRevenue ? Math.round((Number(o.totalRevenue) / target) * 100) : 0;
   const activePct = o?.memberCount
     ? Math.round((memberList.filter((m) => m.status === "active").length / o.memberCount) * 100)
     : 0;
 
-  const zeroTrend = months.length === 0 || months.every((m) => m.revenue === 0 && m.commission === 0);
+  const zeroTrend =
+    months.length === 0 || months.every((m) => m.revenue === 0 && m.commission === 0);
 
   return (
     <EcoShell role="team_leader" profile={profile}>
       {/* ---------------- Focus hero ---------------- */}
       <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
         <div className="min-w-0">
-          <p className="text-[12px] font-light text-muted-foreground">Today's Focus</p>
-          <h1 className="mt-0.5 text-[26px] font-extrabold leading-[1.08] tracking-[-0.03em] text-foreground sm:text-[32px]">
-            {timeGreeting()}, {displayName}.
-            <span className="block text-primary">Lead Team {o?.teamLetter ?? "—"}.</span>
+          <h1 className="font-brand text-[20px] font-semibold leading-[1.15] tracking-[-0.015em] text-foreground sm:text-[24px]">
+            {timeGreeting()}, <span className="text-primary">{displayName}</span>
           </h1>
 
-          <div className="mt-5 flex items-center gap-4">
-            {overview.isLoading ? (
-              <EcoSkeleton className="h-[132px] w-[132px] rounded-full" />
-            ) : (
-              <ProgressRing
-                value={progressPct}
-                label="Progress"
-                caption={`${o?.salesCount ?? 0} sales closed`}
-              />
-            )}
+          <div className="mt-4 flex items-center gap-4">
+            <img
+              src={ecoBuilding}
+              alt=""
+              aria-hidden
+              loading="lazy"
+              width={1024}
+              height={1024}
+              className="h-[104px] w-[104px] shrink-0 object-contain drop-shadow-[0_14px_24px_rgba(16,50,36,0.18)] sm:h-[124px] sm:w-[124px]"
+            />
             <div className="hidden min-w-0 flex-1 sm:block">
               <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Team revenue
@@ -166,12 +161,13 @@ function LeaderContent() {
 
         <div className="grid content-start gap-3">
           <DarkPod
-            icon={<Leaf size={17} />}
-            label="Team health"
-            value={`${activePct}%`}
-            hint={activePct >= 70 ? "Excellent" : activePct > 0 ? "Building" : "—"}
-            to="/leader/members"
+            icon={<TrendingUp size={17} />}
+            label="Total sales"
+            value={formatINR(o?.totalRevenue ?? 0, { compact: true })}
+            hint={`${o?.salesCount ?? 0} closed`}
+            to="/leader/analytics"
           />
+
           <LightPod
             icon={<Droplet size={15} />}
             label="Wallet"
@@ -194,48 +190,30 @@ function LeaderContent() {
 
       {/* ---------------- Quick pods ---------------- */}
       <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <LightPod icon={<Users size={15} />} label="Members" value={String(o?.memberCount ?? 0)} to="/leader/members" />
+        <LightPod
+          icon={<Users size={15} />}
+          label="Members"
+          value={String(o?.memberCount ?? 0)}
+          to="/leader/members"
+        />
         <LightPod
           icon={<Wallet size={15} />}
           label="Withdraw"
           value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })}
           to="/leader/withdrawals"
         />
-        <LightPod icon={<BarChart3 size={15} />} label="Analytics" value="Open" to="/leader/analytics" />
-        <LightPod icon={<Bell size={15} />} label="Alerts" value={String(unread)} to="/leader/notifications" />
-      </section>
-
-      {/* ---------------- Projects rail ---------------- */}
-      <section className="mt-7">
-        <SectionHead title="Active Projects" to="/leader/projects" />
-        {projects.isLoading ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {[0, 1, 2].map((i) => (
-              <EcoSkeleton key={i} className="h-[188px]" />
-            ))}
-          </div>
-        ) : projectList.length === 0 ? (
-          <EcoZero
-            icon={<Building2 size={22} />}
-            title="No projects yet"
-            body="Once Admin publishes projects, live inventory appears here for your team to sell."
-            cta={{ label: "All projects", to: "/leader/projects" }}
-          />
-        ) : (
-          <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
-            {projectList.map((p) => (
-              <div key={p.id} className="w-[62%] shrink-0 snap-start sm:w-auto">
-                <EcoProjectCard
-                  to="/leader/projects"
-                  name={p.name}
-                  meta={p.location}
-                  hue={p.hero_hue}
-                  pct={p.total_units ? Math.round((p.sold_units / p.total_units) * 100) : 0}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <LightPod
+          icon={<BarChart3 size={15} />}
+          label="Analytics"
+          value="Open"
+          to="/leader/analytics"
+        />
+        <LightPod
+          icon={<Bell size={15} />}
+          label="Alerts"
+          value={String(unread)}
+          to="/leader/notifications"
+        />
       </section>
 
       {/* ---------------- Overview + schedule ---------------- */}
@@ -304,7 +282,10 @@ function LeaderContent() {
 
       {/* ---------------- Trend + wallet ---------------- */}
       <section className="mt-5 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-        <LightPanel title="Performance Trend" action={<span className="text-[11px] font-semibold text-primary">6M</span>}>
+        <LightPanel
+          title="Performance Trend"
+          action={<span className="text-[11px] font-semibold text-primary">6M</span>}
+        >
           <div className="h-56 w-full">
             {trend.isLoading ? (
               <EcoSkeleton className="h-full w-full" />
@@ -327,7 +308,13 @@ function LeaderContent() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                  <XAxis dataKey="label" tickLine={false} axisLine={false} fontSize={11} stroke="var(--muted-foreground)" />
+                  <XAxis
+                    dataKey="label"
+                    tickLine={false}
+                    axisLine={false}
+                    fontSize={11}
+                    stroke="var(--muted-foreground)"
+                  />
                   <YAxis
                     tickLine={false}
                     axisLine={false}
@@ -348,22 +335,49 @@ function LeaderContent() {
                       name === "revenue" ? "Revenue" : "Commission",
                     ]}
                   />
-                  <Area type="monotone" dataKey="revenue" stroke="var(--forest)" strokeWidth={2} fill="url(#eco-rev)" />
-                  <Area type="monotone" dataKey="commission" stroke="var(--leaf)" strokeWidth={2} fill="url(#eco-com)" />
+                  <Area
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="var(--forest)"
+                    strokeWidth={2}
+                    fill="url(#eco-rev)"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="commission"
+                    stroke="var(--leaf)"
+                    strokeWidth={2}
+                    fill="url(#eco-com)"
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             )}
           </div>
         </LightPanel>
 
-        <LightPanel title="Wallet & Payouts" footer={{ label: "Open wallet", to: "/leader/withdrawals" }}>
+        <LightPanel
+          title="Wallet & Payouts"
+          footer={{ label: "Open wallet", to: "/leader/withdrawals" }}
+        >
           <div className="grid grid-cols-2 gap-2.5">
             <KV label="Available" value={formatINR(profile?.wallet_balance)} />
             <KV label="Pending" value={formatINR(o?.pendingCommission ?? 0, { compact: true })} />
-            <KV label="Approved" value={formatINR(o?.approvedWithdrawals ?? 0, { compact: true })} />
-            <KV label="Pending WD" value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })} />
-            <KV label="Lifetime" value={formatINR(profile?.total_earnings ?? 0, { compact: true })} />
-            <KV label="This month" value={formatINR(o?.monthlyCommission ?? 0, { compact: true })} />
+            <KV
+              label="Approved"
+              value={formatINR(o?.approvedWithdrawals ?? 0, { compact: true })}
+            />
+            <KV
+              label="Pending WD"
+              value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })}
+            />
+            <KV
+              label="Lifetime"
+              value={formatINR(profile?.total_earnings ?? 0, { compact: true })}
+            />
+            <KV
+              label="This month"
+              value={formatINR(o?.monthlyCommission ?? 0, { compact: true })}
+            />
           </div>
           <Link
             to="/leader/withdrawals"
@@ -402,8 +416,12 @@ function LeaderContent() {
                   </span>
                   <Avatar name={m.full_name} src={m.avatar_url} size={36} />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-[13.5px] font-semibold text-foreground">{m.full_name}</div>
-                    <div className="truncate text-[11px] font-light text-muted-foreground">{m.login_id}</div>
+                    <div className="truncate text-[13.5px] font-semibold text-foreground">
+                      {m.full_name}
+                    </div>
+                    <div className="truncate text-[11px] font-light text-muted-foreground">
+                      {m.login_id}
+                    </div>
                   </div>
                   <div className="shrink-0 text-[13px] font-bold text-foreground">
                     {formatINR(m.total_sales, { compact: true })}
@@ -442,8 +460,12 @@ function LeaderContent() {
                   >
                     <Avatar name={m.full_name} size={34} online={m.status === "active"} />
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-[13px] font-semibold text-foreground">{m.full_name}</div>
-                      <div className="truncate text-[10.5px] font-light text-muted-foreground">{m.login_id}</div>
+                      <div className="truncate text-[13px] font-semibold text-foreground">
+                        {m.full_name}
+                      </div>
+                      <div className="truncate text-[10.5px] font-light text-muted-foreground">
+                        {m.login_id}
+                      </div>
                     </div>
                   </Link>
                 </li>
@@ -478,8 +500,12 @@ function LeaderContent() {
 function KV({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[18px] bg-surface-warm p-3">
-      <div className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</div>
-      <div className="mt-1 truncate text-[14px] font-bold tracking-[-0.01em] text-foreground">{value}</div>
+      <div className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+        {label}
+      </div>
+      <div className="mt-1 truncate text-[14px] font-bold tracking-[-0.01em] text-foreground">
+        {value}
+      </div>
     </div>
   );
 }

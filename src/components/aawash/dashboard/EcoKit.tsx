@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { BadgeCheck, Bell, LogOut, Loader2, Leaf, Mic, Settings, Sparkles, ChevronRight } from "lucide-react";
+import { Bell, LogOut, Loader2, Leaf, Mic, Settings, Sparkles, ChevronRight } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { itemsForRole } from "@/components/aawash/BottomNav";
@@ -97,23 +97,15 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
   }
 
   return (
-    <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+    <header className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
       <Link
         to={`${base}/profile` as never}
-        className="flex min-w-0 items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex min-w-0 items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
         aria-label="Open your profile"
       >
-        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={48} />
-        <span className="min-w-0">
-          <span className="block text-[12px] font-light text-muted-foreground">Welcome back,</span>
-          <span className="flex min-w-0 items-center gap-1.5">
-            <span className="truncate text-[19px] font-bold tracking-[-0.02em] text-foreground sm:text-[21px]">
-              {profile?.full_name || "—"}
-            </span>
-            <BadgeCheck size={16} className="shrink-0 text-primary" />
-          </span>
-        </span>
+        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={44} />
       </Link>
+      <span aria-hidden />
 
       <div className="flex shrink-0 items-center gap-2">
         <Link
@@ -169,7 +161,8 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
     (item) =>
       pathname === item.to || (item.activePrefix ? pathname.startsWith(item.activePrefix) : false),
   );
-  const activeKey = pathMatch?.key ?? (section && items.some((i) => i.key === section) ? section : null);
+  const activeKey =
+    pathMatch?.key ?? (section && items.some((i) => i.key === section) ? section : null);
 
   return (
     <aside
@@ -283,8 +276,6 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
   );
 }
 
-
-
 /* ---------------------------- Atoms ---------------------------- */
 
 export function Avatar({
@@ -348,7 +339,14 @@ export function ProgressRing({
       aria-label={`${label}: ${pct}%`}
     >
       <svg width={size} height={size} className="absolute inset-0 -rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--muted)" strokeWidth={8} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke="var(--muted)"
+          strokeWidth={8}
+        />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -363,7 +361,9 @@ export function ProgressRing({
       </svg>
       <div className="relative text-center">
         <div className="text-[10px] font-medium text-muted-foreground">{label}</div>
-        <div className="text-[26px] font-extrabold leading-none tracking-[-0.03em] text-foreground">{pct}%</div>
+        <div className="text-[26px] font-extrabold leading-none tracking-[-0.03em] text-foreground">
+          {pct}%
+        </div>
         {caption && <div className="mt-1 text-[10px] font-semibold text-primary">{caption}</div>}
       </div>
     </div>
@@ -419,9 +419,13 @@ export function LightPod({
 }) {
   const inner = (
     <>
-      <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-primary">{icon}</span>
+      <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-primary">
+        {icon}
+      </span>
       <span className="mt-1 text-[10.5px] font-medium text-muted-foreground">{label}</span>
-      <span className="text-[17px] font-extrabold leading-tight tracking-[-0.02em] text-foreground">{value}</span>
+      <span className="text-[17px] font-extrabold leading-tight tracking-[-0.02em] text-foreground">
+        {value}
+      </span>
     </>
   );
   const cls =
@@ -443,7 +447,9 @@ export function AskBar({ to, placeholder }: { to: string; placeholder: string })
       className="flex h-[62px] w-full items-center gap-3 rounded-full bg-surface pl-5 pr-2 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] active:scale-[0.99] outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <Sparkles size={18} className="shrink-0 text-primary" />
-      <span className="min-w-0 flex-1 truncate text-sm font-light text-muted-foreground">{placeholder}</span>
+      <span className="min-w-0 flex-1 truncate text-sm font-light text-muted-foreground">
+        {placeholder}
+      </span>
       <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gradient-to-br from-forest to-forest-deep text-forest-foreground shadow-[var(--shadow-glow)]">
         <Mic size={18} />
       </span>
@@ -501,8 +507,12 @@ export function DarkPanel({
               <div className="truncate text-[19px] font-extrabold tracking-[-0.02em] text-forest-foreground">
                 {s.value}
               </div>
-              <div className="truncate text-[10px] font-medium text-forest-foreground/60">{s.label}</div>
-              {s.hint && <div className="truncate text-[10px] font-semibold text-leaf">{s.hint}</div>}
+              <div className="truncate text-[10px] font-medium text-forest-foreground/60">
+                {s.label}
+              </div>
+              {s.hint && (
+                <div className="truncate text-[10px] font-semibold text-leaf">{s.hint}</div>
+              )}
             </div>
           ))}
         </div>
@@ -534,7 +544,10 @@ export function Orb({ intensity = 0.6 }: { intensity?: number }) {
         className="absolute inset-0 rounded-full bg-leaf/25 blur-2xl"
         style={{ opacity: 0.35 + intensity * 0.4 }}
       />
-      <svg viewBox="0 0 180 180" className="relative h-full w-full motion-safe:animate-[aawash-float_9s_ease-in-out_infinite]">
+      <svg
+        viewBox="0 0 180 180"
+        className="relative h-full w-full motion-safe:animate-[aawash-float_9s_ease-in-out_infinite]"
+      >
         <circle cx="90" cy="90" r="84" fill="none" stroke="oklch(1 0 0 / 0.08)" />
         <circle cx="90" cy="90" r="62" fill="none" stroke="oklch(1 0 0 / 0.06)" />
         <ellipse cx="90" cy="90" rx="84" ry="34" fill="none" stroke="oklch(1 0 0 / 0.07)" />
@@ -562,7 +575,9 @@ export function LightPanel({
   return (
     <section className="flex h-full flex-col rounded-[34px] bg-surface p-5 shadow-[var(--shadow-soft)]">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="truncate text-[15px] font-bold tracking-[-0.01em] text-foreground">{title}</h2>
+        <h2 className="truncate text-[15px] font-bold tracking-[-0.01em] text-foreground">
+          {title}
+        </h2>
         {action}
       </div>
       <div className="mt-4 flex-1">{children}</div>
@@ -600,12 +615,18 @@ export function TimelineRow({
   };
   return (
     <li className="flex items-center gap-3">
-      <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${tones[tone]}`}>{icon}</span>
+      <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${tones[tone]}`}>
+        {icon}
+      </span>
       <div className="min-w-0 flex-1">
         <div className="truncate text-[13.5px] font-semibold text-foreground">{title}</div>
-        {subtitle && <div className="truncate text-[11px] font-light text-muted-foreground">{subtitle}</div>}
+        {subtitle && (
+          <div className="truncate text-[11px] font-light text-muted-foreground">{subtitle}</div>
+        )}
       </div>
-      {right && <div className="shrink-0 text-[12px] font-semibold text-muted-foreground">{right}</div>}
+      {right && (
+        <div className="shrink-0 text-[12px] font-semibold text-muted-foreground">{right}</div>
+      )}
     </li>
   );
 }
@@ -632,7 +653,12 @@ export function EcoProjectCard({
       className="group relative flex h-[188px] w-full flex-col justify-end overflow-hidden rounded-[26px] p-3.5 shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {image ? (
-        <img src={image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+        <img
+          src={image}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
       ) : (
         <div
           className="absolute inset-0"
@@ -689,7 +715,9 @@ export function EcoZero({
 }) {
   return (
     <div className="flex flex-col items-center justify-center rounded-[26px] border border-dashed border-border bg-surface-warm/70 px-5 py-8 text-center">
-      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primary-soft text-primary">{icon}</span>
+      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primary-soft text-primary">
+        {icon}
+      </span>
       <div className="mt-3 text-[13.5px] font-bold text-foreground">{title}</div>
       <p className="mt-1 max-w-[34ch] text-[11.5px] font-light text-muted-foreground">{body}</p>
       {cta && (
@@ -710,11 +738,33 @@ export function EcoZeroChart({ labels, caption }: { labels: string[]; caption: s
     <div className="flex h-full w-full flex-col">
       <svg viewBox="0 0 300 110" preserveAspectRatio="none" className="h-full w-full text-primary">
         {[0, 1, 2, 3].map((i) => (
-          <line key={i} x1="0" x2="300" y1={12 + i * 28} y2={12 + i * 28} stroke="var(--border)" strokeDasharray="4 5" />
+          <line
+            key={i}
+            x1="0"
+            x2="300"
+            y1={12 + i * 28}
+            y2={12 + i * 28}
+            stroke="var(--border)"
+            strokeDasharray="4 5"
+          />
         ))}
-        <line x1="0" x2="300" y1="96" y2="96" stroke="currentColor" strokeWidth="2" opacity="0.55" />
+        <line
+          x1="0"
+          x2="300"
+          y1="96"
+          y2="96"
+          stroke="currentColor"
+          strokeWidth="2"
+          opacity="0.55"
+        />
         {labels.map((_, i) => (
-          <circle key={i} cx={(i / Math.max(1, labels.length - 1)) * 296 + 2} cy="96" r="3" fill="currentColor" />
+          <circle
+            key={i}
+            cx={(i / Math.max(1, labels.length - 1)) * 296 + 2}
+            cy="96"
+            r="3"
+            fill="currentColor"
+          />
         ))}
       </svg>
       <div className="mt-1 flex justify-between text-[9.5px] font-medium uppercase tracking-[0.12em] text-muted-foreground">

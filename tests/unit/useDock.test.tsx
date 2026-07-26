@@ -29,7 +29,7 @@ describe("useDock", () => {
     mockMatchMedia(true);
     const { result } = renderHook(() => useDock());
     expect(result.current.open).toBe(true);
-    expect(result.current.width).toBe(132);
+    expect(result.current.width).toBe(148);
   });
 
   it("stays collapsed on narrow viewports regardless of preference", () => {
@@ -37,7 +37,7 @@ describe("useDock", () => {
     const { result } = renderHook(() => useDock());
     expect(result.current.canExpand).toBe(false);
     expect(result.current.open).toBe(false);
-    expect(result.current.width).toBe(72);
+    expect(result.current.width).toBe(80);
   });
 
   it("persists the collapse preference to localStorage", () => {
