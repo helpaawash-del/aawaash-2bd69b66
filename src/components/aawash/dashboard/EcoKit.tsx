@@ -213,16 +213,6 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
             open ? "pr-7" : "pr-3"
           }`}
         >
-          {/* Brand mark */}
-          <Link
-            to={base as never}
-            aria-label="Aawaash home"
-            className={`grid shrink-0 place-items-center rounded-2xl bg-forest-foreground/15 text-forest-foreground backdrop-blur transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-forest-foreground/25 motion-reduce:transition-none ${
-              open ? "h-12 w-12" : "h-10 w-10"
-            }`}
-          >
-            <Leaf size={20} />
-          </Link>
 
           <nav className="flex w-full flex-1 flex-col items-center justify-center gap-1.5">
             {items.map((item) => {
