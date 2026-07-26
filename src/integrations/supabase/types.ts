@@ -2918,6 +2918,7 @@ export type Database = {
         }
         Returns: string
       }
+      current_team_id: { Args: never; Returns: string }
       current_user_role: {
         Args: never
         Returns: Database["public"]["Enums"]["app_role"]
