@@ -10,7 +10,6 @@ import {
   IndianRupee,
   Bell,
   Sparkles,
-  Activity,
   MapPin,
   Loader2,
   Calendar,
@@ -142,6 +141,7 @@ function LeaderContent() {
       />
 
       {/* ---------------- Wallet hero ---------------- */}
+      <Rise delay={40}>
       <section className="mt-6">
         {overview.isLoading ? (
           <WalletHeroSkeleton />
@@ -156,8 +156,10 @@ function LeaderContent() {
         />
         )}
       </section>
+      </Rise>
 
       {/* ---------------- Quick actions ---------------- */}
+      <Rise delay={100}>
       <section className="mt-4">
         <QuickActionGrid>
           <QuickAction icon={<Users size={18} />} label="Members" to="/leader/members" />
@@ -172,8 +174,10 @@ function LeaderContent() {
           />
         </QuickActionGrid>
       </section>
+      </Rise>
 
       {/* ---------------- Metrics ---------------- */}
+      <Rise delay={160}>
       <section className="mt-4">
         {overview.isLoading ? (
           <MetricRowSkeleton />
@@ -204,8 +208,10 @@ function LeaderContent() {
         </div>
         )}
       </section>
+      </Rise>
 
       {/* ---------------- Trend + payouts ---------------- */}
+      <Rise delay={220}>
       <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-[1.65fr_1fr] xl:gap-6">
         <Panel
           title="Performance trend"
@@ -286,8 +292,10 @@ function LeaderContent() {
           </Link>
         </Panel>
       </section>
+      </Rise>
 
       {/* ---------------- Leaderboard + activity ---------------- */}
+      <Rise delay={280}>
       <section className="mt-5 grid gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
         <Panel
           title="Team leaderboard"
@@ -378,8 +386,10 @@ function LeaderContent() {
           )}
         </Panel>
       </section>
+      </Rise>
 
       {/* ---------------- Members ---------------- */}
+      <Rise delay={340}>
       <section className="mt-5">
         <Panel
           title="Your members"
@@ -422,8 +432,10 @@ function LeaderContent() {
           )}
         </Panel>
       </section>
+      </Rise>
 
       {/* ---------------- Projects rail ---------------- */}
+      <Rise delay={400}>
       <section className="mt-5">
         <Panel
           title="Projects quick access"
@@ -458,8 +470,10 @@ function LeaderContent() {
           )}
         </Panel>
       </section>
+      </Rise>
 
       {/* ---------------- Member spotlight CTA ---------------- */}
+      <Rise delay={460}>
       <section className="mt-5">
         <Link
           to="/leader/analytics"
@@ -477,6 +491,7 @@ function LeaderContent() {
           <BarChart3 size={16} className="shrink-0 text-muted-foreground" />
         </Link>
       </section>
+      </Rise>
 
       {overview.isLoading && (
         <div role="status" className="glass-card fixed bottom-28 right-6 hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs text-muted-foreground shadow-[var(--shadow-soft)] md:inline-flex">
