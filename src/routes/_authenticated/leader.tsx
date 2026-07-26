@@ -31,7 +31,8 @@ import {
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { DashboardShell } from "@/components/aawash/DashboardShell";
-import { formatINR, greeting } from "@/components/aawash/dashboard-kit";
+import { formatINR } from "@/components/aawash/dashboard-kit";
+import { greetingName, timeGreeting } from "@/lib/greeting";
 import {
   Panel,
   PanelLink,
@@ -92,8 +93,8 @@ function LeaderHome() {
 }
 
 function LeaderContent() {
-  const { profile } = useSession();
-  const firstName = (profile?.full_name ?? "").trim().split(/\s+/)[0] || "";
+  const { profile, loading } = useSession();
+  const displayName = greetingName(profile?.full_name, loading || !profile);
 
   const overviewFn = useServerFn(getLeaderOverview);
   const trendFn = useServerFn(getLeaderTrend);
@@ -132,8 +133,8 @@ function LeaderContent() {
             <Sparkles size={11} /> Team {o?.teamLetter ?? "—"}
           </span>
         }
-        greeting={greeting()}
-        name={firstName ? `${firstName}.` : "…"}
+        greeting={timeGreeting()}
+        name={displayName}
         caption={`Here's how Team ${o?.teamLetter ?? "—"} is performing this month.`}
       />
 
