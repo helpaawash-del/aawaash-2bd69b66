@@ -8,6 +8,7 @@ import { itemsForRole } from "@/components/aawash/BottomNav";
 import type { AawashProfile } from "@/hooks/useSession";
 import type { AppRole } from "@/lib/auth";
 import { homePathForRole } from "@/lib/auth";
+import { useDock, type DockState } from "@/hooks/useDock";
 import {
   AlertDialog,
   AlertDialogAction,
