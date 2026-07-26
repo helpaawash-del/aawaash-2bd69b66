@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { Bell, LogOut, Loader2, Leaf, Mic, Settings, Sparkles, ChevronRight } from "lucide-react";
@@ -9,6 +9,8 @@ import type { AawashProfile } from "@/hooks/useSession";
 import type { AppRole } from "@/lib/auth";
 import { homePathForRole } from "@/lib/auth";
 import { useDock, type DockState } from "@/hooks/useDock";
+import { useWelcome, type WelcomeState } from "@/hooks/useWelcome";
+import { WelcomeBanner } from "@/components/aawash/dashboard/WelcomeBanner";
 import {
   AlertDialog,
   AlertDialogAction,
