@@ -13,6 +13,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { hasUsableFirstName, normalizeFullName } from "@/lib/greeting";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AAWASH_AUTH_EMAIL_DOMAIN } from "@/lib/auth";
 
@@ -210,8 +211,14 @@ export const listTeamLeaders = createServerFn({ method: "GET" })
 /* Create Team Leader (enterprise form)                                */
 /* ================================================================== */
 
+const fullNameSchema = z
+  .string()
+  .transform(normalizeFullName)
+  .refine((v) => v.length >= 2 && v.length <= 80, "Full name must be 2-80 characters")
+  .refine(hasUsableFirstName, "Enter a real first name (letters only), e.g. Ravi Kumar");
+
 const createSchema = z.object({
-  fullName: z.string().trim().min(2).max(80),
+  fullName: fullNameSchema,
   mobile: z.string().regex(/^\d{10}$/, "Mobile must be exactly 10 digits"),
   password: z.string().min(8).max(72),
   teamId: z.string().uuid(),
@@ -343,7 +350,7 @@ export const createTeamLeaderFull = createServerFn({ method: "POST" })
 
 const updateProfileSchema = z.object({
   userId: z.string().uuid(),
-  fullName: z.string().trim().min(2).max(80).optional(),
+  fullName: fullNameSchema.optional(),
   email: z.string().trim().email().max(160).optional().or(z.literal("")),
   address: z.string().trim().max(400).optional().or(z.literal("")),
   avatarUrl: z.string().trim().url().max(600).optional().or(z.literal("")),

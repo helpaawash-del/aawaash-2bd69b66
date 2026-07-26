@@ -22,7 +22,8 @@ import {
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { DashboardShell } from "@/components/aawash/DashboardShell";
-import { formatINR, greeting } from "@/components/aawash/dashboard-kit";
+import { formatINR } from "@/components/aawash/dashboard-kit";
+import { greetingName, timeGreeting } from "@/lib/greeting";
 import {
   Panel,
   PanelLink,
@@ -76,8 +77,8 @@ function MemberHome() {
 }
 
 function MemberContent() {
-  const { profile } = useSession();
-  const firstName = (profile?.full_name ?? "").trim().split(/\s+/)[0] || "";
+  const { profile, loading } = useSession();
+  const displayName = greetingName(profile?.full_name, loading || !profile);
 
   const overviewFn = useServerFn(getMemberOverview);
   const activityFn = useServerFn(getMyActivity);
@@ -112,8 +113,8 @@ function MemberContent() {
             <Sparkles size={11} /> Team {team?.letter ?? "—"}
           </span>
         }
-        greeting={greeting()}
-        name={firstName ? `${firstName}.` : "…"}
+        greeting={timeGreeting()}
+        name={displayName}
         caption="A calm space to track every sale, referral, and rupee earned."
         right={
           <div className="glass-card flex items-center gap-3 rounded-[22px] p-3 shadow-[var(--shadow-soft)]">

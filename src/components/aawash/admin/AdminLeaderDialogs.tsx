@@ -9,6 +9,7 @@ import {
   deleteTeamLeader,
 } from "@/lib/team-leaders.functions";
 import { invalidateAdmin } from "@/lib/admin-cache";
+import { hasUsableFirstName, normalizeFullName } from "@/lib/greeting";
 
 type Team = { id: string; letter: string; name: string; leader_id: string | null };
 
@@ -80,7 +81,10 @@ export function AddLeaderDialog({ teams, onClose }: { teams: Team[]; onClose: ()
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.fullName.trim().length < 2) return toast.error("Enter the leader's full name");
+    const fullName = normalizeFullName(form.fullName);
+    if (fullName.length < 2) return toast.error("Enter the leader's full name");
+    if (!hasUsableFirstName(fullName))
+      return toast.error("First name must start with a letter — e.g. Ravi Kumar");
     if (!/^\d{10}$/.test(form.mobile)) return toast.error("Mobile must be exactly 10 digits");
     if (form.password.length < 8) return toast.error("Password must be at least 8 characters");
     if (!form.teamId) return toast.error("Select an available team");
@@ -89,7 +93,7 @@ export function AddLeaderDialog({ teams, onClose }: { teams: Team[]; onClose: ()
     try {
       const res = await create({
         data: {
-          fullName: form.fullName.trim(),
+          fullName,
           mobile: form.mobile,
           password: form.password,
           teamId: form.teamId,
