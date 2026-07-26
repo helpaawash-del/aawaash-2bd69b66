@@ -88,6 +88,11 @@
   --shadow-soft: 0 1px 2px oklch(0.35 0.08 155 / 0.05), 0 8px 24px oklch(0.35 0.08 155 / 0.07);
   --shadow-float: 0 14px 42px -14px oklch(0.38 0.1 155 / 0.18);
   --shadow-glow: 0 22px 60px -18px oklch(0.5 0.14 155 / 0.32);
+
+  /* Deep forest surfaces used by the app-style dashboards */
+  --color-forest: var(--forest);
+  --color-forest-deep: var(--forest-deep);
+  --color-forest-foreground: var(--forest-foreground);
 }
 
 :root {
