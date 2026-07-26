@@ -140,6 +140,19 @@ function LeaderContent() {
         caption={`Here's how Team ${o?.teamLetter ?? "—"} is performing this month.`}
       />
 
+      {/* ---------------- Live pulse strip ---------------- */}
+      <Rise delay={20}>
+        <div className="mt-5 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <PulseChip tone="live" label="Live sync" value="Realtime" />
+          <PulseChip label="Members" value={String(o?.memberCount ?? 0)} />
+          <PulseChip label="Sales" value={String(o?.salesCount ?? 0)} />
+          <PulseChip label="Alerts" value={String(unread)} />
+          <PulseChip label="Projects" value={String(o?.projectCount ?? 0)} />
+        </div>
+      </Rise>
+
+
+
       {/* ---------------- Wallet hero ---------------- */}
       <Rise delay={40}>
       <section className="mt-6">
