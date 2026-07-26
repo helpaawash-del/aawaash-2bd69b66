@@ -205,38 +205,8 @@ function LeaderContent() {
         <LightPod icon={<Bell size={15} />} label="Alerts" value={String(unread)} to="/leader/notifications" />
       </section>
 
-      {/* ---------------- Projects rail ---------------- */}
-      <section className="mt-7">
-        <SectionHead title="Active Projects" to="/leader/projects" />
-        {projects.isLoading ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {[0, 1, 2].map((i) => (
-              <EcoSkeleton key={i} className="h-[188px]" />
-            ))}
-          </div>
-        ) : projectList.length === 0 ? (
-          <EcoZero
-            icon={<Building2 size={22} />}
-            title="No projects yet"
-            body="Once Admin publishes projects, live inventory appears here for your team to sell."
-            cta={{ label: "All projects", to: "/leader/projects" }}
-          />
-        ) : (
-          <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
-            {projectList.map((p) => (
-              <div key={p.id} className="w-[62%] shrink-0 snap-start sm:w-auto">
-                <EcoProjectCard
-                  to="/leader/projects"
-                  name={p.name}
-                  meta={p.location}
-                  hue={p.hero_hue}
-                  pct={p.total_units ? Math.round((p.sold_units / p.total_units) * 100) : 0}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+
+
 
       {/* ---------------- Overview + schedule ---------------- */}
       <section className="mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
