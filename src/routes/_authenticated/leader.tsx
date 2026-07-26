@@ -334,12 +334,8 @@ function LeaderContent() {
           {sales.isLoading || comms.isLoading ? (
             <ListRowSkeleton rows={4} />
           ) : recentSales.length === 0 && recentComms.length === 0 ? (
-            <ZeroState
-              icon={<Activity size={26} />}
-              title="Nothing here yet"
-              body="Sales and commissions from your team show up here automatically, in real time."
-              accent="violet"
-            />
+            <ZeroActivity rows={3} caption="Activity streams in live — currently ₹0 across the last 12 days." />
+
           ) : (
             <ul className="flex flex-col gap-2.5">
               {recentSales.map((s) => (
