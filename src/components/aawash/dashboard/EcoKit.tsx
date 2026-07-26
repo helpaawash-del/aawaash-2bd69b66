@@ -10,7 +10,7 @@ import type { AppRole } from "@/lib/auth";
 import { homePathForRole } from "@/lib/auth";
 import { useDock, type DockState } from "@/hooks/useDock";
 import { useWelcome, type WelcomeState } from "@/hooks/useWelcome";
-import { WelcomeBanner, EcoGreeting } from "@/components/aawash/dashboard/WelcomeBanner";
+import { EcoGreeting } from "@/components/aawash/dashboard/EcoGreeting";
 import {
   AlertDialog,
   AlertDialogAction,
