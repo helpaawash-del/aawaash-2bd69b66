@@ -26,7 +26,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-import ecoBuilding from "@/assets/eco-hero-tower.png";
+import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -133,25 +133,10 @@ function LeaderContent() {
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
 
-          <div className="relative mt-7 w-full overflow-hidden rounded-[28px] bg-gradient-to-br from-primary/8 via-transparent to-leaf/10 ring-1 ring-border/50">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl"
-            />
-            <div
-              aria-hidden
-              className="animate-hero-glow pointer-events-none absolute bottom-5 left-1/2 h-8 w-[58%] rounded-[50%] bg-forest/25 blur-2xl motion-reduce:animate-none"
-            />
-            <img
-              src={ecoBuilding}
-              alt=""
-              aria-hidden
-              loading="lazy"
-              width={1024}
-              height={1024}
-              className="animate-hero-levitate relative mx-auto block h-auto w-full max-w-[420px] object-contain drop-shadow-[0_22px_36px_rgba(16,50,36,0.16)] motion-reduce:animate-none"
-            />
+          <div className="mt-7">
+            <EcoLivingScene />
           </div>
+
 
         </div>
 

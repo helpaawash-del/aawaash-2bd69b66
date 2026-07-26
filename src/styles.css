@@ -305,6 +305,53 @@
   animation: hero-glow 7s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
+/* ---- Living hero scene (birds, leaves, waving neighbour) ---- */
+@keyframes scene-bird {
+  0%   { transform: translate3d(-6%, 6%, 0) scale(0.85); opacity: 0; }
+  12%  { opacity: 0.9; }
+  50%  { transform: translate3d(48%, -14%, 0) scale(1); }
+  88%  { opacity: 0.9; }
+  100% { transform: translate3d(104%, -2%, 0) scale(0.85); opacity: 0; }
+}
+
+@keyframes scene-wing {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(0.35); }
+}
+
+@keyframes scene-leaf {
+  0%   { transform: translate3d(0, -8%, 0) rotate(0deg); opacity: 0; }
+  15%  { opacity: 0.85; }
+  85%  { opacity: 0.7; }
+  100% { transform: translate3d(-26px, 108%, 0) rotate(220deg); opacity: 0; }
+}
+
+@keyframes scene-wave {
+  0%, 100% { transform: rotate(-12deg); }
+  50%      { transform: rotate(22deg); }
+}
+
+@utility animate-scene-bird {
+  animation: scene-bird 11s linear infinite;
+  will-change: transform, opacity;
+}
+
+@utility animate-scene-wing {
+  animation: scene-wing 0.42s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@utility animate-scene-leaf {
+  animation: scene-leaf 9s linear infinite;
+  will-change: transform, opacity;
+}
+
+@utility animate-scene-wave {
+  animation: scene-wave 0.9s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+
 
 @utility animate-drift {
   animation: aawash-drift 18s ease-in-out infinite;
