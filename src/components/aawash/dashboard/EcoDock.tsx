@@ -46,20 +46,6 @@ export function ecoDockItems(role: AppRole): EcoDockItem[] {
         activePrefix: "/leader/withdrawals",
       },
       {
-        key: "analytics",
-        label: "Analytics",
-        icon: BarChart3,
-        to: "/leader/analytics",
-        activePrefix: "/leader/analytics",
-      },
-      {
-        key: "alerts",
-        label: "Alerts",
-        icon: Bell,
-        to: "/leader/notifications",
-        activePrefix: "/leader/notifications",
-      },
-      {
         key: "account",
         label: "Account",
         icon: User,
@@ -90,20 +76,6 @@ export function ecoDockItems(role: AppRole): EcoDockItem[] {
       icon: Wallet,
       to: "/member/wallet",
       activePrefix: "/member/wallet",
-    },
-    {
-      key: "analytics",
-      label: "Analytics",
-      icon: BarChart3,
-      to: "/member/analytics",
-      activePrefix: "/member/analytics",
-    },
-    {
-      key: "alerts",
-      label: "Alerts",
-      icon: Bell,
-      to: "/member/notifications",
-      activePrefix: "/member/notifications",
     },
     {
       key: "account",

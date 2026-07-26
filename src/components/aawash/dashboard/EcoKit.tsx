@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Bell, LogOut, Loader2, Leaf, Mic, Settings, Sparkles, ChevronRight } from "lucide-react";
+import { Bell, LogOut, Loader2, Mic, Settings, Sparkles, ChevronRight } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { itemsForRole } from "@/components/aawash/BottomNav";
@@ -10,7 +10,7 @@ import type { AppRole } from "@/lib/auth";
 import { homePathForRole } from "@/lib/auth";
 import { useDock, type DockState } from "@/hooks/useDock";
 import { useWelcome, type WelcomeState } from "@/hooks/useWelcome";
-import { WelcomeBanner, EcoGreeting } from "@/components/aawash/dashboard/WelcomeBanner";
+import { EcoGreeting } from "@/components/aawash/dashboard/EcoGreeting";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -83,8 +83,7 @@ export function EcoShell({
           className="mx-auto flex min-h-screen w-full max-w-md flex-col pr-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 transition-[padding-left] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:max-w-xl sm:pr-6 md:max-w-3xl lg:max-w-6xl lg:pb-24 lg:pr-10 xl:max-w-7xl xl:pr-14"
         >
           <WelcomeHeader role={role} profile={profile} />
-          <WelcomeBanner name={firstName(profile?.full_name)} welcome={welcome} />
-          <main id="main-content" className="mt-5 flex-1">
+          <main id="main-content" className="mt-9 flex-1 sm:mt-11">
             {children}
           </main>
         </div>
@@ -214,17 +213,6 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
             open ? "pr-7" : "pr-3"
           }`}
         >
-          {/* Brand mark */}
-          <Link
-            to={base as never}
-            aria-label="Aawaash home"
-            className={`grid shrink-0 place-items-center rounded-2xl bg-forest-foreground/15 text-forest-foreground backdrop-blur transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-forest-foreground/25 motion-reduce:transition-none ${
-              open ? "h-12 w-12" : "h-10 w-10"
-            }`}
-          >
-            <Leaf size={20} />
-          </Link>
-
           <nav className="flex w-full flex-1 flex-col items-center justify-center gap-1.5">
             {items.map((item) => {
               const Icon = item.icon;

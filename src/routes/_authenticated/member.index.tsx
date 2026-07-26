@@ -22,7 +22,7 @@ import {
   Zap,
 } from "lucide-react";
 
-import ecoBuilding from "@/assets/eco-hero-building.png";
+import ecoBuilding from "@/assets/eco-hero-tower.png";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -112,7 +112,11 @@ function MemberContent() {
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
 
-          <div className="mt-4 flex items-center gap-4">
+          <div className="relative mt-5 w-full overflow-hidden rounded-[28px] bg-gradient-to-br from-primary/8 via-transparent to-leaf/10 ring-1 ring-border/50">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl"
+            />
             <img
               src={ecoBuilding}
               alt=""
@@ -120,20 +124,8 @@ function MemberContent() {
               loading="lazy"
               width={1024}
               height={1024}
-              className="h-[104px] w-[104px] shrink-0 object-contain drop-shadow-[0_14px_24px_rgba(16,50,36,0.18)] sm:h-[124px] sm:w-[124px]"
+              className="relative mx-auto block h-auto w-full max-w-[420px] object-contain drop-shadow-[0_22px_36px_rgba(16,50,36,0.16)]"
             />
-            <div className="hidden min-w-0 flex-1 sm:block">
-              <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                Total sales
-              </div>
-              <div className="truncate text-[24px] font-extrabold tracking-[-0.03em] text-foreground">
-                {formatINR(stats?.totalSales ?? 0, { compact: true })}
-              </div>
-              <div className="mt-1 text-[11.5px] font-light text-muted-foreground">
-                {stats?.salesCount ?? 0} deals · Commission{" "}
-                {formatINR(stats?.totalCommission ?? 0, { compact: true })}
-              </div>
-            </div>
           </div>
         </div>
 
