@@ -63,9 +63,13 @@ export function DashboardShell({
     <div className="relative min-h-screen">
       <AmbientBackground />
 
-      <FloatingSideRail role={role} />
+      {role === "super_admin" && <FloatingSideRail role={role} />}
 
-      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-32 pt-6 sm:max-w-lg md:max-w-3xl md:px-10 md:pb-32 lg:max-w-6xl lg:px-12 lg:pl-28 xl:max-w-7xl xl:px-16 xl:pl-32">
+      <div
+        className={`mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-32 pt-6 sm:max-w-lg md:max-w-3xl md:px-10 md:pb-32 lg:max-w-6xl lg:px-12 xl:max-w-7xl xl:px-16 ${
+          role === "super_admin" ? "lg:pl-28 xl:pl-32" : ""
+        }`}
+      >
 
         <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:gap-4">
           <BrandMark size="sm" />
