@@ -77,7 +77,7 @@ export function useDock() {
     canExpand: wide,
     open,
     /** rail width in px for the current state */
-    width: open ? 132 : 72,
+    width: open ? 148 : 80,
     section,
     setSection,
   };
