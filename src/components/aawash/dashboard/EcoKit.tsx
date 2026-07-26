@@ -62,7 +62,7 @@ export function EcoShell({
 
       <WaveRail role={role} />
 
-      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-36 pt-5 sm:max-w-xl sm:px-6 md:max-w-3xl lg:max-w-6xl lg:pl-32 lg:pr-10 xl:max-w-7xl xl:pl-36 xl:pr-14">
+      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 sm:max-w-xl sm:px-6 md:max-w-3xl lg:max-w-6xl lg:pb-24 lg:pl-32 lg:pr-10 xl:max-w-7xl xl:pl-36 xl:pr-14">
         <WelcomeHeader role={role} profile={profile} />
         <main id="main-content" className="mt-5 flex-1">
           {children}
