@@ -20,6 +20,7 @@ import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
 import { Route as ErrorKindRouteImport } from './routes/error.$kind'
 import { Route as AuthenticatedSalesWorkflowRouteImport } from './routes/_authenticated/sales-workflow'
+import { Route as AuthenticatedLeaderRouteImport } from './routes/_authenticated/leader'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -137,6 +138,11 @@ const AuthenticatedSalesWorkflowRoute =
     path: '/sales-workflow',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLeaderRoute = AuthenticatedLeaderRouteImport.update({
+  id: '/leader',
+  path: '/leader',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -160,9 +166,9 @@ const AuthenticatedMemberIndexRoute =
   } as any)
 const AuthenticatedLeaderIndexRoute =
   AuthenticatedLeaderIndexRouteImport.update({
-    id: '/leader/',
-    path: '/leader/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
@@ -253,51 +259,51 @@ const AuthenticatedMemberAnalyticsRoute =
   } as any)
 const AuthenticatedLeaderWithdrawalsRoute =
   AuthenticatedLeaderWithdrawalsRouteImport.update({
-    id: '/leader/withdrawals',
-    path: '/leader/withdrawals',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/withdrawals',
+    path: '/withdrawals',
+    getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
 const AuthenticatedLeaderSettingsRoute =
   AuthenticatedLeaderSettingsRouteImport.update({
-    id: '/leader/settings',
-    path: '/leader/settings',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
 const AuthenticatedLeaderProjectsRoute =
   AuthenticatedLeaderProjectsRouteImport.update({
-    id: '/leader/projects',
-    path: '/leader/projects',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
 const AuthenticatedLeaderProfileRoute =
   AuthenticatedLeaderProfileRouteImport.update({
-    id: '/leader/profile',
-    path: '/leader/profile',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
 const AuthenticatedLeaderNotificationsRoute =
   AuthenticatedLeaderNotificationsRouteImport.update({
-    id: '/leader/notifications',
-    path: '/leader/notifications',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
 const AuthenticatedLeaderMembersRoute =
   AuthenticatedLeaderMembersRouteImport.update({
-    id: '/leader/members',
-    path: '/leader/members',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
 const AuthenticatedLeaderLeaderboardRoute =
   AuthenticatedLeaderLeaderboardRouteImport.update({
-    id: '/leader/leaderboard',
-    path: '/leader/leaderboard',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/leaderboard',
+    path: '/leaderboard',
+    getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
 const AuthenticatedLeaderAnalyticsRoute =
   AuthenticatedLeaderAnalyticsRouteImport.update({
-    id: '/leader/analytics',
-    path: '/leader/analytics',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedLeaderRoute,
   } as any)
 const AuthenticatedCrmNewRoute = AuthenticatedCrmNewRouteImport.update({
   id: '/new',
@@ -504,6 +510,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/crm': typeof AuthenticatedCrmRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -650,6 +657,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/crm': typeof AuthenticatedCrmRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/leader': typeof AuthenticatedLeaderRouteWithChildren
   '/_authenticated/sales-workflow': typeof AuthenticatedSalesWorkflowRouteWithChildren
   '/error/$kind': typeof ErrorKindRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -725,6 +733,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/crm'
     | '/dashboard'
+    | '/leader'
     | '/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
@@ -870,6 +879,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/crm'
     | '/_authenticated/dashboard'
+    | '/_authenticated/leader'
     | '/_authenticated/sales-workflow'
     | '/error/$kind'
     | '/projects/$slug'
@@ -1026,6 +1036,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSalesWorkflowRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/leader': {
+      id: '/_authenticated/leader'
+      path: '/leader'
+      fullPath: '/leader'
+      preLoaderRoute: typeof AuthenticatedLeaderRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -1056,10 +1073,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/leader/': {
       id: '/_authenticated/leader/'
-      path: '/leader'
+      path: '/'
       fullPath: '/leader/'
       preLoaderRoute: typeof AuthenticatedLeaderIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -1168,59 +1185,59 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/leader/withdrawals': {
       id: '/_authenticated/leader/withdrawals'
-      path: '/leader/withdrawals'
+      path: '/withdrawals'
       fullPath: '/leader/withdrawals'
       preLoaderRoute: typeof AuthenticatedLeaderWithdrawalsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/leader/settings': {
       id: '/_authenticated/leader/settings'
-      path: '/leader/settings'
+      path: '/settings'
       fullPath: '/leader/settings'
       preLoaderRoute: typeof AuthenticatedLeaderSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/leader/projects': {
       id: '/_authenticated/leader/projects'
-      path: '/leader/projects'
+      path: '/projects'
       fullPath: '/leader/projects'
       preLoaderRoute: typeof AuthenticatedLeaderProjectsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/leader/profile': {
       id: '/_authenticated/leader/profile'
-      path: '/leader/profile'
+      path: '/profile'
       fullPath: '/leader/profile'
       preLoaderRoute: typeof AuthenticatedLeaderProfileRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/leader/notifications': {
       id: '/_authenticated/leader/notifications'
-      path: '/leader/notifications'
+      path: '/notifications'
       fullPath: '/leader/notifications'
       preLoaderRoute: typeof AuthenticatedLeaderNotificationsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/leader/members': {
       id: '/_authenticated/leader/members'
-      path: '/leader/members'
+      path: '/members'
       fullPath: '/leader/members'
       preLoaderRoute: typeof AuthenticatedLeaderMembersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/leader/leaderboard': {
       id: '/_authenticated/leader/leaderboard'
-      path: '/leader/leaderboard'
+      path: '/leaderboard'
       fullPath: '/leader/leaderboard'
       preLoaderRoute: typeof AuthenticatedLeaderLeaderboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/leader/analytics': {
       id: '/_authenticated/leader/analytics'
-      path: '/leader/analytics'
+      path: '/analytics'
       fullPath: '/leader/analytics'
       preLoaderRoute: typeof AuthenticatedLeaderAnalyticsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedLeaderRoute
     }
     '/_authenticated/crm/new': {
       id: '/_authenticated/crm/new'
@@ -1597,6 +1614,47 @@ const AuthenticatedCrmRouteChildren: AuthenticatedCrmRouteChildren = {
 const AuthenticatedCrmRouteWithChildren =
   AuthenticatedCrmRoute._addFileChildren(AuthenticatedCrmRouteChildren)
 
+interface AuthenticatedLeaderMembersRouteChildren {
+  AuthenticatedLeaderMembersIdRoute: typeof AuthenticatedLeaderMembersIdRoute
+}
+
+const AuthenticatedLeaderMembersRouteChildren: AuthenticatedLeaderMembersRouteChildren =
+  {
+    AuthenticatedLeaderMembersIdRoute: AuthenticatedLeaderMembersIdRoute,
+  }
+
+const AuthenticatedLeaderMembersRouteWithChildren =
+  AuthenticatedLeaderMembersRoute._addFileChildren(
+    AuthenticatedLeaderMembersRouteChildren,
+  )
+
+interface AuthenticatedLeaderRouteChildren {
+  AuthenticatedLeaderAnalyticsRoute: typeof AuthenticatedLeaderAnalyticsRoute
+  AuthenticatedLeaderLeaderboardRoute: typeof AuthenticatedLeaderLeaderboardRoute
+  AuthenticatedLeaderMembersRoute: typeof AuthenticatedLeaderMembersRouteWithChildren
+  AuthenticatedLeaderNotificationsRoute: typeof AuthenticatedLeaderNotificationsRoute
+  AuthenticatedLeaderProfileRoute: typeof AuthenticatedLeaderProfileRoute
+  AuthenticatedLeaderProjectsRoute: typeof AuthenticatedLeaderProjectsRoute
+  AuthenticatedLeaderSettingsRoute: typeof AuthenticatedLeaderSettingsRoute
+  AuthenticatedLeaderWithdrawalsRoute: typeof AuthenticatedLeaderWithdrawalsRoute
+  AuthenticatedLeaderIndexRoute: typeof AuthenticatedLeaderIndexRoute
+}
+
+const AuthenticatedLeaderRouteChildren: AuthenticatedLeaderRouteChildren = {
+  AuthenticatedLeaderAnalyticsRoute: AuthenticatedLeaderAnalyticsRoute,
+  AuthenticatedLeaderLeaderboardRoute: AuthenticatedLeaderLeaderboardRoute,
+  AuthenticatedLeaderMembersRoute: AuthenticatedLeaderMembersRouteWithChildren,
+  AuthenticatedLeaderNotificationsRoute: AuthenticatedLeaderNotificationsRoute,
+  AuthenticatedLeaderProfileRoute: AuthenticatedLeaderProfileRoute,
+  AuthenticatedLeaderProjectsRoute: AuthenticatedLeaderProjectsRoute,
+  AuthenticatedLeaderSettingsRoute: AuthenticatedLeaderSettingsRoute,
+  AuthenticatedLeaderWithdrawalsRoute: AuthenticatedLeaderWithdrawalsRoute,
+  AuthenticatedLeaderIndexRoute: AuthenticatedLeaderIndexRoute,
+}
+
+const AuthenticatedLeaderRouteWithChildren =
+  AuthenticatedLeaderRoute._addFileChildren(AuthenticatedLeaderRouteChildren)
+
 interface AuthenticatedSalesWorkflowRouteChildren {
   AuthenticatedSalesWorkflowIdRoute: typeof AuthenticatedSalesWorkflowIdRoute
   AuthenticatedSalesWorkflowNewRoute: typeof AuthenticatedSalesWorkflowNewRoute
@@ -1611,20 +1669,6 @@ const AuthenticatedSalesWorkflowRouteChildren: AuthenticatedSalesWorkflowRouteCh
 const AuthenticatedSalesWorkflowRouteWithChildren =
   AuthenticatedSalesWorkflowRoute._addFileChildren(
     AuthenticatedSalesWorkflowRouteChildren,
-  )
-
-interface AuthenticatedLeaderMembersRouteChildren {
-  AuthenticatedLeaderMembersIdRoute: typeof AuthenticatedLeaderMembersIdRoute
-}
-
-const AuthenticatedLeaderMembersRouteChildren: AuthenticatedLeaderMembersRouteChildren =
-  {
-    AuthenticatedLeaderMembersIdRoute: AuthenticatedLeaderMembersIdRoute,
-  }
-
-const AuthenticatedLeaderMembersRouteWithChildren =
-  AuthenticatedLeaderMembersRoute._addFileChildren(
-    AuthenticatedLeaderMembersRouteChildren,
   )
 
 interface AuthenticatedMemberSalesRouteChildren {
@@ -1645,16 +1689,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedCrmRoute: typeof AuthenticatedCrmRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedLeaderRoute: typeof AuthenticatedLeaderRouteWithChildren
   AuthenticatedSalesWorkflowRoute: typeof AuthenticatedSalesWorkflowRouteWithChildren
   AuthenticatedCommissionsIdRoute: typeof AuthenticatedCommissionsIdRoute
-  AuthenticatedLeaderAnalyticsRoute: typeof AuthenticatedLeaderAnalyticsRoute
-  AuthenticatedLeaderLeaderboardRoute: typeof AuthenticatedLeaderLeaderboardRoute
-  AuthenticatedLeaderMembersRoute: typeof AuthenticatedLeaderMembersRouteWithChildren
-  AuthenticatedLeaderNotificationsRoute: typeof AuthenticatedLeaderNotificationsRoute
-  AuthenticatedLeaderProfileRoute: typeof AuthenticatedLeaderProfileRoute
-  AuthenticatedLeaderProjectsRoute: typeof AuthenticatedLeaderProjectsRoute
-  AuthenticatedLeaderSettingsRoute: typeof AuthenticatedLeaderSettingsRoute
-  AuthenticatedLeaderWithdrawalsRoute: typeof AuthenticatedLeaderWithdrawalsRoute
   AuthenticatedMemberAnalyticsRoute: typeof AuthenticatedMemberAnalyticsRoute
   AuthenticatedMemberCommissionRoute: typeof AuthenticatedMemberCommissionRoute
   AuthenticatedMemberLeaderboardRoute: typeof AuthenticatedMemberLeaderboardRoute
@@ -1666,7 +1703,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMemberTipsRoute: typeof AuthenticatedMemberTipsRoute
   AuthenticatedMemberWalletRoute: typeof AuthenticatedMemberWalletRoute
   AuthenticatedMemberWithdrawalsRoute: typeof AuthenticatedMemberWithdrawalsRoute
-  AuthenticatedLeaderIndexRoute: typeof AuthenticatedLeaderIndexRoute
   AuthenticatedMemberIndexRoute: typeof AuthenticatedMemberIndexRoute
 }
 
@@ -1674,16 +1710,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedCrmRoute: AuthenticatedCrmRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedLeaderRoute: AuthenticatedLeaderRouteWithChildren,
   AuthenticatedSalesWorkflowRoute: AuthenticatedSalesWorkflowRouteWithChildren,
   AuthenticatedCommissionsIdRoute: AuthenticatedCommissionsIdRoute,
-  AuthenticatedLeaderAnalyticsRoute: AuthenticatedLeaderAnalyticsRoute,
-  AuthenticatedLeaderLeaderboardRoute: AuthenticatedLeaderLeaderboardRoute,
-  AuthenticatedLeaderMembersRoute: AuthenticatedLeaderMembersRouteWithChildren,
-  AuthenticatedLeaderNotificationsRoute: AuthenticatedLeaderNotificationsRoute,
-  AuthenticatedLeaderProfileRoute: AuthenticatedLeaderProfileRoute,
-  AuthenticatedLeaderProjectsRoute: AuthenticatedLeaderProjectsRoute,
-  AuthenticatedLeaderSettingsRoute: AuthenticatedLeaderSettingsRoute,
-  AuthenticatedLeaderWithdrawalsRoute: AuthenticatedLeaderWithdrawalsRoute,
   AuthenticatedMemberAnalyticsRoute: AuthenticatedMemberAnalyticsRoute,
   AuthenticatedMemberCommissionRoute: AuthenticatedMemberCommissionRoute,
   AuthenticatedMemberLeaderboardRoute: AuthenticatedMemberLeaderboardRoute,
@@ -1695,7 +1724,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMemberTipsRoute: AuthenticatedMemberTipsRoute,
   AuthenticatedMemberWalletRoute: AuthenticatedMemberWalletRoute,
   AuthenticatedMemberWithdrawalsRoute: AuthenticatedMemberWithdrawalsRoute,
-  AuthenticatedLeaderIndexRoute: AuthenticatedLeaderIndexRoute,
   AuthenticatedMemberIndexRoute: AuthenticatedMemberIndexRoute,
 }
 
