@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Building2, Users, TrendingUp, Wallet, BarChart3, Bell, User } from "lucide-react";
 
 import type { AppRole } from "@/lib/auth";
+import { DOCK_DURATION_MS, DOCK_EASE } from "@/components/aawash/dashboard/dock-motion";
 
 /* ------------------------------------------------------------------ *
  * EcoDock — bottom variant of the forest rail.
@@ -129,7 +130,8 @@ export function EcoDock({ role }: { role: AppRole }) {
     <nav
       aria-label="Dashboard navigation"
       data-testid="eco-dock"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] sm:px-6"
+      style={{ animationDuration: `${DOCK_DURATION_MS}ms`, animationTimingFunction: DOCK_EASE }}
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] animate-fade-in px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] motion-reduce:animate-none sm:px-6"
     >
       <ul className="pointer-events-auto mx-auto flex w-full max-w-[560px] items-center gap-1 overflow-x-auto rounded-[30px] bg-forest/95 px-2 py-2 shadow-[0_22px_50px_rgba(16,50,36,0.32)] ring-1 ring-white/10 backdrop-blur-2xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {items.map((item) => {
@@ -144,9 +146,9 @@ export function EcoDock({ role }: { role: AppRole }) {
                 aria-current={active ? "page" : undefined}
                 data-dock-item={item.key}
                 data-active={active ? "true" : "false"}
-                className={`flex min-w-[52px] flex-col items-center gap-0.5 rounded-[22px] px-1.5 py-2 text-[9.5px] font-semibold transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
+                className={`flex min-w-[52px] flex-col items-center gap-0.5 rounded-[22px] px-1.5 py-2 text-[9.5px] font-semibold transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
                   active
-                    ? "bg-surface text-primary shadow-[var(--shadow-float)]"
+                    ? "-translate-y-0.5 scale-[1.03] bg-surface text-primary shadow-[var(--shadow-float)]"
                     : "text-forest-foreground/70 hover:bg-white/10 hover:text-forest-foreground"
                 }`}
               >
