@@ -10,7 +10,7 @@ import type { AppRole } from "@/lib/auth";
 import { homePathForRole } from "@/lib/auth";
 import { useDock, type DockState } from "@/hooks/useDock";
 import { useWelcome, type WelcomeState } from "@/hooks/useWelcome";
-import { WelcomeBanner } from "@/components/aawash/dashboard/WelcomeBanner";
+import { WelcomeBanner, EcoGreeting } from "@/components/aawash/dashboard/WelcomeBanner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -91,6 +91,12 @@ export function EcoShell({
       </div>
     </WelcomeContext.Provider>
   );
+}
+
+/** Hero greeting wired to the first-run customization choice. */
+export function EcoHeroGreeting({ name }: { name: string }) {
+  const welcome = useEcoWelcome();
+  return <EcoGreeting name={name} style={welcome?.style ?? "time"} />;
 }
 
 function firstName(full?: string | null) {

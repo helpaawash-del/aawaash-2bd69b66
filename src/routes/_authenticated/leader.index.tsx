@@ -33,6 +33,7 @@ import { formatINR } from "@/components/aawash/dashboard-kit";
 import { greetingName, timeGreeting } from "@/lib/greeting";
 import {
   EcoShell,
+  EcoHeroGreeting,
   DarkPod,
   LightPod,
   AskBar,
@@ -130,9 +131,7 @@ function LeaderContent() {
       {/* ---------------- Focus hero ---------------- */}
       <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
         <div className="min-w-0">
-          <h1 className="font-brand text-[20px] font-semibold leading-[1.15] tracking-[-0.015em] text-foreground sm:text-[24px]">
-            {timeGreeting()}, <span className="text-primary">{displayName}</span>
-          </h1>
+          <EcoHeroGreeting name={displayName} />
 
           <div className="mt-4 flex items-center gap-4">
             <img
