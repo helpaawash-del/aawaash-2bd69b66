@@ -77,6 +77,7 @@ function MemberHome() {
 
 function MemberContent() {
   const { profile } = useSession();
+  const firstName = (profile?.full_name ?? "").trim().split(/\s+/)[0] || "";
 
   const overviewFn = useServerFn(getMemberOverview);
   const activityFn = useServerFn(getMyActivity);

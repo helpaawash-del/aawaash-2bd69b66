@@ -93,6 +93,7 @@ function LeaderHome() {
 
 function LeaderContent() {
   const { profile } = useSession();
+  const firstName = (profile?.full_name ?? "").trim().split(/\s+/)[0] || "";
 
   const overviewFn = useServerFn(getLeaderOverview);
   const trendFn = useServerFn(getLeaderTrend);
