@@ -213,7 +213,6 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
             open ? "pr-7" : "pr-3"
           }`}
         >
-
           <nav className="flex w-full flex-1 flex-col items-center justify-center gap-1.5">
             {items.map((item) => {
               const Icon = item.icon;
