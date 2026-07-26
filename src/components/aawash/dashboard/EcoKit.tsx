@@ -159,14 +159,14 @@ function WaveRail({ role }: { role: AppRole }) {
   return (
     <aside
       aria-label="Primary navigation"
-      className="pointer-events-none fixed inset-y-0 left-0 z-40 hidden w-[112px] lg:block"
+      className="pointer-events-none fixed inset-y-0 left-0 z-40 block w-[64px] sm:w-[76px] lg:w-[112px]"
     >
       <div className="pointer-events-auto relative h-full">
         <svg
           aria-hidden
           viewBox="0 0 112 800"
           preserveAspectRatio="none"
-          className="absolute inset-0 h-full w-full text-forest"
+          className="absolute inset-0 h-full w-full text-forest drop-shadow-[8px_0_24px_rgba(16,50,36,0.28)]"
         >
           <path
             fill="currentColor"
@@ -174,7 +174,7 @@ function WaveRail({ role }: { role: AppRole }) {
           />
         </svg>
 
-        <nav className="relative flex h-full flex-col items-center justify-center gap-1.5 pr-6">
+        <nav className="relative flex h-full flex-col items-center justify-center gap-1.5 pr-3 lg:pr-6">
           {items.map((item) => {
             const Icon = item.icon;
             const active =
@@ -185,17 +185,18 @@ function WaveRail({ role }: { role: AppRole }) {
                 key={item.key}
                 to={item.to}
                 hash={item.hash}
+                preload="render"
                 title={item.description}
                 aria-label={item.label}
                 aria-current={active ? "page" : undefined}
-                className={`flex w-[74px] flex-col items-center gap-1 rounded-[20px] px-1 py-2.5 text-[10px] font-semibold transition-all outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 ${
+                className={`flex w-[44px] flex-col items-center gap-1 rounded-[18px] px-1 py-2.5 text-[10px] font-semibold transition-all outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 sm:w-[54px] lg:w-[74px] lg:rounded-[20px] ${
                   active
                     ? "bg-surface text-primary shadow-[var(--shadow-float)]"
                     : "text-forest-foreground/70 hover:bg-white/10 hover:text-forest-foreground"
                 }`}
               >
                 <Icon size={19} />
-                <span className="truncate">{item.label}</span>
+                <span className="hidden truncate lg:block">{item.label}</span>
               </Link>
             );
           })}
@@ -203,6 +204,7 @@ function WaveRail({ role }: { role: AppRole }) {
       </div>
     </aside>
   );
+
 }
 
 /* ---------------------------- Atoms ---------------------------- */
