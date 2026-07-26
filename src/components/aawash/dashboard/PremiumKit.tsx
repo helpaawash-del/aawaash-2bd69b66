@@ -686,3 +686,146 @@ export function ZeroState({
     </div>
   );
 }
+
+/* ------------------------------------------------------------------ *
+ * Zero-data visuals — instead of "nothing here" text blocks we render
+ * a real, readable zero-baseline chart / ghost ranking so the panels
+ * always look composed.
+ * ------------------------------------------------------------------ */
+
+/** Flat zero-baseline area chart with axis grid + month labels. */
+export function ZeroChart({
+  labels = ["", "", "", "", "", ""],
+  caption,
+  className = "h-full w-full",
+}: {
+  labels?: string[];
+  caption?: string;
+  className?: string;
+}) {
+  const w = 320;
+  const h = 140;
+  const n = Math.max(labels.length, 2);
+  return (
+    <div className={`relative flex flex-col ${className}`}>
+      <svg
+        viewBox={`0 0 ${w} ${h}`}
+        preserveAspectRatio="none"
+        className="min-h-0 w-full flex-1"
+        role="img"
+        aria-label="No activity yet — flat zero baseline"
+      >
+        <defs>
+          <linearGradient id="zero-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="currentColor" stopOpacity={0.16} />
+            <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        {[0, 0.25, 0.5, 0.75].map((t) => (
+          <line
+            key={t}
+            x1={0}
+            x2={w}
+            y1={h * t + 6}
+            y2={h * t + 6}
+            stroke="currentColor"
+            strokeOpacity={0.12}
+            strokeDasharray="3 5"
+            strokeWidth={1}
+          />
+        ))}
+        <path d={`M0,${h - 8} L${w},${h - 8} L${w},${h} L0,${h} Z`} fill="url(#zero-fill)" />
+        <line
+          x1={0}
+          x2={w}
+          y1={h - 8}
+          y2={h - 8}
+          stroke="currentColor"
+          strokeOpacity={0.55}
+          strokeWidth={2}
+          strokeLinecap="round"
+          className="motion-safe:animate-holo-draw"
+        />
+        {Array.from({ length: n }).map((_, i) => (
+          <circle
+            key={i}
+            cx={(i / (n - 1)) * (w - 8) + 4}
+            cy={h - 8}
+            r={2.6}
+            fill="currentColor"
+            fillOpacity={0.5}
+          />
+        ))}
+      </svg>
+      <div className="mt-2 flex justify-between px-0.5 text-[10px] font-medium text-muted-foreground">
+        {labels.map((l, i) => (
+          <span key={i}>{l || "—"}</span>
+        ))}
+      </div>
+      {caption && (
+        <p className="mt-1 text-center text-[11px] font-light text-muted-foreground">{caption}</p>
+      )}
+    </div>
+  );
+}
+
+/** Placeholder ranking rows: real podium chrome, values at zero. */
+export function ZeroRanking({ rows = 4, caption }: { rows?: number; caption?: string }) {
+  return (
+    <div className="flex flex-col gap-2.5">
+      {Array.from({ length: rows }).map((_, i) => (
+        <div
+          key={i}
+          className="flex items-center gap-3 rounded-[22px] border border-dashed border-border/70 bg-surface/50 p-3"
+        >
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-muted text-xs font-bold text-muted-foreground">
+            {i + 1}
+          </span>
+          <span className="h-10 w-10 shrink-0 rounded-2xl bg-muted/70" />
+          <div className="min-w-0 flex-1">
+            <div className="h-2.5 w-24 rounded-full bg-muted/80" />
+            <div className="mt-2 h-2 w-16 rounded-full bg-muted/60" />
+          </div>
+          <div className="shrink-0 text-right">
+            <div className="text-sm font-semibold tracking-[-0.01em] text-muted-foreground">₹0</div>
+            <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground/70">
+              Sales
+            </div>
+          </div>
+        </div>
+      ))}
+      {caption && (
+        <p className="pt-1 text-center text-[11px] font-light text-muted-foreground">{caption}</p>
+      )}
+    </div>
+  );
+}
+
+/** Placeholder activity timeline with a zero bar column. */
+export function ZeroActivity({ rows = 3, caption }: { rows?: number; caption?: string }) {
+  return (
+    <div className="flex flex-col gap-2.5">
+      <div className="flex h-20 items-end gap-1.5 rounded-[22px] border border-dashed border-border/70 bg-surface/50 px-3 pb-3 pt-3 text-primary">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <span key={i} className="flex-1 rounded-t-md bg-current opacity-25" style={{ height: 3 }} />
+        ))}
+      </div>
+      {Array.from({ length: rows }).map((_, i) => (
+        <div
+          key={i}
+          className="flex items-center gap-3 rounded-[22px] border border-dashed border-border/70 bg-surface/50 p-3"
+        >
+          <span className="h-9 w-9 shrink-0 rounded-xl bg-muted/70" />
+          <div className="min-w-0 flex-1">
+            <div className="h-2.5 w-32 rounded-full bg-muted/80" />
+            <div className="mt-2 h-2 w-20 rounded-full bg-muted/60" />
+          </div>
+          <div className="shrink-0 text-sm font-semibold text-muted-foreground">₹0</div>
+        </div>
+      ))}
+      {caption && (
+        <p className="pt-1 text-center text-[11px] font-light text-muted-foreground">{caption}</p>
+      )}
+    </div>
+  );
+}
