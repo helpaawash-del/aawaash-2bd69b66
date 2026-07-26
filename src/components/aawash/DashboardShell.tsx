@@ -7,7 +7,7 @@ import { AmbientBackground } from "./AmbientBackground";
 import { BrandMark } from "./BrandMark";
 import { itemsForRole } from "./BottomNav";
 import type { AawashProfile } from "@/hooks/useSession";
-import { roleLabel } from "@/lib/auth";
+import { homePathForRole, roleLabel } from "@/lib/auth";
 import type { AppRole } from "@/lib/auth";
 import {
   AlertDialog,
@@ -49,6 +49,8 @@ export function DashboardShell({
     }
   }
 
+  const base = homePathForRole(role);
+
   const initials = (profile?.full_name || profile?.login_id || "AA")
     .split(" ")
     .map((s) => s[0])
@@ -85,7 +87,7 @@ export function DashboardShell({
 
             {/* Notifications */}
             <Link
-              to={`/${role}/notifications` as never}
+              to={`${base}/notifications` as never}
               aria-label="Notifications"
               className="group relative grid h-11 w-11 min-h-11 min-w-11 shrink-0 place-items-center rounded-2xl border border-border bg-surface text-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
@@ -95,7 +97,7 @@ export function DashboardShell({
 
             {/* User chip */}
             <Link
-              to={`/${role}/profile` as never}
+              to={`${base}/profile` as never}
               aria-label="Open your profile"
               className="glass-card hidden min-h-11 items-center gap-2.5 rounded-full py-1 pl-1 pr-3 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)] sm:inline-flex outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
