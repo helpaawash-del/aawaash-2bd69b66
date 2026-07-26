@@ -191,38 +191,8 @@ function MemberContent() {
         <LightPod icon={<Bell size={15} />} label="Alerts" value={String(unread)} to="/member/notifications" />
       </section>
 
-      {/* ---------------- Projects rail ---------------- */}
-      <section className="mt-7">
-        <SectionHead title="Active Projects" to="/projects" />
-        {projects.isLoading ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {[0, 1, 2].map((i) => (
-              <EcoSkeleton key={i} className="h-[188px]" />
-            ))}
-          </div>
-        ) : projectList.length === 0 ? (
-          <EcoZero
-            icon={<Building2 size={22} />}
-            title="No projects yet"
-            body="Published residences appear here so you can start selling right away."
-            cta={{ label: "Browse projects", to: "/projects" }}
-          />
-        ) : (
-          <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
-            {projectList.map((p) => (
-              <div key={p.id} className="w-[62%] shrink-0 snap-start sm:w-auto">
-                <EcoProjectCard
-                  to="/projects"
-                  name={p.name}
-                  meta={p.location}
-                  hue={p.hero_hue}
-                  pct={p.total_units ? Math.round((p.sold_units / p.total_units) * 100) : 0}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+
+
 
       {/* ---------------- Overview + activity ---------------- */}
       <section className="mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
