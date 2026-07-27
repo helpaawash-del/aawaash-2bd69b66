@@ -227,16 +227,22 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
                   data-dock-item={item.key}
                   data-active={active ? "true" : "false"}
                   onClick={() => setSection(item.key)}
-                  className={`group flex flex-col items-center gap-1 overflow-hidden rounded-[18px] px-1 py-2.5 text-[10px] font-semibold transition-[background-color,color,width,box-shadow,transform] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
-                    open ? "w-[84px] rounded-[22px] py-3" : "w-[46px]"
+                  className={`group relative flex flex-col items-center gap-1 overflow-hidden rounded-[16px] px-1 py-2.5 text-[9.5px] font-semibold tracking-[0.02em] transition-[background-color,color,width,box-shadow,transform] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
+                    open ? "w-[80px] rounded-[20px] py-3" : "w-[44px]"
                   } ${
                     active
-                      ? "bg-surface text-primary shadow-[var(--shadow-float)]"
-                      : "text-forest-foreground/70 hover:bg-white/10 hover:text-forest-foreground"
+                      ? "bg-white/95 text-primary shadow-[0_8px_20px_-8px_rgba(0,0,0,0.45)]"
+                      : "text-forest-foreground/65 hover:bg-white/10 hover:text-forest-foreground"
                   }`}
                 >
+                  <span
+                    aria-hidden
+                    className={`absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-primary transition-opacity duration-300 ${
+                      active ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
                   <Icon
-                    size={19}
+                    size={18}
                     className="shrink-0 transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-0.5 motion-reduce:transition-none"
                   />
                   <span
@@ -247,6 +253,7 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
                     {item.label}
                   </span>
                 </Link>
+
               );
             })}
           </nav>
