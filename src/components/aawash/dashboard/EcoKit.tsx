@@ -258,7 +258,10 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
             })}
           </nav>
 
+          <span aria-hidden className="h-px w-7 shrink-0 rounded-full bg-white/15" />
+
           {canExpand && (
+
             <button
               type="button"
               onClick={toggle}
