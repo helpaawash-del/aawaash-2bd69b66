@@ -354,10 +354,11 @@ function MemberContent() {
             </ol>
           )}
         </LightPanel>
-      </section>
+      </EcoSection>
 
       {/* ---------------- Footer CTAs ---------------- */}
-      <section className="mt-4 sm:mt-5 grid gap-3 sm:grid-cols-2">
+      <EcoSection className="pb-2">
+        <div className="grid gap-3 sm:grid-cols-2">
         <Link
           to="/projects"
           className="flex items-center gap-3 rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
