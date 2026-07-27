@@ -35,7 +35,15 @@ function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [attempts, setAttempts] = useState(0);
+  const [lockedUntil, setLockedUntil] = useState<number | null>(null);
   const [shake, setShake] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (!lockedUntil) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [lockedUntil]);
 
   const { data, isLoading } = useQuery({ queryKey: ["admin", "passcode"], queryFn: () => check() });
 
@@ -66,16 +74,19 @@ function AdminLoginPage() {
     try {
       const result = await unlock({ data: { passcode } });
       if (!result.ok) {
-        const next = attempts + 1;
-        setAttempts(next);
-        setError(
-          `Incorrect passcode. Please try again.${next >= 3 ? " Check with your administrator for the correct 4-digit code." : ""}`,
+        setAttempts((n) => n + 1);
+        setError(result.message);
+        setLockedUntil(
+          result.reason === "rate_limited" && result.retryAfterSeconds
+            ? Date.now() + result.retryAfterSeconds * 1000
+            : null,
         );
         setPasscode("");
         setShake((n) => n + 1);
         return;
       }
       setAttempts(0);
+      setLockedUntil(null);
 
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
@@ -101,6 +112,9 @@ function AdminLoginPage() {
   }
 
 
+
+  const locked = lockedUntil !== null && lockedUntil > now;
+  const lockRemaining = locked ? Math.ceil((lockedUntil! - now) / 1000) : 0;
 
   return (
     <main className="relative grid min-h-dvh place-items-center overflow-hidden bg-background px-4 py-10 text-foreground">
@@ -144,6 +158,7 @@ function AdminLoginPage() {
                 aria-invalid={error ? true : undefined}
                 aria-describedby={error ? "admin-passcode-error" : undefined}
                 value={passcode}
+                disabled={locked}
                 onChange={(e) => {
                   setPasscode(e.target.value.replace(/\D/g, "").slice(0, 4));
                   if (error) setError(null);
@@ -168,9 +183,9 @@ function AdminLoginPage() {
 
 
 
-          <button type="submit" disabled={submitting || isLoading} className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3.5 text-sm font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5 disabled:opacity-70">
+          <button type="submit" disabled={submitting || isLoading || locked} className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3.5 text-sm font-extrabold uppercase tracking-wider text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5 disabled:opacity-70">
             {submitting ? <Loader2 size={16} className="animate-spin" /> : <KeyRound size={16} />}
-            Continue to admin
+            {locked ? `Locked — retry in ${lockRemaining}s` : "Continue to admin"}
           </button>
         </form>
       </section>
