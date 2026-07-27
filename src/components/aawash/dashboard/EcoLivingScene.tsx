@@ -112,17 +112,20 @@ export function EcoLivingScene() {
         data-testid="eco-hero-scene"
         className="relative isolate aspect-[16/11] w-full bg-transparent sm:aspect-[16/10]"
       >
+        {/* soft emerald halo behind the model */}
+        <span className="absolute left-1/2 top-1/2 -z-10 h-[70%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--forest)_18%,transparent),transparent_70%)] blur-2xl" />
         <img
           ref={towerRef}
           src={ecoBuilding.url}
           alt=""
           data-testid="eco-hero-image"
           loading="lazy"
-          width={1920}
-          height={1300}
-          className="absolute inset-0 mx-auto block h-full w-full translate-y-[6%] bg-transparent object-contain sm:translate-y-[5%]"
+          width={1536}
+          height={1152}
+          className="absolute inset-0 mx-auto block h-full w-full translate-y-[4%] bg-transparent object-contain sm:translate-y-[3%]"
         />
       </div>
+
     </>
   );
 }
