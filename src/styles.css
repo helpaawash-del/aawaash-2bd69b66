@@ -339,7 +339,7 @@
 @keyframes bird-roam-b {
   0%    { transform: translate3d(var(--hub-x), calc(var(--hub-y) + 4vh), 0) scaleX(-1); }
   6%    { transform: translate3d(calc(var(--hub-x) - 5vw), calc(var(--hub-y) + 1vh), 0) scaleX(-1); }
-  18%   { transform: translate3d(-10vw, 58vh, 0) scaleX(-1); }
+  18%   { transform: translate3d(-10vw, 44vh, 0) scaleX(-1); }
   25%   { transform: translate3d(12vw, 50vh, 0) scaleX(1); }
   31%   { transform: translate3d(var(--hub-x), calc(var(--hub-y) + 6vh), 0) scaleX(1); }
   38%   { transform: translate3d(calc(var(--hub-x) + 7vw), calc(var(--hub-y) - 2vh), 0) scaleX(1); }
@@ -355,7 +355,7 @@
   0%    { transform: translate3d(var(--hub-x), calc(var(--hub-y) - 6vh), 0) scaleX(1); }
   7%    { transform: translate3d(calc(var(--hub-x) + 5vw), calc(var(--hub-y) - 9vh), 0) scaleX(1); }
   20%   { transform: translate3d(84vw, 56vh, 0) scaleX(1); }
-  27%   { transform: translate3d(48vw, 60vh, 0) scaleX(-1); }
+  27%   { transform: translate3d(48vw, 42vh, 0) scaleX(-1); }
   33%   { transform: translate3d(var(--hub-x), calc(var(--hub-y) - 4vh), 0) scaleX(-1); }
   40%   { transform: translate3d(calc(var(--hub-x) - 6vw), calc(var(--hub-y) - 8vh), 0) scaleX(-1); }
   54%   { transform: translate3d(-9vw, 48vh, 0) scaleX(-1); }
