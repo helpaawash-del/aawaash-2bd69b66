@@ -27,7 +27,6 @@ import {
 } from "recharts";
 
 import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
-import { BlankChart } from "@/components/aawash/dashboard/BlankChart";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -41,7 +40,6 @@ import {
   DarkPanel,
   LightPanel,
   Orb,
-  TimelineRow,
   EcoSkeleton,
   EcoRows,
   EcoZero,
@@ -115,8 +113,6 @@ function LeaderContent() {
   const unread = (notifs.data ?? []).filter((n) => !n.is_read).length;
   const memberList = members.data ?? [];
   const topMembers = (board.data ?? []).slice(0, 5);
-  const recentSales = (sales.data ?? []).slice(0, 4);
-  const recentComms = (comms.data ?? []).slice(0, 3);
   const months = trend.data?.months ?? [];
 
   const target = Math.max(1, Number(o?.totalRevenue ?? 0) * 1.4 || 1);

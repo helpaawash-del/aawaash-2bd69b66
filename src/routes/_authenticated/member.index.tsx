@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 
 import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
-import { BlankChart } from "@/components/aawash/dashboard/BlankChart";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -37,7 +36,6 @@ import {
   DarkPanel,
   LightPanel,
   Orb,
-  TimelineRow,
   EcoRows,
   EcoZero,
   Avatar,
@@ -102,7 +100,6 @@ function MemberContent() {
   const rank = board.data?.members.find((m) => m.id === myId)?.rank ?? null;
   const myScore = Number(board.data?.members.find((m) => m.id === myId)?.score ?? 0);
   const topBoard = (board.data?.members ?? []).slice(0, 5);
-  const recent = (activity.data ?? []).slice(0, 5);
 
   const xpGoal = Math.max(100, Math.round(myScore * 1.6) || 100);
 
@@ -396,36 +393,6 @@ function MemberContent() {
       </section>
     </EcoShell>
   );
-}
-
-function activityTone(kind: string): "primary" | "gold" | "danger" | "muted" {
-  switch (kind) {
-    case "commission":
-      return "gold";
-    case "withdrawal":
-      return "danger";
-    case "sale":
-    case "referral":
-    case "tip":
-      return "primary";
-    default:
-      return "muted";
-  }
-}
-
-function activityIcon(kind: string) {
-  switch (kind) {
-    case "commission":
-      return <IndianRupee size={15} />;
-    case "withdrawal":
-      return <Wallet size={15} />;
-    case "referral":
-      return <UserPlus size={15} />;
-    case "tip":
-      return <Handshake size={15} />;
-    default:
-      return <TrendingUp size={15} />;
-  }
 }
 
 function KV({
