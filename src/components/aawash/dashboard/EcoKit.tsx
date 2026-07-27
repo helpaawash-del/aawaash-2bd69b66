@@ -68,12 +68,27 @@ export function EcoShell({
   return (
     <WelcomeContext.Provider value={welcome}>
       <div className="relative min-h-screen overflow-x-clip bg-surface-warm">
-        {/* ambient light */}
+        {/* ambient futuristic field */}
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-          <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-leaf/10 blur-3xl" />
-          <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
+          {/* aurora washes */}
+          <div className="absolute -left-32 -top-24 h-[26rem] w-[26rem] rounded-full bg-primary/20 blur-[120px] animate-eco-drift-a" />
+          <div className="absolute -right-24 top-1/4 h-[30rem] w-[30rem] rounded-full bg-leaf/20 blur-[130px] animate-eco-drift-b" />
+          <div className="absolute bottom-[-8rem] left-1/4 h-[24rem] w-[24rem] rounded-full bg-gold/15 blur-[120px] animate-eco-drift-c" />
+          {/* fine grid */}
+          <div
+            className="absolute inset-0 opacity-[0.35]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, color-mix(in oklab, var(--forest) 8%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--forest) 8%, transparent) 1px, transparent 1px)",
+              backgroundSize: "56px 56px",
+              maskImage: "radial-gradient(ellipse at 50% 20%, black 10%, transparent 78%)",
+              WebkitMaskImage: "radial-gradient(ellipse at 50% 20%, black 10%, transparent 78%)",
+            }}
+          />
+          {/* horizon glow */}
+          <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-surface/90 to-transparent" />
         </div>
+
 
         <WaveRail role={role} dock={dock} />
 
