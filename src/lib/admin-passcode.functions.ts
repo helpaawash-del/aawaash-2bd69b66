@@ -10,7 +10,11 @@ export const isAdminPanelUnlocked = createServerFn({ method: "GET" }).handler(as
 export const unlockAdminPanel = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ passcode: z.string().trim().length(4) }).parse(data))
   .handler(async ({ data }) => {
-    const expected = process.env.ADMIN_PANEL_PASSCODE ?? "0000";
+    const expected = process.env.ADMIN_PANEL_PASSCODE;
+    if (!expected || expected.trim().length < 4) {
+      // Fail closed: never fall back to a well-known default passcode.
+      throw new Error("Admin panel is not configured: ADMIN_PANEL_PASSCODE is missing.");
+    }
     if (!passcodeMatches(data.passcode, expected)) {
       return { ok: false as const, tokenHash: null, email: null };
     }
