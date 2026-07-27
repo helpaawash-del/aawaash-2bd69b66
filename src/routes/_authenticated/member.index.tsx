@@ -29,7 +29,9 @@ import { formatINR } from "@/components/aawash/dashboard-kit";
 import { greetingName } from "@/lib/greeting";
 import {
   EcoShell,
-  EcoHeroGreeting,
+  EcoHero,
+  EcoSection,
+  EcoLink,
   LightPod,
   AskBar,
   DarkPanel,
@@ -39,6 +41,7 @@ import {
   EcoZero,
   Avatar,
 } from "@/components/aawash/dashboard/EcoKit";
+
 import { getMemberOverview, getMyActivity, getMyTeamLeaderboard } from "@/lib/member.functions";
 import { listMyNotifications, listProjects } from "@/lib/leader.functions";
 
