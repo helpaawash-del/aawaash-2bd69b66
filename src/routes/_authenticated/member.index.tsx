@@ -115,9 +115,9 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Command bar + primary pods ---------------- */}
-      <section className="mt-4 grid gap-3 sm:mt-5">
+      <section className="mt-4 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3 sm:mt-5">
         <AskBar to="/member/sales" placeholder="Search your sales, referrals or tips…" />
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3">
           <LightPod
             icon={<TrendingUp size={15} />}
             label="Total sales"
