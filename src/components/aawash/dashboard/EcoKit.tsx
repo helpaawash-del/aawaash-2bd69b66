@@ -98,6 +98,106 @@ export function EcoHeroGreeting({ name }: { name: string }) {
   return <EcoGreeting name={name} style={welcome?.style ?? "time"} />;
 }
 
+/**
+ * Hero card — one calm container that holds the eyebrow, greeting, supporting
+ * line, an optional command bar and the architectural scene. Keeps the top of
+ * every dashboard visually identical across roles and breakpoints.
+ */
+export function EcoHero({
+  name,
+  eyebrow,
+  tagline,
+  scene,
+  aside,
+}: {
+  name: string;
+  eyebrow: string;
+  tagline?: string;
+  scene?: React.ReactNode;
+  aside?: React.ReactNode;
+}) {
+  return (
+    <section className="relative overflow-hidden rounded-[30px] bg-surface p-5 shadow-[var(--shadow-soft)] ring-1 ring-inset ring-border/50 sm:rounded-[38px] sm:p-7">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-24 left-1/4 h-56 w-56 rounded-full bg-leaf/10 blur-3xl"
+      />
+      <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-8">
+        <div className="min-w-0">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-[9.5px] font-semibold uppercase tracking-[0.18em] text-primary">
+            {eyebrow}
+          </span>
+          <div className="mt-3">
+            <EcoHeroGreeting name={name} />
+          </div>
+          {tagline && (
+            <p className="mt-2.5 max-w-[44ch] text-[12.5px] font-light leading-relaxed text-muted-foreground">
+              {tagline}
+            </p>
+          )}
+          {aside && <div className="mt-5">{aside}</div>}
+        </div>
+        {scene && <div className="min-w-0">{scene}</div>}
+      </div>
+    </section>
+  );
+}
+
+/** Consistent vertical rhythm + heading for every dashboard block. */
+export function EcoSection({
+  title,
+  subtitle,
+  action,
+  children,
+  className = "",
+}: {
+  title?: string;
+  subtitle?: string;
+  action?: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section className={`mt-7 sm:mt-9 ${className}`}>
+      {(title || action) && (
+        <div className="mb-3.5 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3">
+          <div className="min-w-0">
+            {title && (
+              <h2 className="truncate text-[15.5px] font-bold tracking-[-0.015em] text-foreground sm:text-[17px]">
+                {title}
+              </h2>
+            )}
+            {subtitle && (
+              <p className="mt-0.5 truncate text-[11.5px] font-light text-muted-foreground">
+                {subtitle}
+              </p>
+            )}
+          </div>
+          {action && <div className="shrink-0">{action}</div>}
+        </div>
+      )}
+      {children}
+    </section>
+  );
+}
+
+/** Small text link used as a section action. */
+export function EcoLink({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <Link
+      to={to as never}
+      className="inline-flex items-center gap-1 rounded-full px-1 text-[12px] font-semibold text-primary transition-colors hover:text-leaf outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      {children} <ChevronRight size={14} />
+    </Link>
+  );
+}
+
+
 function firstName(full?: string | null) {
   return (full || "there").trim().split(/\s+/)[0] || "there";
 }
@@ -480,21 +580,21 @@ export function LightPod({
 }) {
   const inner = (
     <>
-      <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-primary">
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-primary-soft text-primary transition-transform duration-300 group-hover:scale-105">
         {icon}
       </span>
       <span
         data-pod-label
-        className="mt-1 text-[10px] font-medium text-muted-foreground sm:text-[10.5px]"
+        className="mt-3 block w-full truncate text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground"
       >
         {label}
       </span>
       {loading ? (
-        <span className="my-[2px] h-[15.4px] w-12 eco-skel rounded-full bg-muted sm:h-[17px]" />
+        <span className="mt-[3px] block h-[17px] w-14 eco-skel rounded-full bg-muted sm:h-[19px]" />
       ) : (
         <span
           data-pod-value
-          className="text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-[17px]"
+          className="mt-0.5 block w-full truncate text-[17px] font-extrabold leading-tight tracking-[-0.025em] text-foreground sm:text-[19px]"
         >
           {value}
         </span>
@@ -502,7 +602,8 @@ export function LightPod({
     </>
   );
   const cls =
-    "flex h-full min-h-[88px] flex-col items-center justify-center rounded-[22px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[96px] sm:rounded-[24px]";
+    "group flex h-full min-h-[104px] flex-col items-start justify-center rounded-[22px] bg-surface px-3.5 py-3.5 text-left shadow-[var(--shadow-soft)] ring-1 ring-inset ring-border/50 transition-all will-change-transform hover:-translate-y-1 hover:shadow-[var(--shadow-float)] active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-[112px] sm:rounded-[26px] sm:px-4";
+
   const testProps = {
     "data-testid": "eco-pod",
     "data-pod": label.toLowerCase().replace(/\s+/g, "-"),
@@ -574,7 +675,7 @@ export function DarkPanel({
   stats?: { label: string; value: string; hint?: string }[];
 }) {
   return (
-    <section className="relative overflow-hidden rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] sm:rounded-[34px] sm:p-5">
+    <section className="relative overflow-hidden rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] ring-1 ring-inset ring-border/50 sm:rounded-[34px] sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">
           {title}
@@ -654,7 +755,7 @@ export function LightPanel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex h-full flex-col rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] sm:rounded-[34px] sm:p-5">
+    <section className="flex h-full flex-col rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] ring-1 ring-inset ring-border/50 sm:rounded-[34px] sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">
           {title}
