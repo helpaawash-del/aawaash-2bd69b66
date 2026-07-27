@@ -34,7 +34,6 @@ function AdminLoginPage() {
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [attempts, setAttempts] = useState(0);
   const [lockedUntil, setLockedUntil] = useState<number | null>(null);
   const [shake, setShake] = useState(0);
   const [now, setNow] = useState(() => Date.now());
@@ -74,7 +73,6 @@ function AdminLoginPage() {
     try {
       const result = await unlock({ data: { passcode } });
       if (!result.ok) {
-        setAttempts((n) => n + 1);
         setError(result.message);
         setLockedUntil(
           result.reason === "rate_limited" && result.retryAfterSeconds
@@ -85,7 +83,6 @@ function AdminLoginPage() {
         setShake((n) => n + 1);
         return;
       }
-      setAttempts(0);
       setLockedUntil(null);
 
       const { data: userData } = await supabase.auth.getUser();
