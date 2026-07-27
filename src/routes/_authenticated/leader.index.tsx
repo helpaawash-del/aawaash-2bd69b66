@@ -132,10 +132,9 @@ function LeaderContent() {
           </div>
         </div>
 
-        <div className="grid grid-rows-2 gap-3 pt-4 sm:pt-6">
-          <DarkPod
-            tone="light"
-            icon={<TrendingUp size={17} />}
+        <div className="grid content-start gap-3 pt-4 sm:pt-6">
+          <LightPod
+            icon={<TrendingUp size={15} />}
             label="Total sales"
             value={String(o?.salesCount ?? 0)}
             to="/leader/analytics"
