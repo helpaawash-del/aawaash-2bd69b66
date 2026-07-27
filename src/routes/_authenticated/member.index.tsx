@@ -295,10 +295,11 @@ function MemberContent() {
             </Link>
           </div>
         </LightPanel>
-      </section>
+        </div>
+      </EcoSection>
 
       {/* ---------------- Leaderboard ---------------- */}
-      <section className="mt-4 sm:mt-5">
+      <EcoSection title="Standings" subtitle="How your team is ranking this cycle">
         <LightPanel
           title="Team Leaderboard"
           action={
