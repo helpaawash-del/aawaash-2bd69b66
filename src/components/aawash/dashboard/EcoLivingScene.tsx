@@ -74,9 +74,11 @@ export function EcoLivingScene() {
   return (
     <>
       {/* page-wide roaming birds — behind content, never interactive */}
+      {/* Flight area is clipped: it starts below the greeting block and ends
+          above the bottom dock, so birds can never overlap either. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-0 overflow-hidden motion-reduce:hidden"
+        className="pointer-events-none fixed inset-x-0 top-[168px] bottom-[132px] z-0 overflow-hidden motion-reduce:hidden sm:top-[136px] sm:bottom-[112px]"
         style={{ "--hub-x": hub.x, "--hub-y": hub.y } as React.CSSProperties}
       >
         {BIRDS.map((b, i) => (
