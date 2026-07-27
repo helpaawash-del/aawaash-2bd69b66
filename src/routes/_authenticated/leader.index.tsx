@@ -416,7 +416,7 @@ function LeaderContent() {
           </div>
           <MapPin size={16} className="shrink-0 text-muted-foreground" />
         </Link>
-      </section>
+      </EcoSection>
     </EcoShell>
   );
 }
