@@ -469,13 +469,19 @@ export function LightPod({
       <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-primary">
         {icon}
       </span>
-      <span className="mt-1 text-[10px] font-medium text-muted-foreground sm:text-[10.5px]">
+      <span
+        data-pod-label
+        className="mt-1 text-[10px] font-medium text-muted-foreground sm:text-[10.5px]"
+      >
         {label}
       </span>
       {loading ? (
         <span className="mt-1.5 h-[15px] w-12 eco-skel rounded-full bg-muted" />
       ) : (
-        <span className="text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-[17px]">
+        <span
+          data-pod-value
+          className="text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-[17px]"
+        >
           {value}
         </span>
       )}
@@ -483,12 +489,19 @@ export function LightPod({
   );
   const cls =
     "flex h-full min-h-[88px] flex-col items-center justify-center rounded-[22px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[96px] sm:rounded-[24px]";
+  const testProps = {
+    "data-testid": "eco-pod",
+    "data-pod": label.toLowerCase().replace(/\s+/g, "-"),
+    "data-loading": loading ? "true" : "false",
+  } as const;
   return to ? (
-    <Link to={to as never} className={cls} aria-label={`${label}: ${value}`}>
+    <Link to={to as never} className={cls} aria-label={`${label}: ${value}`} {...testProps}>
       {inner}
     </Link>
   ) : (
-    <div className={cls}>{inner}</div>
+    <div className={cls} {...testProps}>
+      {inner}
+    </div>
   );
 }
 
