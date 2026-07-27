@@ -159,9 +159,9 @@ export function EcoLivingScene() {
           width={1536}
           height={1152}
           style={{
-            transform: `perspective(1100px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translate3d(${tilt.tx}px, ${tilt.ty}px, 0)`,
+            transform: `perspective(1100px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translate3d(${tilt.tx}px, calc(4% + ${tilt.ty}px), 0)`,
           }}
-          className="absolute inset-0 mx-auto block h-full w-full translate-y-[4%] bg-transparent object-contain transition-transform duration-300 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none sm:translate-y-[3%]"
+          className="absolute inset-0 mx-auto block h-full w-full bg-transparent object-contain transition-transform duration-300 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none"
         />
       </div>
 
