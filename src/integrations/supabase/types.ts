@@ -2923,7 +2923,6 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["app_role"]
       }
-      debug_whoami: { Args: never; Returns: Json }
       generate_commissions_for_sale: {
         Args: { p_sale_id: string }
         Returns: string
