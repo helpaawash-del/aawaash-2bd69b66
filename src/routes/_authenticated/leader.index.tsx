@@ -30,9 +30,7 @@ import { formatINR } from "@/components/aawash/dashboard-kit";
 import { greetingName } from "@/lib/greeting";
 import {
   EcoShell,
-  EcoHero,
-  EcoSection,
-  EcoLink,
+  EcoHeroGreeting,
   LightPod,
   AskBar,
   DarkPanel,
@@ -44,7 +42,6 @@ import {
   EcoZeroChart,
   Avatar,
 } from "@/components/aawash/dashboard/EcoKit";
-
 import {
   getLeaderOverview,
   getLeaderTrend,
@@ -124,63 +121,74 @@ function LeaderContent() {
 
   return (
     <EcoShell role="team_leader" profile={profile}>
-      {/* ---------------- Hero ---------------- */}
-      <EcoHero
-        name={displayName}
-        eyebrow="Team command centre"
-        tagline="Your team's revenue, commissions and inventory — one calm view, updated live."
-        aside={<AskBar to="/leader/members" placeholder="Search members, sales or projects…" />}
-        scene={<EcoLivingScene />}
-      />
+      {/* ---------------- Focus hero ---------------- */}
+      <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
+        <div className="min-w-0 pt-4 sm:pt-6">
+          <EcoHeroGreeting name={displayName} />
 
-      {/* ---------------- KPI strip ---------------- */}
-      <EcoSection title="At a glance" subtitle="Live team performance">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-6 sm:mt-8">
+            <EcoLivingScene />
+          </div>
+        </div>
+
+        <div className="grid content-start gap-3 pt-4 sm:pt-6">
           <LightPod
-            icon={<TrendingUp size={16} />}
+            icon={<TrendingUp size={15} />}
             label="Total sales"
             value={String(o?.salesCount ?? 0)}
             to="/leader/analytics"
             loading={overview.isLoading}
           />
+
           <LightPod
-            icon={<Droplet size={16} />}
+            icon={<Droplet size={15} />}
             label="Wallet"
             value={formatINR(profile?.wallet_balance, { compact: true })}
             to="/leader/withdrawals"
             loading={overview.isLoading}
           />
-          <LightPod
-            icon={<Users size={16} />}
-            label="Members"
-            value={String(o?.memberCount ?? 0)}
-            to="/leader/members"
-            loading={overview.isLoading}
-          />
-          <LightPod
-            icon={<Wallet size={16} />}
-            label="Withdraw"
-            value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })}
-            to="/leader/withdrawals"
-          />
-          <LightPod
-            icon={<Bell size={16} />}
-            label="Alerts"
-            value={String(unread)}
-            to="/leader/notifications"
-            loading={notifs.isLoading}
-          />
         </div>
-      </EcoSection>
+      </section>
 
-      {/* ---------------- Overview ---------------- */}
-      <EcoSection
-        title="Team overview"
-        subtitle="Members, closed deals and approved payouts"
-        action={<EcoLink to="/leader/analytics">Analytics</EcoLink>}
-      >
+      {/* ---------------- Command bar ---------------- */}
+      <section className="mt-4 sm:mt-5">
+        <AskBar to="/leader/members" placeholder="Search members, sales or projects…" />
+      </section>
+
+      {/* ---------------- Quick pods ---------------- */}
+      <section className="mt-4 sm:mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <LightPod
+          icon={<Users size={15} />}
+          label="Members"
+          value={String(o?.memberCount ?? 0)}
+          to="/leader/members"
+          loading={overview.isLoading}
+        />
+        <LightPod
+          icon={<Wallet size={15} />}
+          label="Withdraw"
+          value={formatINR(o?.pendingWithdrawals ?? 0, { compact: true })}
+          to="/leader/withdrawals"
+        />
+        <LightPod
+          icon={<BarChart3 size={15} />}
+          label="Analytics"
+          value="Open"
+          to="/leader/analytics"
+        />
+        <LightPod
+          icon={<Bell size={15} />}
+          label="Alerts"
+          value={String(unread)}
+          to="/leader/notifications"
+          loading={notifs.isLoading}
+        />
+      </section>
+
+      {/* ---------------- Overview + schedule ---------------- */}
+      <section className="mt-4 sm:mt-5">
         <DarkPanel
-          title="Live pulse"
+          title="Team Overview"
           action={<Activity size={17} className="text-forest/70" />}
           stats={[
             { label: "Members", value: String(o?.memberCount ?? 0), hint: "Active" },
@@ -194,11 +202,10 @@ function LeaderContent() {
         >
           <Orb intensity={Math.min(1, (o?.salesCount ?? 0) / 10)} />
         </DarkPanel>
-      </EcoSection>
+      </section>
 
       {/* ---------------- Trend + wallet ---------------- */}
-      <EcoSection title="Money & momentum" subtitle="Six-month trend against your wallet position">
-        <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
+      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
         <LightPanel
           title="Performance Trend"
           action={<span className="text-[11px] font-semibold text-primary">6M</span>}
@@ -303,16 +310,10 @@ function LeaderContent() {
             <ArrowDownToLine size={15} /> Request withdrawal
           </Link>
         </LightPanel>
-        </div>
-      </EcoSection>
+      </section>
 
       {/* ---------------- Leaderboard + members ---------------- */}
-      <EcoSection
-        title="People"
-        subtitle="Top performers and your active roster"
-        action={<EcoLink to="/leader/members">All members</EcoLink>}
-      >
-        <div className="grid gap-4 lg:grid-cols-2">
+      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-2">
         <LightPanel
           title="Team Leaderboard"
           action={
@@ -396,11 +397,10 @@ function LeaderContent() {
             </ul>
           )}
         </LightPanel>
-        </div>
-      </EcoSection>
+      </section>
 
       {/* ---------------- Footer CTA ---------------- */}
-      <EcoSection>
+      <section className="mt-4 sm:mt-5">
         <Link
           to="/leader/analytics"
           className="flex items-center gap-3 rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
@@ -416,7 +416,7 @@ function LeaderContent() {
           </div>
           <MapPin size={16} className="shrink-0 text-muted-foreground" />
         </Link>
-      </EcoSection>
+      </section>
     </EcoShell>
   );
 }
