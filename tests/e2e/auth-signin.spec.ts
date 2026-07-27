@@ -86,7 +86,7 @@ test.describe("sign-in page — login behaviour is unchanged", () => {
 
   test("exposes exactly the original Login ID + password controls", async ({ page }) => {
     await expect(page.getByRole("textbox", { name: "Login ID" })).toBeVisible();
-    await expect(page.getByRole("textbox", { name: "Password" })).toBeVisible();
+    await expect(page.locator('input[aria-label="Password"]')).toBeVisible();
     await expect(page.getByRole("button", { name: /^sign in$/i })).toBeVisible();
     // No social / remember-me controls were introduced by the redesign.
     await expect(page.getByRole("button", { name: /google|facebook|apple/i })).toHaveCount(0);
@@ -106,7 +106,7 @@ test.describe("sign-in page — login behaviour is unchanged", () => {
     });
 
     await page.getByRole("textbox", { name: "Login ID" }).fill("12");
-    await page.getByRole("textbox", { name: "Password" }).fill("secret123");
+    await page.locator('input[aria-label="Password"]').fill("secret123");
     await page.getByRole("button", { name: /^sign in$/i }).click();
 
     await expect(page.getByRole("alert")).toHaveText(/invalid login credentials/i);
@@ -120,7 +120,7 @@ test.describe("sign-in page — login behaviour is unchanged", () => {
     });
 
     await page.getByRole("textbox", { name: "Login ID" }).fill("9876543210");
-    await page.getByRole("textbox", { name: "Password" }).fill("123");
+    await page.locator('input[aria-label="Password"]').fill("123");
     await page.getByRole("button", { name: /^sign in$/i }).click();
 
     await expect(page.getByRole("alert")).toHaveText(/invalid login credentials/i);
@@ -129,7 +129,7 @@ test.describe("sign-in page — login behaviour is unchanged", () => {
 
   test("shows a generic error for wrong credentials and stays on /auth", async ({ page }) => {
     await page.getByRole("textbox", { name: "Login ID" }).fill("9999999999");
-    await page.getByRole("textbox", { name: "Password" }).fill("definitely-wrong-password");
+    await page.locator('input[aria-label="Password"]').fill("definitely-wrong-password");
     await page.getByRole("button", { name: /^sign in$/i }).click();
 
     await expect(page.getByRole("alert")).toHaveText(/invalid login credentials/i, { timeout: 15_000 });
@@ -138,7 +138,7 @@ test.describe("sign-in page — login behaviour is unchanged", () => {
   });
 
   test("password reveal toggle works", async ({ page }) => {
-    const pwd = page.getByRole("textbox", { name: "Password" });
+    const pwd = page.locator('input[aria-label="Password"]');
     await pwd.fill("secret123");
     await expect(pwd).toHaveAttribute("type", "password");
     await page.getByRole("button", { name: /show password/i }).click();
@@ -156,7 +156,7 @@ test.describe("sign-in page — login behaviour is unchanged", () => {
     test.skip(!LOGIN_ID || !PASSWORD, "Set E2E_LOGIN_ID / E2E_PASSWORD to run the happy path.");
 
     await page.getByRole("textbox", { name: "Login ID" }).fill(LOGIN_ID!);
-    await page.getByRole("textbox", { name: "Password" }).fill(PASSWORD!);
+    await page.locator('input[aria-label="Password"]').fill(PASSWORD!);
     await page.getByRole("button", { name: /^sign in$/i }).click();
 
     await expect(page.getByText(/signed in/i)).toBeVisible({ timeout: 15_000 });
@@ -168,7 +168,7 @@ test.describe("sign-in page — login behaviour is unchanged", () => {
 
     await page.goto(`${BASE}/auth?redirect=%2Fmember%2Fwallet`, { waitUntil: "domcontentloaded" });
     await page.getByRole("textbox", { name: "Login ID" }).fill(LOGIN_ID!);
-    await page.getByRole("textbox", { name: "Password" }).fill(PASSWORD!);
+    await page.locator('input[aria-label="Password"]').fill(PASSWORD!);
     await page.getByRole("button", { name: /^sign in$/i }).click();
 
     await expect(page).toHaveURL(/\/member\/wallet/, { timeout: 15_000 });
