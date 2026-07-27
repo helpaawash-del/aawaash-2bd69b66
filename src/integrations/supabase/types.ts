@@ -2962,6 +2962,28 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      profiles_protected_unchanged: {
+        Args: {
+          _display_code: string
+          _email: string
+          _id: string
+          _is_active: boolean
+          _is_deleted: boolean
+          _lifetime_withdrawals: number
+          _locked_balance: number
+          _login_id: string
+          _metrics_override: Json
+          _mobile_number: string
+          _pending_balance: number
+          _referral_count: number
+          _status: Database["public"]["Enums"]["account_status"]
+          _team_id: string
+          _total_earnings: number
+          _total_sales: number
+          _wallet_balance: number
+        }
+        Returns: boolean
+      }
       recompute_project_flat_counts: {
         Args: { p_project_id: string }
         Returns: undefined
