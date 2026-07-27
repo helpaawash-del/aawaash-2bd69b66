@@ -180,7 +180,7 @@ function LeaderContent() {
         action={<EcoLink to="/leader/analytics">Analytics</EcoLink>}
       >
         <DarkPanel
-          title="Team Overview"
+          title="Live pulse"
           action={<Activity size={17} className="text-forest/70" />}
           stats={[
             { label: "Members", value: String(o?.memberCount ?? 0), hint: "Active" },
