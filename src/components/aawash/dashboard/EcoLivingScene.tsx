@@ -141,11 +141,15 @@ export function EcoLivingScene() {
 
       <div
         aria-hidden
+        ref={sceneRef}
         data-testid="eco-hero-scene"
-        className="relative isolate aspect-[16/11] w-full bg-transparent sm:aspect-[16/10]"
+        className="relative isolate aspect-[16/11] w-full bg-transparent [perspective:1100px] sm:aspect-[16/10]"
       >
         {/* soft emerald halo behind the model */}
-        <span className="absolute left-1/2 top-1/2 -z-10 h-[70%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--forest)_18%,transparent),transparent_70%)] blur-2xl" />
+        <span
+          className="absolute left-1/2 top-1/2 -z-10 h-[70%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--forest)_18%,transparent),transparent_70%)] blur-2xl transition-transform duration-500 ease-out"
+          style={{ transform: `translate(calc(-50% + ${tilt.tx * 0.4}px), calc(-50% + ${tilt.ty * 0.4}px))` }}
+        />
         <img
           ref={towerRef}
           src={ecoBuilding.url}
@@ -154,9 +158,13 @@ export function EcoLivingScene() {
           loading="lazy"
           width={1536}
           height={1152}
-          className="absolute inset-0 mx-auto block h-full w-full translate-y-[4%] bg-transparent object-contain sm:translate-y-[3%]"
+          style={{
+            transform: `perspective(1100px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translate3d(${tilt.tx}px, ${tilt.ty}px, 0)`,
+          }}
+          className="absolute inset-0 mx-auto block h-full w-full translate-y-[4%] bg-transparent object-contain transition-transform duration-300 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none sm:translate-y-[3%]"
         />
       </div>
+
 
     </>
   );
