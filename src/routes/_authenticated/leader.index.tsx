@@ -156,12 +156,14 @@ function LeaderContent() {
             label="Wallet"
             value={formatINR(profile?.wallet_balance, { compact: true })}
             to="/leader/withdrawals"
+            loading={overview.isLoading}
           />
           <LightPod
             icon={<Zap size={15} />}
             label="This month"
             value={formatINR(o?.monthlyCommission ?? 0, { compact: true })}
             to="/leader/analytics"
+            loading={overview.isLoading}
           />
         </div>
       </section>
@@ -178,6 +180,7 @@ function LeaderContent() {
           label="Members"
           value={String(o?.memberCount ?? 0)}
           to="/leader/members"
+          loading={overview.isLoading}
         />
         <LightPod
           icon={<Wallet size={15} />}
@@ -196,6 +199,7 @@ function LeaderContent() {
           label="Alerts"
           value={String(unread)}
           to="/leader/notifications"
+          loading={notifs.isLoading}
         />
       </section>
 

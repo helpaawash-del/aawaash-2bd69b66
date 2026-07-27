@@ -141,6 +141,7 @@ function MemberContent() {
             label="This month"
             value={formatINR(stats?.monthCommission ?? 0, { compact: true })}
             to="/member/commission"
+            loading={overview.isLoading}
           />
         </div>
       </section>
@@ -157,24 +158,28 @@ function MemberContent() {
           label="Referrals"
           value={String(stats?.referralCount ?? 0)}
           to="/member/referrals"
+          loading={overview.isLoading}
         />
         <LightPod
           icon={<Handshake size={15} />}
           label="Tips"
           value={String(stats?.tipCount ?? 0)}
           to="/member/tips"
+          loading={overview.isLoading}
         />
         <LightPod
           icon={<Wallet size={15} />}
           label="Withdraw"
           value={formatINR(stats?.pendingCommission ?? 0, { compact: true })}
           to="/member/withdrawals"
+          loading={overview.isLoading}
         />
         <LightPod
           icon={<Bell size={15} />}
           label="Alerts"
           value={String(unread)}
           to="/member/notifications"
+          loading={notifs.isLoading}
         />
       </section>
 
