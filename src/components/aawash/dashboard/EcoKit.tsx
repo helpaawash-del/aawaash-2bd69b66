@@ -482,7 +482,7 @@ export function LightPod({
     </>
   );
   const cls =
-    "flex min-h-[88px] flex-col items-center justify-center rounded-[22px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[96px] sm:rounded-[24px]";
+    "flex h-full min-h-[88px] flex-col items-center justify-center rounded-[22px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[96px] sm:rounded-[24px]";
   return to ? (
     <Link to={to as never} className={cls} aria-label={`${label}: ${value}`}>
       {inner}
