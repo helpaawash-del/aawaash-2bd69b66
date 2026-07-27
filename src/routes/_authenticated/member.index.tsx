@@ -30,7 +30,6 @@ import { greetingName } from "@/lib/greeting";
 import {
   EcoShell,
   EcoHeroGreeting,
-  DarkPod,
   LightPod,
   AskBar,
   DarkPanel,
@@ -116,11 +115,10 @@ function MemberContent() {
         </div>
 
         <div className="grid content-start gap-3">
-          <DarkPod
-            icon={<TrendingUp size={17} />}
+          <LightPod
+            icon={<TrendingUp size={15} />}
             label="Total sales"
-            value={formatINR(stats?.totalSales ?? 0, { compact: true })}
-            hint={`${stats?.salesCount ?? 0} deals`}
+            value={String(stats?.salesCount ?? 0)}
             to="/member/sales"
             loading={overview.isLoading}
           />
