@@ -30,7 +30,6 @@ import { greetingName } from "@/lib/greeting";
 import {
   EcoShell,
   EcoHeroGreeting,
-  DarkPod,
   LightPod,
   AskBar,
   DarkPanel,
