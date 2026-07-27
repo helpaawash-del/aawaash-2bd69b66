@@ -193,7 +193,7 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
       data-testid="dock"
       data-dock-open={open ? "true" : "false"}
       style={{ width: dock.width }}
-      className="pointer-events-none fixed inset-y-0 left-0 z-40 block transition-[width] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-[width] motion-reduce:transition-none"
+      className="pointer-events-none fixed inset-y-[20%] left-0 z-40 block transition-[width] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-[width] motion-reduce:transition-none"
     >
       <div className="pointer-events-auto relative h-full">
         <svg
