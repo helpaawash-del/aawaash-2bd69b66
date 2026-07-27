@@ -24,6 +24,7 @@ const RULES: Rule[] = [
   { name: "SUPABASE_URL", required: true, validate: (v) => /^https:\/\/.+\.supabase\.co$/.test(v), hint: "Managed by Lovable Cloud." },
   { name: "SUPABASE_PUBLISHABLE_KEY", required: true, validate: (v) => v.length > 20, hint: "Publishable anon/api key." },
   { name: "SUPABASE_SERVICE_ROLE_KEY", required: true, validate: (v) => v.length > 20, hint: "Server-only, never expose." },
+  { name: "ADMIN_PANEL_PASSCODE", required: true, validate: (v) => /^\d{4,}$/.test(v.trim()) && !["0000", "1234", "1111"].includes(v.trim()), hint: "Admin panel passcode; must be set and not a well-known default." },
   { name: "SYSTEM_MAINTENANCE_SECRET", required: true, validate: (v) => v.length >= 32, hint: "Shared secret for the cron webhook." },
 ];
 
