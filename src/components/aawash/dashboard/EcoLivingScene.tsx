@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ecoBuilding from "@/assets/eco-hero-tower.png";
+import ecoBuilding from "@/assets/eco-hero-tower.png.asset.json";
 
 /* ------------------------------------------------------------------ *
  * EcoLivingScene — the dashboard hero artwork.
@@ -109,16 +109,16 @@ export function EcoLivingScene() {
 
       <div
         aria-hidden
-        className="relative isolate aspect-[4/3] w-full overflow-hidden rounded-[28px] sm:aspect-[16/10]"
+        className="relative isolate aspect-[16/11] w-full overflow-hidden sm:aspect-[16/10]"
       >
         <img
           ref={towerRef}
-          src={ecoBuilding}
+          src={ecoBuilding.url}
           alt=""
           loading="lazy"
-          width={1024}
-          height={1024}
-          className="absolute inset-x-0 bottom-[-3%] mx-auto block h-[97%] w-auto max-w-[100%] object-contain drop-shadow-[0_22px_36px_rgba(16,50,36,0.16)]"
+          width={1920}
+          height={1300}
+          className="absolute inset-0 mx-auto block h-full w-full object-contain drop-shadow-[0_18px_30px_rgba(16,50,36,0.14)]"
         />
       </div>
     </>

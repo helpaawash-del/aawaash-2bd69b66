@@ -134,7 +134,7 @@ function LeaderContent() {
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
 
-          <div className="mt-7">
+          <div className="mt-5 sm:mt-7">
             <EcoLivingScene />
           </div>
 
@@ -148,6 +148,7 @@ function LeaderContent() {
             value={formatINR(o?.totalRevenue ?? 0, { compact: true })}
             hint={`${o?.salesCount ?? 0} closed`}
             to="/leader/analytics"
+            loading={overview.isLoading}
           />
 
           <LightPod
@@ -155,28 +156,31 @@ function LeaderContent() {
             label="Wallet"
             value={formatINR(profile?.wallet_balance, { compact: true })}
             to="/leader/withdrawals"
+            loading={overview.isLoading}
           />
           <LightPod
             icon={<Zap size={15} />}
             label="This month"
             value={formatINR(o?.monthlyCommission ?? 0, { compact: true })}
             to="/leader/analytics"
+            loading={overview.isLoading}
           />
         </div>
       </section>
 
       {/* ---------------- Command bar ---------------- */}
-      <section className="mt-5">
+      <section className="mt-4 sm:mt-5">
         <AskBar to="/leader/members" placeholder="Search members, sales or projects…" />
       </section>
 
       {/* ---------------- Quick pods ---------------- */}
-      <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <section className="mt-4 sm:mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <LightPod
           icon={<Users size={15} />}
           label="Members"
           value={String(o?.memberCount ?? 0)}
           to="/leader/members"
+          loading={overview.isLoading}
         />
         <LightPod
           icon={<Wallet size={15} />}
@@ -195,11 +199,12 @@ function LeaderContent() {
           label="Alerts"
           value={String(unread)}
           to="/leader/notifications"
+          loading={notifs.isLoading}
         />
       </section>
 
       {/* ---------------- Overview + schedule ---------------- */}
-      <section className="mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
+      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
         <DarkPanel
           title="Team Overview"
           action={<Activity size={17} className="text-forest-foreground/70" />}
@@ -260,7 +265,7 @@ function LeaderContent() {
       </section>
 
       {/* ---------------- Trend + wallet ---------------- */}
-      <section className="mt-5 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
+      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
         <LightPanel
           title="Performance Trend"
           action={<span className="text-[11px] font-semibold text-primary">6M</span>}
@@ -368,7 +373,7 @@ function LeaderContent() {
       </section>
 
       {/* ---------------- Leaderboard + members ---------------- */}
-      <section className="mt-5 grid gap-4 lg:grid-cols-2">
+      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-2">
         <LightPanel
           title="Team Leaderboard"
           action={
@@ -455,7 +460,7 @@ function LeaderContent() {
       </section>
 
       {/* ---------------- Footer CTA ---------------- */}
-      <section className="mt-5">
+      <section className="mt-4 sm:mt-5">
         <Link
           to="/leader/analytics"
           className="flex items-center gap-3 rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"

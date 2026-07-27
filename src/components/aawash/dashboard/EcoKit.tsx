@@ -83,7 +83,7 @@ export function EcoShell({
           className="mx-auto flex min-h-screen w-full max-w-md flex-col pr-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 transition-[padding-left] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:max-w-xl sm:pr-6 md:max-w-3xl lg:max-w-6xl lg:pb-24 lg:pr-10 xl:max-w-7xl xl:pr-14"
         >
           <WelcomeHeader role={role} profile={profile} />
-          <main id="main-content" className="mt-9 flex-1 sm:mt-11">
+          <main id="main-content" className="mt-7 flex-1 sm:mt-10">
             {children}
           </main>
         </div>
@@ -389,25 +389,38 @@ export function DarkPod({
   value,
   hint,
   to,
+  loading = false,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   hint?: string;
   to?: string;
+  loading?: boolean;
 }) {
   const inner = (
     <>
       <span className="grid place-items-center text-forest-foreground/80">{icon}</span>
-      <span className="mt-1.5 text-[10.5px] font-medium text-forest-foreground/70">{label}</span>
-      <span className="text-[20px] font-extrabold leading-tight tracking-[-0.02em] text-forest-foreground">
-        {value}
+      <span className="mt-1.5 text-[10px] font-medium text-forest-foreground/70 sm:text-[10.5px]">
+        {label}
       </span>
-      {hint && <span className="text-[10px] font-semibold text-leaf">{hint}</span>}
+      {loading ? (
+        <span className="mt-1.5 h-[18px] w-14 animate-pulse rounded-full bg-forest-foreground/20" />
+      ) : (
+        <span className="text-[18px] font-extrabold leading-tight tracking-[-0.02em] text-forest-foreground sm:text-[20px]">
+          {value}
+        </span>
+      )}
+      {hint &&
+        (loading ? (
+          <span className="mt-1 h-2.5 w-10 animate-pulse rounded-full bg-forest-foreground/15" />
+        ) : (
+          <span className="text-[10px] font-semibold text-leaf">{hint}</span>
+        ))}
     </>
   );
   const cls =
-    "flex min-h-[112px] flex-col items-center justify-center rounded-[26px] bg-gradient-to-b from-forest to-forest-deep px-3 py-3 text-center shadow-[var(--shadow-float)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98]";
+    "flex min-h-[104px] flex-col items-center justify-center rounded-[24px] bg-gradient-to-b from-forest to-forest-deep px-3 py-3 text-center shadow-[var(--shadow-float)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[112px] sm:rounded-[26px]";
   return to ? (
     <Link to={to as never} className={cls} aria-label={`${label}: ${value}`}>
       {inner}
@@ -423,25 +436,33 @@ export function LightPod({
   label,
   value,
   to,
+  loading = false,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   to?: string;
+  loading?: boolean;
 }) {
   const inner = (
     <>
       <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-primary">
         {icon}
       </span>
-      <span className="mt-1 text-[10.5px] font-medium text-muted-foreground">{label}</span>
-      <span className="text-[17px] font-extrabold leading-tight tracking-[-0.02em] text-foreground">
-        {value}
+      <span className="mt-1 text-[10px] font-medium text-muted-foreground sm:text-[10.5px]">
+        {label}
       </span>
+      {loading ? (
+        <span className="mt-1.5 h-[15px] w-12 animate-pulse rounded-full bg-muted" />
+      ) : (
+        <span className="text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-[17px]">
+          {value}
+        </span>
+      )}
     </>
   );
   const cls =
-    "flex min-h-[96px] flex-col items-center justify-center rounded-[24px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98]";
+    "flex min-h-[88px] flex-col items-center justify-center rounded-[22px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[96px] sm:rounded-[24px]";
   return to ? (
     <Link to={to as never} className={cls} aria-label={`${label}: ${value}`}>
       {inner}
@@ -480,7 +501,7 @@ export function SectionHead({
 }) {
   return (
     <div className="mb-3 flex items-center justify-between gap-3">
-      <h2 className="truncate text-[15px] font-bold tracking-[-0.01em] text-foreground">{title}</h2>
+      <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">{title}</h2>
       {to && (
         <Link
           to={to as never}
@@ -506,9 +527,9 @@ export function DarkPanel({
   stats?: { label: string; value: string; hint?: string }[];
 }) {
   return (
-    <section className="relative overflow-hidden rounded-[34px] bg-gradient-to-b from-forest to-forest-deep p-5 shadow-[var(--shadow-glow)]">
+    <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-b from-forest to-forest-deep p-4 shadow-[var(--shadow-glow)] sm:rounded-[34px] sm:p-5">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="truncate text-[15px] font-bold text-forest-foreground">{title}</h2>
+        <h2 className="truncate text-[14.5px] font-bold text-forest-foreground sm:text-[15px]">{title}</h2>
         {action}
       </div>
       {children}
@@ -585,9 +606,9 @@ export function LightPanel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex h-full flex-col rounded-[34px] bg-surface p-5 shadow-[var(--shadow-soft)]">
+    <section className="flex h-full flex-col rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] sm:rounded-[34px] sm:p-5">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="truncate text-[15px] font-bold tracking-[-0.01em] text-foreground">
+        <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">
           {title}
         </h2>
         {action}
