@@ -476,7 +476,7 @@ export function LightPod({
         {label}
       </span>
       {loading ? (
-        <span className="mt-1.5 h-[15px] w-12 eco-skel rounded-full bg-muted" />
+        <span className="my-[2px] h-[15.4px] w-12 eco-skel rounded-full bg-muted sm:h-[17px]" />
       ) : (
         <span
           data-pod-value
