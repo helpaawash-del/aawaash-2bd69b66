@@ -1,17 +1,15 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useServerFn } from "@tanstack/react-start";
 import {
+  ArrowRight,
   Eye,
   EyeOff,
   Loader2,
   Lock,
-  ShieldCheck,
   User,
-  Sparkles,
-  Building2,
-  KeyRound,
+  UserRound,
   Leaf,
   CheckCircle2,
   AlertCircle,
@@ -19,7 +17,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { loginIdToEmail, validateLoginId, homePathForRole, toInternalPath, type AppRole } from "@/lib/auth";
 import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/auth.functions";
-import { BrandMark } from "@/components/aawash/BrandMark";
+import heroImage from "@/assets/auth-eco-building.jpg";
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -30,187 +28,52 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
   head: () => ({
     meta: [
-      { title: "Sign in — Aawash" },
+      { title: "Sign in — Aawaash" },
       {
         name: "description",
-        content: "Sign in to Aawash — the premium real estate sales ecosystem.",
+        content: "Sign in to Aawaash — nature-friendly constructions and the premium real estate sales ecosystem.",
       },
+      { property: "og:title", content: "Sign in — Aawaash" },
+      {
+        property: "og:description",
+        content: "Sign in to Aawaash — nature-friendly constructions and the premium real estate sales ecosystem.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
 
 /* ------------------------------------------------------------------ */
-/*  Ambient scene: skyline + floating particles                        */
+/*  Wave hero — curved photo panel in the top-right corner             */
 /* ------------------------------------------------------------------ */
 
-function SkylineScene() {
+function WaveHero() {
   return (
-    <svg
-      viewBox="0 0 1200 700"
-      className="absolute inset-0 h-full w-full"
-      preserveAspectRatio="xMidYMax slice"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.995 0.003 155)" />
-          <stop offset="60%" stopColor="oklch(0.985 0.008 155)" />
-          <stop offset="100%" stopColor="oklch(0.97 0.02 155)" />
-        </linearGradient>
-        <linearGradient id="tower" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.94 0.02 155)" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="oklch(0.86 0.06 155)" stopOpacity="0.6" />
-        </linearGradient>
-        <linearGradient id="towerDeep" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.9 0.04 155)" stopOpacity="0.45" />
-          <stop offset="100%" stopColor="oklch(0.78 0.09 155)" stopOpacity="0.6" />
-        </linearGradient>
-        <linearGradient id="glassPane" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.99 0.01 155)" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="oklch(0.88 0.06 155)" stopOpacity="0.22" />
-        </linearGradient>
-        <radialGradient id="sun" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="oklch(0.96 0.06 90)" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="oklch(0.96 0.06 90)" stopOpacity="0" />
-        </radialGradient>
-        <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-          <path d="M 60 0 L 0 0 0 60" fill="none" stroke="oklch(0.58 0.135 155)" strokeWidth="0.5" opacity="0.08" />
-        </pattern>
-      </defs>
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-[46vh] min-h-[280px] sm:h-[52vh]">
+      <svg className="absolute h-0 w-0" aria-hidden="true">
+        <defs>
+          <clipPath id="authWave" clipPathUnits="objectBoundingBox">
+            <path d="M1,0 L1,1 L0.62,1 C0.5,0.98 0.44,0.9 0.42,0.78 C0.4,0.62 0.44,0.5 0.38,0.36 C0.31,0.19 0.14,0.12 0.02,0.06 C-0.01,0.04 0,0 0.06,0 Z" />
+          </clipPath>
+        </defs>
+      </svg>
 
-      {/* Sky */}
-      <rect width="1200" height="700" fill="url(#sky)" />
-      {/* Subtle blueprint grid — very low visibility */}
-      <rect width="1200" height="700" fill="url(#grid)" />
-
-      {/* Sun halo */}
-      <circle cx="900" cy="200" r="240" fill="url(#sun)" />
-
-      {/* Distant skyline — back layer */}
-      <g opacity="0.4">
-        <rect x="60" y="360" width="90" height="200" fill="url(#tower)" rx="4" />
-        <rect x="170" y="320" width="70" height="240" fill="url(#tower)" rx="4" />
-        <rect x="260" y="380" width="110" height="180" fill="url(#tower)" rx="4" />
-        <rect x="820" y="340" width="80" height="220" fill="url(#tower)" rx="4" />
-        <rect x="920" y="300" width="95" height="260" fill="url(#tower)" rx="4" />
-        <rect x="1035" y="370" width="80" height="190" fill="url(#tower)" rx="4" />
-      </g>
-
-      {/* Mid layer — signature tower + neighbours */}
-      <g opacity="0.55">
-        <rect x="540" y="200" width="120" height="360" fill="url(#towerDeep)" rx="6" />
-        <rect x="556" y="160" width="88" height="50" fill="url(#towerDeep)" rx="4" />
-        <rect x="592" y="110" width="16" height="58" fill="oklch(0.78 0.09 155)" opacity="0.6" />
-        <rect x="597" y="80" width="6" height="34" fill="oklch(0.78 0.12 85)" opacity="0.6" />
-        {Array.from({ length: 14 }).map((_, r) =>
-          Array.from({ length: 5 }).map((_, c) => (
-            <rect
-              key={`p-${r}-${c}`}
-              x={548 + c * 22}
-              y={216 + r * 24}
-              width="18"
-              height="18"
-              fill="url(#glassPane)"
-              opacity={0.35 + ((r + c) % 3) * 0.08}
-              rx="2"
-            />
-          )),
-        )}
-
-        <rect x="390" y="280" width="90" height="280" fill="url(#tower)" rx="6" />
-        {Array.from({ length: 11 }).map((_, r) =>
-          Array.from({ length: 4 }).map((_, c) => (
-            <rect
-              key={`l-${r}-${c}`}
-              x={398 + c * 20}
-              y={292 + r * 22}
-              width="16"
-              height="14"
-              fill="url(#glassPane)"
-              opacity={0.35 + ((r * c) % 3) * 0.08}
-              rx="2"
-            />
-          )),
-        )}
-
-        <rect x="700" y="250" width="100" height="310" fill="url(#tower)" rx="6" />
-        <rect x="716" y="220" width="68" height="34" fill="url(#tower)" rx="4" />
-        {Array.from({ length: 12 }).map((_, r) =>
-          Array.from({ length: 4 }).map((_, c) => (
-            <rect
-              key={`r-${r}-${c}`}
-              x={710 + c * 22}
-              y={262 + r * 22}
-              width="18"
-              height="14"
-              fill="url(#glassPane)"
-              opacity={0.4 + ((r + c) % 2) * 0.1}
-              rx="2"
-            />
-          )),
-        )}
-      </g>
-
-      {/* Faint horizontal ground line — no trees, no path */}
-      <line x1="0" y1="560" x2="1200" y2="560" stroke="oklch(0.58 0.135 155)" strokeWidth="0.5" opacity="0.15" />
-
-      {/* Floating apartment icons — very low visibility */}
-      <g opacity="0.09" fill="oklch(0.58 0.135 155)">
-        <g transform="translate(140 140)">
-          <rect x="0" y="0" width="46" height="60" rx="4" />
-          <rect x="8" y="10" width="8" height="8" fill="oklch(0.99 0 0)" />
-          <rect x="20" y="10" width="8" height="8" fill="oklch(0.99 0 0)" />
-          <rect x="32" y="10" width="8" height="8" fill="oklch(0.99 0 0)" />
-          <rect x="8" y="24" width="8" height="8" fill="oklch(0.99 0 0)" />
-          <rect x="20" y="24" width="8" height="8" fill="oklch(0.99 0 0)" />
-          <rect x="32" y="24" width="8" height="8" fill="oklch(0.99 0 0)" />
-        </g>
-        <g transform="translate(1020 380)">
-          <polygon points="0,20 24,0 48,20 48,60 0,60" />
-          <rect x="18" y="34" width="12" height="26" fill="oklch(0.99 0 0)" />
-        </g>
-        <g transform="translate(80 480)">
-          <rect x="0" y="0" width="34" height="50" rx="3" />
-          <rect x="6" y="8" width="6" height="6" fill="oklch(0.99 0 0)" />
-          <rect x="16" y="8" width="6" height="6" fill="oklch(0.99 0 0)" />
-          <rect x="6" y="20" width="6" height="6" fill="oklch(0.99 0 0)" />
-          <rect x="16" y="20" width="6" height="6" fill="oklch(0.99 0 0)" />
-        </g>
-      </g>
-    </svg>
-  );
-}
-
-function Particles() {
-  const dots = useMemo(
-    () =>
-      Array.from({ length: 22 }).map((_, i) => ({
-        id: i,
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        size: 3 + Math.random() * 6,
-        delay: Math.random() * 8,
-        duration: 10 + Math.random() * 14,
-        opacity: 0.15 + Math.random() * 0.35,
-      })),
-    [],
-  );
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {dots.map((d) => (
-        <span
-          key={d.id}
-          className="absolute rounded-full bg-primary/40 blur-[1px]"
-          style={{
-            left: `${d.left}%`,
-            top: `${d.top}%`,
-            width: d.size,
-            height: d.size,
-            opacity: d.opacity,
-            animation: `particleFloat ${d.duration}s ease-in-out ${d.delay}s infinite`,
-          }}
+      {/* soft outer glow following the curve */}
+      <div
+        className="absolute inset-y-0 right-0 w-[86%] scale-[1.04] bg-primary/25 blur-[10px]"
+        style={{ clipPath: "url(#authWave)" }}
+      />
+      <div className="absolute inset-y-0 right-0 w-[86%] overflow-hidden" style={{ clipPath: "url(#authWave)" }}>
+        <img
+          src={heroImage}
+          alt="Green residential tower with trees on every balcony"
+          width={1024}
+          height={1536}
+          className="h-full w-full object-cover object-[70%_35%]"
         />
-      ))}
+        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-background/70" />
+      </div>
     </div>
   );
 }
@@ -259,7 +122,7 @@ function AuthPage() {
 
   if (checking) {
     return (
-      <div className="relative grid min-h-dvh place-items-center bg-background">
+      <div className="relative grid min-h-dvh place-items-center bg-[oklch(0.975_0.012_155)]">
         <div className="relative">
           <div className="absolute inset-0 -m-6 rounded-full bg-primary/10 blur-2xl" />
           <Loader2 className="relative h-9 w-9 animate-spin text-primary" />
@@ -269,118 +132,69 @@ function AuthPage() {
   }
 
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-background text-foreground">
-      {/* Ambient light orbs */}
-      <div className="pointer-events-none absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-primary/10 blur-[120px]" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 h-[560px] w-[560px] rounded-full bg-gold/10 blur-[140px]" />
-      <div className="pointer-events-none absolute top-1/3 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-leaf/10 blur-[120px]" />
+    <div className="relative min-h-dvh overflow-hidden bg-[oklch(0.975_0.012_155)] text-foreground">
+      {/* Faint blueprint wireframe behind the card */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.5]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, color-mix(in oklab, var(--primary) 9%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--primary) 9%, transparent) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+          maskImage: "radial-gradient(120% 70% at 50% 100%, #000 20%, transparent 75%)",
+        }}
+      />
 
-      <div className="relative z-10 grid min-h-dvh lg:grid-cols-[1.15fr_1fr]">
-        {/* Left: hero visual */}
-        <aside className="relative hidden overflow-hidden lg:block">
-          <div className="absolute inset-0 animate-[skylineDrift_30s_ease-in-out_infinite_alternate]">
-            <SkylineScene />
+      <WaveHero />
+
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 pb-12 pt-8 sm:max-w-lg">
+        {/* Brand */}
+        <Link to="/" className="inline-flex w-fit flex-col gap-2" aria-label="Aawaash home">
+          <svg viewBox="0 0 64 56" className="h-12 w-14 text-primary" fill="none" aria-hidden="true">
+            <g stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round">
+              <path d="M6 52V18l12-8 12 8v34" />
+              <path d="M30 52V26l12-7v33" />
+              <path d="M13 26h5M13 34h5M13 42h5M35 32h4M35 40h4" />
+            </g>
+            <path
+              d="M52 14c-8 2-12 8-11 16 8 1 13-4 13-12 0-2 0-3-2-4Z"
+              fill="currentColor"
+              opacity="0.85"
+            />
+            <path d="M53 15c-6 5-8 9-9 15" stroke="oklch(0.99 0 0)" strokeWidth="1.4" />
+          </svg>
+          <span className="text-[11px] font-extrabold uppercase leading-tight tracking-[0.22em] text-primary">
+            Nature Friendly
+            <br />
+            Constructions
+          </span>
+        </Link>
+
+        {/* Leaf medallion */}
+        <div className="mt-10 grid h-24 w-24 place-items-center rounded-full border border-dashed border-primary/30">
+          <div className="grid h-16 w-16 place-items-center rounded-full bg-[oklch(0.95_0.05_155)] shadow-[0_10px_30px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)] ring-4 ring-white/70">
+            <Leaf size={22} className="text-primary" />
           </div>
-          <Particles />
-          {/* Soft wash */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/10 to-transparent" />
+        </div>
 
-          <div className="relative flex h-full flex-col justify-between p-12 xl:p-16">
-            <div className="flex items-center gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-2xl border border-primary/30 bg-surface/80 backdrop-blur-xl shadow-soft">
-                <Building2 size={20} className="text-primary" />
-              </div>
-              <div>
-                <div className="text-lg font-bold tracking-wide text-foreground">Aawash</div>
-                <div className="text-[11px] uppercase tracking-[0.24em] text-primary/80">Luxury Living</div>
-              </div>
-            </div>
+        {/* Welcome */}
+        <h1 className="mt-8 text-[clamp(2.6rem,11vw,3.6rem)] font-extrabold leading-[0.98] tracking-tight text-[oklch(0.28_0.03_240)]">
+          Welcome
+          <br />
+          <span className="text-primary">Back</span>
+          <Leaf size={30} className="ml-2 inline-block -translate-y-2 fill-primary/25 text-primary" />
+        </h1>
+        <p className="mt-4 max-w-[20rem] text-lg leading-snug text-muted-foreground">
+          Let&rsquo;s continue building
+          <br />a <span className="font-semibold text-primary">better</span> tomorrow
+        </p>
 
-            <div className="max-w-lg animate-[floatIn_0.9s_cubic-bezier(.2,.8,.2,1)_both]">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-surface/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary backdrop-blur-md shadow-soft">
-                <Sparkles size={12} /> A Green Skyline Awaits
-              </div>
-              <h2 className="mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight text-foreground xl:text-6xl">
-                Where skylines
-                <br />
-                <span className="bg-gradient-to-r from-primary via-leaf to-gold bg-clip-text text-transparent">
-                  become homes.
-                </span>
-              </h2>
-              <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
-                Step into the premium real-estate ecosystem powering India&rsquo;s most
-                iconic residences — a treehouse of glass, gardens, and light.
-              </p>
-
-              <div className="mt-8 grid grid-cols-3 gap-3">
-                {[
-                  { k: "Live", v: "Projects", icon: Building2 },
-                  { k: "Real-time", v: "Inventory", icon: Sparkles },
-                  { k: "Green", v: "Certified", icon: Leaf },
-                ].map((it) => (
-                  <div
-                    key={it.v}
-                    className="group rounded-2xl border border-border bg-surface/80 p-3 backdrop-blur-md shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-glow"
-                  >
-                    <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
-                      <it.icon size={11} /> {it.k}
-                    </div>
-                    <div className="mt-0.5 text-sm font-bold text-foreground">{it.v}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-              © {new Date().getFullYear()} Aawash · Secured end-to-end
-            </div>
-          </div>
-        </aside>
-
-        {/* Right: form panel */}
-        <main className="relative flex min-h-dvh flex-col justify-center px-5 py-10 sm:px-10">
-          {/* Mobile-only mini skyline */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-52 overflow-hidden lg:hidden">
-            <SkylineScene />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
-          </div>
-          <Particles />
-
-          <header className="relative mb-6 flex items-center justify-between lg:hidden">
-            <BrandMark size="md" />
-            <Link
-              to="/"
-              className="rounded-full border border-border bg-surface/80 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition-colors hover:text-foreground"
-            >
-              ← Home
-            </Link>
-          </header>
-
-          <div className="relative mx-auto w-full max-w-md">
-            {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
-          </div>
-
-          <div className="relative mx-auto mt-8 hidden max-w-md items-center gap-2 text-center text-[11px] uppercase tracking-[0.25em] text-muted-foreground lg:flex">
-            <ShieldCheck size={12} className="text-primary" />
-            Invite-only · End-to-end encrypted
-          </div>
-        </main>
+        {/* Card */}
+        <div className="mt-10">
+          {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
+        </div>
       </div>
 
       <style>{`
-        @keyframes skylineDrift {
-          0% { transform: scale(1) translateY(0); }
-          100% { transform: scale(1.06) translateY(-1.2%); }
-        }
-        @keyframes floatIn {
-          0% { opacity: 0; transform: translateY(18px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes particleFloat {
-          0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.25; }
-          50% { transform: translate3d(12px, -28px, 0); opacity: 0.7; }
-        }
         @keyframes cardIn {
           0% { opacity: 0; transform: translateY(20px) scale(0.98); }
           100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -402,6 +216,46 @@ function AuthPage() {
         .shake-x { animation: shakeX 0.4s ease-in-out; }
       `}</style>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Glass card shell                                                   */
+/* ------------------------------------------------------------------ */
+
+function GlassCard({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="auth-card-in relative rounded-[34px] border border-white/70 bg-white/55 p-6 shadow-[0_30px_60px_-30px_color-mix(in_oklab,var(--primary)_45%,transparent)] backdrop-blur-2xl sm:p-8">
+      <div className="pointer-events-none absolute right-10 top-4 h-1 w-16 rounded-full bg-primary/60" />
+      <div className="flex flex-col items-center">
+        <div className="grid h-14 w-14 place-items-center rounded-full bg-white/90 shadow-[0_8px_24px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)]">
+          <UserRound size={22} className="text-primary" />
+        </div>
+        <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-[oklch(0.28_0.03_240)]">{title}</h2>
+        <span className="mt-2 h-[3px] w-10 rounded-full bg-primary" />
+      </div>
+      <div className="mt-6">{children}</div>
+    </div>
+  );
+}
+
+function Field({
+  icon,
+  hint,
+  children,
+}: {
+  icon: React.ReactNode;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <div className="flex items-center gap-3 rounded-[22px] border border-primary/25 bg-white/70 px-4 py-4 shadow-[inset_0_1px_0_oklch(1_0_0/0.6)] transition-all duration-300 focus-within:border-primary/60 focus-within:bg-white focus-within:shadow-[0_0_0_5px_color-mix(in_oklab,var(--primary)_12%,transparent)]">
+        <span className="shrink-0 text-primary">{icon}</span>
+        <div className="min-w-0 flex-1">{children}</div>
+      </div>
+      {hint && <p className="mt-1.5 px-1 text-[11px] text-muted-foreground">{hint}</p>}
+    </label>
   );
 }
 
@@ -466,28 +320,10 @@ function LoginForm() {
   }
 
   return (
-    <div className="auth-card-in relative overflow-hidden rounded-[32px] border border-border bg-surface/85 p-7 shadow-float backdrop-blur-2xl sm:p-9">
-      {/* Emerald + gold sheen */}
-      <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-primary/15 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-gold/15 blur-3xl" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-
-      <div className="relative mb-7">
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">
-          <ShieldCheck size={12} /> Secure Sign-In
-        </div>
-        <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-          Welcome back.
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Enter your Aawash Login ID and password to continue.
-        </p>
-      </div>
-
-      <form onSubmit={onSubmit} className={`relative space-y-4 ${error ? "shake-x" : ""}`} key={error ?? "ok"}>
+    <GlassCard title="Sign In">
+      <form onSubmit={onSubmit} className={`space-y-4 ${error ? "shake-x" : ""}`} key={error ?? "ok"}>
         <Field
-          label="Login ID"
-          icon={<User size={16} />}
+          icon={<User size={18} />}
           hint="Team Leader: mobile (9876543210). Member: TeamLetter+mobile (A9876543210)."
         >
           <input
@@ -497,28 +333,30 @@ function LoginForm() {
             spellCheck={false}
             value={loginId}
             onChange={(e) => setLoginId(e.target.value.toUpperCase())}
-            placeholder="A9876543210"
-            className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/60"
+            placeholder="Login ID"
+            aria-label="Login ID"
+            className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/70"
           />
         </Field>
 
-        <Field label="Password" icon={<Lock size={16} />}>
+        <Field icon={<Lock size={18} />}>
           <div className="flex w-full items-center gap-2">
             <input
               autoComplete="current-password"
               type={showPwd ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/60"
+              placeholder="Password"
+              aria-label="Password"
+              className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/70"
             />
             <button
               type="button"
               onClick={() => setShowPwd((v) => !v)}
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-primary/10 hover:text-foreground"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
               aria-label={showPwd ? "Hide password" : "Show password"}
             >
-              {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
+              {showPwd ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
         </Field>
@@ -536,32 +374,35 @@ function LoginForm() {
         <button
           type="submit"
           disabled={submitting || success}
-          className="group relative mt-3 inline-flex h-13 min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-leaf to-primary py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-glow transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80"
+          className="group relative flex h-16 w-full items-center justify-center rounded-[26px] bg-[linear-gradient(140deg,oklch(0.32_0.07_155),oklch(0.24_0.06_155))] px-6 text-base font-bold text-primary-foreground shadow-[0_18px_36px_-18px_oklch(0.3_0.08_155)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80"
         >
-          <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+          <span className="pointer-events-none absolute inset-x-6 top-2 h-px bg-white/25" />
           {success ? (
             <span className="success-pop inline-flex items-center gap-2">
-              <CheckCircle2 size={16} /> Signed in
+              <CheckCircle2 size={18} /> Signed in
             </span>
           ) : submitting ? (
-            <>
-              <Loader2 size={16} className="animate-spin" /> Signing in
-            </>
+            <span className="inline-flex items-center gap-2">
+              <Loader2 size={18} className="animate-spin" /> Signing in
+            </span>
           ) : (
             <>
-              <KeyRound size={14} /> Enter Aawash
+              <span>Sign In</span>
+              <span className="absolute right-3 grid h-11 w-11 place-items-center rounded-full border border-white/35 transition-transform duration-300 group-hover:translate-x-0.5">
+                <ArrowRight size={18} />
+              </span>
             </>
           )}
         </button>
 
         <Link
           to="/"
-          className="mx-auto mt-2 hidden text-center text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground lg:block"
+          className="mx-auto block pt-1 text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
         >
           ← Back to home
         </Link>
       </form>
-    </div>
+    </GlassCard>
   );
 }
 
@@ -595,49 +436,40 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="auth-card-in relative overflow-hidden rounded-[32px] border border-border bg-surface/85 p-7 shadow-float backdrop-blur-2xl sm:p-9">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-      <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-primary/15 blur-3xl" />
-      <div className="relative mb-6">
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">
-          <ShieldCheck size={12} /> One-Time Setup
-        </div>
-        <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-foreground">
-          Create Super Admin
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          No admin exists yet. Create the first Super Admin account. This screen
-          locks permanently after setup.
-        </p>
-      </div>
-
+    <GlassCard title="Create Super Admin">
+      <p className="-mt-2 mb-5 text-center text-sm text-muted-foreground">
+        No admin exists yet. This screen locks permanently after setup.
+      </p>
       <form onSubmit={onSubmit} className="space-y-4">
-        <Field label="Full name" icon={<User size={16} />}>
+        <Field icon={<User size={18} />}>
           <input
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            placeholder="Your name"
-            className="w-full bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground/60"
+            placeholder="Full name"
+            aria-label="Full name"
+            className="w-full bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground/70"
           />
         </Field>
 
-        <Field label="Mobile number" icon={<User size={16} />} hint="10 digits. Becomes your Login ID.">
+        <Field icon={<User size={18} />} hint="10 digits. Becomes your Login ID.">
           <input
             value={mobile}
             onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
             inputMode="numeric"
-            placeholder="9876543210"
-            className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/60"
+            placeholder="Mobile number"
+            aria-label="Mobile number"
+            className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/70"
           />
         </Field>
 
-        <Field label="Password" icon={<Lock size={16} />} hint="Minimum 8 characters.">
+        <Field icon={<Lock size={18} />} hint="Minimum 8 characters.">
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Choose a strong password"
-            className="w-full bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground/60"
+            aria-label="Password"
+            className="w-full bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground/70"
           />
         </Field>
 
@@ -651,42 +483,11 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 inline-flex h-12 min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary via-leaf to-primary text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-glow transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+          className="relative flex h-16 w-full items-center justify-center rounded-[26px] bg-[linear-gradient(140deg,oklch(0.32_0.07_155),oklch(0.24_0.06_155))] px-6 text-base font-bold text-primary-foreground shadow-[0_18px_36px_-18px_oklch(0.3_0.08_155)] transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
         >
-          {submitting ? <Loader2 size={16} className="animate-spin" /> : "Create Super Admin"}
+          {submitting ? <Loader2 size={18} className="animate-spin" /> : "Create Super Admin"}
         </button>
       </form>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Field                                                              */
-/* ------------------------------------------------------------------ */
-
-function Field({
-  label,
-  icon,
-  hint,
-  children,
-}: {
-  label: string;
-  icon: React.ReactNode;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-        {label}
-      </span>
-      <div className="group flex items-center gap-3 rounded-2xl border border-border bg-surface/80 px-4 py-3.5 backdrop-blur-md transition-all duration-300 focus-within:-translate-y-0.5 focus-within:border-primary/60 focus-within:bg-surface focus-within:shadow-[0_0_0_5px_color-mix(in_oklab,var(--primary)_14%,transparent)] hover:border-primary/30">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-primary/25 bg-gradient-to-br from-primary/15 to-leaf/10 text-primary transition-transform duration-300 group-focus-within:scale-105">
-          {icon}
-        </span>
-        <div className="min-w-0 flex-1">{children}</div>
-      </div>
-      {hint && <p className="mt-1.5 text-[11px] text-muted-foreground">{hint}</p>}
-    </label>
+    </GlassCard>
   );
 }
