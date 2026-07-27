@@ -10,7 +10,6 @@ import {
   Bell,
   Leaf,
   Droplet,
-  Zap,
   Activity,
   BarChart3,
   ArrowDownToLine,
