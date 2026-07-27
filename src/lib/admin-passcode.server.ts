@@ -1,4 +1,4 @@
-import { useSession, getHeaders } from "@tanstack/react-start/server";
+import { useSession, getRequest } from "@tanstack/react-start/server";
 import { createHash, timingSafeEqual } from "node:crypto";
 
 type AdminPasscodeSession = { unlocked?: boolean };
@@ -77,13 +77,13 @@ export function requestFingerprint(): string {
   let ip = "unknown";
   let ua = "";
   try {
-    const headers = getHeaders() as Record<string, string | undefined>;
+    const headers = getRequest().headers;
     ip =
-      headers["cf-connecting-ip"] ||
-      headers["x-real-ip"] ||
-      (headers["x-forwarded-for"] ?? "").split(",")[0].trim() ||
+      headers.get("cf-connecting-ip") ||
+      headers.get("x-real-ip") ||
+      (headers.get("x-forwarded-for") ?? "").split(",")[0].trim() ||
       "unknown";
-    ua = headers["user-agent"] ?? "";
+    ua = headers.get("user-agent") ?? "";
   } catch {
     /* no request context (tests) */
   }
