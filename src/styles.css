@@ -327,11 +327,11 @@
   24%   { transform: translate3d(88vw, 38vh, 0) scaleX(-1); }
   29%   { transform: translate3d(var(--hub-x), calc(var(--hub-y) + 3vh), 0) scaleX(-1); }
   36%   { transform: translate3d(calc(var(--hub-x) - 5vw), var(--hub-y), 0) scaleX(-1); }
-  48%   { transform: translate3d(6vw, 74vh, 0) scaleX(-1); }
+  48%   { transform: translate3d(6vw, 52vh, 0) scaleX(-1); }
   56%   { transform: translate3d(-8vw, 26vh, 0) scaleX(1); }
   62%   { transform: translate3d(var(--hub-x), calc(var(--hub-y) - 5vh), 0) scaleX(1); }
   69%   { transform: translate3d(calc(var(--hub-x) + 6vw), calc(var(--hub-y) + 2vh), 0) scaleX(1); }
-  82%   { transform: translate3d(64vw, 88vh, 0) scaleX(1); }
+  82%   { transform: translate3d(64vw, 54vh, 0) scaleX(1); }
   92%   { transform: translate3d(30vw, 12vh, 0) scaleX(-1); }
   100%  { transform: translate3d(var(--hub-x), var(--hub-y), 0) scaleX(-1); }
 }
@@ -339,11 +339,11 @@
 @keyframes bird-roam-b {
   0%    { transform: translate3d(var(--hub-x), calc(var(--hub-y) + 4vh), 0) scaleX(-1); }
   6%    { transform: translate3d(calc(var(--hub-x) - 5vw), calc(var(--hub-y) + 1vh), 0) scaleX(-1); }
-  18%   { transform: translate3d(-10vw, 58vh, 0) scaleX(-1); }
-  25%   { transform: translate3d(12vw, 84vh, 0) scaleX(1); }
+  18%   { transform: translate3d(-10vw, 44vh, 0) scaleX(-1); }
+  25%   { transform: translate3d(12vw, 50vh, 0) scaleX(1); }
   31%   { transform: translate3d(var(--hub-x), calc(var(--hub-y) + 6vh), 0) scaleX(1); }
   38%   { transform: translate3d(calc(var(--hub-x) + 7vw), calc(var(--hub-y) - 2vh), 0) scaleX(1); }
-  52%   { transform: translate3d(92vw, 70vh, 0) scaleX(1); }
+  52%   { transform: translate3d(92vw, 46vh, 0) scaleX(1); }
   60%   { transform: translate3d(70vw, 18vh, 0) scaleX(-1); }
   66%   { transform: translate3d(var(--hub-x), calc(var(--hub-y) - 2vh), 0) scaleX(-1); }
   73%   { transform: translate3d(calc(var(--hub-x) - 8vw), calc(var(--hub-y) - 6vh), 0) scaleX(-1); }
@@ -354,11 +354,11 @@
 @keyframes bird-roam-c {
   0%    { transform: translate3d(var(--hub-x), calc(var(--hub-y) - 6vh), 0) scaleX(1); }
   7%    { transform: translate3d(calc(var(--hub-x) + 5vw), calc(var(--hub-y) - 9vh), 0) scaleX(1); }
-  20%   { transform: translate3d(84vw, 92vh, 0) scaleX(1); }
-  27%   { transform: translate3d(48vw, 60vh, 0) scaleX(-1); }
+  20%   { transform: translate3d(84vw, 56vh, 0) scaleX(1); }
+  27%   { transform: translate3d(48vw, 42vh, 0) scaleX(-1); }
   33%   { transform: translate3d(var(--hub-x), calc(var(--hub-y) - 4vh), 0) scaleX(-1); }
   40%   { transform: translate3d(calc(var(--hub-x) - 6vw), calc(var(--hub-y) - 8vh), 0) scaleX(-1); }
-  54%   { transform: translate3d(-9vw, 90vh, 0) scaleX(-1); }
+  54%   { transform: translate3d(-9vw, 48vh, 0) scaleX(-1); }
   61%   { transform: translate3d(20vw, 40vh, 0) scaleX(1); }
   67%   { transform: translate3d(var(--hub-x), var(--hub-y), 0) scaleX(1); }
   74%   { transform: translate3d(calc(var(--hub-x) + 9vw), calc(var(--hub-y) + 5vh), 0) scaleX(1); }
