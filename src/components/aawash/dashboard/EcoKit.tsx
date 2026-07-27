@@ -98,6 +98,106 @@ export function EcoHeroGreeting({ name }: { name: string }) {
   return <EcoGreeting name={name} style={welcome?.style ?? "time"} />;
 }
 
+/**
+ * Hero card — one calm container that holds the eyebrow, greeting, supporting
+ * line, an optional command bar and the architectural scene. Keeps the top of
+ * every dashboard visually identical across roles and breakpoints.
+ */
+export function EcoHero({
+  name,
+  eyebrow,
+  tagline,
+  scene,
+  aside,
+}: {
+  name: string;
+  eyebrow: string;
+  tagline?: string;
+  scene?: React.ReactNode;
+  aside?: React.ReactNode;
+}) {
+  return (
+    <section className="relative overflow-hidden rounded-[30px] bg-surface p-5 shadow-[var(--shadow-soft)] ring-1 ring-inset ring-border/50 sm:rounded-[38px] sm:p-7">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-24 left-1/4 h-56 w-56 rounded-full bg-leaf/10 blur-3xl"
+      />
+      <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-8">
+        <div className="min-w-0">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-[9.5px] font-semibold uppercase tracking-[0.18em] text-primary">
+            {eyebrow}
+          </span>
+          <div className="mt-3">
+            <EcoHeroGreeting name={name} />
+          </div>
+          {tagline && (
+            <p className="mt-2.5 max-w-[44ch] text-[12.5px] font-light leading-relaxed text-muted-foreground">
+              {tagline}
+            </p>
+          )}
+          {aside && <div className="mt-5">{aside}</div>}
+        </div>
+        {scene && <div className="min-w-0">{scene}</div>}
+      </div>
+    </section>
+  );
+}
+
+/** Consistent vertical rhythm + heading for every dashboard block. */
+export function EcoSection({
+  title,
+  subtitle,
+  action,
+  children,
+  className = "",
+}: {
+  title?: string;
+  subtitle?: string;
+  action?: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section className={`mt-7 sm:mt-9 ${className}`}>
+      {(title || action) && (
+        <div className="mb-3.5 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3">
+          <div className="min-w-0">
+            {title && (
+              <h2 className="truncate text-[15.5px] font-bold tracking-[-0.015em] text-foreground sm:text-[17px]">
+                {title}
+              </h2>
+            )}
+            {subtitle && (
+              <p className="mt-0.5 truncate text-[11.5px] font-light text-muted-foreground">
+                {subtitle}
+              </p>
+            )}
+          </div>
+          {action && <div className="shrink-0">{action}</div>}
+        </div>
+      )}
+      {children}
+    </section>
+  );
+}
+
+/** Small text link used as a section action. */
+export function EcoLink({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <Link
+      to={to as never}
+      className="inline-flex items-center gap-1 rounded-full px-1 text-[12px] font-semibold text-primary transition-colors hover:text-leaf outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      {children} <ChevronRight size={14} />
+    </Link>
+  );
+}
+
+
 function firstName(full?: string | null) {
   return (full || "there").trim().split(/\s+/)[0] || "there";
 }
