@@ -105,16 +105,20 @@ function MemberContent() {
   return (
     <EcoShell role="member" profile={profile}>
       {/* ---------------- Focus hero ---------------- */}
-      <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
+      <section className="pt-4 sm:pt-6">
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
-
-          <div className="mt-5 sm:mt-7">
-            <EcoLivingScene />
-          </div>
         </div>
 
-        <div className="grid content-start gap-3">
+        <div className="mx-auto mt-5 w-full max-w-[420px] sm:mt-7 sm:max-w-[560px] lg:max-w-[640px]">
+          <EcoLivingScene />
+        </div>
+      </section>
+
+      {/* ---------------- Command bar + primary pods ---------------- */}
+      <section className="mt-4 grid gap-3 sm:mt-5">
+        <AskBar to="/member/sales" placeholder="Search your sales, referrals or tips…" />
+        <div className="grid grid-cols-2 gap-3">
           <LightPod
             icon={<TrendingUp size={15} />}
             label="Total sales"
@@ -122,26 +126,13 @@ function MemberContent() {
             to="/member/sales"
             loading={overview.isLoading}
           />
-
           <LightPod
             icon={<Droplet size={15} />}
             label="Wallet"
             value={formatINR(profile?.wallet_balance, { compact: true })}
             to="/member/wallet"
           />
-          <LightPod
-            icon={<Zap size={15} />}
-            label="This month"
-            value={formatINR(stats?.monthCommission ?? 0, { compact: true })}
-            to="/member/commission"
-            loading={overview.isLoading}
-          />
         </div>
-      </section>
-
-      {/* ---------------- Command bar ---------------- */}
-      <section className="mt-4 sm:mt-5">
-        <AskBar to="/member/sales" placeholder="Search your sales, referrals or tips…" />
       </section>
 
       {/* ---------------- Quick pods ---------------- */}
