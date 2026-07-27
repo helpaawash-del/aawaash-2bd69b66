@@ -303,10 +303,16 @@ function LeaderContent() {
             <ArrowDownToLine size={15} /> Request withdrawal
           </Link>
         </LightPanel>
-      </section>
+        </div>
+      </EcoSection>
 
       {/* ---------------- Leaderboard + members ---------------- */}
-      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-2">
+      <EcoSection
+        title="People"
+        subtitle="Top performers and your active roster"
+        action={<EcoLink to="/leader/members">All members</EcoLink>}
+      >
+        <div className="grid gap-4 lg:grid-cols-2">
         <LightPanel
           title="Team Leaderboard"
           action={
