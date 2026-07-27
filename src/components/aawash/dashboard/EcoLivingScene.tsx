@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ecoBuilding from "@/assets/eco-hero-tower.png.asset.json";
+import ecoBuilding from "@/assets/eco-tower-v2.png.asset.json";
 
 /* ------------------------------------------------------------------ *
  * EcoLivingScene — the dashboard hero artwork.
