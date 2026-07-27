@@ -183,15 +183,15 @@ function MemberContent() {
             { label: "Deals", value: String(stats?.salesCount ?? 0), hint: "Closed" },
             { label: "Referrals", value: String(stats?.referralCount ?? 0), hint: "Added" },
             { label: "Tips", value: String(stats?.tipCount ?? 0), hint: "Shared" },
-
           ]}
         >
           <Orb intensity={Math.min(1, (stats?.salesCount ?? 0) / 10)} />
         </DarkPanel>
-      </section>
+      </EcoSection>
 
       {/* ---------------- Team + wallet ---------------- */}
-      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-2">
+      <EcoSection title="Team & wallet" subtitle="Who you work with and what you've earned">
+        <div className="grid gap-4 lg:grid-cols-2">
         <LightPanel
           title="My Team"
           action={
