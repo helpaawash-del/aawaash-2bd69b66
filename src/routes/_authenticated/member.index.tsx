@@ -113,7 +113,7 @@ function MemberContent() {
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
 
-          <div className="mt-7">
+          <div className="mt-5 sm:mt-7">
             <EcoLivingScene />
           </div>
 
@@ -127,6 +127,7 @@ function MemberContent() {
             value={formatINR(stats?.totalSales ?? 0, { compact: true })}
             hint={`${stats?.salesCount ?? 0} deals`}
             to="/member/sales"
+            loading={overview.isLoading}
           />
 
           <LightPod
@@ -145,12 +146,12 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Command bar ---------------- */}
-      <section className="mt-5">
+      <section className="mt-4 sm:mt-5">
         <AskBar to="/member/sales" placeholder="Search your sales, referrals or tips…" />
       </section>
 
       {/* ---------------- Quick pods ---------------- */}
-      <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <section className="mt-4 sm:mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <LightPod
           icon={<UserPlus size={15} />}
           label="Referrals"
@@ -178,7 +179,7 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Overview + activity ---------------- */}
-      <section className="mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
+      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
         <DarkPanel
           title="My Overview"
           action={<Activity size={17} className="text-forest-foreground/70" />}
@@ -230,7 +231,7 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Team + wallet ---------------- */}
-      <section className="mt-5 grid gap-4 lg:grid-cols-2">
+      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-2">
         <LightPanel
           title="My Team"
           action={
@@ -337,7 +338,7 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Leaderboard ---------------- */}
-      <section className="mt-5">
+      <section className="mt-4 sm:mt-5">
         <LightPanel
           title="Team Leaderboard"
           action={
@@ -395,7 +396,7 @@ function MemberContent() {
       </section>
 
       {/* ---------------- Footer CTAs ---------------- */}
-      <section className="mt-5 grid gap-3 sm:grid-cols-2">
+      <section className="mt-4 sm:mt-5 grid gap-3 sm:grid-cols-2">
         <Link
           to="/projects"
           className="flex items-center gap-3 rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
