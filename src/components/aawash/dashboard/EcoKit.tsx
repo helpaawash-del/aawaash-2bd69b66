@@ -390,6 +390,7 @@ export function DarkPod({
   hint,
   to,
   loading = false,
+  tone = "dark",
 }: {
   icon: React.ReactNode;
   label: string;
@@ -397,30 +398,49 @@ export function DarkPod({
   hint?: string;
   to?: string;
   loading?: boolean;
+  tone?: "dark" | "light";
 }) {
+  const light = tone === "light";
   const inner = (
     <>
-      <span className="grid place-items-center text-forest-foreground/80">{icon}</span>
-      <span className="mt-1.5 text-[10px] font-medium text-forest-foreground/70 sm:text-[10.5px]">
+      <span
+        className={`grid place-items-center ${light ? "text-forest" : "text-forest-foreground/80"}`}
+      >
+        {icon}
+      </span>
+      <span
+        className={`mt-1.5 text-[10px] font-medium sm:text-[10.5px] ${light ? "text-foreground/70" : "text-forest-foreground/70"}`}
+      >
         {label}
       </span>
       {loading ? (
-        <span className="mt-1.5 h-[18px] w-14 eco-skel rounded-full bg-forest-foreground/20" />
+        <span
+          className={`mt-1.5 h-[18px] w-14 eco-skel rounded-full ${light ? "bg-muted" : "bg-forest-foreground/20"}`}
+        />
       ) : (
-        <span className="text-[18px] font-extrabold leading-tight tracking-[-0.02em] text-forest-foreground sm:text-[20px]">
+        <span
+          className={`text-[18px] font-extrabold leading-tight tracking-[-0.02em] sm:text-[20px] ${light ? "text-foreground" : "text-forest-foreground"}`}
+        >
           {value}
         </span>
       )}
       {hint &&
         (loading ? (
-          <span className="mt-1 h-2.5 w-10 eco-skel rounded-full bg-forest-foreground/15" />
+          <span
+            className={`mt-1 h-2.5 w-10 eco-skel rounded-full ${light ? "bg-muted" : "bg-forest-foreground/15"}`}
+          />
         ) : (
-          <span className="text-[10px] font-semibold text-leaf">{hint}</span>
+          <span className={`text-[10px] font-semibold ${light ? "text-forest" : "text-leaf"}`}>
+            {hint}
+          </span>
         ))}
     </>
   );
-  const cls =
-    "flex min-h-[104px] flex-col items-center justify-center rounded-[24px] bg-gradient-to-b from-forest to-forest-deep px-3 py-3 text-center shadow-[var(--shadow-float)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[112px] sm:rounded-[26px]";
+  const cls = `flex h-full min-h-[104px] flex-col items-center justify-center rounded-[24px] px-3 py-3 text-center transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[112px] sm:rounded-[26px] ${
+    light
+      ? "bg-surface shadow-[var(--shadow-soft)]"
+      : "bg-gradient-to-b from-forest to-forest-deep shadow-[var(--shadow-float)]"
+  }`;
   return to ? (
     <Link to={to as never} className={cls} aria-label={`${label}: ${value}`}>
       {inner}
@@ -462,7 +482,7 @@ export function LightPod({
     </>
   );
   const cls =
-    "flex min-h-[88px] flex-col items-center justify-center rounded-[22px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[96px] sm:rounded-[24px]";
+    "flex h-full min-h-[88px] flex-col items-center justify-center rounded-[22px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[96px] sm:rounded-[24px]";
   return to ? (
     <Link to={to as never} className={cls} aria-label={`${label}: ${value}`}>
       {inner}

@@ -6,11 +6,8 @@ import {
   Wallet,
   TrendingUp,
   Trophy,
-  IndianRupee,
   Bell,
-  Leaf,
   Droplet,
-  Zap,
   Activity,
   BarChart3,
   ArrowDownToLine,
@@ -127,20 +124,20 @@ function LeaderContent() {
     <EcoShell role="team_leader" profile={profile}>
       {/* ---------------- Focus hero ---------------- */}
       <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
-        <div className="min-w-0">
+        <div className="min-w-0 pt-4 sm:pt-6">
           <EcoHeroGreeting name={displayName} />
 
-          <div className="mt-5 sm:mt-7">
+          <div className="mt-6 sm:mt-8">
             <EcoLivingScene />
           </div>
         </div>
 
-        <div className="grid content-start gap-3">
+        <div className="grid grid-rows-2 gap-3 pt-4 sm:pt-6">
           <DarkPod
+            tone="light"
             icon={<TrendingUp size={17} />}
             label="Total sales"
-            value={formatINR(o?.totalRevenue ?? 0, { compact: true })}
-            hint={`${o?.salesCount ?? 0} closed`}
+            value={String(o?.salesCount ?? 0)}
             to="/leader/analytics"
             loading={overview.isLoading}
           />
@@ -150,13 +147,6 @@ function LeaderContent() {
             label="Wallet"
             value={formatINR(profile?.wallet_balance, { compact: true })}
             to="/leader/withdrawals"
-            loading={overview.isLoading}
-          />
-          <LightPod
-            icon={<Zap size={15} />}
-            label="This month"
-            value={formatINR(o?.monthlyCommission ?? 0, { compact: true })}
-            to="/leader/analytics"
             loading={overview.isLoading}
           />
         </div>

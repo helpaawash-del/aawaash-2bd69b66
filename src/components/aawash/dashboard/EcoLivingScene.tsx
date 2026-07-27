@@ -109,7 +109,7 @@ export function EcoLivingScene() {
 
       <div
         aria-hidden
-        className="relative isolate aspect-[16/11] w-full overflow-hidden sm:aspect-[16/10]"
+        className="relative isolate aspect-[16/11] w-full bg-transparent sm:aspect-[16/10]"
       >
         <img
           ref={towerRef}
@@ -118,7 +118,7 @@ export function EcoLivingScene() {
           loading="lazy"
           width={1920}
           height={1300}
-          className="absolute inset-0 mx-auto block h-full w-full object-contain drop-shadow-[0_18px_30px_rgba(16,50,36,0.14)]"
+          className="absolute inset-0 mx-auto block h-full w-full translate-y-[6%] bg-transparent object-contain sm:translate-y-[5%]"
         />
       </div>
     </>
