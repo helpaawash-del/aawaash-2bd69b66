@@ -130,16 +130,18 @@ function LeaderContent() {
   return (
     <EcoShell role="team_leader" profile={profile}>
       {/* ---------------- Focus hero ---------------- */}
-      <section className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
+      <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
 
-          <div className="mt-5 sm:mt-7">
+          <div className="mt-7">
             <EcoLivingScene />
           </div>
+
+
         </div>
 
-        <div className="grid grid-cols-3 gap-2.5 lg:grid-cols-1 lg:content-start lg:gap-3">
+        <div className="grid content-start gap-3">
           <DarkPod
             icon={<TrendingUp size={17} />}
             label="Total sales"
@@ -162,7 +164,6 @@ function LeaderContent() {
           />
         </div>
       </section>
-
 
       {/* ---------------- Command bar ---------------- */}
       <section className="mt-5">
