@@ -34,8 +34,8 @@ const FREEZE_MOTION = `
 
 async function signIn(page: Page) {
   await page.goto(`${BASE}/auth`);
-  await page.getByLabel(/email/i).first().fill(EMAIL!);
-  await page.getByLabel(/password/i).first().fill(PASSWORD!);
+  await page.getByRole("textbox", { name: "Login ID" }).fill(EMAIL!);
+  await page.locator('input[aria-label="Password"]').fill(PASSWORD!);
   await page
     .getByRole("button", { name: /sign in|log in/i })
     .first()
