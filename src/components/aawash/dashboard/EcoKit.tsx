@@ -195,24 +195,22 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
       style={{ width: dock.width }}
       className="pointer-events-none fixed inset-y-[20%] left-0 z-40 block transition-[width] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-[width] motion-reduce:transition-none"
     >
-      <div className="pointer-events-auto relative h-full">
-        <svg
+      <div className="pointer-events-auto relative h-full py-1 pl-2 pr-1.5">
+        {/* Floating capsule shell — glassy deep-forest gradient */}
+        <div
           aria-hidden
-          viewBox="0 0 112 800"
-          preserveAspectRatio="none"
-          className="absolute inset-0 h-full w-full text-forest drop-shadow-[8px_0_24px_rgba(16,50,36,0.28)]"
+          className="absolute inset-y-1 left-2 right-1.5 rounded-[30px] bg-gradient-to-b from-forest via-forest to-forest-deep shadow-[0_18px_50px_-18px_rgba(16,50,36,0.65)] ring-1 ring-inset ring-white/12"
         >
-          <path
-            fill="currentColor"
-            d="M0,0 H72 C104,110 60,190 92,300 C118,392 66,470 88,570 C106,660 64,720 78,800 H0 Z"
-          />
-        </svg>
+          <span className="absolute inset-x-0 top-0 h-24 rounded-t-[30px] bg-gradient-to-b from-white/14 to-transparent" />
+          <span className="absolute inset-x-0 bottom-0 h-24 rounded-b-[30px] bg-gradient-to-t from-black/15 to-transparent" />
+        </div>
 
         <div
-          className={`relative flex h-full flex-col items-center gap-3 py-5 transition-[padding] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
-            open ? "pr-7" : "pr-3"
+          className={`relative flex h-full flex-col items-center gap-2 py-4 transition-[padding] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
+            open ? "pr-1.5" : "pr-1"
           }`}
         >
+
           <nav className="flex w-full flex-1 flex-col items-center justify-center gap-1.5">
             {items.map((item) => {
               const Icon = item.icon;
