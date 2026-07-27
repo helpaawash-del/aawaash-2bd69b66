@@ -389,25 +389,38 @@ export function DarkPod({
   value,
   hint,
   to,
+  loading = false,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   hint?: string;
   to?: string;
+  loading?: boolean;
 }) {
   const inner = (
     <>
       <span className="grid place-items-center text-forest-foreground/80">{icon}</span>
-      <span className="mt-1.5 text-[10.5px] font-medium text-forest-foreground/70">{label}</span>
-      <span className="text-[20px] font-extrabold leading-tight tracking-[-0.02em] text-forest-foreground">
-        {value}
+      <span className="mt-1.5 text-[10px] font-medium text-forest-foreground/70 sm:text-[10.5px]">
+        {label}
       </span>
-      {hint && <span className="text-[10px] font-semibold text-leaf">{hint}</span>}
+      {loading ? (
+        <span className="mt-1.5 h-[18px] w-14 animate-pulse rounded-full bg-forest-foreground/20" />
+      ) : (
+        <span className="text-[18px] font-extrabold leading-tight tracking-[-0.02em] text-forest-foreground sm:text-[20px]">
+          {value}
+        </span>
+      )}
+      {hint &&
+        (loading ? (
+          <span className="mt-1 h-2.5 w-10 animate-pulse rounded-full bg-forest-foreground/15" />
+        ) : (
+          <span className="text-[10px] font-semibold text-leaf">{hint}</span>
+        ))}
     </>
   );
   const cls =
-    "flex min-h-[112px] flex-col items-center justify-center rounded-[26px] bg-gradient-to-b from-forest to-forest-deep px-3 py-3 text-center shadow-[var(--shadow-float)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98]";
+    "flex min-h-[104px] flex-col items-center justify-center rounded-[24px] bg-gradient-to-b from-forest to-forest-deep px-3 py-3 text-center shadow-[var(--shadow-float)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[112px] sm:rounded-[26px]";
   return to ? (
     <Link to={to as never} className={cls} aria-label={`${label}: ${value}`}>
       {inner}
@@ -423,25 +436,33 @@ export function LightPod({
   label,
   value,
   to,
+  loading = false,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   to?: string;
+  loading?: boolean;
 }) {
   const inner = (
     <>
       <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-primary">
         {icon}
       </span>
-      <span className="mt-1 text-[10.5px] font-medium text-muted-foreground">{label}</span>
-      <span className="text-[17px] font-extrabold leading-tight tracking-[-0.02em] text-foreground">
-        {value}
+      <span className="mt-1 text-[10px] font-medium text-muted-foreground sm:text-[10.5px]">
+        {label}
       </span>
+      {loading ? (
+        <span className="mt-1.5 h-[15px] w-12 animate-pulse rounded-full bg-muted" />
+      ) : (
+        <span className="text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-[17px]">
+          {value}
+        </span>
+      )}
     </>
   );
   const cls =
-    "flex min-h-[96px] flex-col items-center justify-center rounded-[24px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98]";
+    "flex min-h-[88px] flex-col items-center justify-center rounded-[22px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[96px] sm:rounded-[24px]";
   return to ? (
     <Link to={to as never} className={cls} aria-label={`${label}: ${value}`}>
       {inner}
