@@ -389,7 +389,8 @@ function MemberContent() {
           </div>
           <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
         </Link>
-      </section>
+        </div>
+      </EcoSection>
     </EcoShell>
   );
 }
