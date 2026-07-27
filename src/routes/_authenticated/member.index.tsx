@@ -116,8 +116,6 @@ function MemberContent() {
           <div className="mt-5 sm:mt-7">
             <EcoLivingScene />
           </div>
-
-
         </div>
 
         <div className="grid content-start gap-3">
@@ -197,7 +195,6 @@ function MemberContent() {
           <Orb intensity={Math.min(1, (stats?.salesCount ?? 0) / 10)} />
         </DarkPanel>
       </section>
-
 
       {/* ---------------- Team + wallet ---------------- */}
       <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-2">

@@ -137,8 +137,6 @@ function LeaderContent() {
           <div className="mt-5 sm:mt-7">
             <EcoLivingScene />
           </div>
-
-
         </div>
 
         <div className="grid content-start gap-3">
@@ -221,7 +219,6 @@ function LeaderContent() {
           <Orb intensity={Math.min(1, (o?.salesCount ?? 0) / 10)} />
         </DarkPanel>
       </section>
-
 
       {/* ---------------- Trend + wallet ---------------- */}
       <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
