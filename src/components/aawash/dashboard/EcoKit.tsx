@@ -195,24 +195,22 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
       style={{ width: dock.width }}
       className="pointer-events-none fixed inset-y-[20%] left-0 z-40 block transition-[width] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-[width] motion-reduce:transition-none"
     >
-      <div className="pointer-events-auto relative h-full">
-        <svg
+      <div className="pointer-events-auto relative h-full py-1 pl-2 pr-1.5">
+        {/* Floating capsule shell — glassy deep-forest gradient */}
+        <div
           aria-hidden
-          viewBox="0 0 112 800"
-          preserveAspectRatio="none"
-          className="absolute inset-0 h-full w-full text-forest drop-shadow-[8px_0_24px_rgba(16,50,36,0.28)]"
+          className="absolute inset-y-1 left-2 right-1.5 rounded-[30px] bg-gradient-to-b from-forest via-forest to-forest-deep shadow-[0_18px_50px_-18px_rgba(16,50,36,0.65)] ring-1 ring-inset ring-white/12"
         >
-          <path
-            fill="currentColor"
-            d="M0,0 H72 C104,110 60,190 92,300 C118,392 66,470 88,570 C106,660 64,720 78,800 H0 Z"
-          />
-        </svg>
+          <span className="absolute inset-x-0 top-0 h-24 rounded-t-[30px] bg-gradient-to-b from-white/14 to-transparent" />
+          <span className="absolute inset-x-0 bottom-0 h-24 rounded-b-[30px] bg-gradient-to-t from-black/15 to-transparent" />
+        </div>
 
         <div
-          className={`relative flex h-full flex-col items-center gap-3 py-5 transition-[padding] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
-            open ? "pr-7" : "pr-3"
+          className={`relative flex h-full flex-col items-center gap-2 py-4 transition-[padding] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
+            open ? "pr-1.5" : "pr-1"
           }`}
         >
+
           <nav className="flex w-full flex-1 flex-col items-center justify-center gap-1.5">
             {items.map((item) => {
               const Icon = item.icon;
@@ -229,16 +227,22 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
                   data-dock-item={item.key}
                   data-active={active ? "true" : "false"}
                   onClick={() => setSection(item.key)}
-                  className={`group flex flex-col items-center gap-1 overflow-hidden rounded-[18px] px-1 py-2.5 text-[10px] font-semibold transition-[background-color,color,width,box-shadow,transform] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
-                    open ? "w-[84px] rounded-[22px] py-3" : "w-[46px]"
+                  className={`group relative flex flex-col items-center gap-1 overflow-hidden rounded-[16px] px-1 py-2.5 text-[9.5px] font-semibold tracking-[0.02em] transition-[background-color,color,width,box-shadow,transform] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
+                    open ? "w-[80px] rounded-[20px] py-3" : "w-[44px]"
                   } ${
                     active
-                      ? "bg-surface text-primary shadow-[var(--shadow-float)]"
-                      : "text-forest-foreground/70 hover:bg-white/10 hover:text-forest-foreground"
+                      ? "bg-white/95 text-primary shadow-[0_8px_20px_-8px_rgba(0,0,0,0.45)]"
+                      : "text-forest-foreground/65 hover:bg-white/10 hover:text-forest-foreground"
                   }`}
                 >
+                  <span
+                    aria-hidden
+                    className={`absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-primary transition-opacity duration-300 ${
+                      active ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
                   <Icon
-                    size={19}
+                    size={18}
                     className="shrink-0 transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-0.5 motion-reduce:transition-none"
                   />
                   <span
@@ -249,11 +253,15 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
                     {item.label}
                   </span>
                 </Link>
+
               );
             })}
           </nav>
 
+          <span aria-hidden className="h-px w-7 shrink-0 rounded-full bg-white/15" />
+
           {canExpand && (
+
             <button
               type="button"
               onClick={toggle}
