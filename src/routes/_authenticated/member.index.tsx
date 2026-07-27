@@ -183,11 +183,11 @@ function MemberContent() {
         />
       </section>
 
-      {/* ---------------- Overview + activity ---------------- */}
-      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
+      {/* ---------------- Overview ---------------- */}
+      <section className="mt-4 sm:mt-5">
         <DarkPanel
           title="My Overview"
-          action={<Activity size={17} className="text-forest-foreground/70" />}
+          action={<Activity size={17} className="text-forest/70" />}
           stats={[
             { label: "Deals", value: String(stats?.salesCount ?? 0), hint: "Closed" },
             { label: "Referrals", value: String(stats?.referralCount ?? 0), hint: "Added" },
@@ -196,44 +196,8 @@ function MemberContent() {
         >
           <Orb intensity={Math.min(1, (stats?.salesCount ?? 0) / 10)} />
         </DarkPanel>
-
-        <LightPanel
-          title="Recent Activity"
-          action={
-            <Link to="/member/notifications" className="text-[12px] font-semibold text-primary">
-              Alerts{unread > 0 ? ` (${unread})` : ""}
-            </Link>
-          }
-          footer={{ label: "My analytics", to: "/member/analytics" }}
-        >
-          {activity.isLoading ? (
-            <EcoRows rows={4} />
-          ) : recent.length === 0 ? (
-            <BlankChart />
-
-          ) : (
-            <ul className="flex flex-col gap-4">
-              {recent.map((a) => (
-                <TimelineRow
-                  key={a.id}
-                  tone={activityTone(a.kind)}
-                  icon={activityIcon(a.kind)}
-                  title={a.title}
-                  subtitle={new Date(a.date).toLocaleString("en-IN")}
-                  right={
-                    a.amount !== 0 ? (
-                      <span className={a.amount < 0 ? "text-destructive" : "text-success"}>
-                        {a.amount < 0 ? "" : "+"}
-                        {formatINR(Math.abs(a.amount), { compact: true })}
-                      </span>
-                    ) : undefined
-                  }
-                />
-              ))}
-            </ul>
-          )}
-        </LightPanel>
       </section>
+
 
       {/* ---------------- Team + wallet ---------------- */}
       <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-2">
