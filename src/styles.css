@@ -566,23 +566,3 @@
 @media (prefers-reduced-motion: reduce) {
   .eco-skel { animation: none !important; }
 }
-
-/* --- futuristic ambient drift for dashboard background --- */
-@keyframes eco-drift-a {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(4%, 6%, 0) scale(1.08); }
-}
-@keyframes eco-drift-b {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.04); }
-  50% { transform: translate3d(-5%, -4%, 0) scale(1); }
-}
-@keyframes eco-drift-c {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(3%, -5%, 0) scale(1.1); }
-}
-@utility animate-eco-drift-a { animation: eco-drift-a 26s ease-in-out infinite; }
-@utility animate-eco-drift-b { animation: eco-drift-b 32s ease-in-out infinite; }
-@utility animate-eco-drift-c { animation: eco-drift-c 38s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) {
-  .animate-eco-drift-a, .animate-eco-drift-b, .animate-eco-drift-c { animation: none !important; }
-}

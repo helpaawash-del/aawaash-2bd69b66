@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ecoBuilding from "@/assets/eco-dome.png.asset.json";
+import ecoBuilding from "@/assets/eco-tower-v2.png.asset.json";
 
 /* ------------------------------------------------------------------ *
  * EcoLivingScene — the dashboard hero artwork.
@@ -110,7 +110,7 @@ export function EcoLivingScene() {
       <div
         aria-hidden
         data-testid="eco-hero-scene"
-        className="relative isolate aspect-[5/4] w-full bg-transparent sm:aspect-[16/11]"
+        className="relative isolate aspect-[16/11] w-full bg-transparent sm:aspect-[16/10]"
       >
         <img
           ref={towerRef}
@@ -118,9 +118,9 @@ export function EcoLivingScene() {
           alt=""
           data-testid="eco-hero-image"
           loading="lazy"
-          width={1600}
-          height={1600}
-          className="absolute inset-0 mx-auto block h-full w-full translate-y-[4%] bg-transparent object-contain sm:translate-y-[3%]"
+          width={1920}
+          height={1300}
+          className="absolute inset-0 mx-auto block h-full w-full translate-y-[6%] bg-transparent object-contain sm:translate-y-[5%]"
         />
       </div>
     </>

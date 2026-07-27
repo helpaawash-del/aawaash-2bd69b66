@@ -122,20 +122,16 @@ function LeaderContent() {
   return (
     <EcoShell role="team_leader" profile={profile}>
       {/* ---------------- Focus hero ---------------- */}
-      <section className="pt-4 sm:pt-6">
-        <div className="min-w-0">
+      <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
+        <div className="min-w-0 pt-4 sm:pt-6">
           <EcoHeroGreeting name={displayName} />
+
+          <div className="mt-6 sm:mt-8">
+            <EcoLivingScene />
+          </div>
         </div>
 
-        <div className="mx-auto mt-5 w-full max-w-[420px] sm:mt-7 sm:max-w-[560px] lg:max-w-[640px]">
-          <EcoLivingScene />
-        </div>
-      </section>
-
-      {/* ---------------- Command bar + primary pods ---------------- */}
-      <section className="mt-4 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3 sm:mt-5">
-        <AskBar to="/leader/members" placeholder="Search members, sales or projects…" />
-        <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3">
+        <div className="grid content-start gap-3 pt-4 sm:pt-6">
           <LightPod
             icon={<TrendingUp size={15} />}
             label="Total sales"
@@ -143,6 +139,7 @@ function LeaderContent() {
             to="/leader/analytics"
             loading={overview.isLoading}
           />
+
           <LightPod
             icon={<Droplet size={15} />}
             label="Wallet"
@@ -151,6 +148,11 @@ function LeaderContent() {
             loading={overview.isLoading}
           />
         </div>
+      </section>
+
+      {/* ---------------- Command bar ---------------- */}
+      <section className="mt-4 sm:mt-5">
+        <AskBar to="/leader/members" placeholder="Search members, sales or projects…" />
       </section>
 
       {/* ---------------- Quick pods ---------------- */}
