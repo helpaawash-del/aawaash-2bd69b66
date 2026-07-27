@@ -565,7 +565,7 @@ export function Orb({ intensity = 0.6 }: { intensity?: number }) {
         x: 90 + Math.cos(a) * rad,
         y: 90 + Math.sin(a) * rad * 0.94,
         r: 0.8 + ((i * 7) % 5) * 0.32,
-        o: 0.25 + ((i * 13) % 10) / 14,
+        o: 0.4 + ((i * 13) % 10) / 11,
       });
     }
     return out;
