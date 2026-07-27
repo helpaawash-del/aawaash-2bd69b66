@@ -580,21 +580,21 @@ export function LightPod({
 }) {
   const inner = (
     <>
-      <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-primary">
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-primary-soft text-primary transition-transform duration-300 group-hover:scale-105">
         {icon}
       </span>
       <span
         data-pod-label
-        className="mt-1 text-[10px] font-medium text-muted-foreground sm:text-[10.5px]"
+        className="mt-3 block w-full truncate text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground"
       >
         {label}
       </span>
       {loading ? (
-        <span className="my-[2px] h-[15.4px] w-12 eco-skel rounded-full bg-muted sm:h-[17px]" />
+        <span className="mt-[3px] block h-[17px] w-14 eco-skel rounded-full bg-muted sm:h-[19px]" />
       ) : (
         <span
           data-pod-value
-          className="text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-[17px]"
+          className="mt-0.5 block w-full truncate text-[17px] font-extrabold leading-tight tracking-[-0.025em] text-foreground sm:text-[19px]"
         >
           {value}
         </span>
@@ -602,7 +602,8 @@ export function LightPod({
     </>
   );
   const cls =
-    "flex h-full min-h-[88px] flex-col items-center justify-center rounded-[22px] bg-surface px-2.5 py-3 text-center shadow-[var(--shadow-soft)] transition-transform will-change-transform hover:-translate-y-1 active:scale-[0.98] sm:min-h-[96px] sm:rounded-[24px]";
+    "group flex h-full min-h-[104px] flex-col items-start justify-center rounded-[22px] bg-surface px-3.5 py-3.5 text-left shadow-[var(--shadow-soft)] ring-1 ring-inset ring-border/50 transition-all will-change-transform hover:-translate-y-1 hover:shadow-[var(--shadow-float)] active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-[112px] sm:rounded-[26px] sm:px-4";
+
   const testProps = {
     "data-testid": "eco-pod",
     "data-pod": label.toLowerCase().replace(/\s+/g, "-"),
