@@ -501,7 +501,7 @@ export function SectionHead({
 }) {
   return (
     <div className="mb-3 flex items-center justify-between gap-3">
-      <h2 className="truncate text-[15px] font-bold tracking-[-0.01em] text-foreground">{title}</h2>
+      <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">{title}</h2>
       {to && (
         <Link
           to={to as never}
@@ -527,9 +527,9 @@ export function DarkPanel({
   stats?: { label: string; value: string; hint?: string }[];
 }) {
   return (
-    <section className="relative overflow-hidden rounded-[34px] bg-gradient-to-b from-forest to-forest-deep p-5 shadow-[var(--shadow-glow)]">
+    <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-b from-forest to-forest-deep p-4 shadow-[var(--shadow-glow)] sm:rounded-[34px] sm:p-5">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="truncate text-[15px] font-bold text-forest-foreground">{title}</h2>
+        <h2 className="truncate text-[14.5px] font-bold text-forest-foreground sm:text-[15px]">{title}</h2>
         {action}
       </div>
       {children}
@@ -606,9 +606,9 @@ export function LightPanel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex h-full flex-col rounded-[34px] bg-surface p-5 shadow-[var(--shadow-soft)]">
+    <section className="flex h-full flex-col rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] sm:rounded-[34px] sm:p-5">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="truncate text-[15px] font-bold tracking-[-0.01em] text-foreground">
+        <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">
           {title}
         </h2>
         {action}
