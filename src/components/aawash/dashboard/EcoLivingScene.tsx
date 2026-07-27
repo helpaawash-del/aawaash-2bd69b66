@@ -48,7 +48,39 @@ function Bird({ scale }: { scale: number }) {
 export function EcoLivingScene() {
   const towerRef = useRef<HTMLImageElement>(null);
   const skyRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
   const [hub, setHub] = useState({ x: "40vw", y: "30%" });
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0, tx: 0, ty: 0 });
+
+  // Pointer parallax / tilt — desktop pointers only, respects reduced motion.
+  useEffect(() => {
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const node = sceneRef.current;
+    if (!fine || calm || !node) return;
+    let frame = 0;
+    const onMove = (e: PointerEvent) => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const r = node.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        setTilt({ rx: -py * 7, ry: px * 10, tx: px * 12, ty: py * 8 });
+      });
+    };
+    const onLeave = () => {
+      cancelAnimationFrame(frame);
+      setTilt({ rx: 0, ry: 0, tx: 0, ty: 0 });
+    };
+    node.addEventListener("pointermove", onMove);
+    node.addEventListener("pointerleave", onLeave);
+    return () => {
+      cancelAnimationFrame(frame);
+      node.removeEventListener("pointermove", onMove);
+      node.removeEventListener("pointerleave", onLeave);
+    };
+  }, []);
+
 
   useEffect(() => {
     let frame = 0;
