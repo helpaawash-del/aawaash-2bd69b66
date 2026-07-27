@@ -396,10 +396,11 @@ function LeaderContent() {
             </ul>
           )}
         </LightPanel>
-      </section>
+        </div>
+      </EcoSection>
 
       {/* ---------------- Footer CTA ---------------- */}
-      <section className="mt-4 sm:mt-5">
+      <EcoSection>
         <Link
           to="/leader/analytics"
           className="flex items-center gap-3 rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-0.5 active:scale-[0.99]"
