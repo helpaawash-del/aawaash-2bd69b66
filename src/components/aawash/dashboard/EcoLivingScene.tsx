@@ -204,7 +204,7 @@ export function EcoLivingScene() {
         {/* soft emerald halo behind the model */}
         <span
           ref={haloRef}
-          className="absolute left-1/2 top-1/2 -z-10 h-[70%] w-[78%] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--forest)_18%,transparent),transparent_70%)] blur-2xl transition-transform duration-500 ease-out [transform:translate(calc(-50%+var(--hx,0px)),calc(-50%+var(--hy,0px)))]"
+          className="absolute left-1/2 top-1/2 -z-10 h-[70%] w-[78%] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--forest)_18%,transparent),transparent_70%)] blur-2xl transition-transform duration-500 ease-out [transform:translate(calc(-50%_+_var(--hx,0px)),calc(-50%_+_var(--hy,0px)))]"
         />
         <img
           ref={towerRef}
@@ -215,7 +215,7 @@ export function EcoLivingScene() {
           decoding="async"
           width={1536}
           height={1152}
-          className="absolute inset-0 mx-auto block h-full w-full bg-transparent object-contain transition-transform duration-300 ease-out will-change-transform [transform:perspective(1100px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))_translate3d(var(--tx,0px),calc(4%+var(--ty,0px)),0)] motion-reduce:transform-none motion-reduce:transition-none"
+          className="absolute inset-0 mx-auto block h-full w-full bg-transparent object-contain transition-transform duration-300 ease-out will-change-transform [transform:perspective(1100px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))_translate3d(var(--tx,0px),calc(4%_+_var(--ty,0px)),0)] motion-reduce:transform-none motion-reduce:transition-none"
         />
       </div>
     </>
