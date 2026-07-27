@@ -197,11 +197,7 @@ function LeaderContent() {
       </EcoSection>
 
       {/* ---------------- Trend + wallet ---------------- */}
-      <EcoSection
-        title="Money & momentum"
-        subtitle="Six-month trend against your wallet position"
-        className="grid gap-4 lg:grid-cols-[1.5fr_1fr] [&>div:first-child]:col-span-full"
-      >
+      <EcoSection title="Money & momentum" subtitle="Six-month trend against your wallet position">
         <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
         <LightPanel
           title="Performance Trend"
