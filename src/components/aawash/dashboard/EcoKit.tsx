@@ -405,7 +405,7 @@ export function DarkPod({
         {label}
       </span>
       {loading ? (
-        <span className="mt-1.5 h-[18px] w-14 animate-pulse rounded-full bg-forest-foreground/20" />
+        <span className="mt-1.5 h-[18px] w-14 eco-skel rounded-full bg-forest-foreground/20" />
       ) : (
         <span className="text-[18px] font-extrabold leading-tight tracking-[-0.02em] text-forest-foreground sm:text-[20px]">
           {value}
@@ -413,7 +413,7 @@ export function DarkPod({
       )}
       {hint &&
         (loading ? (
-          <span className="mt-1 h-2.5 w-10 animate-pulse rounded-full bg-forest-foreground/15" />
+          <span className="mt-1 h-2.5 w-10 eco-skel rounded-full bg-forest-foreground/15" />
         ) : (
           <span className="text-[10px] font-semibold text-leaf">{hint}</span>
         ))}
@@ -453,7 +453,7 @@ export function LightPod({
         {label}
       </span>
       {loading ? (
-        <span className="mt-1.5 h-[15px] w-12 animate-pulse rounded-full bg-muted" />
+        <span className="mt-1.5 h-[15px] w-12 eco-skel rounded-full bg-muted" />
       ) : (
         <span className="text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-[17px]">
           {value}
@@ -722,7 +722,7 @@ export function EcoProjectCard({
 /* --------------------------- Skeletons -------------------------- */
 
 export function EcoSkeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-[24px] bg-muted ${className}`} />;
+  return <div className={`eco-skel rounded-[24px] bg-muted ${className}`} />;
 }
 
 export function EcoRows({ rows = 3 }: { rows?: number }) {
