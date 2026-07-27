@@ -19,7 +19,6 @@ import {
   Award,
   Leaf,
   Droplet,
-  Zap,
 } from "lucide-react";
 
 import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
