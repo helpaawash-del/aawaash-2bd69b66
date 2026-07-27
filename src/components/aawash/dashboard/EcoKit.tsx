@@ -675,7 +675,7 @@ export function DarkPanel({
   stats?: { label: string; value: string; hint?: string }[];
 }) {
   return (
-    <section className="relative overflow-hidden rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] sm:rounded-[34px] sm:p-5">
+    <section className="relative overflow-hidden rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] ring-1 ring-inset ring-border/50 sm:rounded-[34px] sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">
           {title}
@@ -755,7 +755,7 @@ export function LightPanel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex h-full flex-col rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] sm:rounded-[34px] sm:p-5">
+    <section className="flex h-full flex-col rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] ring-1 ring-inset ring-border/50 sm:rounded-[34px] sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">
           {title}
