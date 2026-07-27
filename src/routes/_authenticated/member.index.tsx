@@ -107,87 +107,83 @@ function MemberContent() {
 
   return (
     <EcoShell role="member" profile={profile}>
-      {/* ---------------- Focus hero ---------------- */}
-      <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
-        <div className="min-w-0">
-          <EcoHeroGreeting name={displayName} />
+      {/* ---------------- Hero ---------------- */}
+      <EcoHero
+        name={displayName}
+        eyebrow="Your sales cockpit"
+        tagline="Deals, commissions, referrals and rank — everything you need in one calm view."
+        aside={<AskBar to="/member/sales" placeholder="Search your sales, referrals or tips…" />}
+        scene={<EcoLivingScene />}
+      />
 
-          <div className="mt-5 sm:mt-7">
-            <EcoLivingScene />
-          </div>
-        </div>
-
-        <div className="grid content-start gap-3">
+      {/* ---------------- KPI strip ---------------- */}
+      <EcoSection title="At a glance" subtitle="Your live performance">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
           <LightPod
-            icon={<TrendingUp size={15} />}
+            icon={<TrendingUp size={16} />}
             label="Total sales"
             value={String(stats?.salesCount ?? 0)}
             to="/member/sales"
             loading={overview.isLoading}
           />
-
           <LightPod
-            icon={<Droplet size={15} />}
+            icon={<Droplet size={16} />}
             label="Wallet"
             value={formatINR(profile?.wallet_balance, { compact: true })}
             to="/member/wallet"
           />
           <LightPod
-            icon={<Zap size={15} />}
+            icon={<Zap size={16} />}
             label="This month"
             value={formatINR(stats?.monthCommission ?? 0, { compact: true })}
             to="/member/commission"
             loading={overview.isLoading}
           />
+          <LightPod
+            icon={<UserPlus size={16} />}
+            label="Referrals"
+            value={String(stats?.referralCount ?? 0)}
+            to="/member/referrals"
+            loading={overview.isLoading}
+          />
+          <LightPod
+            icon={<Handshake size={16} />}
+            label="Tips"
+            value={String(stats?.tipCount ?? 0)}
+            to="/member/tips"
+            loading={overview.isLoading}
+          />
+          <LightPod
+            icon={<Wallet size={16} />}
+            label="Withdraw"
+            value={formatINR(stats?.pendingCommission ?? 0, { compact: true })}
+            to="/member/withdrawals"
+            loading={overview.isLoading}
+          />
+          <LightPod
+            icon={<Bell size={16} />}
+            label="Alerts"
+            value={String(unread)}
+            to="/member/notifications"
+            loading={notifs.isLoading}
+          />
         </div>
-      </section>
-
-      {/* ---------------- Command bar ---------------- */}
-      <section className="mt-4 sm:mt-5">
-        <AskBar to="/member/sales" placeholder="Search your sales, referrals or tips…" />
-      </section>
-
-      {/* ---------------- Quick pods ---------------- */}
-      <section className="mt-4 sm:mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <LightPod
-          icon={<UserPlus size={15} />}
-          label="Referrals"
-          value={String(stats?.referralCount ?? 0)}
-          to="/member/referrals"
-          loading={overview.isLoading}
-        />
-        <LightPod
-          icon={<Handshake size={15} />}
-          label="Tips"
-          value={String(stats?.tipCount ?? 0)}
-          to="/member/tips"
-          loading={overview.isLoading}
-        />
-        <LightPod
-          icon={<Wallet size={15} />}
-          label="Withdraw"
-          value={formatINR(stats?.pendingCommission ?? 0, { compact: true })}
-          to="/member/withdrawals"
-          loading={overview.isLoading}
-        />
-        <LightPod
-          icon={<Bell size={15} />}
-          label="Alerts"
-          value={String(unread)}
-          to="/member/notifications"
-          loading={notifs.isLoading}
-        />
-      </section>
+      </EcoSection>
 
       {/* ---------------- Overview ---------------- */}
-      <section className="mt-4 sm:mt-5">
+      <EcoSection
+        title="My overview"
+        subtitle="Deals, referrals and tips you've contributed"
+        action={<EcoLink to="/member/analytics">Analytics</EcoLink>}
+      >
         <DarkPanel
-          title="My Overview"
+          title="Live pulse"
           action={<Activity size={17} className="text-forest/70" />}
           stats={[
             { label: "Deals", value: String(stats?.salesCount ?? 0), hint: "Closed" },
             { label: "Referrals", value: String(stats?.referralCount ?? 0), hint: "Added" },
             { label: "Tips", value: String(stats?.tipCount ?? 0), hint: "Shared" },
+
           ]}
         >
           <Orb intensity={Math.min(1, (stats?.salesCount ?? 0) / 10)} />
