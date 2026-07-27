@@ -78,12 +78,12 @@ export function EcoShell({
         <WaveRail role={role} dock={dock} />
 
         <div
-          style={{ paddingLeft: dock.width + 10 }}
+          style={{ paddingLeft: dock.width + 14 }}
           data-testid="dock-content"
           className="mx-auto flex min-h-screen w-full max-w-md flex-col pr-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 transition-[padding-left] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:max-w-xl sm:pr-6 md:max-w-3xl lg:max-w-6xl lg:pb-24 lg:pr-10 xl:max-w-7xl xl:pr-14"
         >
           <WelcomeHeader role={role} profile={profile} />
-          <main id="main-content" className="mt-7 flex-1 sm:mt-10">
+          <main id="main-content" className="mt-6 flex-1 sm:mt-9">
             {children}
           </main>
         </div>
