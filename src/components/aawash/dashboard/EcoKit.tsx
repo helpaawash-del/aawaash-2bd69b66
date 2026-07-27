@@ -405,7 +405,7 @@ export function DarkPod({
         {label}
       </span>
       {loading ? (
-        <span className="mt-1.5 h-[18px] w-14 animate-pulse rounded-full bg-forest-foreground/20" />
+        <span className="mt-1.5 h-[18px] w-14 eco-skel rounded-full bg-forest-foreground/20" />
       ) : (
         <span className="text-[18px] font-extrabold leading-tight tracking-[-0.02em] text-forest-foreground sm:text-[20px]">
           {value}
@@ -413,7 +413,7 @@ export function DarkPod({
       )}
       {hint &&
         (loading ? (
-          <span className="mt-1 h-2.5 w-10 animate-pulse rounded-full bg-forest-foreground/15" />
+          <span className="mt-1 h-2.5 w-10 eco-skel rounded-full bg-forest-foreground/15" />
         ) : (
           <span className="text-[10px] font-semibold text-leaf">{hint}</span>
         ))}
@@ -453,7 +453,7 @@ export function LightPod({
         {label}
       </span>
       {loading ? (
-        <span className="mt-1.5 h-[15px] w-12 animate-pulse rounded-full bg-muted" />
+        <span className="mt-1.5 h-[15px] w-12 eco-skel rounded-full bg-muted" />
       ) : (
         <span className="text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-foreground sm:text-[17px]">
           {value}
@@ -514,7 +514,7 @@ export function SectionHead({
   );
 }
 
-/** Dark data panel with an orb visual and a stat trio. */
+/** Light data panel with an orb visual and a stat trio. */
 export function DarkPanel({
   title,
   action,
@@ -527,25 +527,25 @@ export function DarkPanel({
   stats?: { label: string; value: string; hint?: string }[];
 }) {
   return (
-    <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-b from-forest to-forest-deep p-4 shadow-[var(--shadow-glow)] sm:rounded-[34px] sm:p-5">
+    <section className="relative overflow-hidden rounded-[28px] bg-surface p-4 shadow-[var(--shadow-soft)] sm:rounded-[34px] sm:p-5">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="truncate text-[14.5px] font-bold text-forest-foreground sm:text-[15px]">{title}</h2>
+        <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">
+          {title}
+        </h2>
         {action}
       </div>
       {children}
       {stats && (
-        <div className="mt-4 grid grid-cols-3 gap-2 border-t border-white/10 pt-4">
+        <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border/70 pt-4">
           {stats.map((s) => (
             <div key={s.label} className="min-w-0 text-center">
-              <div className="truncate text-[19px] font-extrabold tracking-[-0.02em] text-forest-foreground">
+              <div className="truncate text-[19px] font-extrabold tracking-[-0.02em] text-foreground">
                 {s.value}
               </div>
-              <div className="truncate text-[10px] font-medium text-forest-foreground/60">
+              <div className="truncate text-[10px] font-medium text-muted-foreground">
                 {s.label}
               </div>
-              {s.hint && (
-                <div className="truncate text-[10px] font-semibold text-leaf">{s.hint}</div>
-              )}
+              {s.hint && <div className="truncate text-[10px] font-semibold text-forest">{s.hint}</div>}
             </div>
           ))}
         </div>
@@ -565,7 +565,7 @@ export function Orb({ intensity = 0.6 }: { intensity?: number }) {
         x: 90 + Math.cos(a) * rad,
         y: 90 + Math.sin(a) * rad * 0.94,
         r: 0.8 + ((i * 7) % 5) * 0.32,
-        o: 0.25 + ((i * 13) % 10) / 14,
+        o: 0.4 + ((i * 13) % 10) / 11,
       });
     }
     return out;
@@ -574,24 +574,25 @@ export function Orb({ intensity = 0.6 }: { intensity?: number }) {
   return (
     <div className="relative mx-auto my-3 aspect-square w-[min(220px,72%)]">
       <div
-        className="absolute inset-0 rounded-full bg-leaf/25 blur-2xl"
-        style={{ opacity: 0.35 + intensity * 0.4 }}
+        className="absolute inset-0 rounded-full bg-primary-soft blur-2xl"
+        style={{ opacity: 0.4 + intensity * 0.4 }}
       />
       <svg
         viewBox="0 0 180 180"
         className="relative h-full w-full motion-safe:animate-[aawash-float_9s_ease-in-out_infinite]"
       >
-        <circle cx="90" cy="90" r="84" fill="none" stroke="oklch(1 0 0 / 0.08)" />
-        <circle cx="90" cy="90" r="62" fill="none" stroke="oklch(1 0 0 / 0.06)" />
-        <ellipse cx="90" cy="90" rx="84" ry="34" fill="none" stroke="oklch(1 0 0 / 0.07)" />
-        <ellipse cx="90" cy="90" rx="34" ry="84" fill="none" stroke="oklch(1 0 0 / 0.07)" />
+        <circle cx="90" cy="90" r="84" fill="none" stroke="var(--forest)" strokeOpacity="0.16" />
+        <circle cx="90" cy="90" r="62" fill="none" stroke="var(--forest)" strokeOpacity="0.12" />
+        <ellipse cx="90" cy="90" rx="84" ry="34" fill="none" stroke="var(--forest)" strokeOpacity="0.13" />
+        <ellipse cx="90" cy="90" rx="34" ry="84" fill="none" stroke="var(--forest)" strokeOpacity="0.13" />
         {dots.map((d, i) => (
-          <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="var(--leaf)" opacity={d.o} />
+          <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="var(--forest-deep)" opacity={d.o} />
         ))}
       </svg>
     </div>
   );
 }
+
 
 /** White card with title + rows, matching the "Upcoming Schedule" block. */
 export function LightPanel({
@@ -721,7 +722,7 @@ export function EcoProjectCard({
 /* --------------------------- Skeletons -------------------------- */
 
 export function EcoSkeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-[24px] bg-muted ${className}`} />;
+  return <div className={`eco-skel rounded-[24px] bg-muted ${className}`} />;
 }
 
 export function EcoRows({ rows = 3 }: { rows?: number }) {

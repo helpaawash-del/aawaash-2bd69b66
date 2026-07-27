@@ -129,7 +129,7 @@ export function GreetingHeader({
             <span
               data-testid="greeting-name-loading"
               aria-hidden="true"
-              className="inline-block h-[1em] w-[6.5ch] translate-y-[0.12em] animate-pulse rounded-full bg-primary-soft align-middle"
+              className="inline-block h-[1em] w-[6.5ch] translate-y-[0.12em] eco-skel rounded-full bg-primary-soft align-middle"
             />
           )}
         </h1>
@@ -557,7 +557,7 @@ export function AchievementCard({
  * Loading skeletons — shape-matched to their live counterparts
  * ------------------------------------------------------------------ */
 function Shimmer({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-2xl bg-muted/70 ${className}`} aria-hidden />;
+  return <div className={`eco-skel rounded-2xl bg-muted/70 ${className}`} aria-hidden />;
 }
 
 export function WalletHeroSkeleton() {

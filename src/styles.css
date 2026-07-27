@@ -551,3 +551,18 @@
   60% { transform: translateX(-4px); }
   80% { transform: translateX(4px); }
 }
+
+/* Shared dashboard skeleton rhythm — every widget shimmers on the same
+   1.6s beat so nothing pops or shifts while data streams in. */
+@utility eco-skel {
+  animation: eco-skel-pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes eco-skel-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eco-skel { animation: none !important; }
+}

@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 
 import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
-import { BlankChart } from "@/components/aawash/dashboard/BlankChart";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -37,7 +36,6 @@ import {
   DarkPanel,
   LightPanel,
   Orb,
-  TimelineRow,
   EcoRows,
   EcoZero,
   Avatar,
@@ -102,7 +100,6 @@ function MemberContent() {
   const rank = board.data?.members.find((m) => m.id === myId)?.rank ?? null;
   const myScore = Number(board.data?.members.find((m) => m.id === myId)?.score ?? 0);
   const topBoard = (board.data?.members ?? []).slice(0, 5);
-  const recent = (activity.data ?? []).slice(0, 5);
 
   const xpGoal = Math.max(100, Math.round(myScore * 1.6) || 100);
 
@@ -116,8 +113,6 @@ function MemberContent() {
           <div className="mt-5 sm:mt-7">
             <EcoLivingScene />
           </div>
-
-
         </div>
 
         <div className="grid content-start gap-3">
@@ -183,11 +178,11 @@ function MemberContent() {
         />
       </section>
 
-      {/* ---------------- Overview + activity ---------------- */}
-      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
+      {/* ---------------- Overview ---------------- */}
+      <section className="mt-4 sm:mt-5">
         <DarkPanel
           title="My Overview"
-          action={<Activity size={17} className="text-forest-foreground/70" />}
+          action={<Activity size={17} className="text-forest/70" />}
           stats={[
             { label: "Deals", value: String(stats?.salesCount ?? 0), hint: "Closed" },
             { label: "Referrals", value: String(stats?.referralCount ?? 0), hint: "Added" },
@@ -196,43 +191,6 @@ function MemberContent() {
         >
           <Orb intensity={Math.min(1, (stats?.salesCount ?? 0) / 10)} />
         </DarkPanel>
-
-        <LightPanel
-          title="Recent Activity"
-          action={
-            <Link to="/member/notifications" className="text-[12px] font-semibold text-primary">
-              Alerts{unread > 0 ? ` (${unread})` : ""}
-            </Link>
-          }
-          footer={{ label: "My analytics", to: "/member/analytics" }}
-        >
-          {activity.isLoading ? (
-            <EcoRows rows={4} />
-          ) : recent.length === 0 ? (
-            <BlankChart />
-
-          ) : (
-            <ul className="flex flex-col gap-4">
-              {recent.map((a) => (
-                <TimelineRow
-                  key={a.id}
-                  tone={activityTone(a.kind)}
-                  icon={activityIcon(a.kind)}
-                  title={a.title}
-                  subtitle={new Date(a.date).toLocaleString("en-IN")}
-                  right={
-                    a.amount !== 0 ? (
-                      <span className={a.amount < 0 ? "text-destructive" : "text-success"}>
-                        {a.amount < 0 ? "" : "+"}
-                        {formatINR(Math.abs(a.amount), { compact: true })}
-                      </span>
-                    ) : undefined
-                  }
-                />
-              ))}
-            </ul>
-          )}
-        </LightPanel>
       </section>
 
       {/* ---------------- Team + wallet ---------------- */}
@@ -435,36 +393,6 @@ function MemberContent() {
       </section>
     </EcoShell>
   );
-}
-
-function activityTone(kind: string): "primary" | "gold" | "danger" | "muted" {
-  switch (kind) {
-    case "commission":
-      return "gold";
-    case "withdrawal":
-      return "danger";
-    case "sale":
-    case "referral":
-    case "tip":
-      return "primary";
-    default:
-      return "muted";
-  }
-}
-
-function activityIcon(kind: string) {
-  switch (kind) {
-    case "commission":
-      return <IndianRupee size={15} />;
-    case "withdrawal":
-      return <Wallet size={15} />;
-    case "referral":
-      return <UserPlus size={15} />;
-    case "tip":
-      return <Handshake size={15} />;
-    default:
-      return <TrendingUp size={15} />;
-  }
 }
 
 function KV({
