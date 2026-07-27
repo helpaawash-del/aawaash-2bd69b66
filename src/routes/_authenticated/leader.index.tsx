@@ -204,10 +204,10 @@ function LeaderContent() {
       </section>
 
       {/* ---------------- Overview + schedule ---------------- */}
-      <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
+      <section className="mt-4 sm:mt-5">
         <DarkPanel
           title="Team Overview"
-          action={<Activity size={17} className="text-forest-foreground/70" />}
+          action={<Activity size={17} className="text-forest/70" />}
           stats={[
             { label: "Members", value: String(o?.memberCount ?? 0), hint: "Active" },
             { label: "Sales", value: String(o?.salesCount ?? 0), hint: "Closed" },
@@ -220,49 +220,8 @@ function LeaderContent() {
         >
           <Orb intensity={Math.min(1, (o?.salesCount ?? 0) / 10)} />
         </DarkPanel>
-
-        <LightPanel
-          title="Recent Activity"
-          action={
-            <Link
-              to="/leader/notifications"
-              className="text-[12px] font-semibold text-primary outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              Alerts{unread > 0 ? ` (${unread})` : ""}
-            </Link>
-          }
-          footer={{ label: "View team", to: "/leader/members" }}
-        >
-          {sales.isLoading || comms.isLoading ? (
-            <EcoRows rows={4} />
-          ) : recentSales.length === 0 && recentComms.length === 0 ? (
-            <BlankChart />
-
-          ) : (
-            <ul className="flex flex-col gap-4">
-              {recentSales.map((s) => (
-                <TimelineRow
-                  key={`s-${s.id}`}
-                  icon={<TrendingUp size={15} />}
-                  title={`Sale to ${s.buyer_name}`}
-                  subtitle={`${new Date(s.sale_date).toLocaleDateString("en-IN")} · ${s.unit_label || "Unit"}`}
-                  right={formatINR(s.deal_value, { compact: true })}
-                />
-              ))}
-              {recentComms.map((c) => (
-                <TimelineRow
-                  key={`c-${c.id}`}
-                  icon={<IndianRupee size={15} />}
-                  tone="gold"
-                  title={`Commission · Tier ${c.tier}`}
-                  subtitle={c.status}
-                  right={formatINR(c.amount, { compact: true })}
-                />
-              ))}
-            </ul>
-          )}
-        </LightPanel>
       </section>
+
 
       {/* ---------------- Trend + wallet ---------------- */}
       <section className="mt-4 sm:mt-5 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
