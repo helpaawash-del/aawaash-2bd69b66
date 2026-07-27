@@ -109,12 +109,14 @@ export function EcoLivingScene() {
 
       <div
         aria-hidden
+        data-testid="eco-hero-scene"
         className="relative isolate aspect-[16/11] w-full bg-transparent sm:aspect-[16/10]"
       >
         <img
           ref={towerRef}
           src={ecoBuilding.url}
           alt=""
+          data-testid="eco-hero-image"
           loading="lazy"
           width={1920}
           height={1300}
