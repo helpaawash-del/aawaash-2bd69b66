@@ -227,24 +227,30 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
                   data-dock-item={item.key}
                   data-active={active ? "true" : "false"}
                   onClick={() => setSection(item.key)}
-                  className={`group relative flex flex-col items-center gap-1 overflow-hidden rounded-[16px] px-1 py-2.5 text-[9.5px] font-semibold tracking-[0.02em] transition-[background-color,color,width,box-shadow,transform] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
+                  className={`group relative flex flex-col items-center gap-1 overflow-hidden rounded-[16px] px-1 py-2.5 text-[9.5px] font-semibold tracking-[0.02em] transition-[background-color,color,width,box-shadow,transform] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 active:scale-[0.93] motion-reduce:transition-none ${
                     open ? "w-[80px] rounded-[20px] py-3" : "w-[44px]"
                   } ${
                     active
-                      ? "bg-white/95 text-primary shadow-[0_8px_20px_-8px_rgba(0,0,0,0.45)]"
-                      : "text-forest-foreground/65 hover:bg-white/10 hover:text-forest-foreground"
+                      ? "bg-white/95 text-primary shadow-[0_10px_22px_-10px_rgba(0,0,0,0.5)]"
+                      : "text-forest-foreground/65 hover:-translate-y-[1px] hover:bg-white/12 hover:text-forest-foreground hover:shadow-[0_6px_18px_-10px_rgba(0,0,0,0.6)]"
                   }`}
                 >
+                  {/* sheen sweep on hover */}
                   <span
                     aria-hidden
-                    className={`absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-primary transition-opacity duration-300 ${
-                      active ? "opacity-100" : "opacity-0"
+                    className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:translate-x-full group-hover:opacity-100 motion-reduce:hidden"
+                  />
+                  <span
+                    aria-hidden
+                    className={`absolute left-0 top-1/2 w-[3px] -translate-y-1/2 rounded-r-full bg-primary transition-all duration-300 ${
+                      active ? "h-6 opacity-100" : "h-0 opacity-0"
                     }`}
                   />
                   <Icon
                     size={18}
-                    className="shrink-0 transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-0.5 motion-reduce:transition-none"
+                    className="relative shrink-0 transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-0.5 group-hover:scale-110 group-active:scale-95 motion-reduce:transition-none"
                   />
+
                   <span
                     className={`w-full origin-top truncate text-center transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
                       open ? "max-h-5 scale-100 opacity-100" : "max-h-0 scale-95 opacity-0"
