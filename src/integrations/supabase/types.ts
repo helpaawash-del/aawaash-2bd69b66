@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_passcode_attempts: {
+        Row: {
+          created_at: string
+          id: string
+          identifier_hash: string
+          success: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          identifier_hash: string
+          success?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          identifier_hash?: string
+          success?: boolean
+        }
+        Relationships: []
+      }
       asset_audit_log: {
         Row: {
           action: string
