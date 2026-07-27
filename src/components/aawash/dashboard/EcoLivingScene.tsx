@@ -47,7 +47,8 @@ function Bird({ scale }: { scale: number }) {
 
 export function EcoLivingScene() {
   const towerRef = useRef<HTMLImageElement>(null);
-  const [hub, setHub] = useState({ x: "40vw", y: "36vh" });
+  const skyRef = useRef<HTMLDivElement>(null);
+  const [hub, setHub] = useState({ x: "40vw", y: "30%" });
 
   useEffect(() => {
     let frame = 0;
@@ -55,19 +56,27 @@ export function EcoLivingScene() {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const el = towerRef.current;
-        if (!el) return;
+        const sky = skyRef.current;
+        if (!el || !sky) return;
         const r = el.getBoundingClientRect();
+        const s = sky.getBoundingClientRect();
+        // Coordinates are relative to the clipped sky layer, and clamped so
+        // the hub always stays inside it.
+        const x = r.left + r.width * 0.5 - s.left;
+        const y = r.top + r.height * 0.22 - s.top;
         setHub({
-          x: `${Math.round(r.left + r.width * 0.5)}px`,
-          y: `${Math.round(Math.max(8, r.top + r.height * 0.22))}px`,
+          x: `${Math.round(Math.min(Math.max(x, 24), Math.max(24, s.width - 24)))}px`,
+          y: `${Math.round(Math.min(Math.max(y, 16), Math.max(16, s.height - 40)))}px`,
         });
       });
     };
     measure();
     window.addEventListener("resize", measure, { passive: true });
+    window.addEventListener("scroll", measure, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure);
     };
   }, []);
 
@@ -77,6 +86,7 @@ export function EcoLivingScene() {
       {/* Flight area is clipped: it starts below the greeting block and ends
           above the bottom dock, so birds can never overlap either. */}
       <div
+        ref={skyRef}
         aria-hidden
         className="pointer-events-none fixed inset-x-0 top-[168px] bottom-[132px] z-0 overflow-hidden motion-reduce:hidden sm:top-[136px] sm:bottom-[112px]"
         style={{ "--hub-x": hub.x, "--hub-y": hub.y } as React.CSSProperties}
