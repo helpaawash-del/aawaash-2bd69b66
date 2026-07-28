@@ -67,7 +67,7 @@ export function EcoShell({
 
   return (
     <WelcomeContext.Provider value={welcome}>
-      <div className="relative min-h-screen overflow-x-clip bg-surface-warm">
+      <div className="theme-mono relative min-h-screen overflow-x-clip bg-surface-warm">
         {/* ambient light */}
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
           <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
