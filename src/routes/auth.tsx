@@ -11,9 +11,7 @@ import {
   Loader2,
   Lock,
   User,
-  Fingerprint,
   KeyRound,
-  ShieldCheck,
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
@@ -57,7 +55,7 @@ const SURFACE = "oklch(0.975 0.012 155)";
 
 function EcoHero() {
   return (
-    <header className="relative h-[clamp(186px,29vh,380px)] w-full shrink-0">
+    <header className="relative h-[clamp(232px,36vh,440px)] w-full shrink-0">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authHeroWave" clipPathUnits="objectBoundingBox">
@@ -73,7 +71,7 @@ function EcoHero() {
           alt="Eco-luxury residential tower with trees growing on every balcony"
           width={1024}
           height={1536}
-          className="h-full w-full object-cover object-[62%_30%]"
+          className="h-full w-full object-cover object-[62%_28%]"
           draggable={false}
         />
         {/* light wash so the headline stays readable on the left */}
@@ -88,55 +86,38 @@ function EcoHero() {
         <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.985_0.01_155)/0.55] to-transparent" />
       </div>
 
-      {/* top row: logo + sustainable pill */}
-      <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 sm:pt-5">
-        <Link
-          to="/"
-          aria-label="Aawaash home"
-          className="grid h-[58px] w-[58px] place-items-center rounded-[20px] bg-white/90 shadow-[0_16px_34px_-20px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:h-[66px] sm:w-[66px]"
-        >
-          <img src={logoAsset.url} alt="Aawaash" className="h-9 w-auto object-contain sm:h-11" draggable={false} />
-        </Link>
-
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-2 text-[13px] font-semibold text-[oklch(0.26_0.03_160)] shadow-[0_14px_30px_-20px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl sm:text-sm">
-          <Leaf size={16} className="text-primary" aria-hidden="true" />
-          Sustainable
-        </span>
-      </div>
-
       {/* headline */}
-      <div className="absolute inset-x-0 top-[84px] z-10 px-4 sm:top-[116px] sm:px-6">
+      <div className="absolute inset-x-0 top-[clamp(30px,6vh,64px)] z-10 px-5 sm:px-8">
+        <span className="inline-flex items-center gap-2 text-[10.5px] font-semibold uppercase tracking-[0.3em] text-primary/80">
+          <i aria-hidden="true" className="block h-px w-6 bg-primary/50" />
+          Est. Aawaash
+        </span>
         <h1
-          className="text-[clamp(1.6rem,7.4vw,2.6rem)] font-extrabold leading-[1.06] tracking-[-0.03em] text-[oklch(0.24_0.03_160)]"
+          className="mt-2.5 text-[clamp(1.85rem,8.4vw,3rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-[oklch(0.2_0.03_160)]"
           style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
         >
           Building
           <br />
           a Better
           <br />
-          <span className="relative text-primary">
+          <span className="bg-[linear-gradient(96deg,oklch(0.42_0.1_158),oklch(0.34_0.09_172))] bg-clip-text italic text-transparent">
             Tomorrow
-            <Leaf
-              aria-hidden="true"
-              size={20}
-              className="ml-1 inline-block -translate-y-1 rotate-[24deg] text-primary/80"
-            />
           </span>
         </h1>
-        <p className="mt-2 max-w-[10.5rem] text-[12.5px] leading-snug text-muted-foreground sm:max-w-xs sm:text-sm">
+        <p className="mt-2.5 max-w-[11rem] text-[12px] leading-relaxed tracking-[0.02em] text-muted-foreground sm:max-w-xs sm:text-[13.5px]">
           Green construction for a stronger, smarter future.
         </p>
       </div>
 
-      {/* fingerprint medallion sitting on the wave */}
-      <span
-        aria-hidden="true"
-        className="absolute bottom-[-26px] left-1/2 z-20 grid h-[62px] w-[62px] -translate-x-1/2 place-items-center rounded-[22px] bg-[linear-gradient(155deg,oklch(0.36_0.085_155),oklch(0.2_0.05_155))] text-white shadow-[0_22px_44px_-20px_oklch(0.3_0.08_155)] ring-[6px] ring-[oklch(0.975_0.012_155)]"
-        style={{ clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)" }}
-      >
-        <Fingerprint size={26} />
-      </span>
+      {/* brand mark sitting where the photo ends */}
+      <img
+        src={logoAsset.url}
+        alt="Aawaash"
+        draggable={false}
+        className="absolute bottom-[-30px] left-1/2 z-20 h-[68px] w-auto -translate-x-1/2 object-contain drop-shadow-[0_16px_26px_color-mix(in_oklab,var(--primary)_38%,transparent)] sm:h-[78px]"
+      />
     </header>
+
   );
 }
 
@@ -220,7 +201,7 @@ function AuthPage() {
 
       <EcoHero />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[26px] sm:max-w-lg sm:px-7 sm:pt-11">
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[clamp(48px,8vh,84px)] sm:max-w-lg sm:px-7">
         {/* floating glass sheet */}
         <div className="auth-sheet relative rounded-[30px] bg-white/70 p-[clamp(1rem,3.6vw,1.6rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
           <span
@@ -230,24 +211,16 @@ function AuthPage() {
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
         </div>
 
-        {/* trust strip */}
-        <div className="mt-auto pt-2">
-          <div className="mx-auto flex max-w-sm items-center gap-3 rounded-full bg-white/65 px-3.5 py-2 shadow-[0_20px_44px_-38px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-white/70 backdrop-blur-xl">
-            <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-              <ShieldCheck size={16} />
-            </span>
-            <p className="min-w-0 text-[12px] leading-snug text-muted-foreground">
-              <span className="font-semibold text-[oklch(0.26_0.03_160)]">Your data is safe.</span> Secure · Trusted · Green
-            </p>
-          </div>
+        <div className="mt-auto pt-3">
           <Link
             to="/"
-            className="mx-auto mt-2.5 block rounded-md text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="mx-auto block rounded-md text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             ← Back to home
           </Link>
         </div>
       </main>
+
 
 
       <style>{`
@@ -288,7 +261,7 @@ function AuthPage() {
 /*  Shared pieces                                                      */
 /* ------------------------------------------------------------------ */
 
-function SectionHead({ title, subtitle }: { title: string; subtitle: string }) {
+function SectionHead({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
     <div className="auth-card-in text-center">
       <span className="mx-auto inline-flex items-center gap-1.5 rounded-full bg-primary/[0.08] px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.22em] text-primary">
@@ -301,7 +274,7 @@ function SectionHead({ title, subtitle }: { title: string; subtitle: string }) {
       >
         {title}
       </h2>
-      <p className="mt-1 text-[12.5px] text-muted-foreground sm:text-sm">{subtitle}</p>
+      {subtitle && <p className="mt-1 text-[12.5px] text-muted-foreground sm:text-sm">{subtitle}</p>}
     </div>
   );
 }
@@ -408,7 +381,7 @@ function LoginForm() {
 
   return (
     <section aria-label="Sign in">
-      <SectionHead title="Welcome To Aawaash" subtitle="Sign in to continue to your account" />
+      <SectionHead title="Welcome To Aawaash" />
 
       <form
         onSubmit={onSubmit}
