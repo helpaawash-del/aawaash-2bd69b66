@@ -4,11 +4,14 @@ import { z } from "zod";
 import { useServerFn } from "@tanstack/react-start";
 import {
   ArrowRight,
+  Check,
   Eye,
   EyeOff,
+  Leaf,
   Loader2,
   Lock,
   User,
+  Fingerprint,
   KeyRound,
   ShieldCheck,
   CheckCircle2,
@@ -20,8 +23,6 @@ import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/aut
 import { getRememberPreference, setRememberPreference } from "@/lib/session-persistence";
 import heroImage from "@/assets/auth-hero-tower.jpg";
 import logoAsset from "@/assets/aawaash-logo.png.asset.json";
-
-
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -48,45 +49,96 @@ export const Route = createFileRoute("/auth")({
   }),
 });
 
+const SURFACE = "oklch(0.975 0.012 155)";
+
 /* ------------------------------------------------------------------ */
-/*  Wave hero — curved photo panel in the top-right corner             */
+/*  Hero — photo panel with curved bottom wave                         */
 /* ------------------------------------------------------------------ */
 
-function WaveHero() {
+function EcoHero() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[34vh] min-h-[200px] sm:h-[46vh] md:h-[52vh]">
+    <header className="relative h-[clamp(186px,29vh,380px)] w-full shrink-0">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
-          <clipPath id="authWave" clipPathUnits="objectBoundingBox">
-            <path d="M1,0 L1,1 L0.55,1 C0.42,0.97 0.34,0.86 0.32,0.7 C0.3,0.5 0.34,0.34 0.26,0.2 C0.19,0.08 0.09,0.04 0.02,0.02 C-0.01,0.01 0,0 0.05,0 Z" />
+          <clipPath id="authHeroWave" clipPathUnits="objectBoundingBox">
+            <path d="M0,0 L1,0 L1,0.82 C0.78,0.99 0.62,0.86 0.42,0.93 C0.24,0.99 0.13,1 0,0.9 Z" />
           </clipPath>
         </defs>
       </svg>
 
-      {/* soft outer glow following the curve */}
-      <div
-        className="absolute inset-y-0 right-0 w-[92%] scale-[1.03] bg-primary/25 blur-[14px] sm:w-[72%]"
-        style={{ clipPath: "url(#authWave)" }}
-      />
-      <div
-        className="absolute inset-y-0 right-0 w-[92%] overflow-hidden sm:w-[72%]"
-        style={{ clipPath: "url(#authWave)" }}
-      >
+      {/* photo */}
+      <div className="absolute inset-0" style={{ clipPath: "url(#authHeroWave)" }}>
         <img
           src={heroImage}
           alt="Eco-luxury residential tower with trees growing on every balcony"
           width={1024}
           height={1536}
-          className="h-full w-full object-cover object-[58%_35%]"
+          className="h-full w-full object-cover object-[62%_30%]"
+          draggable={false}
         />
-        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-background/80" />
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.975_0.012_155)] to-transparent" />
+        {/* light wash so the headline stays readable on the left */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(100deg, oklch(0.985 0.01 155 / 0.97) 0%, oklch(0.985 0.01 155 / 0.92) 34%, oklch(0.985 0.01 155 / 0.3) 60%, transparent 78%)",
+          }}
+        />
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.985_0.01_155)/0.55] to-transparent" />
       </div>
-    </div>
+
+      {/* top row: logo + sustainable pill */}
+      <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 sm:pt-5">
+        <Link
+          to="/"
+          aria-label="Aawaash home"
+          className="grid h-[58px] w-[58px] place-items-center rounded-[20px] bg-white/90 shadow-[0_16px_34px_-20px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:h-[66px] sm:w-[66px]"
+        >
+          <img src={logoAsset.url} alt="Aawaash" className="h-9 w-auto object-contain sm:h-11" draggable={false} />
+        </Link>
+
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-2 text-[13px] font-semibold text-[oklch(0.26_0.03_160)] shadow-[0_14px_30px_-20px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl sm:text-sm">
+          <Leaf size={16} className="text-primary" aria-hidden="true" />
+          Sustainable
+        </span>
+      </div>
+
+      {/* headline */}
+      <div className="absolute inset-x-0 top-[84px] z-10 px-4 sm:top-[116px] sm:px-6">
+        <h1
+          className="text-[clamp(1.6rem,7.4vw,2.6rem)] font-extrabold leading-[1.06] tracking-[-0.03em] text-[oklch(0.24_0.03_160)]"
+          style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+        >
+          Building
+          <br />
+          a Better
+          <br />
+          <span className="relative text-primary">
+            Tomorrow
+            <Leaf
+              aria-hidden="true"
+              size={20}
+              className="ml-1 inline-block -translate-y-1 rotate-[24deg] text-primary/80"
+            />
+          </span>
+        </h1>
+        <p className="mt-2 max-w-[10.5rem] text-[12.5px] leading-snug text-muted-foreground sm:max-w-xs sm:text-sm">
+          Green construction for a stronger, smarter future.
+        </p>
+      </div>
+
+      {/* fingerprint medallion sitting on the wave */}
+      <span
+        aria-hidden="true"
+        className="absolute bottom-[-26px] left-1/2 z-20 grid h-[62px] w-[62px] -translate-x-1/2 place-items-center rounded-[22px] bg-[linear-gradient(155deg,oklch(0.36_0.085_155),oklch(0.2_0.05_155))] text-white shadow-[0_22px_44px_-20px_oklch(0.3_0.08_155)] ring-[6px] ring-[oklch(0.975_0.012_155)]"
+        style={{ clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)" }}
+      >
+        <Fingerprint size={26} />
+      </span>
+    </header>
   );
 }
-
-
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -132,7 +184,7 @@ function AuthPage() {
 
   if (checking) {
     return (
-      <div className="relative grid min-h-dvh place-items-center bg-[oklch(0.975_0.012_155)]">
+      <div className="relative grid min-h-dvh place-items-center" style={{ background: SURFACE }}>
         <div className="relative">
           <div className="absolute inset-0 -m-6 rounded-full bg-primary/10 blur-2xl" />
           <Loader2 className="relative h-9 w-9 animate-spin text-primary" />
@@ -142,63 +194,50 @@ function AuthPage() {
   }
 
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-[oklch(0.975_0.012_155)] text-foreground">
-      {/* Faint blueprint wireframe behind the card */}
+    <div className="relative flex min-h-dvh flex-col overflow-hidden text-foreground" style={{ background: SURFACE }}>
+      {/* faint skyline blueprint at the base */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.5]"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[46vh] opacity-[0.5]"
         style={{
           backgroundImage:
-            "linear-gradient(to right, color-mix(in oklab, var(--primary) 9%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--primary) 9%, transparent) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          maskImage: "radial-gradient(120% 70% at 50% 100%, #000 20%, transparent 75%)",
+            "linear-gradient(to right, color-mix(in oklab, var(--primary) 8%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--primary) 8%, transparent) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage: "radial-gradient(120% 80% at 50% 100%, #000 15%, transparent 78%)",
         }}
       />
 
-      <WaveHero />
+      <EcoHero />
 
-      <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:max-w-lg sm:px-6 sm:pt-5">
-        {/* Welcome block — logo sits directly above the title */}
-        <div className="mt-[clamp(2.5rem,14vh,15rem)]">
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[34px] sm:max-w-lg sm:px-7 sm:pt-12">
+        {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
+
+        {/* trust strip */}
+        <div className="mt-auto pt-3">
+          <div className="mx-auto flex max-w-sm items-center gap-3 rounded-[22px] bg-white/80 px-4 py-2.5 shadow-[0_20px_44px_-34px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl">
+            <span aria-hidden="true" className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] bg-primary/10 text-primary">
+              <ShieldCheck size={19} />
+            </span>
+            <p className="min-w-0 text-[12.5px] leading-snug text-muted-foreground">
+              <span className="block font-semibold text-[oklch(0.26_0.03_160)]">Your data is safe with us.</span>
+              Secure. Trusted. Green.
+            </p>
+          </div>
           <Link
             to="/"
-            aria-label="Aawaash home"
-            className="inline-flex rounded-2xl transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[oklch(0.975_0.012_155)]"
+            className="mx-auto mt-2.5 block rounded-md text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <img
-              src={logoAsset.url}
-              alt="Aawaash"
-              className="h-[clamp(3.2rem,11vw,5.5rem)] w-auto object-contain drop-shadow-[0_10px_24px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
-              draggable={false}
-            />
+            ← Back to home
           </Link>
-
-          <h1
-            className="mt-2 text-[clamp(1.4rem,5.4vw,2.1rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-[oklch(0.26_0.03_160)]"
-            style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
-          >
-            Welcome To
-            <br />
-            <span className="text-primary">Aawaash</span>
-          </h1>
-          <p className="mt-1 max-w-[19rem] text-[12px] leading-snug text-muted-foreground sm:text-sm">
-            Let&rsquo;s continue building a <span className="font-semibold text-primary">better</span> tomorrow
-          </p>
-        </div>
-
-        {/* Card */}
-        <div className="mb-auto mt-3 sm:mt-6">
-
-          {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
-
         </div>
       </main>
 
       <style>{`
         @keyframes cardIn {
-          0% { opacity: 0; transform: translateY(20px) scale(0.98); }
-          100% { opacity: 1; transform: translateY(0) scale(1); }
+          0% { opacity: 0; transform: translateY(18px); }
+          100% { opacity: 1; transform: translateY(0); }
         }
-        .auth-card-in { animation: cardIn 0.8s cubic-bezier(.2,.8,.2,1) both; }
+        .auth-card-in { animation: cardIn 0.7s cubic-bezier(.2,.8,.2,1) both; }
         @keyframes successPop {
           0% { transform: scale(0.4); opacity: 0; }
           60% { transform: scale(1.15); opacity: 1; }
@@ -219,130 +258,54 @@ function AuthPage() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Glass card shell                                                   */
+/*  Shared pieces                                                      */
 /* ------------------------------------------------------------------ */
 
-function GlassCard({
-  title,
-  serial = "AWS · 01",
-  children,
-}: {
-  title: string;
-  serial?: string;
-  children: React.ReactNode;
-}) {
+function SectionHead({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <section
-      aria-label={title}
-      className="auth-card-in relative rounded-[30px] bg-[linear-gradient(150deg,color-mix(in_oklab,var(--primary)_45%,transparent),transparent_38%,color-mix(in_oklab,var(--primary)_28%,transparent))] p-px shadow-[0_40px_90px_-46px_color-mix(in_oklab,var(--primary)_75%,transparent)]"
-    >
-      <div className="relative overflow-hidden rounded-[29px] bg-white/72 backdrop-blur-2xl">
-        {/* blueprint mesh + aurora bloom */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.35]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, color-mix(in oklab, var(--primary) 10%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--primary) 10%, transparent) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-            maskImage: "radial-gradient(90% 60% at 100% 0%, #000, transparent 70%)",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-primary/15 blur-3xl"
-        />
-
-        <div className="relative flex">
-          {/* Vertical emerald spine — the signature of this card */}
-          <div className="relative flex w-[46px] shrink-0 flex-col items-center justify-between sm:w-[54px] bg-[linear-gradient(180deg,oklch(0.36_0.085_155),oklch(0.2_0.05_155))] py-4">
-            <span className="grid h-8 w-8 place-items-center rounded-[12px] bg-white/15 text-white ring-1 ring-white/25">
-              <ShieldCheck size={16} aria-hidden="true" />
-            </span>
-            <span
-              aria-hidden="true"
-              className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.42em] text-white/80"
-              style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-            >
-              Secure Access
-            </span>
-            <span aria-hidden="true" className="flex flex-col items-center gap-1">
-              <i className="block h-1 w-1 rounded-full bg-white/70" />
-              <i className="block h-1 w-1 rounded-full bg-white/40" />
-              <i className="block h-1 w-1 rounded-full bg-white/25" />
-            </span>
-          </div>
-
-          <div className="min-w-0 flex-1 p-3.5 sm:p-6">
-            {/* Header plate */}
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-primary/70">
-                  Aawaash Access
-                </p>
-                <h2
-                  className="mt-1 truncate text-[20px] font-semibold tracking-[-0.02em] text-[oklch(0.26_0.03_160)] sm:text-[23px]"
-                  style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
-                >
-                  {title}
-                </h2>
-              </div>
-              <span className="mt-1 shrink-0 rounded-full border border-primary/25 bg-white/70 px-2.5 py-1 font-mono text-[10px] tracking-[0.18em] text-primary">
-                {serial}
-              </span>
-            </div>
-
-            {/* perforated divider */}
-            <div aria-hidden="true" className="relative my-4 h-px">
-              <div className="absolute inset-0 bg-[repeating-linear-gradient(to_right,color-mix(in_oklab,var(--primary)_45%,transparent)_0_6px,transparent_6px_12px)] opacity-60" />
-              <span className="absolute -left-7 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[oklch(0.975_0.012_155)] sm:-left-9" />
-              <span className="absolute -right-7 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[oklch(0.975_0.012_155)] sm:-right-9" />
-            </div>
-
-            {children}
-          </div>
-        </div>
-      </div>
-    </section>
+    <div className="auth-card-in text-center">
+      <h2
+        className="text-[clamp(1.45rem,6vw,1.95rem)] font-bold leading-tight tracking-[-0.025em] text-[oklch(0.24_0.03_160)]"
+        style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+      >
+        {title}
+      </h2>
+      <span aria-hidden="true" className="mx-auto mt-2 flex items-center justify-center gap-1.5">
+        <i className="block h-[3px] w-10 rounded-full bg-primary" />
+        <i className="block h-[3px] w-[3px] rounded-full bg-primary/60" />
+      </span>
+      <p className="mt-1.5 text-[13px] text-muted-foreground sm:text-sm">{subtitle}</p>
+    </div>
   );
 }
 
 function Field({
   icon,
-  label,
   hint,
   children,
 }: {
   icon: React.ReactNode;
-  label?: string;
   hint?: string;
   children: React.ReactNode;
 }) {
   return (
     <label className="block">
-      {label && (
-        <span className="mb-1 block px-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-          {label}
-        </span>
-      )}
-      <div className="group/field relative flex items-center gap-3 rounded-[14px] bg-white/55 px-2.5 py-2 ring-1 ring-inset ring-primary/15 transition-all duration-300 focus-within:bg-white focus-within:ring-primary/45">
+      <div className="group/field flex items-center gap-3 rounded-[20px] bg-white px-2.5 py-2 shadow-[0_18px_38px_-32px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-inset ring-primary/10 transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/45">
         <span
           aria-hidden="true"
-          className="grid h-9 w-9 shrink-0 place-items-center rounded-[11px] bg-[linear-gradient(150deg,color-mix(in_oklab,var(--primary)_16%,white),white)] text-primary shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--primary)_16%,transparent)] transition-all duration-300 group-focus-within/field:bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] group-focus-within/field:text-primary-foreground"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-[15px] bg-primary/[0.08] text-primary transition-colors duration-300 group-focus-within/field:bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] group-focus-within/field:text-primary-foreground"
         >
           {icon}
         </span>
-        <div className="min-w-0 flex-1">{children}</div>
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-3 bottom-0 h-px origin-left scale-x-0 bg-gradient-to-r from-primary via-primary/50 to-transparent transition-transform duration-500 group-focus-within/field:scale-x-100"
-        />
+        <div className="min-w-0 flex-1 pr-1">{children}</div>
       </div>
-      {hint && <p className="mt-1 px-1 text-[11px] text-muted-foreground">{hint}</p>}
+      {hint && <p className="mt-1 px-2 text-[11px] text-muted-foreground">{hint}</p>}
     </label>
   );
 }
 
+const inputClass =
+  "w-full bg-transparent text-[15px] font-medium text-foreground outline-none placeholder:font-normal placeholder:text-muted-foreground/70";
 
 /* ------------------------------------------------------------------ */
 /*  Login form                                                         */
@@ -412,24 +375,29 @@ function LoginForm() {
   }
 
   return (
-    <GlassCard title="Step Into Aawash">
-      <form onSubmit={onSubmit} className={`space-y-3 ${error ? "shake-x" : ""}`} key={error ?? "ok"}>
-        <Field icon={<User size={17} aria-hidden="true" />} label="Login ID">
+    <section aria-label="Sign in">
+      <SectionHead title="Welcome To Aawaash" subtitle="Sign in to continue to your account" />
+
+      <form
+        onSubmit={onSubmit}
+        className={`auth-card-in mt-5 space-y-3 ${error ? "shake-x" : ""}`}
+        key={error ?? "ok"}
+      >
+        <Field icon={<User size={19} aria-hidden="true" />}>
           <input
             id="auth-login-id"
             name="loginId"
             autoComplete="username"
-            inputMode="text"
             spellCheck={false}
             value={loginId}
             onChange={(e) => setLoginId(e.target.value.toUpperCase())}
-            placeholder="ENTER YOUR ID"
-            aria-label="Login ID"
-            className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.16em] placeholder:text-muted-foreground/70"
+            placeholder="User ID"
+            aria-label="User ID"
+            className={inputClass}
           />
         </Field>
 
-        <Field icon={<Lock size={17} aria-hidden="true" />} label="Password">
+        <Field icon={<Lock size={19} aria-hidden="true" />}>
           <div className="flex w-full items-center gap-2">
             <input
               id="auth-password"
@@ -438,9 +406,9 @@ function LoginForm() {
               type={showPwd ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="ENTER PASSWORD"
+              placeholder="Password"
               aria-label="Password"
-              className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.16em] placeholder:text-muted-foreground/70"
+              className={inputClass}
             />
             <button
               type="button"
@@ -449,31 +417,29 @@ function LoginForm() {
               aria-label={showPwd ? "Hide password" : "Show password"}
               aria-pressed={showPwd}
             >
-              {showPwd ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
+              {showPwd ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
             </button>
           </div>
         </Field>
 
-        {/* Remember me + forgot password */}
-        <div className="flex items-center justify-between gap-3 px-0.5">
+        {/* remember + forgot */}
+        <div className="flex items-center justify-between gap-3 px-1 pt-0.5">
           <button
             type="button"
-            role="switch"
+            role="checkbox"
             aria-checked={remember}
             onClick={() => setRemember((v) => !v)}
-            className="group inline-flex items-center gap-2 rounded-full py-1 pr-1 text-[12.5px] font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="inline-flex items-center gap-2.5 rounded-lg py-1 text-[13px] font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
             <span
               aria-hidden="true"
-              className={`relative h-[22px] w-[38px] rounded-full transition-colors duration-300 ${
-                remember ? "bg-[linear-gradient(140deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))]" : "bg-primary/15"
+              className={`grid h-[22px] w-[22px] place-items-center rounded-[7px] transition-all duration-300 ${
+                remember
+                  ? "bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] text-white shadow-[0_8px_18px_-10px_oklch(0.3_0.08_155)]"
+                  : "bg-white ring-1 ring-inset ring-primary/25"
               }`}
             >
-              <span
-                className={`absolute top-[3px] h-4 w-4 rounded-full bg-white shadow transition-all duration-300 ${
-                  remember ? "left-[19px]" : "left-[3px]"
-                }`}
-              />
+              {remember && <Check size={14} strokeWidth={3} />}
             </span>
             Remember me
           </button>
@@ -483,9 +449,9 @@ function LoginForm() {
             onClick={() => setShowHelp((v) => !v)}
             aria-expanded={showHelp}
             aria-controls="auth-forgot-help"
-            className="rounded-md text-[12.5px] font-semibold text-primary underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="rounded-md text-[13px] font-semibold text-primary underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            Forgot password?
+            Forgot Password?
           </button>
         </div>
 
@@ -519,46 +485,36 @@ function LoginForm() {
         <button
           type="submit"
           disabled={submitting || success}
-          className="group relative flex h-[52px] w-full items-center justify-center overflow-hidden rounded-[18px] bg-[linear-gradient(140deg,oklch(0.36_0.085_155),oklch(0.21_0.05_155))] px-5 text-[14px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-[0_22px_44px_-22px_oklch(0.3_0.08_155),inset_0_1px_0_oklch(1_0_0/0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_54px_-22px_oklch(0.3_0.08_155)] active:translate-y-0 disabled:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="group relative mt-1 flex h-[54px] w-full items-center justify-center overflow-hidden rounded-[22px] bg-[linear-gradient(140deg,oklch(0.38_0.09_155),oklch(0.21_0.05_155))] px-5 text-[16px] font-semibold text-primary-foreground shadow-[0_26px_50px_-24px_oklch(0.3_0.08_155),inset_0_1px_0_oklch(1_0_0/0.18)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
-          <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 top-1.5 h-px bg-white/25" />
           <span
             aria-hidden="true"
             className="pointer-events-none absolute -left-1/3 top-0 h-full w-1/3 skew-x-[-18deg] bg-white/15 transition-transform duration-700 group-hover:translate-x-[420%]"
           />
           {success ? (
             <span className="success-pop inline-flex items-center gap-2">
-              <CheckCircle2 size={18} aria-hidden="true" /> Signed in
+              <CheckCircle2 size={19} aria-hidden="true" /> Signed in
             </span>
           ) : submitting ? (
             <span className="inline-flex items-center gap-2">
-              <Loader2 size={18} aria-hidden="true" className="animate-spin" /> Signing in
+              <Loader2 size={19} aria-hidden="true" className="animate-spin" /> Signing in
             </span>
           ) : (
             <>
               <span>Sign In</span>
               <span
                 aria-hidden="true"
-                className="absolute right-2 grid h-9 w-9 place-items-center rounded-[14px] border border-white/30 bg-white/10 transition-transform duration-300 group-hover:translate-x-0.5"
+                className="absolute right-2.5 grid h-11 w-11 place-items-center rounded-full bg-white text-primary transition-transform duration-300 group-hover:translate-x-0.5"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={18} />
               </span>
             </>
           )}
         </button>
-
-
-        <Link
-          to="/"
-          className="mx-auto block rounded-md pt-0.5 text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        >
-          ← Back to home
-        </Link>
       </form>
-    </GlassCard>
+    </section>
   );
 }
-
 
 /* ------------------------------------------------------------------ */
 /*  Bootstrap form                                                     */
@@ -590,46 +546,48 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <GlassCard title="Create Super Admin">
-      <p className="-mt-2 mb-5 text-center text-sm text-muted-foreground">
-        No admin exists yet. This screen locks permanently after setup.
-      </p>
-      <form onSubmit={onSubmit} className="space-y-4">
-        <Field icon={<User size={18} />}>
+    <section aria-label="Create super admin">
+      <SectionHead title="Create Super Admin" subtitle="No admin exists yet — this screen locks after setup." />
+
+      <form onSubmit={onSubmit} className="auth-card-in mt-5 space-y-3">
+        <Field icon={<User size={19} aria-hidden="true" />}>
           <input
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             placeholder="Full name"
             aria-label="Full name"
-            className="w-full bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground/70"
+            className={inputClass}
           />
         </Field>
 
-        <Field icon={<User size={18} />} hint="10 digits. Becomes your Login ID.">
+        <Field icon={<User size={19} aria-hidden="true" />} hint="10 digits. Becomes your Login ID.">
           <input
             value={mobile}
             onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
             inputMode="numeric"
             placeholder="Mobile number"
             aria-label="Mobile number"
-            className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/70"
+            className={inputClass}
           />
         </Field>
 
-        <Field icon={<Lock size={18} />} hint="Minimum 8 characters.">
+        <Field icon={<Lock size={19} aria-hidden="true" />} hint="Minimum 8 characters.">
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Choose a strong password"
             aria-label="Password"
-            className="w-full bg-transparent text-base font-medium text-foreground outline-none placeholder:text-muted-foreground/70"
+            className={inputClass}
           />
         </Field>
 
         {error && (
-          <div className="flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
-            <AlertCircle size={16} className="mt-0.5 shrink-0" />
+          <div
+            role="alert"
+            className="flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive"
+          >
+            <AlertCircle size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
             <span>{error}</span>
           </div>
         )}
@@ -637,11 +595,11 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
         <button
           type="submit"
           disabled={submitting}
-          className="relative flex h-16 w-full items-center justify-center rounded-[26px] bg-[linear-gradient(140deg,oklch(0.32_0.07_155),oklch(0.24_0.06_155))] px-6 text-base font-bold text-primary-foreground shadow-[0_18px_36px_-18px_oklch(0.3_0.08_155)] transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70"
+          className="relative mt-1 flex h-[58px] w-full items-center justify-center rounded-[22px] bg-[linear-gradient(140deg,oklch(0.38_0.09_155),oklch(0.21_0.05_155))] px-6 text-[16px] font-semibold text-primary-foreground shadow-[0_26px_50px_-24px_oklch(0.3_0.08_155)] transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
-          {submitting ? <Loader2 size={18} className="animate-spin" /> : "Create Super Admin"}
+          {submitting ? <Loader2 size={19} className="animate-spin" aria-hidden="true" /> : "Create Super Admin"}
         </button>
       </form>
-    </GlassCard>
+    </section>
   );
 }
