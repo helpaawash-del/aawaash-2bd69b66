@@ -9,7 +9,7 @@ import {
   Loader2,
   Lock,
   User,
-  
+  KeyRound,
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
@@ -17,8 +17,10 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { loginIdToEmail, validateLoginId, homePathForRole, toInternalPath, type AppRole } from "@/lib/auth";
 import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/auth.functions";
-import heroImage from "@/assets/auth-eco-building.jpg";
+import { getRememberPreference, setRememberPreference } from "@/lib/session-persistence";
+import heroImage from "@/assets/auth-hero-tower.jpg";
 import logoAsset from "@/assets/aawaash-logo.png.asset.json";
+
 
 
 const searchSchema = z.object({
@@ -52,7 +54,7 @@ export const Route = createFileRoute("/auth")({
 
 function WaveHero() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[36vh] min-h-[240px] sm:h-[42vh] md:h-[48vh]">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[34vh] min-h-[200px] sm:h-[46vh] md:h-[52vh]">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authWave" clipPathUnits="objectBoundingBox">
@@ -63,20 +65,19 @@ function WaveHero() {
 
       {/* soft outer glow following the curve */}
       <div
-        className="absolute inset-y-0 right-0 w-[84%] scale-[1.03] bg-primary/25 blur-[12px] sm:w-[74%]"
+        className="absolute inset-y-0 right-0 w-[92%] scale-[1.03] bg-primary/25 blur-[14px] sm:w-[72%]"
         style={{ clipPath: "url(#authWave)" }}
       />
       <div
-        className="absolute inset-y-0 right-0 w-[84%] overflow-hidden sm:w-[74%]"
+        className="absolute inset-y-0 right-0 w-[92%] overflow-hidden sm:w-[72%]"
         style={{ clipPath: "url(#authWave)" }}
-
       >
         <img
           src={heroImage}
-          alt="Green residential tower with trees on every balcony"
+          alt="Eco-luxury residential tower with trees growing on every balcony"
           width={1024}
           height={1536}
-          className="h-full w-full object-cover object-[62%_30%]"
+          className="h-full w-full object-cover object-[58%_35%]"
         />
         <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-background/80" />
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.975_0.012_155)] to-transparent" />
@@ -84,6 +85,7 @@ function WaveHero() {
     </div>
   );
 }
+
 
 
 /* ------------------------------------------------------------------ */
@@ -154,9 +156,9 @@ function AuthPage() {
 
       <WaveHero />
 
-      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:max-w-lg sm:px-6 sm:pt-5">
+      <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:max-w-lg sm:px-6 sm:pt-5">
         {/* Welcome block — logo sits directly above the title */}
-        <div className="mt-[clamp(7rem,23vh,15rem)]">
+        <div className="mt-[clamp(2.5rem,14vh,15rem)]">
           <Link
             to="/"
             aria-label="Aawaash home"
@@ -165,31 +167,31 @@ function AuthPage() {
             <img
               src={logoAsset.url}
               alt="Aawaash"
-              className="h-[clamp(4rem,13vw,6rem)] w-auto object-contain drop-shadow-[0_10px_24px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
+              className="h-[clamp(3.2rem,11vw,5.5rem)] w-auto object-contain drop-shadow-[0_10px_24px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
               draggable={false}
             />
           </Link>
 
           <h1
-            className="mt-2 text-[clamp(1.55rem,5.8vw,2.15rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-[oklch(0.26_0.03_160)]"
+            className="mt-2 text-[clamp(1.4rem,5.4vw,2.1rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-[oklch(0.26_0.03_160)]"
             style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
           >
             Welcome To
             <br />
             <span className="text-primary">Aawaash</span>
           </h1>
-          <p className="mt-1.5 max-w-[19rem] text-[12.5px] leading-snug text-muted-foreground sm:text-sm">
+          <p className="mt-1 max-w-[19rem] text-[12px] leading-snug text-muted-foreground sm:text-sm">
             Let&rsquo;s continue building a <span className="font-semibold text-primary">better</span> tomorrow
           </p>
         </div>
 
         {/* Card */}
-        <div className="mb-auto mt-4 sm:mt-6">
+        <div className="mb-auto mt-3 sm:mt-6">
 
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
 
         </div>
-      </div>
+      </main>
 
       <style>{`
         @keyframes cardIn {
@@ -220,58 +222,121 @@ function AuthPage() {
 /*  Glass card shell                                                   */
 /* ------------------------------------------------------------------ */
 
-function GlassCard({ title, children }: { title: string; children: React.ReactNode }) {
+function GlassCard({
+  title,
+  serial = "AWS · 01",
+  children,
+}: {
+  title: string;
+  serial?: string;
+  children: React.ReactNode;
+}) {
   return (
     <section
       aria-label={title}
-      className="auth-card-in relative overflow-hidden rounded-[26px] border border-white/70 bg-white/55 p-4 shadow-[0_34px_80px_-40px_color-mix(in_oklab,var(--primary)_60%,transparent)] backdrop-blur-2xl sm:rounded-[30px] sm:p-6"
+      className="auth-card-in relative rounded-[30px] bg-[linear-gradient(150deg,color-mix(in_oklab,var(--primary)_45%,transparent),transparent_38%,color-mix(in_oklab,var(--primary)_28%,transparent))] p-px shadow-[0_40px_90px_-46px_color-mix(in_oklab,var(--primary)_75%,transparent)]"
     >
-      {/* futuristic sheen, hairlines + corner ticks */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
-      <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-primary/12 blur-3xl" />
-      <div className="pointer-events-none absolute left-3 top-3 h-4 w-4 rounded-tl-md border-l border-t border-primary/35" />
-      <div className="pointer-events-none absolute bottom-3 right-3 h-4 w-4 rounded-br-md border-b border-r border-primary/35" />
+      <div className="relative overflow-hidden rounded-[29px] bg-white/72 backdrop-blur-2xl">
+        {/* blueprint mesh + aurora bloom */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, color-mix(in oklab, var(--primary) 10%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--primary) 10%, transparent) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+            maskImage: "radial-gradient(90% 60% at 100% 0%, #000, transparent 70%)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-primary/15 blur-3xl"
+        />
 
-      <div className="flex items-center gap-3">
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] border border-white/80 bg-gradient-to-br from-white to-white/60 text-primary shadow-[0_10px_24px_-14px_color-mix(in_oklab,var(--primary)_70%,transparent)]">
-          <ShieldCheck size={18} aria-hidden="true" />
-        </div>
-        <div className="min-w-0">
-          <h2
-            className="truncate text-[18px] font-semibold tracking-[-0.015em] text-[oklch(0.26_0.03_160)] sm:text-[20px]"
-            style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
-          >
-            {title}
-          </h2>
-          <span className="mt-1 block h-[2px] w-10 rounded-full bg-gradient-to-r from-primary to-primary/10" />
+        <div className="relative flex">
+          {/* Vertical emerald spine — the signature of this card */}
+          <div className="relative flex w-[46px] shrink-0 flex-col items-center justify-between sm:w-[54px] bg-[linear-gradient(180deg,oklch(0.36_0.085_155),oklch(0.2_0.05_155))] py-4">
+            <span className="grid h-8 w-8 place-items-center rounded-[12px] bg-white/15 text-white ring-1 ring-white/25">
+              <ShieldCheck size={16} aria-hidden="true" />
+            </span>
+            <span
+              aria-hidden="true"
+              className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.42em] text-white/80"
+              style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+            >
+              Secure Access
+            </span>
+            <span aria-hidden="true" className="flex flex-col items-center gap-1">
+              <i className="block h-1 w-1 rounded-full bg-white/70" />
+              <i className="block h-1 w-1 rounded-full bg-white/40" />
+              <i className="block h-1 w-1 rounded-full bg-white/25" />
+            </span>
+          </div>
+
+          <div className="min-w-0 flex-1 p-3.5 sm:p-6">
+            {/* Header plate */}
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-primary/70">
+                  Aawaash Access
+                </p>
+                <h2
+                  className="mt-1 truncate text-[20px] font-semibold tracking-[-0.02em] text-[oklch(0.26_0.03_160)] sm:text-[23px]"
+                  style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+                >
+                  {title}
+                </h2>
+              </div>
+              <span className="mt-1 shrink-0 rounded-full border border-primary/25 bg-white/70 px-2.5 py-1 font-mono text-[10px] tracking-[0.18em] text-primary">
+                {serial}
+              </span>
+            </div>
+
+            {/* perforated divider */}
+            <div aria-hidden="true" className="relative my-4 h-px">
+              <div className="absolute inset-0 bg-[repeating-linear-gradient(to_right,color-mix(in_oklab,var(--primary)_45%,transparent)_0_6px,transparent_6px_12px)] opacity-60" />
+              <span className="absolute -left-7 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[oklch(0.975_0.012_155)] sm:-left-9" />
+              <span className="absolute -right-7 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[oklch(0.975_0.012_155)] sm:-right-9" />
+            </div>
+
+            {children}
+          </div>
         </div>
       </div>
-      <div className="mt-4">{children}</div>
     </section>
   );
 }
 
 function Field({
   icon,
+  label,
   hint,
   children,
 }: {
   icon: React.ReactNode;
+  label?: string;
   hint?: string;
   children: React.ReactNode;
 }) {
   return (
     <label className="block">
-      <div className="group/field relative flex items-center gap-3 overflow-hidden rounded-[16px] border border-primary/20 bg-white/70 px-3 py-2.5 shadow-[inset_0_1px_0_oklch(1_0_0/0.75)] transition-all duration-300 focus-within:border-primary/60 focus-within:bg-white focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_12%,transparent)]">
-        <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-gradient-to-r from-primary/70 to-transparent transition-transform duration-500 group-focus-within/field:scale-x-100" />
+      {label && (
+        <span className="mb-1 block px-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+          {label}
+        </span>
+      )}
+      <div className="group/field relative flex items-center gap-3 rounded-[14px] bg-white/55 px-2.5 py-2 ring-1 ring-inset ring-primary/15 transition-all duration-300 focus-within:bg-white focus-within:ring-primary/45">
         <span
           aria-hidden="true"
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-[12px] bg-primary/10 text-primary transition-all duration-300 group-focus-within/field:bg-gradient-to-br group-focus-within/field:from-primary group-focus-within/field:to-[oklch(0.28_0.06_155)] group-focus-within/field:text-primary-foreground"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-[11px] bg-[linear-gradient(150deg,color-mix(in_oklab,var(--primary)_16%,white),white)] text-primary shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--primary)_16%,transparent)] transition-all duration-300 group-focus-within/field:bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] group-focus-within/field:text-primary-foreground"
         >
           {icon}
         </span>
         <div className="min-w-0 flex-1">{children}</div>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-3 bottom-0 h-px origin-left scale-x-0 bg-gradient-to-r from-primary via-primary/50 to-transparent transition-transform duration-500 group-focus-within/field:scale-x-100"
+        />
       </div>
       {hint && <p className="mt-1 px-1 text-[11px] text-muted-foreground">{hint}</p>}
     </label>
@@ -291,9 +356,15 @@ function LoginForm() {
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
+  const [remember, setRemember] = useState(true);
+  const [showHelp, setShowHelp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    setRemember(getRememberPreference());
+  }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -309,6 +380,7 @@ function LoginForm() {
     }
     setSubmitting(true);
     try {
+      setRememberPreference(remember);
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: loginIdToEmail(v.normalized),
         password,
@@ -342,27 +414,31 @@ function LoginForm() {
   return (
     <GlassCard title="Step Into Aawash">
       <form onSubmit={onSubmit} className={`space-y-3 ${error ? "shake-x" : ""}`} key={error ?? "ok"}>
-        <Field icon={<User size={17} aria-hidden="true" />}>
+        <Field icon={<User size={17} aria-hidden="true" />} label="Login ID">
           <input
+            id="auth-login-id"
+            name="loginId"
             autoComplete="username"
             inputMode="text"
             spellCheck={false}
             value={loginId}
             onChange={(e) => setLoginId(e.target.value.toUpperCase())}
-            placeholder="LOGIN ID"
+            placeholder="ENTER YOUR ID"
             aria-label="Login ID"
             className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.16em] placeholder:text-muted-foreground/70"
           />
         </Field>
 
-        <Field icon={<Lock size={17} aria-hidden="true" />}>
+        <Field icon={<Lock size={17} aria-hidden="true" />} label="Password">
           <div className="flex w-full items-center gap-2">
             <input
+              id="auth-password"
+              name="password"
               autoComplete="current-password"
               type={showPwd ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="PASSWORD"
+              placeholder="ENTER PASSWORD"
               aria-label="Password"
               className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.16em] placeholder:text-muted-foreground/70"
             />
@@ -377,6 +453,56 @@ function LoginForm() {
             </button>
           </div>
         </Field>
+
+        {/* Remember me + forgot password */}
+        <div className="flex items-center justify-between gap-3 px-0.5">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={remember}
+            onClick={() => setRemember((v) => !v)}
+            className="group inline-flex items-center gap-2 rounded-full py-1 pr-1 text-[12.5px] font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          >
+            <span
+              aria-hidden="true"
+              className={`relative h-[22px] w-[38px] rounded-full transition-colors duration-300 ${
+                remember ? "bg-[linear-gradient(140deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))]" : "bg-primary/15"
+              }`}
+            >
+              <span
+                className={`absolute top-[3px] h-4 w-4 rounded-full bg-white shadow transition-all duration-300 ${
+                  remember ? "left-[19px]" : "left-[3px]"
+                }`}
+              />
+            </span>
+            Remember me
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowHelp((v) => !v)}
+            aria-expanded={showHelp}
+            aria-controls="auth-forgot-help"
+            className="rounded-md text-[12.5px] font-semibold text-primary underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            Forgot password?
+          </button>
+        </div>
+
+        <div id="auth-forgot-help" aria-live="polite" className="empty:hidden">
+          {showHelp && (
+            <div className="flex items-start gap-2 rounded-2xl border border-primary/20 bg-primary/5 px-3.5 py-2.5 text-[12.5px] leading-snug text-foreground/80">
+              <KeyRound size={15} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
+              <span>
+                Passwords are reset by your administrator. Ask your team leader, or contact Aawaash support at{" "}
+                <a href="tel:+919876543210" className="font-semibold text-primary underline-offset-4 hover:underline">
+                  +91 98765 43210
+                </a>
+                .
+              </span>
+            </div>
+          )}
+        </div>
 
         <div aria-live="polite" className="empty:hidden">
           {error && (
@@ -432,6 +558,7 @@ function LoginForm() {
     </GlassCard>
   );
 }
+
 
 /* ------------------------------------------------------------------ */
 /*  Bootstrap form                                                     */

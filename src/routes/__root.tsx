@@ -175,6 +175,9 @@ function RootComponent() {
 
   useEffect(() => {
     // Import inside effect to keep the browser client out of any SSR path.
+    import("@/lib/session-persistence").then(({ enforceSessionPersistence }) =>
+      enforceSessionPersistence(),
+    );
     import("@/integrations/supabase/client").then(({ supabase }) => {
       const { data: sub } = supabase.auth.onAuthStateChange((event) => {
         if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
@@ -184,6 +187,7 @@ function RootComponent() {
       return () => sub.subscription.unsubscribe();
     });
   }, [queryClient, router]);
+
 
   // Belt-and-suspenders: ensure #lovable-badge stays hidden even when
   // injected after hydration. CSS !important covers paint; this observer
