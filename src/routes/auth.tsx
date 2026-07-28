@@ -291,17 +291,17 @@ function AuthPage() {
 function SectionHead({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="auth-card-in text-center">
+      <span className="mx-auto inline-flex items-center gap-1.5 rounded-full bg-primary/[0.08] px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.22em] text-primary">
+        <Leaf size={12} aria-hidden="true" />
+        Aawaash
+      </span>
       <h2
-        className="text-[clamp(1.45rem,6vw,1.95rem)] font-bold leading-tight tracking-[-0.025em] text-[oklch(0.24_0.03_160)]"
+        className="mt-2 text-[clamp(1.4rem,5.8vw,1.9rem)] font-bold leading-[1.12] tracking-[-0.03em] text-[oklch(0.22_0.03_160)]"
         style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
       >
         {title}
       </h2>
-      <span aria-hidden="true" className="mx-auto mt-2 flex items-center justify-center gap-1.5">
-        <i className="block h-[3px] w-10 rounded-full bg-primary" />
-        <i className="block h-[3px] w-[3px] rounded-full bg-primary/60" />
-      </span>
-      <p className="mt-1.5 text-[13px] text-muted-foreground sm:text-sm">{subtitle}</p>
+      <p className="mt-1 text-[12.5px] text-muted-foreground sm:text-sm">{subtitle}</p>
     </div>
   );
 }
@@ -317,14 +317,18 @@ function Field({
 }) {
   return (
     <label className="block">
-      <div className="group/field flex items-center gap-3 rounded-[20px] bg-white px-2.5 py-2 shadow-[0_18px_38px_-32px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-inset ring-primary/10 transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/45">
+      <div className="group/field relative flex items-center gap-3 overflow-hidden rounded-[18px] bg-white/85 px-2 py-1.5 ring-1 ring-inset ring-primary/12 transition-all duration-300 focus-within:bg-white focus-within:ring-primary/35 focus-within:shadow-[0_18px_40px_-30px_color-mix(in_oklab,var(--primary)_95%,transparent)]">
         <span
           aria-hidden="true"
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-[15px] bg-primary/[0.08] text-primary transition-colors duration-300 group-focus-within/field:bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] group-focus-within/field:text-primary-foreground"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-[13px] bg-primary/[0.07] text-primary transition-all duration-300 group-focus-within/field:scale-[1.04] group-focus-within/field:bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] group-focus-within/field:text-primary-foreground"
         >
           {icon}
         </span>
         <div className="min-w-0 flex-1 pr-1">{children}</div>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-3 bottom-0 h-[2px] origin-left scale-x-0 rounded-full bg-[linear-gradient(90deg,var(--primary),transparent)] transition-transform duration-500 group-focus-within/field:scale-x-100"
+        />
       </div>
       {hint && <p className="mt-1 px-2 text-[11px] text-muted-foreground">{hint}</p>}
     </label>
@@ -332,7 +336,8 @@ function Field({
 }
 
 const inputClass =
-  "w-full bg-transparent text-[15px] font-medium text-foreground outline-none placeholder:font-normal placeholder:text-muted-foreground/70";
+  "w-full bg-transparent text-[15px] font-medium tracking-[-0.01em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.01em] placeholder:text-muted-foreground/60";
+
 
 /* ------------------------------------------------------------------ */
 /*  Login form                                                         */
