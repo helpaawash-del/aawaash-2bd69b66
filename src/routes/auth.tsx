@@ -52,7 +52,7 @@ export const Route = createFileRoute("/auth")({
 
 function WaveHero() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[36vh] min-h-[240px] sm:h-[42vh] md:h-[48vh]">
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-[44vh] min-h-[300px] sm:h-[52vh] md:h-[58vh]">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authWave" clipPathUnits="objectBoundingBox">
@@ -63,20 +63,19 @@ function WaveHero() {
 
       {/* soft outer glow following the curve */}
       <div
-        className="absolute inset-y-0 right-0 w-[84%] scale-[1.03] bg-primary/25 blur-[12px] sm:w-[74%]"
+        className="absolute inset-y-0 right-0 w-[92%] scale-[1.03] bg-primary/25 blur-[14px] sm:w-[82%]"
         style={{ clipPath: "url(#authWave)" }}
       />
       <div
-        className="absolute inset-y-0 right-0 w-[84%] overflow-hidden sm:w-[74%]"
+        className="absolute inset-y-0 right-0 w-[92%] overflow-hidden sm:w-[82%]"
         style={{ clipPath: "url(#authWave)" }}
-
       >
         <img
           src={heroImage}
-          alt="Green residential tower with trees on every balcony"
+          alt="Eco-luxury residential tower with trees growing on every balcony"
           width={1024}
           height={1536}
-          className="h-full w-full object-cover object-[62%_30%]"
+          className="h-full w-full object-cover object-[58%_35%]"
         />
         <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-background/80" />
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.975_0.012_155)] to-transparent" />
@@ -84,6 +83,7 @@ function WaveHero() {
     </div>
   );
 }
+
 
 
 /* ------------------------------------------------------------------ */
