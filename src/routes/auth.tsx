@@ -517,7 +517,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={submitting || success}
-          className="group relative mt-1 flex h-[54px] w-full items-center justify-center overflow-hidden rounded-[22px] bg-[linear-gradient(140deg,oklch(0.38_0.09_155),oklch(0.21_0.05_155))] px-5 text-[16px] font-semibold text-primary-foreground shadow-[0_26px_50px_-24px_oklch(0.3_0.08_155),inset_0_1px_0_oklch(1_0_0/0.18)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          className="group relative mt-1.5 flex h-[54px] w-full items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(120deg,oklch(0.42_0.1_158),oklch(0.24_0.06_155)_55%,oklch(0.35_0.09_170))] px-5 text-[15.5px] font-semibold tracking-[0.01em] text-primary-foreground shadow-[0_24px_46px_-22px_oklch(0.3_0.08_155),inset_0_1px_0_oklch(1_0_0/0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_56px_-22px_oklch(0.3_0.08_155)] active:translate-y-0 active:scale-[0.99] disabled:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
           <span
             aria-hidden="true"
