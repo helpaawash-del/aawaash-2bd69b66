@@ -23,7 +23,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
+import { RankRing } from "@/components/aawash/dashboard/RankRing";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -112,9 +112,12 @@ function LeaderContent() {
   const months = trend.data?.months ?? [];
 
   const target = Math.max(1, Number(o?.totalRevenue ?? 0) * 1.4 || 1);
-  const activePct = o?.memberCount
-    ? Math.round((memberList.filter((m) => m.status === "active").length / o.memberCount) * 100)
-    : 0;
+  const activeMembers = memberList.filter((m) => m.status === "active").length;
+  const activePct = o?.memberCount ? Math.round((activeMembers / o.memberCount) * 100) : 0;
+  const rankPct = Math.max(
+    activePct,
+    Math.min(100, Math.round((Number(o?.totalRevenue ?? 0) / target) * 100)),
+  );
 
   const zeroTrend =
     months.length === 0 || months.every((m) => m.revenue === 0 && m.commission === 0);
@@ -127,9 +130,17 @@ function LeaderContent() {
           <EcoHeroGreeting name={displayName} />
 
           <div className="mt-6 sm:mt-8">
-            <EcoLivingScene />
+            <RankRing
+              percent={rankPct}
+              rank={activeMembers || null}
+              total={o?.memberCount ?? null}
+              label="Team rank"
+              caption="Active members"
+              loading={overview.isLoading}
+            />
           </div>
         </div>
+
 
         <div className="grid content-start gap-3 pt-4 sm:pt-6">
           <LightPod
