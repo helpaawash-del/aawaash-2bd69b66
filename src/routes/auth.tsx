@@ -231,7 +231,7 @@ function AuthPage() {
         </div>
 
         {/* trust strip */}
-        <div className="mt-auto pt-3">
+        <div className="mt-auto pt-2">
           <div className="mx-auto flex max-w-sm items-center gap-3 rounded-full bg-white/65 px-3.5 py-2 shadow-[0_20px_44px_-38px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-white/70 backdrop-blur-xl">
             <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
               <ShieldCheck size={16} />
