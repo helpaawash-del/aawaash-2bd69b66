@@ -412,7 +412,7 @@ function LoginForm() {
 
       <form
         onSubmit={onSubmit}
-        className={`auth-card-in mt-5 space-y-3 ${error ? "shake-x" : ""}`}
+        className={`auth-card-in mt-4 space-y-2.5 ${error ? "shake-x" : ""}`}
         key={error ?? "ok"}
       >
         <Field icon={<User size={19} aria-hidden="true" />}>
@@ -581,7 +581,7 @@ function BootstrapForm({ onDone }: { onDone: () => void }) {
     <section aria-label="Create super admin">
       <SectionHead title="Create Super Admin" subtitle="No admin exists yet — this screen locks after setup." />
 
-      <form onSubmit={onSubmit} className="auth-card-in mt-5 space-y-3">
+      <form onSubmit={onSubmit} className="auth-card-in mt-4 space-y-2.5">
         <Field icon={<User size={19} aria-hidden="true" />}>
           <input
             value={fullName}
