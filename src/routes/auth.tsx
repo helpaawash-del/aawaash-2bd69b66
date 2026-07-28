@@ -172,7 +172,7 @@ function AuthPage() {
 
         {/* Welcome */}
         <h1
-          className="mt-5 text-[clamp(1.7rem,6.4vw,2.35rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-[oklch(0.26_0.03_160)]"
+          className="mt-[26vh] text-[clamp(1.7rem,6.4vw,2.35rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-[oklch(0.26_0.03_160)] sm:mt-[28vh]"
           style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
         >
           Welcome To
@@ -184,7 +184,8 @@ function AuthPage() {
         </p>
 
         {/* Card */}
-        <div className="mt-5 sm:mt-7">
+        <div className="mb-auto mt-5 sm:mt-7">
+
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
 
         </div>
