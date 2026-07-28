@@ -156,7 +156,7 @@ function AuthPage() {
 
       <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:max-w-lg sm:px-6 sm:pt-5">
         {/* Welcome block — logo sits directly above the title */}
-        <div className="mt-[clamp(9rem,25vh,15rem)]">
+        <div className="mt-[clamp(7rem,23vh,15rem)]">
           <Link
             to="/"
             aria-label="Aawaash home"
