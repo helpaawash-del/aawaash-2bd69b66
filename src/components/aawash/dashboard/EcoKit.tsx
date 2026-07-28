@@ -146,7 +146,7 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
           className="relative grid h-11 w-11 min-h-11 min-w-11 place-items-center rounded-full text-foreground transition-transform hover:-translate-y-0.5 active:scale-95 outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Bell size={21} />
-          <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-success ring-2 ring-surface-warm" />
+          <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-primary ring-2 ring-surface" />
         </Link>
 
         <AlertDialog>
@@ -344,7 +344,7 @@ export function Avatar({
         </span>
       )}
       {online && (
-        <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-surface-warm" />
+        <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-primary ring-2 ring-surface" />
       )}
     </span>
   );
