@@ -220,16 +220,26 @@ function AuthPage() {
 
 function GlassCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="auth-card-in relative rounded-[34px] border border-white/70 bg-white/55 p-6 shadow-[0_30px_60px_-30px_color-mix(in_oklab,var(--primary)_45%,transparent)] backdrop-blur-2xl sm:p-8">
-      <div className="pointer-events-none absolute right-10 top-4 h-1 w-16 rounded-full bg-primary/60" />
-      <div className="flex flex-col items-center">
-        <div className="grid h-14 w-14 place-items-center rounded-full bg-white/90 shadow-[0_8px_24px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)]">
-          <UserRound size={22} className="text-primary" />
+    <div className="auth-card-in relative overflow-hidden rounded-[28px] border border-white/70 bg-white/60 p-5 shadow-[0_30px_70px_-34px_color-mix(in_oklab,var(--primary)_55%,transparent)] backdrop-blur-2xl sm:rounded-[32px] sm:p-7">
+      {/* futuristic sheen + hairlines */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/10 blur-2xl" />
+
+      <div className="flex items-center gap-3">
+        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/80 bg-white/90 text-primary shadow-[0_10px_24px_-14px_color-mix(in_oklab,var(--primary)_70%,transparent)]">
+          <ShieldCheck size={19} />
         </div>
-        <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-[oklch(0.28_0.03_240)]">{title}</h2>
-        <span className="mt-2 h-[3px] w-10 rounded-full bg-primary" />
+        <div className="min-w-0">
+          <h2
+            className="truncate text-[19px] font-semibold tracking-[-0.01em] text-[oklch(0.26_0.03_160)] sm:text-xl"
+            style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif' }}
+          >
+            {title}
+          </h2>
+          <span className="mt-1 block h-[2px] w-9 rounded-full bg-gradient-to-r from-primary to-primary/10" />
+        </div>
       </div>
-      <div className="mt-6">{children}</div>
+      <div className="mt-5">{children}</div>
     </div>
   );
 }
@@ -245,14 +255,17 @@ function Field({
 }) {
   return (
     <label className="block">
-      <div className="flex items-center gap-3 rounded-[22px] border border-primary/25 bg-white/70 px-4 py-4 shadow-[inset_0_1px_0_oklch(1_0_0/0.6)] transition-all duration-300 focus-within:border-primary/60 focus-within:bg-white focus-within:shadow-[0_0_0_5px_color-mix(in_oklab,var(--primary)_12%,transparent)]">
-        <span className="shrink-0 text-primary">{icon}</span>
+      <div className="group/field relative flex items-center gap-3 rounded-[18px] border border-primary/20 bg-white/75 px-3.5 py-3 shadow-[inset_0_1px_0_oklch(1_0_0/0.7)] transition-all duration-300 focus-within:border-primary/60 focus-within:bg-white focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_10%,transparent)]">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-primary/8 text-primary transition-colors duration-300 group-focus-within/field:bg-primary group-focus-within/field:text-primary-foreground">
+          {icon}
+        </span>
         <div className="min-w-0 flex-1">{children}</div>
       </div>
       {hint && <p className="mt-1.5 px-1 text-[11px] text-muted-foreground">{hint}</p>}
     </label>
   );
 }
+
 
 /* ------------------------------------------------------------------ */
 /*  Login form                                                         */
