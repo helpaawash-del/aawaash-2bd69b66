@@ -57,7 +57,7 @@ const SURFACE = "oklch(0.975 0.012 155)";
 
 function EcoHero() {
   return (
-    <header className="relative h-[clamp(230px,38vh,420px)] w-full shrink-0">
+    <header className="relative h-[clamp(200px,33vh,400px)] w-full shrink-0">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authHeroWave" clipPathUnits="objectBoundingBox">
@@ -82,7 +82,7 @@ function EcoHero() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(100deg, oklch(0.985 0.01 155 / 0.97) 0%, oklch(0.985 0.01 155 / 0.86) 30%, oklch(0.985 0.01 155 / 0.22) 58%, transparent 78%)",
+              "linear-gradient(100deg, oklch(0.985 0.01 155 / 0.97) 0%, oklch(0.985 0.01 155 / 0.92) 34%, oklch(0.985 0.01 155 / 0.3) 60%, transparent 78%)",
           }}
         />
         <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.985_0.01_155)/0.55] to-transparent" />
@@ -105,7 +105,7 @@ function EcoHero() {
       </div>
 
       {/* headline */}
-      <div className="absolute inset-x-0 top-[92px] z-10 px-4 sm:top-[116px] sm:px-6">
+      <div className="absolute inset-x-0 top-[84px] z-10 px-4 sm:top-[116px] sm:px-6">
         <h1
           className="text-[clamp(1.6rem,7.4vw,2.6rem)] font-extrabold leading-[1.06] tracking-[-0.03em] text-[oklch(0.24_0.03_160)]"
           style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
@@ -209,12 +209,12 @@ function AuthPage() {
 
       <EcoHero />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[42px] sm:max-w-lg sm:px-7 sm:pt-12">
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[38px] sm:max-w-lg sm:px-7 sm:pt-12">
         {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
 
         {/* trust strip */}
-        <div className="mt-auto pt-4">
-          <div className="mx-auto flex max-w-sm items-center gap-3 rounded-[22px] bg-white/80 px-4 py-3 shadow-[0_20px_44px_-34px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl">
+        <div className="mt-auto pt-3">
+          <div className="mx-auto flex max-w-sm items-center gap-3 rounded-[22px] bg-white/80 px-4 py-2.5 shadow-[0_20px_44px_-34px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl">
             <span aria-hidden="true" className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] bg-primary/10 text-primary">
               <ShieldCheck size={19} />
             </span>
