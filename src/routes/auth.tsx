@@ -341,73 +341,81 @@ function LoginForm() {
 
   return (
     <GlassCard title="Step Into Aawash">
-      <form onSubmit={onSubmit} className={`space-y-3.5 ${error ? "shake-x" : ""}`} key={error ?? "ok"}>
-        <Field icon={<User size={17} />}>
+      <form onSubmit={onSubmit} className={`space-y-3 ${error ? "shake-x" : ""}`} key={error ?? "ok"}>
+        <Field icon={<User size={17} aria-hidden="true" />}>
           <input
-            autoFocus
             autoComplete="username"
             inputMode="text"
             spellCheck={false}
             value={loginId}
             onChange={(e) => setLoginId(e.target.value.toUpperCase())}
-            placeholder="Login ID"
+            placeholder="LOGIN ID"
             aria-label="Login ID"
-            className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.14em] placeholder:text-muted-foreground/60 placeholder:uppercase"
+            className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.16em] placeholder:text-muted-foreground/70"
           />
         </Field>
 
-        <Field icon={<Lock size={17} />}>
+        <Field icon={<Lock size={17} aria-hidden="true" />}>
           <div className="flex w-full items-center gap-2">
             <input
               autoComplete="current-password"
               type={showPwd ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder="PASSWORD"
               aria-label="Password"
-              className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.14em] placeholder:text-muted-foreground/60 placeholder:uppercase"
+              className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.16em] placeholder:text-muted-foreground/70"
             />
             <button
               type="button"
               onClick={() => setShowPwd((v) => !v)}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-label={showPwd ? "Hide password" : "Show password"}
+              aria-pressed={showPwd}
             >
-              {showPwd ? <EyeOff size={17} /> : <Eye size={17} />}
+              {showPwd ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
             </button>
           </div>
         </Field>
 
-        {error && (
-          <div
-            role="alert"
-            className="flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-[13px] font-medium text-destructive"
-          >
-            <AlertCircle size={15} className="mt-0.5 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
+        <div aria-live="polite" className="empty:hidden">
+          {error && (
+            <div
+              role="alert"
+              className="flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-[13px] font-medium text-destructive"
+            >
+              <AlertCircle size={15} aria-hidden="true" className="mt-0.5 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+        </div>
 
         <button
           type="submit"
           disabled={submitting || success}
-          className="group relative flex h-14 w-full items-center justify-center overflow-hidden rounded-[20px] bg-[linear-gradient(140deg,oklch(0.34_0.08_155),oklch(0.22_0.05_155))] px-5 text-[15px] font-semibold tracking-[0.06em] text-primary-foreground uppercase shadow-[0_20px_40px_-20px_oklch(0.3_0.08_155)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80"
+          className="group relative flex h-[52px] w-full items-center justify-center overflow-hidden rounded-[18px] bg-[linear-gradient(140deg,oklch(0.36_0.085_155),oklch(0.21_0.05_155))] px-5 text-[14px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-[0_22px_44px_-22px_oklch(0.3_0.08_155),inset_0_1px_0_oklch(1_0_0/0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_54px_-22px_oklch(0.3_0.08_155)] active:translate-y-0 disabled:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
-          <span className="pointer-events-none absolute inset-x-5 top-1.5 h-px bg-white/25" />
-          <span className="pointer-events-none absolute -left-1/3 top-0 h-full w-1/3 skew-x-[-18deg] bg-white/12 transition-transform duration-700 group-hover:translate-x-[420%]" />
+          <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 top-1.5 h-px bg-white/25" />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-1/3 top-0 h-full w-1/3 skew-x-[-18deg] bg-white/15 transition-transform duration-700 group-hover:translate-x-[420%]"
+          />
           {success ? (
             <span className="success-pop inline-flex items-center gap-2">
-              <CheckCircle2 size={18} /> Signed in
+              <CheckCircle2 size={18} aria-hidden="true" /> Signed in
             </span>
           ) : submitting ? (
             <span className="inline-flex items-center gap-2">
-              <Loader2 size={18} className="animate-spin" /> Signing in
+              <Loader2 size={18} aria-hidden="true" className="animate-spin" /> Signing in
             </span>
           ) : (
             <>
               <span>Sign In</span>
-              <span className="absolute right-2.5 grid h-10 w-10 place-items-center rounded-2xl border border-white/30 bg-white/10 transition-transform duration-300 group-hover:translate-x-0.5">
-                <ArrowRight size={17} />
+              <span
+                aria-hidden="true"
+                className="absolute right-2 grid h-9 w-9 place-items-center rounded-[14px] border border-white/30 bg-white/10 transition-transform duration-300 group-hover:translate-x-0.5"
+              >
+                <ArrowRight size={16} />
               </span>
             </>
           )}
@@ -416,7 +424,7 @@ function LoginForm() {
 
         <Link
           to="/"
-          className="mx-auto block pt-1 text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
+          className="mx-auto block rounded-md pt-0.5 text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           ← Back to home
         </Link>
