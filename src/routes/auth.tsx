@@ -9,7 +9,7 @@ import {
   Loader2,
   Lock,
   User,
-  
+  KeyRound,
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
@@ -17,8 +17,10 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { loginIdToEmail, validateLoginId, homePathForRole, toInternalPath, type AppRole } from "@/lib/auth";
 import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/auth.functions";
+import { getRememberPreference, setRememberPreference } from "@/lib/session-persistence";
 import heroImage from "@/assets/auth-hero-tower.jpg";
 import logoAsset from "@/assets/aawaash-logo.png.asset.json";
+
 
 
 const searchSchema = z.object({
