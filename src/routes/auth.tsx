@@ -255,7 +255,7 @@ function GlassCard({
 
         <div className="relative flex">
           {/* Vertical emerald spine — the signature of this card */}
-          <div className="relative hidden w-[54px] shrink-0 flex-col items-center justify-between bg-[linear-gradient(180deg,oklch(0.36_0.085_155),oklch(0.2_0.05_155))] py-4 xs:flex sm:flex">
+          <div className="relative flex w-[46px] shrink-0 flex-col items-center justify-between sm:w-[54px] bg-[linear-gradient(180deg,oklch(0.36_0.085_155),oklch(0.2_0.05_155))] py-4">
             <span className="grid h-8 w-8 place-items-center rounded-[12px] bg-white/15 text-white ring-1 ring-white/25">
               <ShieldCheck size={16} aria-hidden="true" />
             </span>
