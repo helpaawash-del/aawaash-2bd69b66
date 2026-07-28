@@ -195,6 +195,17 @@ function AuthPage() {
 
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden text-foreground" style={{ background: SURFACE }}>
+      {/* ambient aurora */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-24 top-1/3 h-[52vh] w-[52vh] rounded-full opacity-70 blur-[90px]"
+        style={{ background: "radial-gradient(circle, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%)" }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-28 bottom-[-10vh] h-[48vh] w-[48vh] rounded-full opacity-60 blur-[100px]"
+        style={{ background: "radial-gradient(circle, oklch(0.86 0.09 175 / 0.55), transparent 70%)" }}
+      />
       {/* faint skyline blueprint at the base */}
       <div
         aria-hidden="true"
@@ -209,18 +220,24 @@ function AuthPage() {
 
       <EcoHero />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[34px] sm:max-w-lg sm:px-7 sm:pt-12">
-        {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[30px] sm:max-w-lg sm:px-7 sm:pt-11">
+        {/* floating glass sheet */}
+        <div className="auth-sheet relative rounded-[30px] bg-white/70 p-[clamp(1rem,3.6vw,1.6rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-8 -top-px h-px bg-gradient-to-r from-transparent via-primary/45 to-transparent"
+          />
+          {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
+        </div>
 
         {/* trust strip */}
         <div className="mt-auto pt-3">
-          <div className="mx-auto flex max-w-sm items-center gap-3 rounded-[22px] bg-white/80 px-4 py-2.5 shadow-[0_20px_44px_-34px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl">
-            <span aria-hidden="true" className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] bg-primary/10 text-primary">
-              <ShieldCheck size={19} />
+          <div className="mx-auto flex max-w-sm items-center gap-3 rounded-full bg-white/65 px-3.5 py-2 shadow-[0_20px_44px_-38px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-white/70 backdrop-blur-xl">
+            <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+              <ShieldCheck size={16} />
             </span>
-            <p className="min-w-0 text-[12.5px] leading-snug text-muted-foreground">
-              <span className="block font-semibold text-[oklch(0.26_0.03_160)]">Your data is safe with us.</span>
-              Secure. Trusted. Green.
+            <p className="min-w-0 text-[12px] leading-snug text-muted-foreground">
+              <span className="font-semibold text-[oklch(0.26_0.03_160)]">Your data is safe.</span> Secure · Trusted · Green
             </p>
           </div>
           <Link
@@ -231,6 +248,7 @@ function AuthPage() {
           </Link>
         </div>
       </main>
+
 
       <style>{`
         @keyframes cardIn {
