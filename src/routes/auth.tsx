@@ -57,7 +57,7 @@ const SURFACE = "oklch(0.975 0.012 155)";
 
 function EcoHero() {
   return (
-    <header className="relative h-[clamp(186px,29vh,380px)] w-full shrink-0">
+    <header className="relative h-[clamp(232px,36vh,440px)] w-full shrink-0">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authHeroWave" clipPathUnits="objectBoundingBox">
@@ -73,7 +73,7 @@ function EcoHero() {
           alt="Eco-luxury residential tower with trees growing on every balcony"
           width={1024}
           height={1536}
-          className="h-full w-full object-cover object-[62%_30%]"
+          className="h-full w-full object-cover object-[62%_28%]"
           draggable={false}
         />
         {/* light wash so the headline stays readable on the left */}
@@ -88,55 +88,38 @@ function EcoHero() {
         <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.985_0.01_155)/0.55] to-transparent" />
       </div>
 
-      {/* top row: logo + sustainable pill */}
-      <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 sm:pt-5">
-        <Link
-          to="/"
-          aria-label="Aawaash home"
-          className="grid h-[58px] w-[58px] place-items-center rounded-[20px] bg-white/90 shadow-[0_16px_34px_-20px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:h-[66px] sm:w-[66px]"
-        >
-          <img src={logoAsset.url} alt="Aawaash" className="h-9 w-auto object-contain sm:h-11" draggable={false} />
-        </Link>
-
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-2 text-[13px] font-semibold text-[oklch(0.26_0.03_160)] shadow-[0_14px_30px_-20px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-primary/10 backdrop-blur-xl sm:text-sm">
-          <Leaf size={16} className="text-primary" aria-hidden="true" />
-          Sustainable
-        </span>
-      </div>
-
       {/* headline */}
-      <div className="absolute inset-x-0 top-[84px] z-10 px-4 sm:top-[116px] sm:px-6">
+      <div className="absolute inset-x-0 top-[clamp(30px,6vh,64px)] z-10 px-5 sm:px-8">
+        <span className="inline-flex items-center gap-2 text-[10.5px] font-semibold uppercase tracking-[0.3em] text-primary/80">
+          <i aria-hidden="true" className="block h-px w-6 bg-primary/50" />
+          Est. Aawaash
+        </span>
         <h1
-          className="text-[clamp(1.6rem,7.4vw,2.6rem)] font-extrabold leading-[1.06] tracking-[-0.03em] text-[oklch(0.24_0.03_160)]"
+          className="mt-2.5 text-[clamp(1.85rem,8.4vw,3rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-[oklch(0.2_0.03_160)]"
           style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
         >
           Building
           <br />
           a Better
           <br />
-          <span className="relative text-primary">
+          <span className="bg-[linear-gradient(96deg,oklch(0.42_0.1_158),oklch(0.34_0.09_172))] bg-clip-text italic text-transparent">
             Tomorrow
-            <Leaf
-              aria-hidden="true"
-              size={20}
-              className="ml-1 inline-block -translate-y-1 rotate-[24deg] text-primary/80"
-            />
           </span>
         </h1>
-        <p className="mt-2 max-w-[10.5rem] text-[12.5px] leading-snug text-muted-foreground sm:max-w-xs sm:text-sm">
+        <p className="mt-2.5 max-w-[11rem] text-[12px] leading-relaxed tracking-[0.02em] text-muted-foreground sm:max-w-xs sm:text-[13.5px]">
           Green construction for a stronger, smarter future.
         </p>
       </div>
 
-      {/* fingerprint medallion sitting on the wave */}
-      <span
-        aria-hidden="true"
-        className="absolute bottom-[-26px] left-1/2 z-20 grid h-[62px] w-[62px] -translate-x-1/2 place-items-center rounded-[22px] bg-[linear-gradient(155deg,oklch(0.36_0.085_155),oklch(0.2_0.05_155))] text-white shadow-[0_22px_44px_-20px_oklch(0.3_0.08_155)] ring-[6px] ring-[oklch(0.975_0.012_155)]"
-        style={{ clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)" }}
-      >
-        <Fingerprint size={26} />
-      </span>
+      {/* brand mark sitting where the photo ends */}
+      <img
+        src={logoAsset.url}
+        alt="Aawaash"
+        draggable={false}
+        className="absolute bottom-[-30px] left-1/2 z-20 h-[68px] w-auto -translate-x-1/2 object-contain drop-shadow-[0_16px_26px_color-mix(in_oklab,var(--primary)_38%,transparent)] sm:h-[78px]"
+      />
     </header>
+
   );
 }
 
