@@ -54,7 +54,7 @@ export const Route = createFileRoute("/auth")({
 
 function WaveHero() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[44vh] min-h-[300px] sm:h-[52vh] md:h-[58vh]">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[38vh] min-h-[250px] sm:h-[50vh] md:h-[58vh]">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authWave" clipPathUnits="objectBoundingBox">
@@ -156,9 +156,9 @@ function AuthPage() {
 
       <WaveHero />
 
-      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:max-w-lg sm:px-6 sm:pt-5">
+      <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:max-w-lg sm:px-6 sm:pt-5">
         {/* Welcome block — logo sits directly above the title */}
-        <div className="mt-[clamp(8rem,26vh,16rem)]">
+        <div className="mt-[clamp(5.5rem,22vh,16rem)]">
           <Link
             to="/"
             aria-label="Aawaash home"
@@ -191,7 +191,7 @@ function AuthPage() {
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
 
         </div>
-      </div>
+      </main>
 
       <style>{`
         @keyframes cardIn {
