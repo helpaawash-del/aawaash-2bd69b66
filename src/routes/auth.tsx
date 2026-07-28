@@ -263,13 +263,17 @@ function Field({
 }) {
   return (
     <label className="block">
-      <div className="group/field relative flex items-center gap-3 rounded-[18px] border border-primary/20 bg-white/75 px-3.5 py-3 shadow-[inset_0_1px_0_oklch(1_0_0/0.7)] transition-all duration-300 focus-within:border-primary/60 focus-within:bg-white focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_10%,transparent)]">
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-primary/8 text-primary transition-colors duration-300 group-focus-within/field:bg-primary group-focus-within/field:text-primary-foreground">
+      <div className="group/field relative flex items-center gap-3 overflow-hidden rounded-[16px] border border-primary/20 bg-white/70 px-3 py-2.5 shadow-[inset_0_1px_0_oklch(1_0_0/0.75)] transition-all duration-300 focus-within:border-primary/60 focus-within:bg-white focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_12%,transparent)]">
+        <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-gradient-to-r from-primary/70 to-transparent transition-transform duration-500 group-focus-within/field:scale-x-100" />
+        <span
+          aria-hidden="true"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-[12px] bg-primary/10 text-primary transition-all duration-300 group-focus-within/field:bg-gradient-to-br group-focus-within/field:from-primary group-focus-within/field:to-[oklch(0.28_0.06_155)] group-focus-within/field:text-primary-foreground"
+        >
           {icon}
         </span>
         <div className="min-w-0 flex-1">{children}</div>
       </div>
-      {hint && <p className="mt-1.5 px-1 text-[11px] text-muted-foreground">{hint}</p>}
+      {hint && <p className="mt-1 px-1 text-[11px] text-muted-foreground">{hint}</p>}
     </label>
   );
 }
