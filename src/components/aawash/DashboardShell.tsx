@@ -70,7 +70,7 @@ export function DashboardShell({
           role === "super_admin" ? "lg:pl-28 xl:pl-32" : ""
         }`}
       >
-        <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:gap-4">
+        <header className="sticky top-3 z-30 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-3 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl sm:gap-4">
           <BrandMark size="sm" />
 
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
