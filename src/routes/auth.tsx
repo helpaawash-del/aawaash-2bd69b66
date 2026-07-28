@@ -50,33 +50,38 @@ export const Route = createFileRoute("/auth")({
 
 function WaveHero() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[46vh] min-h-[280px] sm:h-[52vh]">
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-[40vh] min-h-[260px] sm:h-[46vh] md:h-[52vh]">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authWave" clipPathUnits="objectBoundingBox">
-            <path d="M1,0 L1,1 L0.62,1 C0.5,0.98 0.44,0.9 0.42,0.78 C0.4,0.62 0.44,0.5 0.38,0.36 C0.31,0.19 0.14,0.12 0.02,0.06 C-0.01,0.04 0,0 0.06,0 Z" />
+            <path d="M1,0 L1,1 L0.55,1 C0.42,0.97 0.34,0.86 0.32,0.7 C0.3,0.5 0.34,0.34 0.26,0.2 C0.19,0.08 0.09,0.04 0.02,0.02 C-0.01,0.01 0,0 0.05,0 Z" />
           </clipPath>
         </defs>
       </svg>
 
       {/* soft outer glow following the curve */}
       <div
-        className="absolute inset-y-0 right-0 w-[86%] scale-[1.04] bg-primary/25 blur-[10px]"
+        className="absolute inset-y-0 right-0 w-[96%] scale-[1.03] bg-primary/25 blur-[12px] sm:w-[78%]"
         style={{ clipPath: "url(#authWave)" }}
       />
-      <div className="absolute inset-y-0 right-0 w-[86%] overflow-hidden" style={{ clipPath: "url(#authWave)" }}>
+      <div
+        className="absolute inset-y-0 right-0 w-[96%] overflow-hidden sm:w-[78%]"
+        style={{ clipPath: "url(#authWave)" }}
+      >
         <img
           src={heroImage}
           alt="Green residential tower with trees on every balcony"
           width={1024}
           height={1536}
-          className="h-full w-full object-cover object-[70%_35%]"
+          className="h-full w-full object-cover object-[62%_30%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-background/70" />
+        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-background/80" />
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.975_0.012_155)] to-transparent" />
       </div>
     </div>
   );
 }
+
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
