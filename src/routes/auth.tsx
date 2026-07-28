@@ -19,7 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { loginIdToEmail, validateLoginId, homePathForRole, toInternalPath, type AppRole } from "@/lib/auth";
 import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/auth.functions";
 import { getRememberPreference, setRememberPreference } from "@/lib/session-persistence";
-import heroImage from "@/assets/auth-hero-tower.jpg";
+import heroImage from "@/assets/auth-hero-tower-v2.png";
 import logoAsset from "@/assets/aawaash-logo.png.asset.json";
 
 const searchSchema = z.object({
@@ -55,7 +55,7 @@ const SURFACE = "oklch(0.975 0.012 155)";
 
 function EcoHero() {
   return (
-    <header className="relative h-[clamp(232px,36vh,440px)] w-full shrink-0">
+    <header className="relative h-[clamp(248px,37vh,460px)] w-full shrink-0">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authHeroWave" clipPathUnits="objectBoundingBox">
@@ -71,7 +71,9 @@ function EcoHero() {
           alt="Eco-luxury residential tower with trees growing on every balcony"
           width={1024}
           height={1536}
-          className="h-full w-full object-cover object-[62%_28%]"
+          decoding="async"
+          fetchPriority="high"
+          className="h-full w-full object-cover object-[62%_26%] [image-rendering:auto]"
           draggable={false}
         />
         {/* light wash so the headline stays readable on the left */}
@@ -110,12 +112,21 @@ function EcoHero() {
       </div>
 
       {/* brand mark sitting where the photo ends */}
-      <img
-        src={logoAsset.url}
-        alt="Aawaash"
-        draggable={false}
-        className="absolute bottom-[-30px] left-1/2 z-20 h-[68px] w-auto -translate-x-1/2 object-contain drop-shadow-[0_16px_26px_color-mix(in_oklab,var(--primary)_38%,transparent)] sm:h-[78px]"
-      />
+      <div className="absolute bottom-[clamp(-74px,-9vh,-56px)] left-1/2 z-20 -translate-x-1/2">
+        <span
+          aria-hidden="true"
+          className="absolute left-1/2 top-1/2 h-[150%] w-[150%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-2xl"
+          style={{ background: "radial-gradient(circle, color-mix(in oklab, var(--primary) 26%, transparent), transparent 68%)" }}
+        />
+        <img
+          src={logoAsset.url}
+          alt="Aawaash"
+          draggable={false}
+          width={512}
+          height={512}
+          className="relative h-[clamp(92px,17vw,116px)] w-auto object-contain drop-shadow-[0_20px_34px_color-mix(in_oklab,var(--primary)_34%,transparent)]"
+        />
+      </div>
     </header>
 
   );
@@ -201,7 +212,7 @@ function AuthPage() {
 
       <EcoHero />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[clamp(48px,8vh,84px)] sm:max-w-lg sm:px-7">
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[clamp(66px,11vh,104px)] sm:max-w-lg sm:px-7">
         {/* floating glass sheet */}
         <div className="auth-sheet relative rounded-[30px] bg-white/70 p-[clamp(1rem,3.6vw,1.6rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
           <span
