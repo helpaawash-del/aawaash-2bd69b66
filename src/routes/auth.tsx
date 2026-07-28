@@ -54,7 +54,7 @@ export const Route = createFileRoute("/auth")({
 
 function WaveHero() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[34vh] min-h-[200px] sm:h-[50vh] md:h-[58vh]">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[34vh] min-h-[200px] sm:h-[46vh] md:h-[52vh]">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authWave" clipPathUnits="objectBoundingBox">
@@ -65,11 +65,11 @@ function WaveHero() {
 
       {/* soft outer glow following the curve */}
       <div
-        className="absolute inset-y-0 right-0 w-[92%] scale-[1.03] bg-primary/25 blur-[14px] sm:w-[82%]"
+        className="absolute inset-y-0 right-0 w-[92%] scale-[1.03] bg-primary/25 blur-[14px] sm:w-[72%]"
         style={{ clipPath: "url(#authWave)" }}
       />
       <div
-        className="absolute inset-y-0 right-0 w-[92%] overflow-hidden sm:w-[82%]"
+        className="absolute inset-y-0 right-0 w-[92%] overflow-hidden sm:w-[72%]"
         style={{ clipPath: "url(#authWave)" }}
       >
         <img
