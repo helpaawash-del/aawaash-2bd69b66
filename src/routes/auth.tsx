@@ -256,6 +256,15 @@ function AuthPage() {
           100% { opacity: 1; transform: translateY(0); }
         }
         .auth-card-in { animation: cardIn 0.7s cubic-bezier(.2,.8,.2,1) both; }
+        @keyframes sheetIn {
+          0% { opacity: 0; transform: translateY(26px) scale(0.985); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .auth-sheet { animation: sheetIn 0.8s cubic-bezier(.2,.8,.2,1) both; }
+        @media (prefers-reduced-motion: reduce) {
+          .auth-sheet, .auth-card-in { animation: none; }
+        }
+
         @keyframes successPop {
           0% { transform: scale(0.4); opacity: 0; }
           60% { transform: scale(1.15); opacity: 1; }
