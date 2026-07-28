@@ -158,7 +158,7 @@ function AuthPage() {
 
       <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:max-w-lg sm:px-6 sm:pt-5">
         {/* Welcome block — logo sits directly above the title */}
-        <div className="mt-[clamp(3.5rem,17vh,15rem)]">
+        <div className="mt-[clamp(2.5rem,14vh,15rem)]">
           <Link
             to="/"
             aria-label="Aawaash home"
@@ -180,7 +180,7 @@ function AuthPage() {
             <br />
             <span className="text-primary">Aawaash</span>
           </h1>
-          <p className="mt-1.5 max-w-[19rem] text-[12.5px] leading-snug text-muted-foreground sm:text-sm">
+          <p className="mt-1 max-w-[19rem] text-[12px] leading-snug text-muted-foreground sm:text-sm">
             Let&rsquo;s continue building a <span className="font-semibold text-primary">better</span> tomorrow
           </p>
         </div>
@@ -273,7 +273,7 @@ function GlassCard({
             </span>
           </div>
 
-          <div className="min-w-0 flex-1 p-4 sm:p-6">
+          <div className="min-w-0 flex-1 p-3.5 sm:p-6">
             {/* Header plate */}
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
