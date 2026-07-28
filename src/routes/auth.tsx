@@ -18,6 +18,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { loginIdToEmail, validateLoginId, homePathForRole, toInternalPath, type AppRole } from "@/lib/auth";
 import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/auth.functions";
 import heroImage from "@/assets/auth-eco-building.jpg";
+import logoAsset from "@/assets/aawaash-logo.png.asset.json";
+
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
