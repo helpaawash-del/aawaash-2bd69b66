@@ -9,8 +9,8 @@ import {
   Loader2,
   Lock,
   User,
-  UserRound,
-  Leaf,
+  
+  ShieldCheck,
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
@@ -18,6 +18,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { loginIdToEmail, validateLoginId, homePathForRole, toInternalPath, type AppRole } from "@/lib/auth";
 import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/auth.functions";
 import heroImage from "@/assets/auth-eco-building.jpg";
+import logoAsset from "@/assets/aawaash-logo.png.asset.json";
+
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -50,33 +52,39 @@ export const Route = createFileRoute("/auth")({
 
 function WaveHero() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[46vh] min-h-[280px] sm:h-[52vh]">
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-[36vh] min-h-[240px] sm:h-[42vh] md:h-[48vh]">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authWave" clipPathUnits="objectBoundingBox">
-            <path d="M1,0 L1,1 L0.62,1 C0.5,0.98 0.44,0.9 0.42,0.78 C0.4,0.62 0.44,0.5 0.38,0.36 C0.31,0.19 0.14,0.12 0.02,0.06 C-0.01,0.04 0,0 0.06,0 Z" />
+            <path d="M1,0 L1,1 L0.55,1 C0.42,0.97 0.34,0.86 0.32,0.7 C0.3,0.5 0.34,0.34 0.26,0.2 C0.19,0.08 0.09,0.04 0.02,0.02 C-0.01,0.01 0,0 0.05,0 Z" />
           </clipPath>
         </defs>
       </svg>
 
       {/* soft outer glow following the curve */}
       <div
-        className="absolute inset-y-0 right-0 w-[86%] scale-[1.04] bg-primary/25 blur-[10px]"
+        className="absolute inset-y-0 right-0 w-[84%] scale-[1.03] bg-primary/25 blur-[12px] sm:w-[74%]"
         style={{ clipPath: "url(#authWave)" }}
       />
-      <div className="absolute inset-y-0 right-0 w-[86%] overflow-hidden" style={{ clipPath: "url(#authWave)" }}>
+      <div
+        className="absolute inset-y-0 right-0 w-[84%] overflow-hidden sm:w-[74%]"
+        style={{ clipPath: "url(#authWave)" }}
+
+      >
         <img
           src={heroImage}
           alt="Green residential tower with trees on every balcony"
           width={1024}
           height={1536}
-          className="h-full w-full object-cover object-[70%_35%]"
+          className="h-full w-full object-cover object-[62%_30%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-background/70" />
+        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-background/80" />
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.975_0.012_155)] to-transparent" />
       </div>
     </div>
   );
 }
+
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -146,51 +154,40 @@ function AuthPage() {
 
       <WaveHero />
 
-      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 pb-12 pt-8 sm:max-w-lg">
-        {/* Brand */}
-        <Link to="/" className="inline-flex w-fit flex-col gap-2" aria-label="Aawaash home">
-          <svg viewBox="0 0 64 56" className="h-12 w-14 text-primary" fill="none" aria-hidden="true">
-            <g stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round">
-              <path d="M6 52V18l12-8 12 8v34" />
-              <path d="M30 52V26l12-7v33" />
-              <path d="M13 26h5M13 34h5M13 42h5M35 32h4M35 40h4" />
-            </g>
-            <path
-              d="M52 14c-8 2-12 8-11 16 8 1 13-4 13-12 0-2 0-3-2-4Z"
-              fill="currentColor"
-              opacity="0.85"
-            />
-            <path d="M53 15c-6 5-8 9-9 15" stroke="oklch(0.99 0 0)" strokeWidth="1.4" />
-          </svg>
-          <span className="text-[11px] font-extrabold uppercase leading-tight tracking-[0.22em] text-primary">
-            Nature Friendly
-            <br />
-            Constructions
-          </span>
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-6 pt-4 sm:max-w-lg sm:px-6 sm:pt-6">
+        {/* Brand medallion — website logo */}
+        <Link
+          to="/"
+          aria-label="Aawaash home"
+          className="group grid h-16 w-16 shrink-0 place-items-center rounded-[22px] border border-white/70 bg-white/70 shadow-[0_14px_34px_-18px_color-mix(in_oklab,var(--primary)_70%,transparent)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5 sm:h-20 sm:w-20"
+        >
+          <img
+            src={logoAsset.url}
+            alt=""
+            aria-hidden="true"
+            className="h-11 w-11 object-contain sm:h-14 sm:w-14"
+            draggable={false}
+          />
         </Link>
 
-        {/* Leaf medallion */}
-        <div className="mt-10 grid h-24 w-24 place-items-center rounded-full border border-dashed border-primary/30">
-          <div className="grid h-16 w-16 place-items-center rounded-full bg-[oklch(0.95_0.05_155)] shadow-[0_10px_30px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)] ring-4 ring-white/70">
-            <Leaf size={22} className="text-primary" />
-          </div>
-        </div>
-
         {/* Welcome */}
-        <h1 className="mt-8 text-[clamp(2.6rem,11vw,3.6rem)] font-extrabold leading-[0.98] tracking-tight text-[oklch(0.28_0.03_240)]">
-          Welcome
+        <h1
+          className="mt-[26vh] text-[clamp(1.7rem,6.4vw,2.35rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-[oklch(0.26_0.03_160)] sm:mt-[28vh]"
+          style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+        >
+          Welcome To
           <br />
-          <span className="text-primary">Back</span>
-          <Leaf size={30} className="ml-2 inline-block -translate-y-2 fill-primary/25 text-primary" />
+          <span className="text-primary">Aawaash</span>
         </h1>
-        <p className="mt-4 max-w-[20rem] text-lg leading-snug text-muted-foreground">
-          Let&rsquo;s continue building
-          <br />a <span className="font-semibold text-primary">better</span> tomorrow
+        <p className="mt-2 max-w-[19rem] text-[13px] leading-snug text-muted-foreground sm:text-sm">
+          Let&rsquo;s continue building a <span className="font-semibold text-primary">better</span> tomorrow
         </p>
 
         {/* Card */}
-        <div className="mt-10">
+        <div className="mb-auto mt-5 sm:mt-7">
+
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
+
         </div>
       </div>
 
@@ -225,16 +222,26 @@ function AuthPage() {
 
 function GlassCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="auth-card-in relative rounded-[34px] border border-white/70 bg-white/55 p-6 shadow-[0_30px_60px_-30px_color-mix(in_oklab,var(--primary)_45%,transparent)] backdrop-blur-2xl sm:p-8">
-      <div className="pointer-events-none absolute right-10 top-4 h-1 w-16 rounded-full bg-primary/60" />
-      <div className="flex flex-col items-center">
-        <div className="grid h-14 w-14 place-items-center rounded-full bg-white/90 shadow-[0_8px_24px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)]">
-          <UserRound size={22} className="text-primary" />
+    <div className="auth-card-in relative overflow-hidden rounded-[28px] border border-white/70 bg-white/60 p-5 shadow-[0_30px_70px_-34px_color-mix(in_oklab,var(--primary)_55%,transparent)] backdrop-blur-2xl sm:rounded-[32px] sm:p-7">
+      {/* futuristic sheen + hairlines */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/10 blur-2xl" />
+
+      <div className="flex items-center gap-3">
+        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/80 bg-white/90 text-primary shadow-[0_10px_24px_-14px_color-mix(in_oklab,var(--primary)_70%,transparent)]">
+          <ShieldCheck size={19} />
         </div>
-        <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-[oklch(0.28_0.03_240)]">{title}</h2>
-        <span className="mt-2 h-[3px] w-10 rounded-full bg-primary" />
+        <div className="min-w-0">
+          <h2
+            className="truncate text-[19px] font-semibold tracking-[-0.01em] text-[oklch(0.26_0.03_160)] sm:text-xl"
+            style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif' }}
+          >
+            {title}
+          </h2>
+          <span className="mt-1 block h-[2px] w-9 rounded-full bg-gradient-to-r from-primary to-primary/10" />
+        </div>
       </div>
-      <div className="mt-6">{children}</div>
+      <div className="mt-5">{children}</div>
     </div>
   );
 }
@@ -250,14 +257,17 @@ function Field({
 }) {
   return (
     <label className="block">
-      <div className="flex items-center gap-3 rounded-[22px] border border-primary/25 bg-white/70 px-4 py-4 shadow-[inset_0_1px_0_oklch(1_0_0/0.6)] transition-all duration-300 focus-within:border-primary/60 focus-within:bg-white focus-within:shadow-[0_0_0_5px_color-mix(in_oklab,var(--primary)_12%,transparent)]">
-        <span className="shrink-0 text-primary">{icon}</span>
+      <div className="group/field relative flex items-center gap-3 rounded-[18px] border border-primary/20 bg-white/75 px-3.5 py-3 shadow-[inset_0_1px_0_oklch(1_0_0/0.7)] transition-all duration-300 focus-within:border-primary/60 focus-within:bg-white focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_10%,transparent)]">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-primary/8 text-primary transition-colors duration-300 group-focus-within/field:bg-primary group-focus-within/field:text-primary-foreground">
+          {icon}
+        </span>
         <div className="min-w-0 flex-1">{children}</div>
       </div>
       {hint && <p className="mt-1.5 px-1 text-[11px] text-muted-foreground">{hint}</p>}
     </label>
   );
 }
+
 
 /* ------------------------------------------------------------------ */
 /*  Login form                                                         */
@@ -320,12 +330,9 @@ function LoginForm() {
   }
 
   return (
-    <GlassCard title="Sign In">
-      <form onSubmit={onSubmit} className={`space-y-4 ${error ? "shake-x" : ""}`} key={error ?? "ok"}>
-        <Field
-          icon={<User size={18} />}
-          hint="Team Leader: mobile (9876543210). Member: TeamLetter+mobile (A9876543210)."
-        >
+    <GlassCard title="Step Into Aawash">
+      <form onSubmit={onSubmit} className={`space-y-3.5 ${error ? "shake-x" : ""}`} key={error ?? "ok"}>
+        <Field icon={<User size={17} />}>
           <input
             autoFocus
             autoComplete="username"
@@ -335,11 +342,11 @@ function LoginForm() {
             onChange={(e) => setLoginId(e.target.value.toUpperCase())}
             placeholder="Login ID"
             aria-label="Login ID"
-            className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/70"
+            className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.14em] placeholder:text-muted-foreground/60 placeholder:uppercase"
           />
         </Field>
 
-        <Field icon={<Lock size={18} />}>
+        <Field icon={<Lock size={17} />}>
           <div className="flex w-full items-center gap-2">
             <input
               autoComplete="current-password"
@@ -348,15 +355,15 @@ function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               aria-label="Password"
-              className="w-full bg-transparent text-base font-medium tracking-wide text-foreground outline-none placeholder:text-muted-foreground/70"
+              className="w-full bg-transparent text-[15px] font-medium tracking-[0.02em] text-foreground outline-none placeholder:font-normal placeholder:tracking-[0.14em] placeholder:text-muted-foreground/60 placeholder:uppercase"
             />
             <button
               type="button"
               onClick={() => setShowPwd((v) => !v)}
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
               aria-label={showPwd ? "Hide password" : "Show password"}
             >
-              {showPwd ? <EyeOff size={18} /> : <Eye size={18} />}
+              {showPwd ? <EyeOff size={17} /> : <Eye size={17} />}
             </button>
           </div>
         </Field>
@@ -364,9 +371,9 @@ function LoginForm() {
         {error && (
           <div
             role="alert"
-            className="flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive"
+            className="flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-[13px] font-medium text-destructive"
           >
-            <AlertCircle size={16} className="mt-0.5 shrink-0" />
+            <AlertCircle size={15} className="mt-0.5 shrink-0" />
             <span>{error}</span>
           </div>
         )}
@@ -374,9 +381,10 @@ function LoginForm() {
         <button
           type="submit"
           disabled={submitting || success}
-          className="group relative flex h-16 w-full items-center justify-center rounded-[26px] bg-[linear-gradient(140deg,oklch(0.32_0.07_155),oklch(0.24_0.06_155))] px-6 text-base font-bold text-primary-foreground shadow-[0_18px_36px_-18px_oklch(0.3_0.08_155)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80"
+          className="group relative flex h-14 w-full items-center justify-center overflow-hidden rounded-[20px] bg-[linear-gradient(140deg,oklch(0.34_0.08_155),oklch(0.22_0.05_155))] px-5 text-[15px] font-semibold tracking-[0.06em] text-primary-foreground uppercase shadow-[0_20px_40px_-20px_oklch(0.3_0.08_155)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80"
         >
-          <span className="pointer-events-none absolute inset-x-6 top-2 h-px bg-white/25" />
+          <span className="pointer-events-none absolute inset-x-5 top-1.5 h-px bg-white/25" />
+          <span className="pointer-events-none absolute -left-1/3 top-0 h-full w-1/3 skew-x-[-18deg] bg-white/12 transition-transform duration-700 group-hover:translate-x-[420%]" />
           {success ? (
             <span className="success-pop inline-flex items-center gap-2">
               <CheckCircle2 size={18} /> Signed in
@@ -388,12 +396,13 @@ function LoginForm() {
           ) : (
             <>
               <span>Sign In</span>
-              <span className="absolute right-3 grid h-11 w-11 place-items-center rounded-full border border-white/35 transition-transform duration-300 group-hover:translate-x-0.5">
-                <ArrowRight size={18} />
+              <span className="absolute right-2.5 grid h-10 w-10 place-items-center rounded-2xl border border-white/30 bg-white/10 transition-transform duration-300 group-hover:translate-x-0.5">
+                <ArrowRight size={17} />
               </span>
             </>
           )}
         </button>
+
 
         <Link
           to="/"
