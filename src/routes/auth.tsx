@@ -203,7 +203,7 @@ function AuthPage() {
 
       <EcoHero />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[26px] sm:max-w-lg sm:px-7 sm:pt-11">
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[clamp(48px,8vh,84px)] sm:max-w-lg sm:px-7">
         {/* floating glass sheet */}
         <div className="auth-sheet relative rounded-[30px] bg-white/70 p-[clamp(1rem,3.6vw,1.6rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
           <span
@@ -213,24 +213,16 @@ function AuthPage() {
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
         </div>
 
-        {/* trust strip */}
-        <div className="mt-auto pt-2">
-          <div className="mx-auto flex max-w-sm items-center gap-3 rounded-full bg-white/65 px-3.5 py-2 shadow-[0_20px_44px_-38px_color-mix(in_oklab,var(--primary)_80%,transparent)] ring-1 ring-white/70 backdrop-blur-xl">
-            <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-              <ShieldCheck size={16} />
-            </span>
-            <p className="min-w-0 text-[12px] leading-snug text-muted-foreground">
-              <span className="font-semibold text-[oklch(0.26_0.03_160)]">Your data is safe.</span> Secure · Trusted · Green
-            </p>
-          </div>
+        <div className="mt-auto pt-3">
           <Link
             to="/"
-            className="mx-auto mt-2.5 block rounded-md text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="mx-auto block rounded-md text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             ← Back to home
           </Link>
         </div>
       </main>
+
 
 
       <style>{`
