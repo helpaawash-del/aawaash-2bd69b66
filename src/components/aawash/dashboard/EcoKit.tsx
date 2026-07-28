@@ -120,17 +120,26 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
   }
 
   return (
-    <header className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
+    <header className="sticky top-0 z-30 -mx-1 mb-1 grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
       <Link
         to={`${base}/profile` as never}
-        className="flex min-w-0 items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex min-w-0 items-center gap-2.5 rounded-full pr-2 outline-none focus-visible:ring-2 focus-visible:ring-ring"
         aria-label="Open your profile"
       >
-        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={44} />
+        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={40} />
+        <span className="flex min-w-0 flex-col leading-tight">
+          <span className="font-brand text-[17px] font-normal tracking-[-0.01em] text-foreground">
+            Aawaash
+          </span>
+          <span className="truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            {firstName(profile?.full_name)}
+          </span>
+        </span>
       </Link>
       <span aria-hidden />
 
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1.5">
+
         <Link
           to={`${base}/notifications` as never}
           aria-label="Notifications"
