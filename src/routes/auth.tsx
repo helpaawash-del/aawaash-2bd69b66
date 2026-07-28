@@ -11,9 +11,7 @@ import {
   Loader2,
   Lock,
   User,
-  Fingerprint,
   KeyRound,
-  ShieldCheck,
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
@@ -263,7 +261,7 @@ function AuthPage() {
 /*  Shared pieces                                                      */
 /* ------------------------------------------------------------------ */
 
-function SectionHead({ title, subtitle }: { title: string; subtitle: string }) {
+function SectionHead({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
     <div className="auth-card-in text-center">
       <span className="mx-auto inline-flex items-center gap-1.5 rounded-full bg-primary/[0.08] px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.22em] text-primary">
@@ -276,7 +274,7 @@ function SectionHead({ title, subtitle }: { title: string; subtitle: string }) {
       >
         {title}
       </h2>
-      <p className="mt-1 text-[12.5px] text-muted-foreground sm:text-sm">{subtitle}</p>
+      {subtitle && <p className="mt-1 text-[12.5px] text-muted-foreground sm:text-sm">{subtitle}</p>}
     </div>
   );
 }
@@ -383,7 +381,7 @@ function LoginForm() {
 
   return (
     <section aria-label="Sign in">
-      <SectionHead title="Welcome To Aawaash" subtitle="Sign in to continue to your account" />
+      <SectionHead title="Welcome To Aawaash" />
 
       <form
         onSubmit={onSubmit}
