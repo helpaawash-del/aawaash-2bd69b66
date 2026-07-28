@@ -10,7 +10,7 @@ import {
   Lock,
   User,
   UserRound,
-  Leaf,
+  ShieldCheck,
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
