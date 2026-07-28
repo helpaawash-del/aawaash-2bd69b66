@@ -123,7 +123,7 @@ function EcoHero() {
             />
           </span>
         </h1>
-        <p className="mt-2 max-w-[16rem] text-[12.5px] leading-snug text-muted-foreground sm:max-w-xs sm:text-sm">
+        <p className="mt-2 max-w-[10.5rem] text-[12.5px] leading-snug text-muted-foreground sm:max-w-xs sm:text-sm">
           Green construction for a stronger, smarter future.
         </p>
       </div>
