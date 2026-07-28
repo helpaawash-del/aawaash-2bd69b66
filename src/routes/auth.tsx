@@ -63,12 +63,13 @@ function WaveHero() {
 
       {/* soft outer glow following the curve */}
       <div
-        className="absolute inset-y-0 right-0 w-[96%] scale-[1.03] bg-primary/25 blur-[12px] sm:w-[78%]"
+        className="absolute inset-y-0 right-0 w-[84%] scale-[1.03] bg-primary/25 blur-[12px] sm:w-[74%]"
         style={{ clipPath: "url(#authWave)" }}
       />
       <div
-        className="absolute inset-y-0 right-0 w-[96%] overflow-hidden sm:w-[78%]"
+        className="absolute inset-y-0 right-0 w-[84%] overflow-hidden sm:w-[74%]"
         style={{ clipPath: "url(#authWave)" }}
+
       >
         <img
           src={heroImage}
