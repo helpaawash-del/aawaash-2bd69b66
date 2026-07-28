@@ -57,7 +57,7 @@ const SURFACE = "oklch(0.975 0.012 155)";
 
 function EcoHero() {
   return (
-    <header className="relative h-[clamp(200px,33vh,400px)] w-full shrink-0">
+    <header className="relative h-[clamp(186px,29vh,380px)] w-full shrink-0">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authHeroWave" clipPathUnits="objectBoundingBox">
@@ -209,7 +209,7 @@ function AuthPage() {
 
       <EcoHero />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[38px] sm:max-w-lg sm:px-7 sm:pt-12">
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[34px] sm:max-w-lg sm:px-7 sm:pt-12">
         {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
 
         {/* trust strip */}
@@ -274,7 +274,7 @@ function SectionHead({ title, subtitle }: { title: string; subtitle: string }) {
         <i className="block h-[3px] w-10 rounded-full bg-primary" />
         <i className="block h-[3px] w-[3px] rounded-full bg-primary/60" />
       </span>
-      <p className="mt-2 text-[13px] text-muted-foreground sm:text-sm">{subtitle}</p>
+      <p className="mt-1.5 text-[13px] text-muted-foreground sm:text-sm">{subtitle}</p>
     </div>
   );
 }
@@ -290,7 +290,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <div className="group/field flex items-center gap-3 rounded-[20px] bg-white px-2.5 py-2.5 shadow-[0_18px_38px_-32px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-inset ring-primary/10 transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/45">
+      <div className="group/field flex items-center gap-3 rounded-[20px] bg-white px-2.5 py-2 shadow-[0_18px_38px_-32px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-inset ring-primary/10 transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/45">
         <span
           aria-hidden="true"
           className="grid h-11 w-11 shrink-0 place-items-center rounded-[15px] bg-primary/[0.08] text-primary transition-colors duration-300 group-focus-within/field:bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] group-focus-within/field:text-primary-foreground"
@@ -485,7 +485,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={submitting || success}
-          className="group relative mt-1 flex h-[58px] w-full items-center justify-center overflow-hidden rounded-[22px] bg-[linear-gradient(140deg,oklch(0.38_0.09_155),oklch(0.21_0.05_155))] px-5 text-[16px] font-semibold text-primary-foreground shadow-[0_26px_50px_-24px_oklch(0.3_0.08_155),inset_0_1px_0_oklch(1_0_0/0.18)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          className="group relative mt-1 flex h-[54px] w-full items-center justify-center overflow-hidden rounded-[22px] bg-[linear-gradient(140deg,oklch(0.38_0.09_155),oklch(0.21_0.05_155))] px-5 text-[16px] font-semibold text-primary-foreground shadow-[0_26px_50px_-24px_oklch(0.3_0.08_155),inset_0_1px_0_oklch(1_0_0/0.18)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
           <span
             aria-hidden="true"
