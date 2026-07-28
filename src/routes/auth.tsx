@@ -153,51 +153,39 @@ function AuthPage() {
 
       <WaveHero />
 
-      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 pb-12 pt-8 sm:max-w-lg">
-        {/* Brand */}
-        <Link to="/" className="inline-flex w-fit flex-col gap-2" aria-label="Aawaash home">
-          <svg viewBox="0 0 64 56" className="h-12 w-14 text-primary" fill="none" aria-hidden="true">
-            <g stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round">
-              <path d="M6 52V18l12-8 12 8v34" />
-              <path d="M30 52V26l12-7v33" />
-              <path d="M13 26h5M13 34h5M13 42h5M35 32h4M35 40h4" />
-            </g>
-            <path
-              d="M52 14c-8 2-12 8-11 16 8 1 13-4 13-12 0-2 0-3-2-4Z"
-              fill="currentColor"
-              opacity="0.85"
-            />
-            <path d="M53 15c-6 5-8 9-9 15" stroke="oklch(0.99 0 0)" strokeWidth="1.4" />
-          </svg>
-          <span className="text-[11px] font-extrabold uppercase leading-tight tracking-[0.22em] text-primary">
-            Nature Friendly
-            <br />
-            Constructions
-          </span>
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-6 pt-4 sm:max-w-lg sm:px-6 sm:pt-6">
+        {/* Brand medallion — website logo */}
+        <Link
+          to="/"
+          aria-label="Aawaash home"
+          className="group grid h-16 w-16 shrink-0 place-items-center rounded-[22px] border border-white/70 bg-white/70 shadow-[0_14px_34px_-18px_color-mix(in_oklab,var(--primary)_70%,transparent)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5 sm:h-20 sm:w-20"
+        >
+          <img
+            src={logoAsset.url}
+            alt=""
+            aria-hidden="true"
+            className="h-11 w-11 object-contain sm:h-14 sm:w-14"
+            draggable={false}
+          />
         </Link>
 
-        {/* Leaf medallion */}
-        <div className="mt-10 grid h-24 w-24 place-items-center rounded-full border border-dashed border-primary/30">
-          <div className="grid h-16 w-16 place-items-center rounded-full bg-[oklch(0.95_0.05_155)] shadow-[0_10px_30px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)] ring-4 ring-white/70">
-            <Leaf size={22} className="text-primary" />
-          </div>
-        </div>
-
         {/* Welcome */}
-        <h1 className="mt-8 text-[clamp(2.6rem,11vw,3.6rem)] font-extrabold leading-[0.98] tracking-tight text-[oklch(0.28_0.03_240)]">
-          Welcome
+        <h1
+          className="mt-5 text-[clamp(1.7rem,6.4vw,2.35rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-[oklch(0.26_0.03_160)]"
+          style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+        >
+          Welcome To
           <br />
-          <span className="text-primary">Back</span>
-          <Leaf size={30} className="ml-2 inline-block -translate-y-2 fill-primary/25 text-primary" />
+          <span className="text-primary">Aawaash</span>
         </h1>
-        <p className="mt-4 max-w-[20rem] text-lg leading-snug text-muted-foreground">
-          Let&rsquo;s continue building
-          <br />a <span className="font-semibold text-primary">better</span> tomorrow
+        <p className="mt-2 max-w-[19rem] text-[13px] leading-snug text-muted-foreground sm:text-sm">
+          Let&rsquo;s continue building a <span className="font-semibold text-primary">better</span> tomorrow
         </p>
 
         {/* Card */}
-        <div className="mt-10">
+        <div className="mt-5 sm:mt-7">
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
+
         </div>
       </div>
 
