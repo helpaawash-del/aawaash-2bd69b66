@@ -29,16 +29,16 @@ export function EcoGreeting({ name, style }: { name: string; style: GreetingStyl
         {eyebrow}
       </span>
 
-      <h1 className="mt-3.5 font-brand text-[clamp(1.75rem,6vw,2.75rem)] font-normal italic leading-[1.08] tracking-[-0.018em] text-balance text-foreground">
+      <h1 className="mt-3 max-w-full text-[clamp(1.15rem,3.6vw,1.6rem)] font-semibold leading-[1.15] tracking-[-0.02em] text-pretty break-words text-foreground">
         {style === "minimal" ? "Dashboard" : name}
       </h1>
 
-      <div className="mt-3 flex items-center gap-3">
+      <div className="mt-2.5 flex items-center gap-3">
         <span
           aria-hidden
-          className="h-px w-10 shrink-0 rounded-full bg-gradient-to-r from-primary/70 to-transparent"
+          className="h-px w-8 shrink-0 rounded-full bg-gradient-to-r from-primary/70 to-transparent"
         />
-        <p className="truncate text-[11px] font-medium uppercase leading-[1.4] tracking-[0.16em] text-muted-foreground sm:text-[11.5px]">
+        <p className="truncate text-[10.5px] font-medium uppercase leading-[1.4] tracking-[0.16em] text-muted-foreground">
           {todayLabel()}
         </p>
       </div>

@@ -120,24 +120,33 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
   }
 
   return (
-    <header className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
+    <header className="sticky top-0 z-30 -mx-1 mb-1 grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
       <Link
         to={`${base}/profile` as never}
-        className="flex min-w-0 items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex min-w-0 items-center gap-2.5 rounded-full pr-2 outline-none focus-visible:ring-2 focus-visible:ring-ring"
         aria-label="Open your profile"
       >
-        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={44} />
+        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={40} />
+        <span className="flex min-w-0 flex-col leading-tight">
+          <span className="font-brand text-[17px] font-normal tracking-[-0.01em] text-foreground">
+            Aawaash
+          </span>
+          <span className="truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            {firstName(profile?.full_name)}
+          </span>
+        </span>
       </Link>
       <span aria-hidden />
 
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1.5">
+
         <Link
           to={`${base}/notifications` as never}
           aria-label="Notifications"
           className="relative grid h-11 w-11 min-h-11 min-w-11 place-items-center rounded-full text-foreground transition-transform hover:-translate-y-0.5 active:scale-95 outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Bell size={21} />
-          <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-success ring-2 ring-surface-warm" />
+          <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-primary ring-2 ring-surface" />
         </Link>
 
         <AlertDialog>
@@ -335,7 +344,7 @@ export function Avatar({
         </span>
       )}
       {online && (
-        <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-surface-warm" />
+        <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-primary ring-2 ring-surface" />
       )}
     </span>
   );
