@@ -54,7 +54,7 @@ export const Route = createFileRoute("/auth")({
 
 function WaveHero() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[38vh] min-h-[250px] sm:h-[50vh] md:h-[58vh]">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[34vh] min-h-[200px] sm:h-[50vh] md:h-[58vh]">
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <clipPath id="authWave" clipPathUnits="objectBoundingBox">
@@ -158,7 +158,7 @@ function AuthPage() {
 
       <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:max-w-lg sm:px-6 sm:pt-5">
         {/* Welcome block — logo sits directly above the title */}
-        <div className="mt-[clamp(5.5rem,22vh,16rem)]">
+        <div className="mt-[clamp(3.5rem,17vh,15rem)]">
           <Link
             to="/"
             aria-label="Aawaash home"
@@ -167,13 +167,13 @@ function AuthPage() {
             <img
               src={logoAsset.url}
               alt="Aawaash"
-              className="h-[clamp(4rem,13vw,6rem)] w-auto object-contain drop-shadow-[0_10px_24px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
+              className="h-[clamp(3.2rem,11vw,5.5rem)] w-auto object-contain drop-shadow-[0_10px_24px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
               draggable={false}
             />
           </Link>
 
           <h1
-            className="mt-2 text-[clamp(1.55rem,5.8vw,2.15rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-[oklch(0.26_0.03_160)]"
+            className="mt-2 text-[clamp(1.4rem,5.4vw,2.1rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-[oklch(0.26_0.03_160)]"
             style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
           >
             Welcome To
@@ -186,7 +186,7 @@ function AuthPage() {
         </div>
 
         {/* Card */}
-        <div className="mb-auto mt-4 sm:mt-6">
+        <div className="mb-auto mt-3 sm:mt-6">
 
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
 
