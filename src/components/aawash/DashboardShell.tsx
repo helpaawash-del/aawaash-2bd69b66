@@ -60,7 +60,7 @@ export function DashboardShell({
     .toUpperCase();
 
   return (
-    <div className="relative min-h-screen">
+    <div className={`relative min-h-screen ${role === "super_admin" ? "" : "theme-mono"}`}>
       <AmbientBackground />
 
       {role === "super_admin" && <FloatingSideRail role={role} />}

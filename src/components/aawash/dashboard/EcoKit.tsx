@@ -67,7 +67,7 @@ export function EcoShell({
 
   return (
     <WelcomeContext.Provider value={welcome}>
-      <div className="relative min-h-screen overflow-x-clip bg-surface-warm">
+      <div className="theme-mono relative min-h-screen overflow-x-clip bg-surface-warm">
         {/* ambient light */}
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
           <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
@@ -193,17 +193,18 @@ function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
       data-testid="dock"
       data-dock-open={open ? "true" : "false"}
       style={{ width: dock.width }}
-      className="pointer-events-none fixed inset-y-[20%] left-0 z-40 block transition-[width] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-[width] motion-reduce:transition-none"
+      className="pointer-events-none fixed inset-y-0 left-0 z-40 block h-screen transition-[width] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-[width] motion-reduce:transition-none"
     >
-      <div className="pointer-events-auto relative h-full py-1 pl-2 pr-1.5">
-        {/* Floating capsule shell — glassy deep-forest gradient */}
+      <div className="pointer-events-auto relative h-full pr-1.5">
+        {/* Full-height rail — edge-to-edge, rounded on the inner side only */}
         <div
           aria-hidden
-          className="absolute inset-y-1 left-2 right-1.5 rounded-[30px] bg-gradient-to-b from-forest via-forest to-forest-deep shadow-[0_18px_50px_-18px_rgba(16,50,36,0.65)] ring-1 ring-inset ring-white/12"
+          className="absolute inset-y-0 left-0 right-1.5 rounded-r-[28px] bg-gradient-to-b from-forest via-forest to-forest-deep shadow-[0_18px_50px_-18px_rgba(0,0,0,0.55)] ring-1 ring-inset ring-white/10"
         >
-          <span className="absolute inset-x-0 top-0 h-24 rounded-t-[30px] bg-gradient-to-b from-white/14 to-transparent" />
-          <span className="absolute inset-x-0 bottom-0 h-24 rounded-b-[30px] bg-gradient-to-t from-black/15 to-transparent" />
+          <span className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/10 to-transparent" />
+          <span className="absolute inset-x-0 bottom-0 h-28 rounded-br-[28px] bg-gradient-to-t from-black/25 to-transparent" />
         </div>
+
 
         <div
           className={`relative flex h-full flex-col items-center gap-2 py-4 transition-[padding] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${

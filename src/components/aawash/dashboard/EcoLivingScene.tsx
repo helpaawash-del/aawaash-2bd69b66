@@ -215,7 +215,7 @@ export function EcoLivingScene() {
           decoding="async"
           width={1536}
           height={1152}
-          className="absolute inset-0 mx-auto block h-full w-full bg-transparent object-contain transition-transform duration-300 ease-out will-change-transform [transform:perspective(1100px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))_translate3d(var(--tx,0px),calc(4%_+_var(--ty,0px)),0)] motion-reduce:transform-none motion-reduce:transition-none"
+          className="absolute inset-0 mx-auto block h-full w-full bg-transparent object-contain grayscale contrast-[1.08] transition-transform duration-300 ease-out will-change-transform [transform:perspective(1100px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))_translate3d(var(--tx,0px),calc(4%_+_var(--ty,0px)),0)] motion-reduce:transform-none motion-reduce:transition-none"
         />
       </div>
     </>

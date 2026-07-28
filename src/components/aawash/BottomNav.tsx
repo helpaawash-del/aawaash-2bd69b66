@@ -200,7 +200,7 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
       {/* Ambient emerald bloom under the dock */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-1 mx-auto h-10 max-w-[320px] rounded-full bg-[color:var(--primary,#2E7D5B)]/20 blur-2xl"
+        className="pointer-events-none absolute inset-x-0 bottom-1 mx-auto h-10 max-w-[320px] rounded-full bg-primary/20 blur-2xl"
       />
 
       <ul
@@ -208,12 +208,12 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
         role="toolbar"
         aria-orientation="horizontal"
         aria-label="Dock destinations"
-        className="pointer-events-auto relative mx-auto flex h-[66px] w-full max-w-[420px] items-stretch justify-between gap-0.5 rounded-[30px] border border-white/60 bg-white/72 p-1.5 shadow-[0_24px_60px_-18px_rgba(46,125,91,0.45),0_4px_14px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-black/5 backdrop-blur-2xl"
+        className="pointer-events-auto relative mx-auto flex h-[66px] w-full max-w-[420px] items-stretch justify-between gap-0.5 rounded-[30px] border border-white/60 bg-white/72 p-1.5 shadow-[0_24px_60px_-18px_rgba(15,23,42,0.28),0_4px_14px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-black/5 backdrop-blur-2xl"
       >
         {/* Magnetic emerald puck */}
         <li
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-1.5 overflow-hidden rounded-[22px] bg-gradient-to-br from-[#2E7D5B] via-[#35916A] to-[#43A97C] shadow-[0_10px_22px_-8px_rgba(46,125,91,0.7),inset_0_1px_1px_rgba(255,255,255,0.4)] motion-safe:transition-[transform,width,opacity] motion-safe:duration-[420ms] motion-reduce:transition-none"
+          className="pointer-events-none absolute inset-y-1.5 overflow-hidden rounded-[22px] bg-gradient-to-br from-[color:var(--primary)] via-[color:color-mix(in_oklab,var(--primary)_86%,white)] to-[color:var(--leaf)] shadow-[0_10px_22px_-8px_color-mix(in_oklab,var(--primary)_55%,transparent),inset_0_1px_1px_rgba(255,255,255,0.4)] motion-safe:transition-[transform,width,opacity] motion-safe:duration-[420ms] motion-reduce:transition-none"
           style={{
             width: puck.w ? `${puck.w}px` : 0,
             transform: `translate3d(${puck.x}px, 0, 0)`,
@@ -256,8 +256,8 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 }}
                 onKeyDown={(e) => onKeyDown(e, i)}
                 data-testid={`dock-link-${label.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`group relative flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-[22px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[#2E7D5B]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
-                  active ? "text-white" : "text-slate-500 hover:text-[#2E7D5B]"
+                className={`group relative flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-[22px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+                  active ? "text-white" : "text-slate-500 hover:text-primary"
                 }`}
               >
                 <span
