@@ -22,7 +22,7 @@ import {
   Zap,
 } from "lucide-react";
 
-import { EcoLivingScene } from "@/components/aawash/dashboard/EcoLivingScene";
+import { RankRing } from "@/components/aawash/dashboard/RankRing";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -99,6 +99,9 @@ function MemberContent() {
   const rank = board.data?.members.find((m) => m.id === myId)?.rank ?? null;
   const myScore = Number(board.data?.members.find((m) => m.id === myId)?.score ?? 0);
   const topBoard = (board.data?.members ?? []).slice(0, 5);
+  const boardTotal = board.data?.members.length ?? 0;
+  const rankPct =
+    rank && boardTotal ? Math.round(((boardTotal - rank + 1) / boardTotal) * 100) : 0;
 
   const xpGoal = Math.max(100, Math.round(myScore * 1.6) || 100);
 
@@ -110,9 +113,17 @@ function MemberContent() {
           <EcoHeroGreeting name={displayName} />
 
           <div className="mt-5 sm:mt-7">
-            <EcoLivingScene />
+            <RankRing
+              percent={rankPct}
+              rank={rank}
+              total={boardTotal || null}
+              label="Your rank"
+              caption="In your team"
+              loading={board.isLoading}
+            />
           </div>
         </div>
+
 
         <div className="grid content-start gap-3">
           <LightPod
