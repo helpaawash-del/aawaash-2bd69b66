@@ -214,10 +214,26 @@ function AuthPage() {
 
       <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[clamp(66px,11vh,104px)] sm:max-w-lg sm:px-7">
         {/* floating glass sheet */}
-        <div className="auth-sheet relative rounded-[30px] bg-white/70 p-[clamp(1rem,3.6vw,1.6rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
+        <div className="auth-sheet relative overflow-hidden rounded-[30px] bg-white/72 p-[clamp(1rem,3.6vw,1.6rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-8 -top-px h-px bg-gradient-to-r from-transparent via-primary/45 to-transparent"
+          />
+          {/* HUD corner ticks */}
+          <span aria-hidden="true" className="pointer-events-none absolute left-3 top-3 h-4 w-4 rounded-tl-lg border-l border-t border-primary/25" />
+          <span aria-hidden="true" className="pointer-events-none absolute right-3 top-3 h-4 w-4 rounded-tr-lg border-r border-t border-primary/25" />
+          <span aria-hidden="true" className="pointer-events-none absolute bottom-3 left-3 h-4 w-4 rounded-bl-lg border-b border-l border-primary/25" />
+          <span aria-hidden="true" className="pointer-events-none absolute bottom-3 right-3 h-4 w-4 rounded-br-lg border-b border-r border-primary/25" />
+          {/* faint tech grid inside the sheet */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 opacity-[0.35]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, color-mix(in oklab, var(--primary) 7%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--primary) 7%, transparent) 1px, transparent 1px)",
+              backgroundSize: "34px 34px",
+              maskImage: "radial-gradient(110% 90% at 50% 0%, #000 0%, transparent 72%)",
+            }}
           />
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
         </div>
