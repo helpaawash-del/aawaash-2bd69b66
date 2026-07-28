@@ -154,37 +154,37 @@ function AuthPage() {
 
       <WaveHero />
 
-      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-6 pt-4 sm:max-w-lg sm:px-6 sm:pt-6">
-        {/* Brand medallion — website logo */}
-        <Link
-          to="/"
-          aria-label="Aawaash home"
-          className="group grid h-16 w-16 shrink-0 place-items-center rounded-[22px] border border-white/70 bg-white/70 shadow-[0_14px_34px_-18px_color-mix(in_oklab,var(--primary)_70%,transparent)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5 sm:h-20 sm:w-20"
-        >
-          <img
-            src={logoAsset.url}
-            alt=""
-            aria-hidden="true"
-            className="h-11 w-11 object-contain sm:h-14 sm:w-14"
-            draggable={false}
-          />
-        </Link>
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:max-w-lg sm:px-6 sm:pt-5">
+        {/* Welcome block — logo sits directly above the title */}
+        <div className="mt-[clamp(9rem,25vh,15rem)]">
+          <Link
+            to="/"
+            aria-label="Aawaash home"
+            className="inline-flex rounded-2xl transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[oklch(0.975_0.012_155)]"
+          >
+            <img
+              src={logoAsset.url}
+              alt="Aawaash"
+              className="h-[clamp(4rem,13vw,6rem)] w-auto object-contain drop-shadow-[0_10px_24px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
+              draggable={false}
+            />
+          </Link>
 
-        {/* Welcome */}
-        <h1
-          className="mt-[26vh] text-[clamp(1.7rem,6.4vw,2.35rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-[oklch(0.26_0.03_160)] sm:mt-[28vh]"
-          style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
-        >
-          Welcome To
-          <br />
-          <span className="text-primary">Aawaash</span>
-        </h1>
-        <p className="mt-2 max-w-[19rem] text-[13px] leading-snug text-muted-foreground sm:text-sm">
-          Let&rsquo;s continue building a <span className="font-semibold text-primary">better</span> tomorrow
-        </p>
+          <h1
+            className="mt-2 text-[clamp(1.55rem,5.8vw,2.15rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-[oklch(0.26_0.03_160)]"
+            style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+          >
+            Welcome To
+            <br />
+            <span className="text-primary">Aawaash</span>
+          </h1>
+          <p className="mt-1.5 max-w-[19rem] text-[12.5px] leading-snug text-muted-foreground sm:text-sm">
+            Let&rsquo;s continue building a <span className="font-semibold text-primary">better</span> tomorrow
+          </p>
+        </div>
 
         {/* Card */}
-        <div className="mb-auto mt-5 sm:mt-7">
+        <div className="mb-auto mt-4 sm:mt-6">
 
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
 
@@ -222,27 +222,33 @@ function AuthPage() {
 
 function GlassCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="auth-card-in relative overflow-hidden rounded-[28px] border border-white/70 bg-white/60 p-5 shadow-[0_30px_70px_-34px_color-mix(in_oklab,var(--primary)_55%,transparent)] backdrop-blur-2xl sm:rounded-[32px] sm:p-7">
-      {/* futuristic sheen + hairlines */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/10 blur-2xl" />
+    <section
+      aria-label={title}
+      className="auth-card-in relative overflow-hidden rounded-[26px] border border-white/70 bg-white/55 p-4 shadow-[0_34px_80px_-40px_color-mix(in_oklab,var(--primary)_60%,transparent)] backdrop-blur-2xl sm:rounded-[30px] sm:p-6"
+    >
+      {/* futuristic sheen, hairlines + corner ticks */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-primary/12 blur-3xl" />
+      <div className="pointer-events-none absolute left-3 top-3 h-4 w-4 rounded-tl-md border-l border-t border-primary/35" />
+      <div className="pointer-events-none absolute bottom-3 right-3 h-4 w-4 rounded-br-md border-b border-r border-primary/35" />
 
       <div className="flex items-center gap-3">
-        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/80 bg-white/90 text-primary shadow-[0_10px_24px_-14px_color-mix(in_oklab,var(--primary)_70%,transparent)]">
-          <ShieldCheck size={19} />
+        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] border border-white/80 bg-gradient-to-br from-white to-white/60 text-primary shadow-[0_10px_24px_-14px_color-mix(in_oklab,var(--primary)_70%,transparent)]">
+          <ShieldCheck size={18} aria-hidden="true" />
         </div>
         <div className="min-w-0">
           <h2
-            className="truncate text-[19px] font-semibold tracking-[-0.01em] text-[oklch(0.26_0.03_160)] sm:text-xl"
-            style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif' }}
+            className="truncate text-[18px] font-semibold tracking-[-0.015em] text-[oklch(0.26_0.03_160)] sm:text-[20px]"
+            style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
           >
             {title}
           </h2>
-          <span className="mt-1 block h-[2px] w-9 rounded-full bg-gradient-to-r from-primary to-primary/10" />
+          <span className="mt-1 block h-[2px] w-10 rounded-full bg-gradient-to-r from-primary to-primary/10" />
         </div>
       </div>
-      <div className="mt-5">{children}</div>
-    </div>
+      <div className="mt-4">{children}</div>
+    </section>
   );
 }
 
