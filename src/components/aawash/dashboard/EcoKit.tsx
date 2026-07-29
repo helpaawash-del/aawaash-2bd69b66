@@ -66,12 +66,18 @@ export function EcoShell({
   return (
     <WelcomeContext.Provider value={welcome}>
       <div className="theme-mono relative min-h-screen overflow-x-clip bg-surface-warm">
-        {/* ambient light */}
+        {/* ambient light + futuristic apartment wireframe */}
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+          <img
+            src={ecoTowerWire.url}
+            alt=""
+            className="absolute left-1/2 top-1/2 w-[min(140vw,1100px)] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain opacity-10"
+          />
           <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
           <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-leaf/10 blur-3xl" />
           <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
         </div>
+
 
         <EcoDock role={role} />
 
