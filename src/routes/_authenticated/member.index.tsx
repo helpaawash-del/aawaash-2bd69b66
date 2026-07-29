@@ -108,13 +108,30 @@ function MemberContent() {
   return (
     <EcoShell role="member" profile={profile}>
       {/* ---------------- Focus hero ---------------- */}
-      <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
+      <section className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
         </div>
+        <Link
+          to="/member/profile"
+          aria-label="Open your profile"
+          className="mt-1 shrink-0 rounded-full outline-none transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Avatar name={profile?.full_name} src={profile?.avatar_url} size={52} online />
+        </Link>
+      </section>
 
-
-
+      {/* ---------------- Rank + pods ---------------- */}
+      <section className="mt-4 grid grid-cols-[minmax(0,1fr)_100px] gap-3 sm:mt-5 sm:grid-cols-[minmax(0,1fr)_132px] sm:gap-4">
+        <RankRing
+          percent={rankPct}
+          rank={rank}
+          total={boardTotal || null}
+          label="Your rank"
+          caption="In your team"
+          info="Your score compares your approved sales value against the top performer in your team. 100% means you lead the leaderboard; the position shows where you sit among all teammates right now."
+          loading={board.isLoading}
+        />
 
         <div className="grid content-start gap-3">
           <LightPod
@@ -141,18 +158,6 @@ function MemberContent() {
         </div>
       </section>
 
-      {/* ---------------- Rank ---------------- */}
-      <section className="mt-4 sm:mt-5">
-        <RankRing
-          percent={rankPct}
-          rank={rank}
-          total={boardTotal || null}
-          label="Your rank"
-          caption="In your team"
-          info="Your score compares your approved sales value against the top performer in your team. 100% means you lead the leaderboard; the position shows where you sit among all teammates right now."
-          loading={board.isLoading}
-        />
-      </section>
 
 
 

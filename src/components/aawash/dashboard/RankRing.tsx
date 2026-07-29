@@ -105,12 +105,12 @@ export function RankRing({
         ) : null}
       </div>
 
-      <div className="relative flex items-center gap-5 sm:gap-7">
+      <div className="relative flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7">
         <div
-          className="relative grid shrink-0 place-items-center"
+          className="relative grid shrink-0 place-items-center self-center sm:self-auto"
           role="img"
           aria-label={`${label}: ${rounded} percent`}
-          style={{ width: SIZE * 0.82, height: SIZE * 0.82 }}
+          style={{ width: SIZE * 0.78, height: SIZE * 0.78 }}
         >
           <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-full w-full -rotate-90">
             <defs>
@@ -144,17 +144,13 @@ export function RankRing({
             {loading ? (
               <div className="eco-skel h-8 w-16 rounded-full" />
             ) : (
-              <>
-                <span className="font-brand text-[clamp(1.7rem,6vw,2.2rem)] leading-none tracking-[-0.02em] text-foreground tabular-nums">
-                  {rounded}
-                  <span className="align-super text-[0.4em] font-semibold text-primary">%</span>
-                </span>
-                <span className="mt-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                  Score
-                </span>
-              </>
+              <span className="font-brand text-[clamp(1.7rem,6vw,2.2rem)] leading-none tracking-[-0.02em] text-foreground tabular-nums">
+                {rounded}
+                <span className="align-super text-[0.4em] font-semibold text-primary">%</span>
+              </span>
             )}
           </div>
+
         </div>
 
         <div className="min-w-0 flex-1">

@@ -10,6 +10,7 @@ import { homePathForRole } from "@/lib/auth";
 import { useWelcome, type WelcomeState } from "@/hooks/useWelcome";
 import { EcoGreeting } from "@/components/aawash/dashboard/EcoGreeting";
 import { EcoDock } from "@/components/aawash/dashboard/EcoDock";
+import ecoTowerWire from "@/assets/eco-tower-wire.png.asset.json";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -66,12 +67,18 @@ export function EcoShell({
   return (
     <WelcomeContext.Provider value={welcome}>
       <div className="theme-mono relative min-h-screen overflow-x-clip bg-surface-warm">
-        {/* ambient light */}
+        {/* ambient light + futuristic apartment wireframe */}
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+          <img
+            src={ecoTowerWire.url}
+            alt=""
+            className="absolute left-1/2 top-1/2 w-[min(140vw,1100px)] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain opacity-10"
+          />
           <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
           <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-leaf/10 blur-3xl" />
           <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
         </div>
+
 
         <EcoDock role={role} />
 
@@ -96,11 +103,7 @@ export function EcoHeroGreeting({ name }: { name: string }) {
   return <EcoGreeting name={name} style={welcome?.style ?? "time"} />;
 }
 
-function firstName(full?: string | null) {
-  return (full || "there").trim().split(/\s+/)[0] || "there";
-}
-
-function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfile | null }) {
+function WelcomeHeader({ role }: { role: AppRole; profile: AawashProfile | null }) {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [signingOut, setSigningOut] = useState(false);
@@ -118,24 +121,7 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
   }
 
   return (
-    <header className="sticky top-0 z-30 -mx-1 mb-1 grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
-      <Link
-        to={`${base}/profile` as never}
-        className="flex min-w-0 items-center gap-2.5 rounded-full pr-2 outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        aria-label="Open your profile"
-      >
-        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={40} />
-        <span className="flex min-w-0 flex-col leading-tight">
-          <span className="font-brand text-[17px] font-normal tracking-[-0.01em] text-foreground">
-            Aawaash
-          </span>
-          <span className="truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            {firstName(profile?.full_name)}
-          </span>
-        </span>
-      </Link>
-      <span aria-hidden />
-
+    <header className="sticky top-0 z-30 -mx-1 mb-1 flex items-center justify-end gap-3 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
       <div className="flex shrink-0 items-center gap-1.5">
 
         <Link

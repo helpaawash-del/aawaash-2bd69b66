@@ -125,14 +125,32 @@ function LeaderContent() {
   return (
     <EcoShell role="team_leader" profile={profile}>
       {/* ---------------- Focus hero ---------------- */}
-      <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
-        <div className="min-w-0 pt-4 sm:pt-6">
+      <section className="flex items-start justify-between gap-3 pt-4 sm:pt-6">
+        <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
         </div>
+        <Link
+          to="/leader/profile"
+          aria-label="Open your profile"
+          className="mt-1 shrink-0 rounded-full outline-none transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Avatar name={profile?.full_name} src={profile?.avatar_url} size={52} online />
+        </Link>
+      </section>
 
+      {/* ---------------- Team rank + pods ---------------- */}
+      <section className="mt-4 grid grid-cols-[minmax(0,1fr)_100px] gap-3 sm:mt-5 sm:grid-cols-[minmax(0,1fr)_132px] sm:gap-4">
+        <RankRing
+          percent={rankPct}
+          rank={activeMembers || null}
+          total={o?.memberCount ?? null}
+          label="Team rank"
+          caption="Active members"
+          info="Your team score blends how many members are actively selling with your team revenue against its monthly target. Position shows active members out of your full team size — grow either number to push the score up."
+          loading={overview.isLoading}
+        />
 
-
-        <div className="grid content-start gap-3 pt-4 sm:pt-6">
+        <div className="grid content-start gap-3">
           <LightPod
             icon={<TrendingUp size={15} />}
             label="Total sales"
@@ -151,18 +169,6 @@ function LeaderContent() {
         </div>
       </section>
 
-      {/* ---------------- Team rank ---------------- */}
-      <section className="mt-4 sm:mt-5">
-        <RankRing
-          percent={rankPct}
-          rank={activeMembers || null}
-          total={o?.memberCount ?? null}
-          label="Team rank"
-          caption="Active members"
-          info="Your team score blends how many members are actively selling with your team revenue against its monthly target. Position shows active members out of your full team size — grow either number to push the score up."
-          loading={overview.isLoading}
-        />
-      </section>
 
 
 
