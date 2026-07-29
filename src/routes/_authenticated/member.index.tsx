@@ -141,6 +141,21 @@ function MemberContent() {
         </div>
       </section>
 
+      {/* ---------------- Rank ---------------- */}
+      <section className="mt-4 sm:mt-5">
+        <RankRing
+          percent={rankPct}
+          rank={rank}
+          total={boardTotal || null}
+          label="Your rank"
+          caption="In your team"
+          info="Your score compares your approved sales value against the top performer in your team. 100% means you lead the leaderboard; the position shows where you sit among all teammates right now."
+          loading={board.isLoading}
+        />
+      </section>
+
+
+
       {/* ---------------- Command bar ---------------- */}
       <section className="mt-4 sm:mt-5">
         <AskBar to="/member/sales" placeholder="Search your sales, referrals or tips…" />
