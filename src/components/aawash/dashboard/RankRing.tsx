@@ -73,7 +73,7 @@ export function RankRing({
       {/* header row */}
       <div className="relative mb-4 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="truncate text-[13px] font-bold tracking-[-0.01em] text-foreground">
+          <h2 className="truncate text-[14px] font-bold tracking-normal text-foreground">
             {label}
           </h2>
           <p className="mt-0.5 text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">

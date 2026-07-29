@@ -77,7 +77,7 @@ export function EcoShell({
 
         <div
           data-testid="dock-content"
-          className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 sm:max-w-xl sm:px-6 md:max-w-3xl lg:max-w-6xl lg:pb-32 lg:px-10 xl:max-w-7xl"
+          className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-[calc(10.5rem+env(safe-area-inset-bottom))] pt-5 sm:max-w-xl sm:px-6 md:max-w-3xl lg:max-w-6xl lg:pb-40 lg:px-10 xl:max-w-7xl"
         >
 
           <WelcomeHeader role={role} profile={profile} />
