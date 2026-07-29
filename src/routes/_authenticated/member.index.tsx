@@ -119,8 +119,10 @@ function MemberContent() {
               total={boardTotal || null}
               label="Your rank"
               caption="In your team"
+              info="Your score compares your approved sales value against the top performer in your team. 100% means you lead the leaderboard; the position shows where you sit among all teammates right now."
               loading={board.isLoading}
             />
+
           </div>
         </div>
 
