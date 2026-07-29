@@ -10,6 +10,7 @@ import { homePathForRole } from "@/lib/auth";
 import { useWelcome, type WelcomeState } from "@/hooks/useWelcome";
 import { EcoGreeting } from "@/components/aawash/dashboard/EcoGreeting";
 import { EcoDock } from "@/components/aawash/dashboard/EcoDock";
+import ecoTowerWire from "@/assets/eco-tower-wire.png.asset.json";
 import {
   AlertDialog,
   AlertDialogAction,
