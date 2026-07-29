@@ -1,16 +1,15 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Bell, LogOut, Loader2, Mic, Settings, Sparkles, ChevronRight } from "lucide-react";
+import { Bell, LogOut, Loader2, Mic, Sparkles, ChevronRight } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
-import { itemsForRole } from "@/components/aawash/BottomNav";
 import type { AawashProfile } from "@/hooks/useSession";
 import type { AppRole } from "@/lib/auth";
 import { homePathForRole } from "@/lib/auth";
-import { useDock, type DockState } from "@/hooks/useDock";
 import { useWelcome, type WelcomeState } from "@/hooks/useWelcome";
 import { EcoGreeting } from "@/components/aawash/dashboard/EcoGreeting";
+import { EcoDock } from "@/components/aawash/dashboard/EcoDock";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,7 +61,6 @@ export function EcoShell({
   profile: AawashProfile | null;
   children: React.ReactNode;
 }) {
-  const dock = useDock();
   const welcome = useWelcome();
 
   return (
@@ -179,136 +177,6 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
         </AlertDialog>
       </div>
     </header>
-  );
-}
-
-/** Deep-forest wave rail — full dock with brand, labelled nav and footer. */
-function WaveRail({ role, dock }: { role: AppRole; dock: DockState }) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const items = itemsForRole(role);
-  const base = homePathForRole(role);
-  const { open, canExpand, expanded, toggle, section, setSection } = dock;
-
-  const pathMatch = items.find(
-    (item) =>
-      pathname === item.to || (item.activePrefix ? pathname.startsWith(item.activePrefix) : false),
-  );
-  const activeKey =
-    pathMatch?.key ?? (section && items.some((i) => i.key === section) ? section : null);
-
-  return (
-    <aside
-      aria-label="Primary navigation"
-      data-testid="dock"
-      data-dock-open={open ? "true" : "false"}
-      style={{ width: dock.width }}
-      className="pointer-events-none fixed inset-y-0 left-0 z-40 block h-screen transition-[width] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-[width] motion-reduce:transition-none"
-    >
-      <div className="pointer-events-auto relative h-full pr-1.5">
-        {/* Full-height rail — edge-to-edge, rounded on the inner side only */}
-        <div
-          aria-hidden
-          className="absolute inset-y-0 left-0 right-1.5 rounded-r-[28px] bg-gradient-to-b from-forest via-forest to-forest-deep shadow-[0_18px_50px_-18px_rgba(0,0,0,0.55)] ring-1 ring-inset ring-white/10"
-        >
-          <span className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/10 to-transparent" />
-          <span className="absolute inset-x-0 bottom-0 h-28 rounded-br-[28px] bg-gradient-to-t from-black/25 to-transparent" />
-        </div>
-
-
-        <div
-          className={`relative flex h-full flex-col items-center gap-2 py-4 transition-[padding] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
-            open ? "pr-1.5" : "pr-1"
-          }`}
-        >
-
-          <nav className="flex w-full flex-1 flex-col items-center justify-center gap-1.5">
-            {items.map((item) => {
-              const Icon = item.icon;
-              const active = activeKey === item.key;
-              return (
-                <Link
-                  key={item.key}
-                  to={item.to}
-                  hash={item.hash}
-                  preload="render"
-                  title={item.description}
-                  aria-label={item.label}
-                  aria-current={active ? "page" : undefined}
-                  data-dock-item={item.key}
-                  data-active={active ? "true" : "false"}
-                  onClick={() => setSection(item.key)}
-                  className={`group relative flex flex-col items-center gap-1 overflow-hidden rounded-[16px] px-1 py-2.5 text-[9.5px] font-semibold tracking-[0.02em] transition-[background-color,color,width,box-shadow,transform] duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 active:scale-[0.93] motion-reduce:transition-none ${
-                    open ? "w-[80px] rounded-[20px] py-3" : "w-[44px]"
-                  } ${
-                    active
-                      ? "bg-white/95 text-primary shadow-[0_10px_22px_-10px_rgba(0,0,0,0.5)]"
-                      : "text-forest-foreground/65 hover:-translate-y-[1px] hover:bg-white/12 hover:text-forest-foreground hover:shadow-[0_6px_18px_-10px_rgba(0,0,0,0.6)]"
-                  }`}
-                >
-                  {/* sheen sweep on hover */}
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:translate-x-full group-hover:opacity-100 motion-reduce:hidden"
-                  />
-                  <span
-                    aria-hidden
-                    className={`absolute left-0 top-1/2 w-[3px] -translate-y-1/2 rounded-r-full bg-primary transition-all duration-300 ${
-                      active ? "h-6 opacity-100" : "h-0 opacity-0"
-                    }`}
-                  />
-                  <Icon
-                    size={18}
-                    className="relative shrink-0 transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-0.5 group-hover:scale-110 group-active:scale-95 motion-reduce:transition-none"
-                  />
-
-                  <span
-                    className={`w-full origin-top truncate text-center transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
-                      open ? "max-h-5 scale-100 opacity-100" : "max-h-0 scale-95 opacity-0"
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                </Link>
-
-              );
-            })}
-          </nav>
-
-          <span aria-hidden className="h-px w-7 shrink-0 rounded-full bg-white/15" />
-
-          {canExpand && (
-
-            <button
-              type="button"
-              onClick={toggle}
-              data-testid="dock-toggle"
-              aria-expanded={expanded}
-              aria-label={expanded ? "Collapse navigation" : "Expand navigation"}
-              title={expanded ? "Collapse navigation" : "Expand navigation"}
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl text-forest-foreground/70 transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/10 hover:text-forest-foreground outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/70 motion-reduce:transition-none"
-            >
-              <ChevronRight
-                size={19}
-                className={`transition-transform duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
-                  open ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-          )}
-
-          <Link
-            to={`${base}/profile` as never}
-            aria-label="Account settings"
-            title="Account settings"
-            className={`grid shrink-0 place-items-center rounded-2xl text-forest-foreground/70 transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/10 hover:text-forest-foreground outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/70 motion-reduce:transition-none ${
-              open ? "h-12 w-12" : "h-10 w-10"
-            }`}
-          >
-            <Settings size={19} />
-          </Link>
-        </div>
-      </div>
-    </aside>
   );
 }
 
