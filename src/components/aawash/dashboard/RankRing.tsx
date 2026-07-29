@@ -105,12 +105,12 @@ export function RankRing({
         ) : null}
       </div>
 
-      <div className="relative flex items-center gap-5 sm:gap-7">
+      <div className="relative flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7">
         <div
-          className="relative grid shrink-0 place-items-center"
+          className="relative grid shrink-0 place-items-center self-center sm:self-auto"
           role="img"
           aria-label={`${label}: ${rounded} percent`}
-          style={{ width: SIZE * 0.82, height: SIZE * 0.82 }}
+          style={{ width: SIZE * 0.78, height: SIZE * 0.78 }}
         >
           <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-full w-full -rotate-90">
             <defs>
