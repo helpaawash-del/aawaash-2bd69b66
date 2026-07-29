@@ -96,11 +96,7 @@ export function EcoHeroGreeting({ name }: { name: string }) {
   return <EcoGreeting name={name} style={welcome?.style ?? "time"} />;
 }
 
-function firstName(full?: string | null) {
-  return (full || "there").trim().split(/\s+/)[0] || "there";
-}
-
-function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfile | null }) {
+function WelcomeHeader({ role }: { role: AppRole; profile: AawashProfile | null }) {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [signingOut, setSigningOut] = useState(false);
