@@ -136,8 +136,10 @@ function LeaderContent() {
               total={o?.memberCount ?? null}
               label="Team rank"
               caption="Active members"
+              info="Your team score blends how many members are actively selling with your team revenue against its monthly target. Position shows active members out of your full team size — grow either number to push the score up."
               loading={overview.isLoading}
             />
+
           </div>
         </div>
 
