@@ -144,17 +144,13 @@ export function RankRing({
             {loading ? (
               <div className="eco-skel h-8 w-16 rounded-full" />
             ) : (
-              <>
-                <span className="font-brand text-[clamp(1.7rem,6vw,2.2rem)] leading-none tracking-[-0.02em] text-foreground tabular-nums">
-                  {rounded}
-                  <span className="align-super text-[0.4em] font-semibold text-primary">%</span>
-                </span>
-                <span className="mt-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                  Score
-                </span>
-              </>
+              <span className="font-brand text-[clamp(1.7rem,6vw,2.2rem)] leading-none tracking-[-0.02em] text-foreground tabular-nums">
+                {rounded}
+                <span className="align-super text-[0.4em] font-semibold text-primary">%</span>
+              </span>
             )}
           </div>
+
         </div>
 
         <div className="min-w-0 flex-1">
