@@ -151,6 +151,21 @@ function LeaderContent() {
         </div>
       </section>
 
+      {/* ---------------- Team rank ---------------- */}
+      <section className="mt-4 sm:mt-5">
+        <RankRing
+          percent={rankPct}
+          rank={activeMembers || null}
+          total={o?.memberCount ?? null}
+          label="Team rank"
+          caption="Active members"
+          info="Your team score blends how many members are actively selling with your team revenue against its monthly target. Position shows active members out of your full team size — grow either number to push the score up."
+          loading={overview.isLoading}
+        />
+      </section>
+
+
+
       {/* ---------------- Command bar ---------------- */}
       <section className="mt-4 sm:mt-5">
         <AskBar to="/leader/members" placeholder="Search members, sales or projects…" />
