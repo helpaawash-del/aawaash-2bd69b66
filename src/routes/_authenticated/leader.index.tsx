@@ -128,18 +128,8 @@ function LeaderContent() {
       <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
         <div className="min-w-0 pt-4 sm:pt-6">
           <EcoHeroGreeting name={displayName} />
-
-          <div className="mt-6 sm:mt-8">
-            <RankRing
-              percent={rankPct}
-              rank={activeMembers || null}
-              total={o?.memberCount ?? null}
-              label="Team rank"
-              caption="Active members"
-              loading={overview.isLoading}
-            />
-          </div>
         </div>
+
 
 
         <div className="grid content-start gap-3 pt-4 sm:pt-6">
@@ -160,6 +150,21 @@ function LeaderContent() {
           />
         </div>
       </section>
+
+      {/* ---------------- Team rank ---------------- */}
+      <section className="mt-4 sm:mt-5">
+        <RankRing
+          percent={rankPct}
+          rank={activeMembers || null}
+          total={o?.memberCount ?? null}
+          label="Team rank"
+          caption="Active members"
+          info="Your team score blends how many members are actively selling with your team revenue against its monthly target. Position shows active members out of your full team size — grow either number to push the score up."
+          loading={overview.isLoading}
+        />
+      </section>
+
+
 
       {/* ---------------- Command bar ---------------- */}
       <section className="mt-4 sm:mt-5">

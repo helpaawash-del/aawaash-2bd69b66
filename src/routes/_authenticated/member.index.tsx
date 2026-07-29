@@ -111,18 +111,9 @@ function MemberContent() {
       <section className="grid grid-cols-[minmax(0,1fr)_92px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-5">
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
-
-          <div className="mt-5 sm:mt-7">
-            <RankRing
-              percent={rankPct}
-              rank={rank}
-              total={boardTotal || null}
-              label="Your rank"
-              caption="In your team"
-              loading={board.isLoading}
-            />
-          </div>
         </div>
+
+
 
 
         <div className="grid content-start gap-3">
@@ -149,6 +140,21 @@ function MemberContent() {
           />
         </div>
       </section>
+
+      {/* ---------------- Rank ---------------- */}
+      <section className="mt-4 sm:mt-5">
+        <RankRing
+          percent={rankPct}
+          rank={rank}
+          total={boardTotal || null}
+          label="Your rank"
+          caption="In your team"
+          info="Your score compares your approved sales value against the top performer in your team. 100% means you lead the leaderboard; the position shows where you sit among all teammates right now."
+          loading={board.isLoading}
+        />
+      </section>
+
+
 
       {/* ---------------- Command bar ---------------- */}
       <section className="mt-4 sm:mt-5">
