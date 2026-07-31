@@ -214,14 +214,17 @@ function AuthPage() {
         className="pointer-events-none absolute -right-28 bottom-[-10vh] h-[48vh] w-[48vh] rounded-full opacity-60 blur-[100px]"
         style={{ background: "radial-gradient(circle, oklch(0.86 0.09 175 / 0.55), transparent 70%)" }}
       />
-      {/* society wireframe under construction — low visibility base layer */}
+      {/* under-construction society skyline — full-bleed, starts 10% below mid-screen */}
       <img
-        src={wireAsset.url}
+        src={societyWire}
         alt=""
         aria-hidden="true"
         draggable={false}
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 max-h-[52vh] w-full select-none object-contain object-bottom opacity-[0.12]"
-        style={{ maskImage: "linear-gradient(to top, #000 45%, transparent 96%)" }}
+        loading="lazy"
+        width={1920}
+        height={640}
+        className="pointer-events-none absolute inset-x-0 bottom-0 top-[60%] z-0 w-full select-none object-cover object-bottom opacity-[0.14]"
+        style={{ maskImage: "linear-gradient(to top, #000 55%, transparent 98%)" }}
       />
       {/* faint blueprint grid at the base */}
       <div
