@@ -321,20 +321,38 @@ function AuthPage() {
 /*  Shared pieces                                                      */
 /* ------------------------------------------------------------------ */
 
-function SectionHead({ title, subtitle }: { title: string; subtitle?: string }) {
+function SectionHead({
+  eyebrow = "Aawaash",
+  eyebrowLarge = false,
+  title,
+  subtitle,
+}: {
+  eyebrow?: string;
+  eyebrowLarge?: boolean;
+  title?: string;
+  subtitle?: string;
+}) {
   return (
     <div className="auth-card-in text-center">
-      <span className="mx-auto inline-flex items-center gap-1.5 rounded-full bg-primary/[0.08] px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.22em] text-primary">
-        <Leaf size={12} aria-hidden="true" />
-        Aawaash
-      </span>
-      <h2
-        className="mt-2 text-[clamp(1.4rem,5.8vw,1.9rem)] font-bold leading-[1.12] tracking-[-0.03em] text-[oklch(0.22_0.03_160)]"
-        style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+      <span
+        className={
+          eyebrowLarge
+            ? "mx-auto inline-flex items-center gap-2 rounded-lg bg-primary/[0.08] px-4 py-1.5 text-[clamp(1rem,4.4vw,1.35rem)] font-extrabold uppercase tracking-[0.26em] text-primary"
+            : "mx-auto inline-flex items-center gap-1.5 rounded-full bg-primary/[0.08] px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.22em] text-primary"
+        }
       >
-        {title}
-      </h2>
-      {subtitle && <p className="mt-1 text-[12.5px] text-muted-foreground sm:text-sm">{subtitle}</p>}
+        <Leaf size={eyebrowLarge ? 18 : 12} aria-hidden="true" />
+        {eyebrow}
+      </span>
+      {title && (
+        <h2
+          className="mt-2 text-[clamp(1.4rem,5.8vw,1.9rem)] font-bold leading-[1.12] tracking-[-0.03em] text-[oklch(0.22_0.03_160)]"
+          style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+        >
+          {title}
+        </h2>
+      )}
+      {subtitle && <p className="mt-1.5 text-[12.5px] text-muted-foreground sm:text-sm">{subtitle}</p>}
     </div>
   );
 }
