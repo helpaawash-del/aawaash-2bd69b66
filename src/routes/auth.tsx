@@ -403,6 +403,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [remember, setRemember] = useState(true);
+  const [desiredRole, setDesiredRole] = useState<AppRole>("member");
   const [showHelp, setShowHelp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
