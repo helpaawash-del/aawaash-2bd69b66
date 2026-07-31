@@ -21,7 +21,7 @@ import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/aut
 import { getRememberPreference, setRememberPreference } from "@/lib/session-persistence";
 import heroImage from "@/assets/auth-hero-tower-v2.png";
 import logoAsset from "@/assets/aawaash-logo.png.asset.json";
-import wireAsset from "@/assets/eco-tower-wire.png.asset.json";
+import societyWire from "@/assets/auth-society-wire.png";
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
