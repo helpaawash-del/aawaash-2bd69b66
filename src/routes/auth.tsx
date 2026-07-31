@@ -21,7 +21,7 @@ import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/aut
 import { getRememberPreference, setRememberPreference } from "@/lib/session-persistence";
 import heroImage from "@/assets/auth-hero-tower-v2.png";
 import logoAsset from "@/assets/aawaash-logo.png.asset.json";
-import wireAsset from "@/assets/eco-tower-wire.png.asset.json";
+import societyWire from "@/assets/auth-society-wire.png";
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -98,17 +98,17 @@ function EcoHero() {
             </svg>
           </div>
 
-          {/* compact framed photo */}
-          <div className="relative w-[clamp(140px,42vw,214px)] shrink-0">
+          {/* enlarged framed photo — stretches up toward the logo and down toward mid-screen */}
+          <div className="relative -mt-[clamp(10px,3vw,26px)] w-[clamp(190px,54vw,320px)] shrink-0">
             <span
               aria-hidden="true"
-              className="absolute -inset-3 rounded-[38px] opacity-70 blur-2xl"
+              className="absolute -inset-4 rounded-[42px] opacity-70 blur-2xl"
               style={{
                 background:
                   "radial-gradient(circle, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%)",
               }}
             />
-            <div className="relative overflow-hidden rounded-[10px_34px_46px_34px] bg-white/60 p-1 shadow-[0_30px_60px_-34px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-white/70 backdrop-blur">
+            <div className="relative overflow-hidden rounded-[10px_38px_52px_38px] bg-white/60 p-1 shadow-[0_34px_70px_-34px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-white/70 backdrop-blur">
               <img
                 src={heroImage}
                 alt="Green residential tower with trees growing on every balcony"
@@ -117,7 +117,7 @@ function EcoHero() {
                 decoding="async"
                 fetchPriority="high"
                 draggable={false}
-                className="aspect-[3/4] w-full rounded-[8px_30px_42px_30px] object-cover object-[62%_28%]"
+                className="aspect-[3/4.5] w-full rounded-[8px_34px_48px_34px] object-cover object-[62%_28%]"
               />
             </div>
           </div>
@@ -214,14 +214,17 @@ function AuthPage() {
         className="pointer-events-none absolute -right-28 bottom-[-10vh] h-[48vh] w-[48vh] rounded-full opacity-60 blur-[100px]"
         style={{ background: "radial-gradient(circle, oklch(0.86 0.09 175 / 0.55), transparent 70%)" }}
       />
-      {/* society wireframe under construction — low visibility base layer */}
+      {/* under-construction society skyline — full-bleed, starts 10% below mid-screen */}
       <img
-        src={wireAsset.url}
+        src={societyWire}
         alt=""
         aria-hidden="true"
         draggable={false}
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 max-h-[52vh] w-full select-none object-contain object-bottom opacity-[0.12]"
-        style={{ maskImage: "linear-gradient(to top, #000 45%, transparent 96%)" }}
+        loading="lazy"
+        width={1920}
+        height={640}
+        className="pointer-events-none absolute inset-x-0 bottom-0 top-[60%] z-0 w-full select-none object-cover object-bottom opacity-[0.14]"
+        style={{ maskImage: "linear-gradient(to top, #000 55%, transparent 98%)" }}
       />
       {/* faint blueprint grid at the base */}
       <div
@@ -238,8 +241,9 @@ function AuthPage() {
       <EcoHero />
 
       <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[clamp(14px,3vh,34px)] sm:max-w-lg sm:px-7">
-        {/* floating glass sheet */}
-        <div className="auth-sheet relative overflow-hidden rounded-[28px] bg-white/75 p-[clamp(0.95rem,3.4vw,1.5rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
+        {/* floating glass sheet — taller, sharper edges, stronger glass */}
+        <div className="auth-sheet relative flex min-h-[clamp(430px,58vh,560px)] flex-col justify-center overflow-hidden rounded-[20px] border border-white/60 bg-white/55 p-[clamp(1.1rem,4vw,1.75rem)] shadow-[0_44px_100px_-50px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-primary/10 backdrop-blur-[26px] backdrop-saturate-150">
+
 
           <span
             aria-hidden="true"
@@ -317,20 +321,38 @@ function AuthPage() {
 /*  Shared pieces                                                      */
 /* ------------------------------------------------------------------ */
 
-function SectionHead({ title, subtitle }: { title: string; subtitle?: string }) {
+function SectionHead({
+  eyebrow = "Aawaash",
+  eyebrowLarge = false,
+  title,
+  subtitle,
+}: {
+  eyebrow?: string;
+  eyebrowLarge?: boolean;
+  title?: string;
+  subtitle?: string;
+}) {
   return (
     <div className="auth-card-in text-center">
-      <span className="mx-auto inline-flex items-center gap-1.5 rounded-full bg-primary/[0.08] px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.22em] text-primary">
-        <Leaf size={12} aria-hidden="true" />
-        Aawaash
-      </span>
-      <h2
-        className="mt-2 text-[clamp(1.4rem,5.8vw,1.9rem)] font-bold leading-[1.12] tracking-[-0.03em] text-[oklch(0.22_0.03_160)]"
-        style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+      <span
+        className={
+          eyebrowLarge
+            ? "mx-auto inline-flex items-center gap-2 rounded-lg bg-primary/[0.08] px-4 py-1.5 text-[clamp(1rem,4.4vw,1.35rem)] font-extrabold uppercase tracking-[0.26em] text-primary"
+            : "mx-auto inline-flex items-center gap-1.5 rounded-full bg-primary/[0.08] px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.22em] text-primary"
+        }
       >
-        {title}
-      </h2>
-      {subtitle && <p className="mt-1 text-[12.5px] text-muted-foreground sm:text-sm">{subtitle}</p>}
+        <Leaf size={eyebrowLarge ? 18 : 12} aria-hidden="true" />
+        {eyebrow}
+      </span>
+      {title && (
+        <h2
+          className="mt-2 text-[clamp(1.4rem,5.8vw,1.9rem)] font-bold leading-[1.12] tracking-[-0.03em] text-[oklch(0.22_0.03_160)]"
+          style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+        >
+          {title}
+        </h2>
+      )}
+      {subtitle && <p className="mt-1.5 text-[12.5px] text-muted-foreground sm:text-sm">{subtitle}</p>}
     </div>
   );
 }
@@ -381,6 +403,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [remember, setRemember] = useState(true);
+  const [desiredRole, setDesiredRole] = useState<AppRole>("member");
   const [showHelp, setShowHelp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -414,19 +437,20 @@ function LoginForm() {
         return;
       }
 
-      const { data: r } = await supabase
+      const { data: rows } = await supabase
         .from("user_roles")
         .select("role")
         .eq("user_id", data.user.id)
-        .order("role", { ascending: true })
-        .limit(1)
-        .maybeSingle();
-      const role = (r?.role as AppRole | null) ?? null;
+        .order("role", { ascending: true });
+      const roles = (rows ?? []).map((x) => x.role as AppRole);
+      const role = roles[0] ?? null;
+      // Honour the compact role selector when the account actually holds that role.
+      const target = roles.includes(desiredRole) ? homePathForRole(desiredRole) : homePathForRole(role);
 
       touch().catch(() => undefined);
       setSuccess(true);
       setTimeout(() => {
-        navigate({ to: toInternalPath(search.redirect) ?? homePathForRole(role), replace: true });
+        navigate({ to: toInternalPath(search.redirect) ?? target, replace: true });
       }, 600);
     } catch {
       setError("Invalid login credentials.");
@@ -437,13 +461,40 @@ function LoginForm() {
 
   return (
     <section aria-label="Sign in">
-      <SectionHead title="Sign In" subtitle="Use your Aawaash Login ID to continue" />
+      <SectionHead eyebrow="Sign - In" eyebrowLarge subtitle="Use your Aawaash Login ID to continue" />
 
       <form
         onSubmit={onSubmit}
         className={`auth-card-in mt-4 space-y-2.5 ${error ? "shake-x" : ""}`}
         key={error ?? "ok"}
       >
+        {/* compact role selector */}
+        <div
+          role="radiogroup"
+          aria-label="Sign in as"
+          className="relative grid grid-cols-2 gap-1 rounded-[14px] bg-white/70 p-1 ring-1 ring-inset ring-primary/12"
+        >
+          {(["team_leader", "member"] as const).map((r) => {
+            const active = desiredRole === r;
+            return (
+              <button
+                key={r}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                onClick={() => setDesiredRole(r)}
+                className={`rounded-[11px] px-3 py-2 text-[12.5px] font-semibold uppercase tracking-[0.12em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  active
+                    ? "bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] text-primary-foreground shadow-[0_12px_24px_-14px_oklch(0.3_0.08_155)]"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                {r === "team_leader" ? "Leader" : "Member"}
+              </button>
+            );
+          })}
+        </div>
+
         <Field icon={<User size={19} aria-hidden="true" />}>
           <input
             id="auth-login-id"
