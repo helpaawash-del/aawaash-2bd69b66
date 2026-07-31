@@ -241,8 +241,9 @@ function AuthPage() {
       <EcoHero />
 
       <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[clamp(14px,3vh,34px)] sm:max-w-lg sm:px-7">
-        {/* floating glass sheet */}
-        <div className="auth-sheet relative overflow-hidden rounded-[28px] bg-white/75 p-[clamp(0.95rem,3.4vw,1.5rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
+        {/* floating glass sheet — taller, sharper edges, stronger glass */}
+        <div className="auth-sheet relative flex min-h-[clamp(430px,58vh,560px)] flex-col justify-center overflow-hidden rounded-[20px] border border-white/60 bg-white/55 p-[clamp(1.1rem,4vw,1.75rem)] shadow-[0_44px_100px_-50px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-primary/10 backdrop-blur-[26px] backdrop-saturate-150">
+
 
           <span
             aria-hidden="true"
