@@ -287,6 +287,9 @@ function AuthPage() {
           100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .auth-sheet { animation: sheetIn 0.8s cubic-bezier(.2,.8,.2,1) both; }
+        @keyframes traceFlow { to { stroke-dashoffset: -26; } }
+        .auth-trace { animation: traceFlow 1.8s linear infinite; }
+        @media (prefers-reduced-motion: reduce) { .auth-trace { animation: none; } }
         @media (prefers-reduced-motion: reduce) {
           .auth-sheet, .auth-card-in { animation: none; }
         }
