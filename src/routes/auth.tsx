@@ -98,17 +98,17 @@ function EcoHero() {
             </svg>
           </div>
 
-          {/* compact framed photo */}
-          <div className="relative w-[clamp(140px,42vw,214px)] shrink-0">
+          {/* enlarged framed photo — stretches up toward the logo and down toward mid-screen */}
+          <div className="relative -mt-[clamp(10px,3vw,26px)] w-[clamp(190px,54vw,320px)] shrink-0">
             <span
               aria-hidden="true"
-              className="absolute -inset-3 rounded-[38px] opacity-70 blur-2xl"
+              className="absolute -inset-4 rounded-[42px] opacity-70 blur-2xl"
               style={{
                 background:
                   "radial-gradient(circle, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%)",
               }}
             />
-            <div className="relative overflow-hidden rounded-[10px_34px_46px_34px] bg-white/60 p-1 shadow-[0_30px_60px_-34px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-white/70 backdrop-blur">
+            <div className="relative overflow-hidden rounded-[10px_38px_52px_38px] bg-white/60 p-1 shadow-[0_34px_70px_-34px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-white/70 backdrop-blur">
               <img
                 src={heroImage}
                 alt="Green residential tower with trees growing on every balcony"
@@ -117,7 +117,7 @@ function EcoHero() {
                 decoding="async"
                 fetchPriority="high"
                 draggable={false}
-                className="aspect-[3/4] w-full rounded-[8px_30px_42px_30px] object-cover object-[62%_28%]"
+                className="aspect-[3/4.5] w-full rounded-[8px_34px_48px_34px] object-cover object-[62%_28%]"
               />
             </div>
           </div>
