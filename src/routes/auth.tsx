@@ -461,13 +461,40 @@ function LoginForm() {
 
   return (
     <section aria-label="Sign in">
-      <SectionHead title="Sign In" subtitle="Use your Aawaash Login ID to continue" />
+      <SectionHead eyebrow="Sign - In" eyebrowLarge subtitle="Use your Aawaash Login ID to continue" />
 
       <form
         onSubmit={onSubmit}
         className={`auth-card-in mt-4 space-y-2.5 ${error ? "shake-x" : ""}`}
         key={error ?? "ok"}
       >
+        {/* compact role selector */}
+        <div
+          role="radiogroup"
+          aria-label="Sign in as"
+          className="relative grid grid-cols-2 gap-1 rounded-[14px] bg-white/70 p-1 ring-1 ring-inset ring-primary/12"
+        >
+          {(["team_leader", "member"] as const).map((r) => {
+            const active = desiredRole === r;
+            return (
+              <button
+                key={r}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                onClick={() => setDesiredRole(r)}
+                className={`rounded-[11px] px-3 py-2 text-[12.5px] font-semibold uppercase tracking-[0.12em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  active
+                    ? "bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] text-primary-foreground shadow-[0_12px_24px_-14px_oklch(0.3_0.08_155)]"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                {r === "team_leader" ? "Leader" : "Member"}
+              </button>
+            );
+          })}
+        </div>
+
         <Field icon={<User size={19} aria-hidden="true" />}>
           <input
             id="auth-login-id"
