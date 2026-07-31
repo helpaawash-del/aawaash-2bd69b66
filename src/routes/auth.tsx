@@ -21,6 +21,7 @@ import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/aut
 import { getRememberPreference, setRememberPreference } from "@/lib/session-persistence";
 import heroImage from "@/assets/auth-hero-tower-v2.png";
 import logoAsset from "@/assets/aawaash-logo.png.asset.json";
+import wireAsset from "@/assets/eco-tower-wire.png.asset.json";
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -50,87 +51,102 @@ export const Route = createFileRoute("/auth")({
 const SURFACE = "oklch(0.975 0.012 155)";
 
 /* ------------------------------------------------------------------ */
-/*  Hero — photo panel with curved bottom wave                         */
+/*  Hero — compact brand lockup: logo ─── connector ─── framed photo    */
 /* ------------------------------------------------------------------ */
 
 function EcoHero() {
   return (
-    <header className="relative h-[clamp(228px,35vh,450px)] w-full shrink-0">
-      <svg className="absolute h-0 w-0" aria-hidden="true">
-        <defs>
-          <clipPath id="authHeroWave" clipPathUnits="objectBoundingBox">
-            <path d="M0,0 L1,0 L1,0.82 C0.78,0.99 0.62,0.86 0.42,0.93 C0.24,0.99 0.13,1 0,0.9 Z" />
-          </clipPath>
-        </defs>
-      </svg>
+    <header className="relative z-10 shrink-0 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
+      <div className="mx-auto w-full max-w-md sm:max-w-lg">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+          {/* logo + futuristic connector */}
+          <div className="flex min-w-0 flex-col">
+            <Link
+              to="/"
+              aria-label="Aawaash home"
+              className="inline-flex w-fit rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            >
+              <img
+                src={logoAsset.url}
+                alt="Aawaash"
+                width={512}
+                height={512}
+                draggable={false}
+                className="h-[clamp(58px,15vw,84px)] w-auto object-contain drop-shadow-[0_14px_26px_color-mix(in_oklab,var(--primary)_26%,transparent)]"
+              />
+            </Link>
 
-      {/* photo */}
-      <div className="absolute inset-0" style={{ clipPath: "url(#authHeroWave)" }}>
-        <img
-          src={heroImage}
-          alt="Eco-luxury residential tower with trees growing on every balcony"
-          width={1024}
-          height={1536}
-          decoding="async"
-          fetchPriority="high"
-          className="h-full w-full object-cover object-[62%_26%] [image-rendering:auto]"
-          draggable={false}
-        />
-        {/* light wash so the headline stays readable on the left */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(100deg, oklch(0.985 0.01 155 / 0.97) 0%, oklch(0.985 0.01 155 / 0.92) 34%, oklch(0.985 0.01 155 / 0.3) 60%, transparent 78%)",
-          }}
-        />
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[oklch(0.985_0.01_155)/0.55] to-transparent" />
-      </div>
+            {/* connector: node → dashed trace → photo */}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 200 56"
+              preserveAspectRatio="none"
+              className="mt-2 h-[clamp(34px,7vh,56px)] w-full text-primary"
+            >
+              <circle cx="16" cy="14" r="11" fill="none" stroke="currentColor" strokeOpacity="0.28" />
+              <circle cx="16" cy="14" r="4" fill="currentColor" fillOpacity="0.55" />
+              <path
+                d="M27 14 H96 Q112 14 112 30 H186"
+                fill="none"
+                stroke="currentColor"
+                strokeOpacity="0.4"
+                strokeWidth="1.4"
+                strokeDasharray="7 6"
+                className="auth-trace"
+              />
+              <circle cx="188" cy="30" r="3.4" fill="currentColor" fillOpacity="0.7" />
+            </svg>
+          </div>
 
-      {/* headline */}
-      <div className="absolute inset-x-0 top-[clamp(30px,6vh,64px)] z-10 px-5 sm:px-8">
-        <span className="inline-flex items-center gap-2 text-[10.5px] font-semibold uppercase tracking-[0.3em] text-primary/80">
-          <i aria-hidden="true" className="block h-px w-6 bg-primary/50" />
-          Est. Aawaash
-        </span>
-        <h1
-          className="mt-2.5 text-[clamp(1.85rem,8.4vw,3rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-[oklch(0.2_0.03_160)]"
-          style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
-        >
-          Building
-          <br />
-          a Better
-          <br />
-          <span className="bg-[linear-gradient(96deg,oklch(0.42_0.1_158),oklch(0.34_0.09_172))] bg-clip-text italic text-transparent">
-            Tomorrow
+          {/* compact framed photo */}
+          <div className="relative w-[clamp(140px,42vw,214px)] shrink-0">
+            <span
+              aria-hidden="true"
+              className="absolute -inset-3 rounded-[38px] opacity-70 blur-2xl"
+              style={{
+                background:
+                  "radial-gradient(circle, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%)",
+              }}
+            />
+            <div className="relative overflow-hidden rounded-[10px_34px_46px_34px] bg-white/60 p-1 shadow-[0_30px_60px_-34px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-white/70 backdrop-blur">
+              <img
+                src={heroImage}
+                alt="Green residential tower with trees growing on every balcony"
+                width={1024}
+                height={1536}
+                decoding="async"
+                fetchPriority="high"
+                draggable={false}
+                className="aspect-[3/4] w-full rounded-[8px_30px_42px_30px] object-cover object-[62%_28%]"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* headline */}
+        <div className="mt-3 sm:mt-4">
+          <span className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-primary/80">
+            <i aria-hidden="true" className="block h-px w-6 bg-primary/50" />
+            Est. Aawaash
           </span>
-        </h1>
-        <p className="mt-2.5 max-w-[11rem] text-[12px] leading-relaxed tracking-[0.02em] text-muted-foreground sm:max-w-xs sm:text-[13.5px]">
-          Green construction for a stronger, smarter future.
-        </p>
-      </div>
-
-      {/* brand mark sitting where the photo ends */}
-      <div className="absolute bottom-[clamp(-68px,-8.5vh,-52px)] left-1/2 z-20 -translate-x-1/2">
-        <span
-          aria-hidden="true"
-          className="absolute left-1/2 top-1/2 h-[150%] w-[150%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-2xl"
-          style={{ background: "radial-gradient(circle, color-mix(in oklab, var(--primary) 26%, transparent), transparent 68%)" }}
-        />
-        <img
-          src={logoAsset.url}
-          alt="Aawaash"
-          draggable={false}
-          width={512}
-          height={512}
-          className="relative h-[clamp(92px,17vw,116px)] w-auto object-contain drop-shadow-[0_20px_34px_color-mix(in_oklab,var(--primary)_34%,transparent)]"
-        />
+          <h1
+            className="mt-2 text-[clamp(1.7rem,7.6vw,2.6rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-[oklch(0.2_0.03_160)]"
+            style={{ fontFamily: '"Fraunces", "Plus Jakarta Sans", serif', fontOpticalSizing: "auto" }}
+          >
+            Welcome to{" "}
+            <span className="bg-[linear-gradient(96deg,oklch(0.42_0.1_158),oklch(0.34_0.09_172))] bg-clip-text italic text-transparent">
+              Aawaash
+            </span>
+          </h1>
+          <p className="mt-1.5 max-w-xs text-[12.5px] leading-relaxed text-muted-foreground">
+            Green construction for a stronger, smarter future.
+          </p>
+        </div>
       </div>
     </header>
-
   );
 }
+
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -198,7 +214,16 @@ function AuthPage() {
         className="pointer-events-none absolute -right-28 bottom-[-10vh] h-[48vh] w-[48vh] rounded-full opacity-60 blur-[100px]"
         style={{ background: "radial-gradient(circle, oklch(0.86 0.09 175 / 0.55), transparent 70%)" }}
       />
-      {/* faint skyline blueprint at the base */}
+      {/* society wireframe under construction — low visibility base layer */}
+      <img
+        src={wireAsset.url}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 max-h-[52vh] w-full select-none object-contain object-bottom opacity-[0.12]"
+        style={{ maskImage: "linear-gradient(to top, #000 45%, transparent 96%)" }}
+      />
+      {/* faint blueprint grid at the base */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[46vh] opacity-[0.5]"
@@ -212,9 +237,10 @@ function AuthPage() {
 
       <EcoHero />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[clamp(56px,10vh,102px)] sm:max-w-lg sm:px-7">
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[clamp(14px,3vh,34px)] sm:max-w-lg sm:px-7">
         {/* floating glass sheet */}
-        <div className="auth-sheet relative overflow-hidden rounded-[30px] bg-white/72 p-[clamp(1rem,3.6vw,1.6rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
+        <div className="auth-sheet relative overflow-hidden rounded-[28px] bg-white/75 p-[clamp(0.95rem,3.4vw,1.5rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
+
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-8 -top-px h-px bg-gradient-to-r from-transparent via-primary/45 to-transparent"
@@ -238,7 +264,7 @@ function AuthPage() {
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
         </div>
 
-        <div className="mt-auto pt-3">
+        <div className="pt-4">
           <Link
             to="/"
             className="mx-auto block rounded-md text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -261,6 +287,9 @@ function AuthPage() {
           100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .auth-sheet { animation: sheetIn 0.8s cubic-bezier(.2,.8,.2,1) both; }
+        @keyframes traceFlow { to { stroke-dashoffset: -26; } }
+        .auth-trace { animation: traceFlow 1.8s linear infinite; }
+        @media (prefers-reduced-motion: reduce) { .auth-trace { animation: none; } }
         @media (prefers-reduced-motion: reduce) {
           .auth-sheet, .auth-card-in { animation: none; }
         }
@@ -408,7 +437,7 @@ function LoginForm() {
 
   return (
     <section aria-label="Sign in">
-      <SectionHead title="Welcome To Aawaash" />
+      <SectionHead title="Sign In" subtitle="Use your Aawaash Login ID to continue" />
 
       <form
         onSubmit={onSubmit}

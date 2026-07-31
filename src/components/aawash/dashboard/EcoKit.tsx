@@ -176,33 +176,38 @@ export function Avatar({
 }: {
   name?: string | null;
   src?: string | null;
-  size?: number;
+  /** px number, or any CSS length (e.g. "clamp(40px,11vw,56px)") for fluid sizing. */
+  size?: number | string;
   online?: boolean;
 }) {
+  const dim = typeof size === "number" ? `${size}px` : size;
   return (
-    <span className="relative inline-flex shrink-0" style={{ width: size, height: size }}>
+    <span
+      className="relative inline-flex shrink-0"
+      style={{ width: dim, height: dim, fontSize: `calc(${dim} * 0.34)` }}
+    >
       {src ? (
         <img
           src={src}
-          alt={name || "Avatar"}
+          alt={name ? `${name} profile photo` : "Profile photo"}
           loading="lazy"
           className="h-full w-full rounded-full object-cover ring-2 ring-white"
-          style={{ width: size, height: size }}
         />
       ) : (
         <span
-          className="grid h-full w-full place-items-center rounded-full bg-gradient-to-br from-primary to-leaf font-bold text-primary-foreground ring-2 ring-white"
-          style={{ fontSize: Math.max(11, size * 0.32) }}
+          aria-hidden="true"
+          className="grid h-full w-full place-items-center rounded-full bg-gradient-to-br from-primary to-leaf font-bold leading-none text-primary-foreground ring-2 ring-white"
         >
           {initialsOf(name)}
         </span>
       )}
       {online && (
-        <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-primary ring-2 ring-surface" />
+        <span className="absolute -bottom-0.5 -right-0.5 h-[26%] max-h-3 min-h-2 w-[26%] max-w-3 min-w-2 rounded-full bg-primary ring-2 ring-surface" />
       )}
     </span>
   );
 }
+
 
 /** Circular progress dial with a soft emerald sweep. */
 export function ProgressRing({
