@@ -213,7 +213,16 @@ function AuthPage() {
         className="pointer-events-none absolute -right-28 bottom-[-10vh] h-[48vh] w-[48vh] rounded-full opacity-60 blur-[100px]"
         style={{ background: "radial-gradient(circle, oklch(0.86 0.09 175 / 0.55), transparent 70%)" }}
       />
-      {/* faint skyline blueprint at the base */}
+      {/* society wireframe under construction — low visibility base layer */}
+      <img
+        src={wireAsset.url}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 max-h-[52vh] w-full select-none object-contain object-bottom opacity-[0.12]"
+        style={{ maskImage: "linear-gradient(to top, #000 45%, transparent 96%)" }}
+      />
+      {/* faint blueprint grid at the base */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[46vh] opacity-[0.5]"
@@ -227,9 +236,10 @@ function AuthPage() {
 
       <EcoHero />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[clamp(56px,10vh,102px)] sm:max-w-lg sm:px-7">
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[clamp(14px,3vh,34px)] sm:max-w-lg sm:px-7">
         {/* floating glass sheet */}
-        <div className="auth-sheet relative overflow-hidden rounded-[30px] bg-white/72 p-[clamp(1rem,3.6vw,1.6rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
+        <div className="auth-sheet relative overflow-hidden rounded-[28px] bg-white/75 p-[clamp(0.95rem,3.4vw,1.5rem)] shadow-[0_40px_90px_-52px_color-mix(in_oklab,var(--primary)_90%,transparent)] ring-1 ring-white/70 backdrop-blur-2xl">
+
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-8 -top-px h-px bg-gradient-to-r from-transparent via-primary/45 to-transparent"
