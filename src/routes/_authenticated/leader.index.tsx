@@ -125,7 +125,7 @@ function LeaderContent() {
   return (
     <EcoShell role="team_leader" profile={profile}>
       {/* ---------------- Focus hero ---------------- */}
-      <section className="flex items-start justify-between gap-3 pt-4 sm:pt-6">
+      <section className="flex items-center justify-between gap-3 pt-4 sm:pt-6">
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
         </div>
@@ -134,7 +134,7 @@ function LeaderContent() {
           aria-label="Open your profile"
           className="mt-1 shrink-0 rounded-full outline-none transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <Avatar name={profile?.full_name} src={profile?.avatar_url} size={52} online />
+          <Avatar name={profile?.full_name} src={profile?.avatar_url} size="clamp(42px,11.5vw,56px)" online />
         </Link>
       </section>
 
