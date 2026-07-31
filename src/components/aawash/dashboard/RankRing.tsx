@@ -60,9 +60,13 @@ export function RankRing({
   const value = loading ? 0 : shown;
   const rounded = Math.round(value);
 
+  const headingId = `rr-h-${gid}`;
+  const infoId = `rr-i-${gid}`;
+
   return (
-    <div
+    <section
       data-testid="rank-ring"
+      aria-labelledby={headingId}
       className="relative overflow-hidden rounded-[30px] border border-border/70 bg-surface p-5 shadow-[var(--shadow-soft)] sm:p-6"
     >
       <span
@@ -73,7 +77,7 @@ export function RankRing({
       {/* header row */}
       <div className="relative mb-4 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="truncate text-[14px] font-bold tracking-normal text-foreground">
+          <h2 id={headingId} className="truncate text-[14px] font-bold tracking-normal text-foreground">
             {label}
           </h2>
           <p className="mt-0.5 text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
@@ -86,15 +90,19 @@ export function RankRing({
             <PopoverTrigger asChild>
               <button
                 type="button"
-                aria-label={`What does ${label.toLowerCase()} mean?`}
-                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border/70 bg-surface-warm text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring outline-none"
+                aria-label={`How ${label.toLowerCase()} is calculated`}
+                aria-describedby={infoId}
+                className="grid h-11 w-11 min-h-11 min-w-11 shrink-0 place-items-center rounded-full border border-border/70 bg-surface-warm text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <Info size={16} />
+                <Info size={16} aria-hidden="true" />
               </button>
             </PopoverTrigger>
             <PopoverContent
               align="end"
-              className="w-72 rounded-2xl border-border/70 text-[12.5px] leading-relaxed text-muted-foreground"
+              id={infoId}
+              role="dialog"
+              aria-label={`How ${label.toLowerCase()} is calculated`}
+              className="w-72 rounded-2xl border-border/70 text-[12.5px] leading-relaxed text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <p className="mb-1.5 text-[12px] font-bold uppercase tracking-[0.14em] text-foreground">
                 How {label.toLowerCase()} works
@@ -108,10 +116,15 @@ export function RankRing({
       <div className="relative flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7">
         <div
           className="relative grid shrink-0 place-items-center self-center sm:self-auto"
-          role="img"
-          aria-label={`${label}: ${rounded} percent`}
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={rounded}
+          aria-valuetext={`${rounded} percent${rank ? `, position ${rank}${total ? ` of ${total}` : ""}` : ""}`}
+          aria-label={`${label} score`}
           style={{ width: SIZE * 0.78, height: SIZE * 0.78 }}
         >
+
           <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-full w-full -rotate-90">
             <defs>
               <linearGradient id={`rr-${gid}`} x1="0" y1="0" x2="1" y2="1">
