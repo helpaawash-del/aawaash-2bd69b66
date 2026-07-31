@@ -21,6 +21,7 @@ import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/aut
 import { getRememberPreference, setRememberPreference } from "@/lib/session-persistence";
 import heroImage from "@/assets/auth-hero-tower-v2.png";
 import logoAsset from "@/assets/aawaash-logo.png.asset.json";
+import wireAsset from "@/assets/eco-tower-wire.png.asset.json";
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -263,7 +264,7 @@ function AuthPage() {
           {needsBootstrap ? <BootstrapForm onDone={() => setNeedsBootstrap(false)} /> : <LoginForm />}
         </div>
 
-        <div className="mt-auto pt-3">
+        <div className="pt-4">
           <Link
             to="/"
             className="mx-auto block rounded-md text-center text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -433,7 +434,7 @@ function LoginForm() {
 
   return (
     <section aria-label="Sign in">
-      <SectionHead title="Welcome To Aawaash" />
+      <SectionHead title="Sign In" subtitle="Use your Aawaash Login ID to continue" />
 
       <form
         onSubmit={onSubmit}
