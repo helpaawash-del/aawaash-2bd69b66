@@ -200,6 +200,7 @@ export function RankRing({
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
   );
 }
