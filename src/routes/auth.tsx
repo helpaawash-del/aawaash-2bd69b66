@@ -436,19 +436,20 @@ function LoginForm() {
         return;
       }
 
-      const { data: r } = await supabase
+      const { data: rows } = await supabase
         .from("user_roles")
         .select("role")
         .eq("user_id", data.user.id)
-        .order("role", { ascending: true })
-        .limit(1)
-        .maybeSingle();
-      const role = (r?.role as AppRole | null) ?? null;
+        .order("role", { ascending: true });
+      const roles = (rows ?? []).map((x) => x.role as AppRole);
+      const role = roles[0] ?? null;
+      // Honour the compact role selector when the account actually holds that role.
+      const target = roles.includes(desiredRole) ? homePathForRole(desiredRole) : homePathForRole(role);
 
       touch().catch(() => undefined);
       setSuccess(true);
       setTimeout(() => {
-        navigate({ to: toInternalPath(search.redirect) ?? homePathForRole(role), replace: true });
+        navigate({ to: toInternalPath(search.redirect) ?? target, replace: true });
       }, 600);
     } catch {
       setError("Invalid login credentials.");
