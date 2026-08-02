@@ -56,75 +56,81 @@ const SURFACE = "oklch(0.975 0.012 155)";
 
 function EcoHero() {
   return (
-    <header className="relative z-10 shrink-0 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
-      <div className="mx-auto w-full max-w-md sm:max-w-lg">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
-          {/* logo + futuristic connector */}
-          <div className="flex min-w-0 flex-col">
-            <Link
-              to="/"
-              aria-label="Aawaash home"
-              className="inline-flex w-fit rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-            >
-              <img
-                src={logoAsset.url}
-                alt="Aawaash"
-                width={512}
-                height={512}
-                draggable={false}
-                className="h-[clamp(58px,15vw,84px)] w-auto object-contain drop-shadow-[0_14px_26px_color-mix(in_oklab,var(--primary)_26%,transparent)]"
-              />
-            </Link>
+    <header className="relative z-10 shrink-0 px-5 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8">
+      {/* Full-bleed hero — no top or right edge, runs off-screen on every device */}
+      <div
+        className="pointer-events-none absolute right-0 top-0 z-0 w-[clamp(200px,62vw,560px)] overflow-hidden rounded-bl-[clamp(48px,16vw,120px)]"
+        style={{
+          height: "clamp(230px, 42vh, 480px)",
+          WebkitMaskImage:
+            "linear-gradient(to left, #000 58%, transparent 100%), linear-gradient(to top, transparent 0%, #000 34%)",
+          WebkitMaskComposite: "source-in",
+          maskImage:
+            "linear-gradient(to left, #000 58%, transparent 100%), linear-gradient(to top, transparent 0%, #000 34%)",
+          maskComposite: "intersect",
+        }}
+      >
+        <img
+          src={heroImage}
+          alt="Green residential tower with trees growing on every balcony"
+          width={1024}
+          height={1536}
+          decoding="async"
+          fetchPriority="high"
+          draggable={false}
+          className="h-full w-full select-none object-cover object-[58%_26%]"
+        />
+      </div>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-0 z-0 h-[clamp(230px,42vh,480px)] w-[clamp(200px,62vw,560px)]"
+        style={{
+          background:
+            "linear-gradient(200deg, transparent 30%, color-mix(in oklab, var(--primary) 10%, transparent) 100%)",
+        }}
+      />
 
-            {/* connector: node → dashed trace → photo */}
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 200 56"
-              preserveAspectRatio="none"
-              className="mt-2 h-[clamp(34px,7vh,56px)] w-full text-primary"
-            >
-              <circle cx="16" cy="14" r="11" fill="none" stroke="currentColor" strokeOpacity="0.28" />
-              <circle cx="16" cy="14" r="4" fill="currentColor" fillOpacity="0.55" />
-              <path
-                d="M27 14 H96 Q112 14 112 30 H186"
-                fill="none"
-                stroke="currentColor"
-                strokeOpacity="0.4"
-                strokeWidth="1.4"
-                strokeDasharray="7 6"
-                className="auth-trace"
-              />
-              <circle cx="188" cy="30" r="3.4" fill="currentColor" fillOpacity="0.7" />
-            </svg>
-          </div>
-
-          {/* enlarged framed photo — stretches up toward the logo and down toward mid-screen */}
-          <div className="relative -mt-[clamp(10px,3vw,26px)] w-[clamp(190px,54vw,320px)] shrink-0">
-            <span
-              aria-hidden="true"
-              className="absolute -inset-4 rounded-[42px] opacity-70 blur-2xl"
-              style={{
-                background:
-                  "radial-gradient(circle, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%)",
-              }}
+      <div className="relative z-10 mx-auto w-full max-w-md sm:max-w-lg">
+        {/* logo + futuristic connector */}
+        <div className="flex w-[min(46%,220px)] min-w-0 flex-col">
+          <Link
+            to="/"
+            aria-label="Aawaash home"
+            className="inline-flex w-fit rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          >
+            <img
+              src={logoAsset.url}
+              alt="Aawaash"
+              width={512}
+              height={512}
+              draggable={false}
+              className="h-[clamp(56px,14vw,80px)] w-auto object-contain drop-shadow-[0_14px_26px_color-mix(in_oklab,var(--primary)_26%,transparent)]"
             />
-            <div className="relative overflow-hidden rounded-[10px_38px_52px_38px] bg-white/60 p-1 shadow-[0_34px_70px_-34px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-white/70 backdrop-blur">
-              <img
-                src={heroImage}
-                alt="Green residential tower with trees growing on every balcony"
-                width={1024}
-                height={1536}
-                decoding="async"
-                fetchPriority="high"
-                draggable={false}
-                className="aspect-[3/4.5] w-full rounded-[8px_34px_48px_34px] object-cover object-[62%_28%]"
-              />
-            </div>
-          </div>
+          </Link>
+
+          {/* connector: node → dashed trace */}
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 200 56"
+            preserveAspectRatio="none"
+            className="mt-2 h-[clamp(30px,6vh,52px)] w-full text-primary"
+          >
+            <circle cx="16" cy="14" r="11" fill="none" stroke="currentColor" strokeOpacity="0.28" />
+            <circle cx="16" cy="14" r="4" fill="currentColor" fillOpacity="0.55" />
+            <path
+              d="M27 14 H96 Q112 14 112 30 H196"
+              fill="none"
+              stroke="currentColor"
+              strokeOpacity="0.4"
+              strokeWidth="1.4"
+              strokeDasharray="7 6"
+              className="auth-trace"
+            />
+          </svg>
         </div>
 
         {/* headline */}
-        <div className="mt-3 sm:mt-4">
+        <div className="mt-[clamp(10px,4vh,26px)]">
           <span className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-primary/80">
             <i aria-hidden="true" className="block h-px w-6 bg-primary/50" />
             Est. Aawaash
@@ -146,6 +152,7 @@ function EcoHero() {
     </header>
   );
 }
+
 
 
 /* ------------------------------------------------------------------ */
