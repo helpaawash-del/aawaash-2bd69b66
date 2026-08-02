@@ -16,7 +16,15 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { loginIdToEmail, validateLoginId, homePathForRole, toInternalPath, type AppRole } from "@/lib/auth";
+import { toast } from "sonner";
+import {
+  loginIdToEmail,
+  validateLoginId,
+  homePathForRole,
+  toInternalPath,
+  roleLabel,
+  type AppRole,
+} from "@/lib/auth";
 import { bootstrapSuperAdmin, superAdminExists, touchLastLogin } from "@/lib/auth.functions";
 import { getRememberPreference, setRememberPreference } from "@/lib/session-persistence";
 import heroImage from "@/assets/auth-hero-tower-v2.png";
@@ -56,75 +64,81 @@ const SURFACE = "oklch(0.975 0.012 155)";
 
 function EcoHero() {
   return (
-    <header className="relative z-10 shrink-0 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
-      <div className="mx-auto w-full max-w-md sm:max-w-lg">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
-          {/* logo + futuristic connector */}
-          <div className="flex min-w-0 flex-col">
-            <Link
-              to="/"
-              aria-label="Aawaash home"
-              className="inline-flex w-fit rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-            >
-              <img
-                src={logoAsset.url}
-                alt="Aawaash"
-                width={512}
-                height={512}
-                draggable={false}
-                className="h-[clamp(58px,15vw,84px)] w-auto object-contain drop-shadow-[0_14px_26px_color-mix(in_oklab,var(--primary)_26%,transparent)]"
-              />
-            </Link>
+    <header className="relative z-10 shrink-0 px-5 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8">
+      {/* Full-bleed hero — no top or right edge, runs off-screen on every device */}
+      <div
+        className="pointer-events-none absolute right-0 top-0 z-0 w-[clamp(200px,62vw,560px)] overflow-hidden rounded-bl-[clamp(48px,16vw,120px)]"
+        style={{
+          height: "clamp(230px, 42vh, 480px)",
+          WebkitMaskImage:
+            "linear-gradient(to left, #000 58%, transparent 100%), linear-gradient(to top, transparent 0%, #000 34%)",
+          WebkitMaskComposite: "source-in",
+          maskImage:
+            "linear-gradient(to left, #000 58%, transparent 100%), linear-gradient(to top, transparent 0%, #000 34%)",
+          maskComposite: "intersect",
+        }}
+      >
+        <img
+          src={heroImage}
+          alt="Green residential tower with trees growing on every balcony"
+          width={1024}
+          height={1536}
+          decoding="async"
+          fetchPriority="high"
+          draggable={false}
+          className="h-full w-full select-none object-cover object-[58%_26%]"
+        />
+      </div>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-0 z-0 h-[clamp(230px,42vh,480px)] w-[clamp(200px,62vw,560px)]"
+        style={{
+          background:
+            "linear-gradient(200deg, transparent 30%, color-mix(in oklab, var(--primary) 10%, transparent) 100%)",
+        }}
+      />
 
-            {/* connector: node → dashed trace → photo */}
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 200 56"
-              preserveAspectRatio="none"
-              className="mt-2 h-[clamp(34px,7vh,56px)] w-full text-primary"
-            >
-              <circle cx="16" cy="14" r="11" fill="none" stroke="currentColor" strokeOpacity="0.28" />
-              <circle cx="16" cy="14" r="4" fill="currentColor" fillOpacity="0.55" />
-              <path
-                d="M27 14 H96 Q112 14 112 30 H186"
-                fill="none"
-                stroke="currentColor"
-                strokeOpacity="0.4"
-                strokeWidth="1.4"
-                strokeDasharray="7 6"
-                className="auth-trace"
-              />
-              <circle cx="188" cy="30" r="3.4" fill="currentColor" fillOpacity="0.7" />
-            </svg>
-          </div>
-
-          {/* enlarged framed photo — stretches up toward the logo and down toward mid-screen */}
-          <div className="relative -mt-[clamp(10px,3vw,26px)] w-[clamp(190px,54vw,320px)] shrink-0">
-            <span
-              aria-hidden="true"
-              className="absolute -inset-4 rounded-[42px] opacity-70 blur-2xl"
-              style={{
-                background:
-                  "radial-gradient(circle, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%)",
-              }}
+      <div className="relative z-10 mx-auto w-full max-w-md sm:max-w-lg">
+        {/* logo + futuristic connector */}
+        <div className="flex w-[min(46%,220px)] min-w-0 flex-col">
+          <Link
+            to="/"
+            aria-label="Aawaash home"
+            className="inline-flex w-fit rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          >
+            <img
+              src={logoAsset.url}
+              alt="Aawaash"
+              width={512}
+              height={512}
+              draggable={false}
+              className="h-[clamp(56px,14vw,80px)] w-auto object-contain drop-shadow-[0_14px_26px_color-mix(in_oklab,var(--primary)_26%,transparent)]"
             />
-            <div className="relative overflow-hidden rounded-[10px_38px_52px_38px] bg-white/60 p-1 shadow-[0_34px_70px_-34px_color-mix(in_oklab,var(--primary)_85%,transparent)] ring-1 ring-white/70 backdrop-blur">
-              <img
-                src={heroImage}
-                alt="Green residential tower with trees growing on every balcony"
-                width={1024}
-                height={1536}
-                decoding="async"
-                fetchPriority="high"
-                draggable={false}
-                className="aspect-[3/4.5] w-full rounded-[8px_34px_48px_34px] object-cover object-[62%_28%]"
-              />
-            </div>
-          </div>
+          </Link>
+
+          {/* connector: node → dashed trace */}
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 200 56"
+            preserveAspectRatio="none"
+            className="mt-2 h-[clamp(30px,6vh,52px)] w-full text-primary"
+          >
+            <circle cx="16" cy="14" r="11" fill="none" stroke="currentColor" strokeOpacity="0.28" />
+            <circle cx="16" cy="14" r="4" fill="currentColor" fillOpacity="0.55" />
+            <path
+              d="M27 14 H96 Q112 14 112 30 H196"
+              fill="none"
+              stroke="currentColor"
+              strokeOpacity="0.4"
+              strokeWidth="1.4"
+              strokeDasharray="7 6"
+              className="auth-trace"
+            />
+          </svg>
         </div>
 
         {/* headline */}
-        <div className="mt-3 sm:mt-4">
+        <div className="mt-[clamp(10px,4vh,26px)]">
           <span className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-primary/80">
             <i aria-hidden="true" className="block h-px w-6 bg-primary/50" />
             Est. Aawaash
@@ -146,6 +160,7 @@ function EcoHero() {
     </header>
   );
 }
+
 
 
 /* ------------------------------------------------------------------ */
@@ -415,6 +430,7 @@ function LoginForm() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (submitting || success) return; // guard duplicate submissions
     setError(null);
     const v = validateLoginId(loginId);
     if (!v.ok) {
@@ -445,7 +461,15 @@ function LoginForm() {
       const roles = (rows ?? []).map((x) => x.role as AppRole);
       const role = roles[0] ?? null;
       // Honour the compact role selector when the account actually holds that role.
-      const target = roles.includes(desiredRole) ? homePathForRole(desiredRole) : homePathForRole(role);
+      const matches = roles.includes(desiredRole);
+      const target = matches ? homePathForRole(desiredRole) : homePathForRole(role);
+
+      if (!matches) {
+        toast.warning(`No ${roleLabel(desiredRole)} dashboard on this account`, {
+          description: `You signed in as ${roleLabel(role)}. Taking you to your ${roleLabel(role)} dashboard instead.`,
+          duration: 6000,
+        });
+      }
 
       touch().catch(() => undefined);
       setSuccess(true);
@@ -459,6 +483,7 @@ function LoginForm() {
     }
   }
 
+
   return (
     <section aria-label="Sign in">
       <SectionHead eyebrow="Sign - In" eyebrowLarge subtitle="Use your Aawaash Login ID to continue" />
@@ -468,25 +493,45 @@ function LoginForm() {
         className={`auth-card-in mt-4 space-y-2.5 ${error ? "shake-x" : ""}`}
         key={error ?? "ok"}
       >
-        {/* compact role selector */}
+        {/* compact role selector — arrow-key navigable radiogroup */}
         <div
           role="radiogroup"
           aria-label="Sign in as"
+          aria-describedby="auth-role-hint"
+          onKeyDown={(e) => {
+            if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) return;
+            e.preventDefault();
+            const next: AppRole =
+              e.key === "Home"
+                ? "team_leader"
+                : e.key === "End"
+                  ? "member"
+                  : desiredRole === "team_leader"
+                    ? "member"
+                    : "team_leader";
+            setDesiredRole(next);
+            requestAnimationFrame(() => document.getElementById(`auth-role-${next}`)?.focus());
+          }}
           className="relative grid grid-cols-2 gap-1 rounded-[14px] bg-white/70 p-1 ring-1 ring-inset ring-primary/12"
         >
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-1 left-1 w-[calc(50%-0.375rem)] rounded-[11px] bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] shadow-[0_12px_24px_-14px_oklch(0.3_0.08_155)] transition-transform duration-300 ease-[cubic-bezier(.2,.8,.2,1)]"
+            style={{ transform: desiredRole === "member" ? "translateX(calc(100% + 0.25rem))" : "translateX(0)" }}
+          />
           {(["team_leader", "member"] as const).map((r) => {
             const active = desiredRole === r;
             return (
               <button
                 key={r}
+                id={`auth-role-${r}`}
                 type="button"
                 role="radio"
                 aria-checked={active}
+                tabIndex={active ? 0 : -1}
                 onClick={() => setDesiredRole(r)}
-                className={`rounded-[11px] px-3 py-2 text-[12.5px] font-semibold uppercase tracking-[0.12em] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  active
-                    ? "bg-[linear-gradient(150deg,oklch(0.36_0.085_155),oklch(0.22_0.05_155))] text-primary-foreground shadow-[0_12px_24px_-14px_oklch(0.3_0.08_155)]"
-                    : "text-muted-foreground hover:text-primary"
+                className={`relative z-10 rounded-[11px] px-3 py-2 text-[12.5px] font-semibold uppercase tracking-[0.12em] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
+                  active ? "text-primary-foreground" : "text-muted-foreground hover:text-primary"
                 }`}
               >
                 {r === "team_leader" ? "Leader" : "Member"}
@@ -494,6 +539,10 @@ function LoginForm() {
             );
           })}
         </div>
+        <p id="auth-role-hint" className="sr-only">
+          Choose which dashboard to open after signing in. Use the left and right arrow keys to switch.
+        </p>
+
 
         <Field icon={<User size={19} aria-hidden="true" />}>
           <input
