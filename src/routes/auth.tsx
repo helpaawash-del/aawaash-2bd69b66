@@ -422,6 +422,7 @@ function LoginForm() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (submitting || success) return; // guard duplicate submissions
     setError(null);
     const v = validateLoginId(loginId);
     if (!v.ok) {
@@ -452,7 +453,15 @@ function LoginForm() {
       const roles = (rows ?? []).map((x) => x.role as AppRole);
       const role = roles[0] ?? null;
       // Honour the compact role selector when the account actually holds that role.
-      const target = roles.includes(desiredRole) ? homePathForRole(desiredRole) : homePathForRole(role);
+      const matches = roles.includes(desiredRole);
+      const target = matches ? homePathForRole(desiredRole) : homePathForRole(role);
+
+      if (!matches) {
+        toast.warning(`No ${roleLabel(desiredRole)} dashboard on this account`, {
+          description: `You signed in as ${roleLabel(role)}. Taking you to your ${roleLabel(role)} dashboard instead.`,
+          duration: 6000,
+        });
+      }
 
       touch().catch(() => undefined);
       setSuccess(true);
@@ -465,6 +474,7 @@ function LoginForm() {
       setSubmitting(false);
     }
   }
+
 
   return (
     <section aria-label="Sign in">
