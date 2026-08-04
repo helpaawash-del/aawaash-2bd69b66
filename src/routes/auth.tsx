@@ -67,15 +67,13 @@ function EcoHero() {
     <header className="relative z-10 shrink-0 px-5 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8">
       {/* Full-bleed hero — no top or right edge, runs off-screen on every device */}
       <div
-        className="pointer-events-none absolute right-0 top-0 z-0 w-[clamp(200px,62vw,560px)] overflow-hidden rounded-bl-[clamp(48px,16vw,120px)]"
+        className="pointer-events-none absolute right-0 top-0 z-0 w-[clamp(220px,66vw,600px)] overflow-hidden"
         style={{
-          height: "clamp(230px, 42vh, 480px)",
+          height: "clamp(250px, 44vh, 500px)",
           WebkitMaskImage:
-            "linear-gradient(to left, #000 58%, transparent 100%), linear-gradient(to top, transparent 0%, #000 34%)",
-          WebkitMaskComposite: "source-in",
+            "radial-gradient(135% 120% at 100% 0%, #000 34%, rgba(0,0,0,0.55) 62%, transparent 88%)",
           maskImage:
-            "linear-gradient(to left, #000 58%, transparent 100%), linear-gradient(to top, transparent 0%, #000 34%)",
-          maskComposite: "intersect",
+            "radial-gradient(135% 120% at 100% 0%, #000 34%, rgba(0,0,0,0.55) 62%, transparent 88%)",
         }}
       >
         <img
@@ -88,15 +86,25 @@ function EcoHero() {
           draggable={false}
           className="h-full w-full select-none object-cover object-[58%_26%]"
         />
+        {/* colour wash so the photo settles into the page background */}
+        <span
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(215deg, transparent 24%, color-mix(in oklab, var(--primary) 12%, transparent) 72%, color-mix(in oklab, var(--background) 78%, transparent) 100%)",
+          }}
+        />
+        <span
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent 46%, color-mix(in oklab, var(--background) 92%, transparent) 100%)",
+          }}
+        />
       </div>
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-0 z-0 h-[clamp(230px,42vh,480px)] w-[clamp(200px,62vw,560px)]"
-        style={{
-          background:
-            "linear-gradient(200deg, transparent 30%, color-mix(in oklab, var(--primary) 10%, transparent) 100%)",
-        }}
-      />
+
 
       <div className="relative z-10 mx-auto w-full max-w-md sm:max-w-lg">
         {/* logo + futuristic connector */}
