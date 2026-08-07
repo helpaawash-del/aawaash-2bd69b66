@@ -17,7 +17,7 @@ import { listSales, salesDashboard } from "@/lib/sales.functions";
 import { saleMeta } from "@/components/aawash/sales/status";
 import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
 
-export const Route = createFileRoute("/_authenticated/sales-workflow")({
+export const Route = createFileRoute("/_authenticated/sales-workflow/")({
   component: SalesWorkflow,
   head: () => ({ meta: [{ title: "Sales Workflow — Aawash" }] }),
 });

@@ -10,7 +10,7 @@ import { useSession } from "@/hooks/useSession";
 import { SectionCard, EmptyState, SkeletonBlock } from "@/components/aawash/dashboard-kit";
 import { cmsListPages, cmsCreatePage, cmsDuplicatePage, cmsSetPageStatus } from "@/lib/cms.functions";
 
-export const Route = createFileRoute("/_authenticated/admin/cms/pages")({
+export const Route = createFileRoute("/_authenticated/admin/cms/pages/")({
   component: () => (<RoleGuard allow={["super_admin"]}><Content /></RoleGuard>),
   head: () => ({
     meta: [
