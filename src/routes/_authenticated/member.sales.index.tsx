@@ -14,7 +14,7 @@ import {
 } from "@/components/aawash/dashboard-kit";
 import { listMySales } from "@/lib/member.functions";
 
-export const Route = createFileRoute("/_authenticated/member/sales")({
+export const Route = createFileRoute("/_authenticated/member/sales/")({
   component: SalesPage,
   head: () => ({ meta: [{ title: "My Sales — Aawash" }] }),
 });

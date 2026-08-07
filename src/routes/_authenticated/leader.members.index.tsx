@@ -15,7 +15,7 @@ import {
 } from "@/components/aawash/dashboard-kit";
 import { listMyTeamMembers } from "@/lib/admin.functions";
 
-export const Route = createFileRoute("/_authenticated/leader/members")({
+export const Route = createFileRoute("/_authenticated/leader/members/")({
   component: MembersPage,
   head: () => ({ meta: [{ title: "Team Members — Aawash" }] }),
 });

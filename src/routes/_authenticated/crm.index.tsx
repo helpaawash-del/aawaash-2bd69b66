@@ -35,7 +35,7 @@ const Parallax3DBuilding = lazy(() =>
   import("@/components/aawash/Parallax3DBuilding").then((m) => ({ default: m.Parallax3DBuilding })),
 );
 
-export const Route = createFileRoute("/_authenticated/crm")({
+export const Route = createFileRoute("/_authenticated/crm/")({
   component: CrmHome,
   head: () => ({ meta: [{ title: "Customer CRM — Aawash" }] }),
 });

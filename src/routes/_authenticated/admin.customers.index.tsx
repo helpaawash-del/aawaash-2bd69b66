@@ -34,7 +34,7 @@ import {
 } from "@/lib/customers-admin.functions";
 import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
 
-export const Route = createFileRoute("/_authenticated/admin/customers")({
+export const Route = createFileRoute("/_authenticated/admin/customers/")({
   component: Page,
   head: () => ({ meta: [{ title: "Customers CRM — Aawash Admin" }] }),
 });

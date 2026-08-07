@@ -29,7 +29,7 @@ import {
   type LeaderMetrics,
 } from "@/components/aawash/admin/AdminLeaderDialogs";
 
-export const Route = createFileRoute("/_authenticated/admin/team-leaders")({
+export const Route = createFileRoute("/_authenticated/admin/team-leaders/")({
   component: Page,
   head: () => ({
     meta: [

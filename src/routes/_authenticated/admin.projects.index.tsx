@@ -26,7 +26,7 @@ import {
 } from "@/lib/project-admin.functions";
 import { formatINR } from "@/components/aawash/dashboard-kit";
 
-export const Route = createFileRoute("/_authenticated/admin/projects")({
+export const Route = createFileRoute("/_authenticated/admin/projects/")({
   component: AdminProjectsPage,
   head: () => ({ meta: [{ title: "Projects — Aawash Admin" }] }),
 });
