@@ -34,6 +34,8 @@ import {
 import { adminResetPassword, setUserStatus } from "@/lib/admin.functions";
 import { ConfirmDialog } from "@/components/aawash/admin/ConfirmDialog";
 import { toast } from "sonner";
+
+import { friendlyError } from "@/lib/error-messages";
 import { invalidateAdmin } from "@/lib/admin-cache";
 
 export const Route = createFileRoute("/_authenticated/admin/members/$id")({
@@ -120,7 +122,7 @@ function Content() {
       await refetch();
       qc.invalidateQueries({ queryKey: ["admin", "members"] });
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Update failed");
+      setErr(friendlyError(e, "Couldn't save this member. Please check the details and try again."));
     } finally {
       setSaving(false);
     }
@@ -135,7 +137,7 @@ function Content() {
       setShowReset(false);
       setNewPass("");
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Password reset failed");
+      setErr(friendlyError(e, "Couldn't reset the password. Please try again."));
     } finally {
       setResetting(false);
     }
@@ -153,7 +155,7 @@ function Content() {
       await refetch();
       qc.invalidateQueries({ queryKey: ["admin", "members"] });
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Team change failed");
+      setErr(friendlyError(e, "Couldn't move this member to the new team."));
     } finally {
       setMovingTeam(false);
     }
@@ -167,7 +169,7 @@ function Content() {
       await refetch();
       qc.invalidateQueries({ queryKey: ["admin", "members"] });
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Status change failed");
+      setErr(friendlyError(e, "Couldn't change this member's status."));
     }
   }
 
@@ -483,7 +485,7 @@ function Content() {
                         setMsg("Tip person deleted");
                         await refetch();
                       } catch (e) {
-                        setErr(e instanceof Error ? e.message : "Delete failed");
+                        setErr(friendlyError(e, "Couldn't delete this record."));
                       }
                     }}
                     className="inline-flex items-center gap-1 rounded-full border border-red-500/40 bg-red-500/10 px-2.5 py-1 text-[11px] font-semibold text-red-800 hover:bg-red-500/20"
