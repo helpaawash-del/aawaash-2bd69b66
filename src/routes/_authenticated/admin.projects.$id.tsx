@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+
+import { friendlyError } from "@/lib/error-messages";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -193,7 +196,7 @@ function OverviewTab({ project, onSaved }: { project: Record<string, unknown>; o
       setOk(true);
       onSaved();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to save");
+      setError(friendlyError(err, "Couldn't save this project. Please check the information and try again."));
     } finally {
       setSaving(false);
     }
@@ -402,7 +405,7 @@ function BuildingsTab({ projectId }: { projectId: string }) {
       await upsertB({ data: { project_id: projectId, name, code, total_floors: 0, ordering: (buildings?.length ?? 0) } as never });
       await refresh();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed");
+      toast.error(friendlyError(err, "Couldn't save these changes. Please try again."));
     }
   }
   async function handleEditBuilding(b: Record<string, unknown>) {
@@ -557,7 +560,7 @@ function FloorsPanel({
       await onSaved();
       await qc.invalidateQueries({ queryKey: ["admin", "project-inv", projectId] });
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed");
+      toast.error(friendlyError(err, "Couldn't save these changes. Please try again."));
     }
   }
   async function handleDeleteFloor(id: string) {
@@ -581,7 +584,7 @@ function FloorsPanel({
       await onSaved();
       await qc.invalidateQueries({ queryKey: ["admin", "project-inv", projectId] });
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed");
+      toast.error(friendlyError(err, "Couldn't save these changes. Please try again."));
     }
   }
   async function handleBulkFlats(floorId: string) {
@@ -598,7 +601,7 @@ function FloorsPanel({
       await onSaved();
       await qc.invalidateQueries({ queryKey: ["admin", "project-inv", projectId] });
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed");
+      toast.error(friendlyError(err, "Couldn't save these changes. Please try again."));
     }
   }
   async function handleDeleteFlat(id: string) {
@@ -983,7 +986,7 @@ function MediaTab({ project, onSaved }: { project: Record<string, unknown>; onSa
       setOk(true);
       onSaved();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed");
+      setError(friendlyError(err, "Couldn't save these changes. Please try again."));
     } finally {
       setSaving(false);
     }
@@ -1104,7 +1107,7 @@ function ContentTab({ project, onSaved }: { project: Record<string, unknown>; on
       setOk(true);
       onSaved();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed");
+      setError(friendlyError(err, "Couldn't save these changes. Please try again."));
     } finally {
       setSaving(false);
     }
