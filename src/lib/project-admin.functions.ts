@@ -451,8 +451,11 @@ export const adminUpsertFlatFull = createServerFn({ method: "POST" })
         .select()
         .maybeSingle();
       if (error) throw new Error(error.message);
+      // Zero rows back = nothing persisted; surface it instead of faking success.
+      if (!row) throw new Error("This unit could not be updated — please refresh and retry.");
       return row;
     }
+
     const { data: row, error } = await context.supabase
       .from("flats")
       .insert(data as never)
