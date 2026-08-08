@@ -236,7 +236,7 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 itemRefs.current[i] = el;
               }}
               role="none"
-              className={`relative z-10 flex min-w-0 transition-[flex] duration-300 ${active ? "flex-[1.5]" : "flex-1"}`}
+              className={`relative z-10 flex min-w-0 flex-1 transition-[flex] duration-300 ${active ? "sm:flex-[1.5]" : ""}`}
             >
               <Link
                 to={to}
@@ -244,6 +244,7 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 preload="render"
                 resetScroll={!hash}
                 aria-label={`${label} — ${description}`}
+                title={label}
                 aria-current={active ? "page" : undefined}
                 tabIndex={tabbable ? 0 : -1}
                 onFocus={() => {
@@ -256,25 +257,27 @@ function DockList({ items, pathname }: { items: NavItem[]; pathname: string }) {
                 }}
                 onKeyDown={(e) => onKeyDown(e, i)}
                 data-testid={`dock-link-${label.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`group relative flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-[22px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+                className={`group relative flex min-h-12 flex-1 touch-manipulation items-center justify-center gap-1.5 rounded-[22px] px-1 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                   active ? "text-white" : "text-slate-500 hover:text-primary"
                 }`}
               >
                 <span
-                  className={`grid place-items-center transition-transform duration-300 group-active:scale-90 ${
-                    active ? "scale-[1.05]" : "group-hover:-translate-y-0.5"
+                  className={`grid place-items-center will-change-transform transition-transform duration-300 group-active:scale-90 ${
+                    active ? "scale-[1.08]" : "group-hover:-translate-y-0.5"
                   }`}
                 >
-                  <Icon size={21} strokeWidth={active ? 2.4 : 2} aria-hidden="true" />
+                  <Icon size={22} strokeWidth={active ? 2.4 : 2} aria-hidden="true" />
                 </span>
+                {/* Labels are desktop-only; mobile stays icon-only (name is exposed via aria-label). */}
                 <span
-                  className={`overflow-hidden whitespace-nowrap text-[11px] font-semibold leading-none tracking-tight transition-all duration-300 ${
+                  className={`hidden overflow-hidden whitespace-nowrap text-[11px] font-semibold leading-none tracking-tight transition-all duration-300 sm:inline-block ${
                     active ? "max-w-[86px] opacity-100" : "max-w-0 opacity-0"
                   }`}
                 >
                   {label}
                 </span>
               </Link>
+
             </li>
           );
         })}
