@@ -776,7 +776,7 @@ function InventoryTab({ projectId, slug }: { projectId: string; slug: string }) 
       for (const [k, snap] of snapshots) qc.setQueryData(k as unknown[], snap);
       // Extra safety: reflect the original status if the snapshot was empty.
       void prevStatus;
-      setErr(e instanceof Error ? e.message : "Status update failed");
+      setErr(friendlyError(e, "Couldn't update this unit. Please try again."));
     } finally {
       setPendingId(null);
     }
