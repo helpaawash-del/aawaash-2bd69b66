@@ -105,32 +105,35 @@ export function EcoDock({ role }: { role: AppRole }) {
       style={{ animationDuration: `${DOCK_DURATION_MS}ms`, animationTimingFunction: DOCK_EASE }}
       className="pointer-events-none fixed inset-x-0 bottom-0 z-[90] animate-fade-in px-3 pb-[calc(max(0.75rem,env(safe-area-inset-bottom))+0.25rem)] motion-reduce:animate-none sm:px-6"
     >
-      <ul className="pointer-events-auto mx-auto flex w-full max-w-[560px] items-center gap-1 overflow-x-auto rounded-[30px] bg-forest/95 px-2 py-2 shadow-[0_22px_50px_rgba(16,50,36,0.32)] ring-1 ring-white/10 backdrop-blur-2xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <ul className="pointer-events-auto mx-auto flex w-full max-w-[560px] items-center gap-1 rounded-[30px] bg-forest/95 px-2 py-2 shadow-[0_22px_50px_rgba(16,50,36,0.32)] ring-1 ring-white/10 backdrop-blur-2xl">
         {items.map((item) => {
           const Icon = item.icon;
           const active = isActive(pathname, item);
           return (
-            <li key={item.key} className="flex-1">
+            <li key={item.key} className="min-w-0 flex-1">
               <Link
                 to={item.to}
                 preload="render"
                 aria-label={item.label}
+                title={item.label}
                 aria-current={active ? "page" : undefined}
                 data-dock-item={item.key}
                 data-active={active ? "true" : "false"}
-                className={`flex min-w-[52px] flex-col items-center gap-0.5 rounded-[22px] px-1.5 py-2 text-[9.5px] font-semibold transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
+                className={`flex min-h-12 touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[22px] px-1.5 py-2 text-[10px] font-semibold outline-none transition-all duration-[420ms] ease-[cubic-bezier(0.32,0.72,0,1)] focus-visible:ring-2 focus-visible:ring-forest-foreground/60 motion-reduce:transition-none ${
                   active
                     ? "-translate-y-0.5 scale-[1.03] bg-surface text-primary shadow-[var(--shadow-float)]"
-                    : "text-forest-foreground/70 hover:bg-white/10 hover:text-forest-foreground"
+                    : "text-forest-foreground/70 hover:bg-white/10 hover:text-forest-foreground active:scale-95"
                 }`}
               >
-                <Icon size={18} className="shrink-0" />
-                <span className="truncate">{item.label}</span>
+                <Icon size={20} strokeWidth={active ? 2.4 : 2} className="shrink-0" />
+                {/* Icon-only on mobile — the label is still announced via aria-label. */}
+                <span className="hidden max-w-full truncate sm:block">{item.label}</span>
               </Link>
             </li>
           );
         })}
       </ul>
+
     </nav>
   );
 }

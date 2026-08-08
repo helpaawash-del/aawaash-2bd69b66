@@ -131,7 +131,30 @@ const projectSchema = z.object({
 
 export const adminUpsertProject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => projectSchema.parse(d))
+  .inputValidator((d: unknown) => {
+    // Admin forms submit raw FormData, so every untouched optional field arrives
+    // as "". Sending "" to a date column (launch_date) or coercing it to 0 on a
+    // numeric column (latitude, price_min) is what made Save fail / silently
+    // corrupt data. Normalise before validation: clearable fields become null,
+    // everything else falls back to its schema default.
+    const clearable = new Set([
+      "address", "short_description", "description", "tag", "seo_title", "seo_description",
+      "google_map_url", "thumbnail_url", "hero_banner_url", "cover_url", "logo_url",
+      "three_d_tour_url", "virtual_walkthrough_url",
+      "launch_date", "possession_date",
+      "latitude", "longitude", "price_min", "price_max",
+    ]);
+    const input = d as Record<string, unknown>;
+    const normalised: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(input ?? {})) {
+      if (typeof v === "string" && v.trim() === "") {
+        if (clearable.has(k)) normalised[k] = null;
+        continue; // drop empties so schema defaults apply
+      }
+      normalised[k] = v;
+    }
+    return projectSchema.parse(normalised);
+  })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const payload = { ...data } as Record<string, unknown>;
@@ -143,6 +166,9 @@ export const adminUpsertProject = createServerFn({ method: "POST" })
         .select("id, slug")
         .maybeSingle();
       if (error) throw new Error(error.message);
+      // No row back = the update matched nothing (bad id or blocked by policy).
+      // Never report success for a write that did not persist.
+      if (!row) throw new Error("Project was not updated — it may have been removed.");
       return { ok: true as const, project: row };
     }
     const { data: row, error } = await context.supabase
@@ -151,8 +177,10 @@ export const adminUpsertProject = createServerFn({ method: "POST" })
       .select("id, slug")
       .maybeSingle();
     if (error) throw new Error(error.message);
+    if (!row) throw new Error("Project could not be created.");
     return { ok: true as const, project: row };
   });
+
 
 export const adminArchiveProject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -423,8 +451,11 @@ export const adminUpsertFlatFull = createServerFn({ method: "POST" })
         .select()
         .maybeSingle();
       if (error) throw new Error(error.message);
+      // Zero rows back = nothing persisted; surface it instead of faking success.
+      if (!row) throw new Error("This unit could not be updated — please refresh and retry.");
       return row;
     }
+
     const { data: row, error } = await context.supabase
       .from("flats")
       .insert(data as never)
