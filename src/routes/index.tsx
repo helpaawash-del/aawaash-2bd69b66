@@ -68,7 +68,6 @@ import { LandingNav } from "@/components/aawash/landing/LandingNav";
 import { Splash } from "@/components/aawash/landing/Splash";
 import { Reveal } from "@/components/aawash/landing/Reveal";
 import { useReveal } from "@/hooks/useReveal";
-import { useSession } from "@/hooks/useSession";
 import {
   Accordion,
   AccordionContent,
