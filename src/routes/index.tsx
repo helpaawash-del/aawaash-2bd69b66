@@ -68,8 +68,6 @@ import { LandingNav } from "@/components/aawash/landing/LandingNav";
 import { Splash } from "@/components/aawash/landing/Splash";
 import { Reveal } from "@/components/aawash/landing/Reveal";
 import { useReveal } from "@/hooks/useReveal";
-import { useSession } from "@/hooks/useSession";
-import { homePathForRole } from "@/lib/auth";
 import {
   Accordion,
   AccordionContent,
@@ -98,15 +96,11 @@ export const Route = createFileRoute("/")({
 });
 
 function Landing() {
-  const navigate = useNavigate();
-  const { loading, user, role } = useSession();
+  // The public homepage is intentionally session-agnostic: signed-in members,
+  // team leaders and admins all stay here. Never redirect to a dashboard or
+  // any login route from `/` — that produced the "homepage → admin login" bug
+  // (admin sessions were bounced to /admin, which requires the passcode gate).
 
-  // If already authenticated, silently redirect to role dashboard.
-  useEffect(() => {
-    if (!loading && user) {
-      navigate({ to: homePathForRole(role), replace: true });
-    }
-  }, [loading, user, role, navigate]);
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
