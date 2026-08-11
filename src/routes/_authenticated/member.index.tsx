@@ -149,6 +149,13 @@ function MemberContent() {
             to="/member/wallet"
           />
           <LightPod
+            icon={<Building2 size={15} />}
+            label="Projects"
+            value={String(projects.data?.length ?? 0)}
+            to="/projects"
+            loading={projects.isLoading}
+          />
+          <LightPod
             icon={<Zap size={15} />}
             label="This month"
             value={formatINR(stats?.monthCommission ?? 0, { compact: true })}
