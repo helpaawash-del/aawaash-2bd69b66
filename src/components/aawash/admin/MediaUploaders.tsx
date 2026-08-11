@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { UploadCloud, X, AlertTriangle, CheckCircle2, Loader2, Image as ImageIcon, Box } from "lucide-react";
 
@@ -60,12 +60,15 @@ export function ImageUploadField({
   value,
   folder,
   disabled,
+  onChange,
 }: {
   label: string;
   name: string;
   value: string | null;
   folder: string;
   disabled?: boolean;
+  /** Optional controlled callback — fires whenever the resolved URL changes. */
+  onChange?: (url: string) => void;
 }) {
   const [url, setUrl] = useState<string>(value ?? "");
   const [progress, setProgress] = useState(0);
@@ -73,6 +76,14 @@ export function ImageUploadField({
   const [err, setErr] = useState<string | null>(null);
   const [broken, setBroken] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const notify = useRef(onChange);
+  notify.current = onChange;
+  useEffect(() => {
+    notify.current?.(url);
+  }, [url]);
+
+
 
   const validate = useCallback((f: File): string | null => {
     if (!IMAGE_MIME.includes(f.type)) {

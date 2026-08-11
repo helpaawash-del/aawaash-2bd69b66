@@ -180,6 +180,27 @@ function AdminContent() {
         <Kpi icon={<TrendingUp size={16} />} label="Revenue" value={formatINR(overview.data?.revenue_total ?? 0, { compact: true })} to="/admin/finance" tone="gold" />
       </section>
 
+      <section className="mt-5">
+        <Link
+          to="/admin/homepage"
+          className="glass-card group flex items-center gap-4 rounded-4xl border border-primary/25 bg-gradient-to-br from-primary-soft via-surface to-surface p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow)]"
+        >
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground">
+            <Home size={20} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-base font-extrabold text-foreground">Public Homepage</span>
+            <span className="block text-xs leading-relaxed text-muted-foreground">
+              Add, edit, hide or delete any section, heading, image, list item or contact detail on the
+              public website homepage.
+            </span>
+          </span>
+          <ArrowRight size={18} className="shrink-0 text-primary transition-transform group-hover:translate-x-1" />
+        </Link>
+      </section>
+
+
+
       <section className="mt-6">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div>

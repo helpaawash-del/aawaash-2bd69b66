@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Users,
   Wallet,
+  Building2,
   TrendingUp,
   Trophy,
   Bell,
@@ -166,7 +167,16 @@ function LeaderContent() {
             to="/leader/withdrawals"
             loading={overview.isLoading}
           />
+
+          <LightPod
+            icon={<Building2 size={15} />}
+            label="Projects"
+            value={String(projects.data?.length ?? 0)}
+            to="/leader/projects"
+            loading={projects.isLoading}
+          />
         </div>
+
       </section>
 
 

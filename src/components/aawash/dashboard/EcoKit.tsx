@@ -103,11 +103,12 @@ export function EcoHeroGreeting({ name }: { name: string }) {
   return <EcoGreeting name={name} style={welcome?.style ?? "time"} />;
 }
 
-function WelcomeHeader({ role }: { role: AppRole; profile: AawashProfile | null }) {
+function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfile | null }) {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [signingOut, setSigningOut] = useState(false);
   const base = homePathForRole(role);
+  const roleLabel = role === "team_leader" ? "Team Leader" : role === "member" ? "Member" : "Admin";
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -121,8 +122,18 @@ function WelcomeHeader({ role }: { role: AppRole; profile: AawashProfile | null 
   }
 
   return (
-    <header className="sticky top-0 z-30 -mx-1 mb-1 flex items-center justify-end gap-3 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+    <header className="sticky top-0 z-30 -mx-1 mb-1 flex items-center justify-between gap-3 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+      <div className="min-w-0 pl-2">
+        <div className="truncate text-[15px] font-extrabold leading-tight tracking-tight text-foreground">
+          {profile?.full_name ?? "…"}
+        </div>
+        <div className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+          {roleLabel}
+        </div>
+      </div>
       <div className="flex shrink-0 items-center gap-1.5">
+
+
 
         <Link
           to={`${base}/notifications` as never}

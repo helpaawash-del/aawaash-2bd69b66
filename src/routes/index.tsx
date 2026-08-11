@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { getHomepageContent } from "@/lib/homepage.functions";
+import { DEFAULT_HOMEPAGE, type HomeItem, type HomepageDoc, type HomeSection } from "@/lib/homepage-content";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -95,6 +99,20 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+/* ---------------------- Admin-editable homepage content ---------------------- */
+
+const HomeContentCtx = createContext<HomepageDoc>(DEFAULT_HOMEPAGE);
+
+/** Section content for `id`, always falling back to the shipped defaults. */
+function useSection(id: string): HomeSection {
+  const doc = useContext(HomeContentCtx);
+  return doc[id] ?? DEFAULT_HOMEPAGE[id] ?? { enabled: true };
+}
+
+function items(sec: HomeSection): HomeItem[] {
+  return sec.items ?? [];
+}
+
 function Landing() {
   // The public homepage is intentionally session-agnostic: signed-in members,
   // team leaders and admins all stay here. Never redirect to a dashboard or
@@ -102,34 +120,46 @@ function Landing() {
   // (admin sessions were bounced to /admin, which requires the passcode gate).
 
 
+  const loadContent = useServerFn(getHomepageContent);
+  const { data: content } = useQuery({
+    queryKey: ["homepage-content"],
+    queryFn: () => loadContent(),
+    initialData: DEFAULT_HOMEPAGE,
+    staleTime: 60_000,
+  });
+  const on = (id: string) => content[id]?.enabled !== false;
+
   return (
-    <div className="relative min-h-screen overflow-x-hidden">
-      <Splash />
-      <AmbientBackground />
-      <LandingNav />
+    <HomeContentCtx.Provider value={content}>
+      <div className="relative min-h-screen overflow-x-hidden">
+        <Splash />
+        <AmbientBackground />
+        <LandingNav />
 
-      <main className="relative overflow-x-hidden">
-        <Hero />
-        <Categories />
-        <Projects />
-        <Commission />
-        <Stats />
-        <Lifestyle />
-        <SmartPanels />
-        <BookVisit />
-        <HowItWorks />
-        <FAQ />
-        <Contact />
-      </main>
+        <main className="relative overflow-x-hidden">
+          {on("hero") && <Hero />}
+          {on("categories") && <Categories />}
+          {on("projects") && <Projects />}
+          {on("commission") && <Commission />}
+          {on("stats") && <Stats />}
+          {on("lifestyle") && <Lifestyle />}
+          {on("smart") && <SmartPanels />}
+          {on("visit") && <BookVisit />}
+          {on("how") && <HowItWorks />}
+          {on("faq") && <FAQ />}
+          {on("contact") && <Contact />}
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </HomeContentCtx.Provider>
   );
 }
 
 /* ------------------------------ HERO ------------------------------ */
 
 function Hero() {
+  const hero = useSection("hero");
   const [scrollY, setScrollY] = useState(0);
   useEffect(() => {
     // Skip parallax + scroll listener on small screens to keep scrolling smooth.
@@ -214,16 +244,16 @@ function Hero() {
       <div className="relative z-10 mx-auto flex max-w-6xl justify-center">
         <div className="glass-card inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-primary shadow-[var(--shadow-soft)]">
           <Sparkles size={13} className="text-gold" />
-          Curated Luxury Residences · India
+          {hero.eyebrow}
         </div>
       </div>
 
       {/* Headline */}
       <div className="relative z-10 mx-auto mt-8 max-w-3xl text-center">
         <h1 className="text-balance text-[2.6rem] font-extrabold leading-[1.03] tracking-tight text-foreground sm:text-6xl md:text-7xl">
-          Home isn't a place.{" "}
+          {hero.title}{" "}
           <span className="bg-gradient-to-br from-primary via-leaf to-primary bg-clip-text text-transparent">
-            It's a feeling.
+            {hero.accent}
           </span>
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
@@ -264,8 +294,7 @@ function Hero() {
         {/* Desktop-only: description, search pill, chips, CTAs, trust */}
         <div className="hidden lg:block">
         <p className="mx-auto mt-5 max-w-xl text-balance text-[15px] leading-relaxed text-muted-foreground sm:text-lg">
-          Aawash brings together premium residential projects, a professional team system, and
-          transparent commission tracking — all in one elegant, mobile-first experience.
+          {hero.subtitle}
         </p>
 
         {/* App-style floating search pill */}
@@ -514,9 +543,14 @@ const CATEGORIES: { label: string; icon: typeof Home; hue: string; count: string
 ];
 
 function Categories() {
-  const mobileCats = CATEGORIES.filter((c) =>
-    ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
-  );
+  const sec = useSection("categories");
+  // Item text is admin-editable; icon/hue styling stays positional from CATEGORIES.
+  const cats = items(sec).map((it, i) => ({
+    ...(CATEGORIES[i % CATEGORIES.length]!),
+    label: it.title,
+    count: it.body ?? "",
+  }));
+  const mobileCats = cats.slice(0, 4);
   return (
     <section aria-labelledby="cats-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
       {/* soft ambient wash */}
@@ -528,20 +562,19 @@ function Categories() {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">
             <div className="glass-card inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
-              <Sparkles size={12} /> Explore
+              <Sparkles size={12} /> {sec.eyebrow}
             </div>
             <h2
               id="cats-title"
               className="mt-4 text-3xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-[2.75rem]"
             >
-              Browse by{" "}
+              {sec.title}{" "}
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
-                category
+                {sec.accent}
               </span>
             </h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Six curated collections — from skyline towers to garden villas. Find the home that
-              fits your lifestyle.
+              {sec.subtitle}
             </p>
           </div>
           <Link
@@ -555,7 +588,7 @@ function Categories() {
         {/* Mobile / tablet: compact 4-icon grid */}
         <ul className="mt-8 grid grid-cols-4 gap-2.5 lg:hidden">
           {mobileCats.map((c, i) => (
-            <li key={c.label}>
+            <li key={`${c.label}-${i}`}>
               <Link
                 to="/projects"
                 aria-label={`Browse ${c.label}`}
@@ -581,8 +614,8 @@ function Categories() {
 
         {/* Desktop: editorial category grid */}
         <ul className="mt-10 hidden gap-5 lg:grid lg:grid-cols-3">
-          {CATEGORIES.map((c, i) => (
-            <li key={c.label}>
+          {cats.map((c, i) => (
+            <li key={`${c.label}-${i}`}>
               <Link
                 to="/projects"
                 aria-label={`Browse ${c.label}`}
@@ -642,6 +675,12 @@ const AMENITIES: { label: string; icon: typeof Waves; desc: string }[] = [
 ];
 
 function Lifestyle() {
+  const sec = useSection("lifestyle");
+  const amenities = items(sec).map((it, i) => ({
+    ...(AMENITIES[i % AMENITIES.length]!),
+    label: it.title,
+    desc: it.body ?? "",
+  }));
   return (
     <section aria-labelledby="lifestyle-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
       <div className="mx-auto max-w-6xl">
@@ -649,23 +688,22 @@ function Lifestyle() {
           <Reveal variant="left">
             <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary">
               <Leaf size={14} />
-              Lifestyle Amenities
+              {sec.eyebrow}
             </div>
             <h2 id="lifestyle-title" className="mt-4 text-3xl font-bold leading-tight text-foreground sm:text-4xl">
-              A home that lives{" "}
+              {sec.title}{" "}
               <span className="bg-gradient-to-r from-primary to-leaf bg-clip-text text-transparent">
-                beyond four walls.
+                {sec.accent}
               </span>
             </h2>
             <p className="mt-4 max-w-md text-base text-muted-foreground">
-              Curated amenities, biophilic design, and community spaces — every Aawash residence is
-              built for calm, everyday luxury.
+              {sec.subtitle}
             </p>
 
             <ul className="mt-8 grid grid-cols-2 gap-3">
-              {AMENITIES.map((a) => (
+              {amenities.map((a, ai) => (
                 <li
-                  key={a.label}
+                  key={`${a.label}-${ai}`}
                   className="rounded-2xl border border-border bg-surface p-4 shadow-[var(--shadow-soft)]"
                 >
                   <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-soft text-primary">
@@ -681,7 +719,7 @@ function Lifestyle() {
           <Reveal variant="right" delay={100}>
             <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[2.5rem] border border-border bg-surface shadow-[var(--shadow-float)]">
               <img
-                src={heroResidence}
+                src={sec.image || heroResidence}
                 alt="Lifestyle amenities and greenery"
                 loading="lazy"
                 width={1408}
@@ -709,6 +747,7 @@ function Lifestyle() {
 /* ------------------------------ BOOK VISIT ------------------------------ */
 
 function BookVisit() {
+  const sec = useSection("visit");
   return (
     <section aria-labelledby="visit-title" className="px-5 py-8 sm:px-8 sm:py-11">
       <div className="mx-auto max-w-6xl">
@@ -720,14 +759,13 @@ function BookVisit() {
             <div className="max-w-lg">
               <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 px-3 py-1 text-xs font-semibold backdrop-blur-md">
                 <CalendarCheck size={14} />
-                Book a Private Tour
+                {sec.eyebrow}
               </div>
               <h2 id="visit-title" className="mt-4 text-3xl font-bold leading-tight sm:text-4xl">
-                Walk through your future home in person.
+                {sec.title}
               </h2>
               <p className="mt-3 text-sm opacity-90 sm:text-base">
-                Personalised site visits with our concierge — pick a project, tell us a time, we do
-                the rest.
+                {sec.subtitle}
               </p>
             </div>
 
@@ -765,12 +803,22 @@ const STATS = [
 ];
 
 function Stats() {
+  const sec = useSection("stats");
+  const stats = items(sec).map((it, i) => {
+    const raw = (it.body ?? "").trim();
+    const numeric = Number(raw.replace(/[^\d.]/g, ""));
+    return {
+      label: it.title,
+      value: Number.isFinite(numeric) ? numeric : (STATS[i % STATS.length]?.value ?? 0),
+      suffix: /\+$/.test(raw) ? "+" : "",
+    };
+  });
   return (
     <section className="px-5 py-9 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="glass-card grid grid-cols-2 gap-3 rounded-3xl p-4 shadow-[var(--shadow-float)] sm:grid-cols-4 sm:gap-6 sm:p-6">
-          {STATS.map((s, i) => (
-            <Reveal key={s.label} variant="up" delay={i * 80}>
+          {stats.map((s, i) => (
+            <Reveal key={`${s.label}-${i}`} variant="up" delay={i * 80}>
               <Counter value={s.value} suffix={s.suffix} label={s.label} />
             </Reveal>
           ))}
@@ -1390,17 +1438,19 @@ const SMART_PANELS: { icon: typeof Calculator; title: string; body: string; tone
 ];
 
 function SmartPanels() {
+  const sec = useSection("smart");
+  const panels = items(sec).map((it, i) => ({
+    ...(SMART_PANELS[i % SMART_PANELS.length]!),
+    title: it.title,
+    body: it.body ?? "",
+  }));
   return (
     <section aria-labelledby="smart-title" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
-        <SectionHeader
-          eyebrow="Smart Tools"
-          title="Everything a modern buyer needs."
-          subtitle="Native app widgets — designed for tapping, not scrolling."
-        />
+        <SectionHeader eyebrow={sec.eyebrow ?? ""} title={sec.title ?? ""} subtitle={sec.subtitle} />
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SMART_PANELS.map((panel, i) => (
-            <Reveal key={panel.title} variant="up" delay={(i % 3) * 80}>
+          {panels.map((panel, i) => (
+            <Reveal key={`${panel.title}-${i}`} variant="up" delay={(i % 3) * 80}>
               <button
                 type="button"
                 className={`group relative flex h-full w-full flex-col items-start gap-3 overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br ${panel.tone} p-5 text-left shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-float)]`}
@@ -1436,19 +1486,17 @@ const STEPS = [
 ];
 
 function HowItWorks() {
+  const sec = useSection("how");
+  const steps = items(sec);
   return (
     <section id="how-it-works" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
-        <SectionHeader
-          eyebrow="Team System"
-          title="A clear ladder, from listing to payout."
-          subtitle="Aawash's simple structure keeps everyone aligned — company, leaders, members, and customers."
-        />
+        <SectionHeader eyebrow={sec.eyebrow ?? ""} title={sec.title ?? ""} subtitle={sec.subtitle} />
         <div className="relative mt-10">
           <div className="pointer-events-none absolute left-6 top-0 hidden h-full w-px bg-gradient-to-b from-primary/40 via-primary/20 to-transparent md:block" />
           <ol className="grid gap-4 md:grid-cols-1">
-            {STEPS.map((s, i) => (
-              <Reveal key={s.title} variant="left" delay={i * 80}>
+            {steps.map((s, i) => (
+              <Reveal key={`${s.title}-${i}`} variant="left" delay={i * 80}>
                 <li className="glass-card relative flex items-start gap-4 rounded-3xl p-5 shadow-[var(--shadow-soft)]">
                   <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary to-leaf text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)]">
                     {String(i + 1).padStart(2, "0")}
@@ -1457,7 +1505,7 @@ function HowItWorks() {
                     <h3 className="text-base font-bold text-foreground">{s.title}</h3>
                     <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
                   </div>
-                  {i < STEPS.length - 1 && (
+                  {i < steps.length - 1 && (
                     <ArrowRight
                       size={16}
                       className="absolute -bottom-3 left-8 hidden text-primary/60 md:block"
@@ -1485,6 +1533,11 @@ const SLABS = [
 ];
 
 function Commission() {
+  const sec = useSection("commission");
+  const slabs = items(sec).map((it, i) => ({
+    range: it.title,
+    tone: SLABS[i % SLABS.length]!.tone,
+  }));
   return (
     <section id="commission" className="relative px-5 py-16 sm:px-8">
       <div
@@ -1495,23 +1548,23 @@ function Commission() {
         <Reveal variant="up">
           <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
             <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
-              <Sparkles size={12} className="text-gold" /> Commission Slabs
+              <Sparkles size={12} className="text-gold" /> {sec.eyebrow}
             </div>
             <h2 className="mt-5 text-[1.75rem] font-semibold leading-[1.12] tracking-[0.005em] text-foreground sm:text-[2.5rem]">
-              Simple, tiered,{" "}
+              {sec.title}{" "}
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
-                transparent.
+                {sec.accent}
               </span>
             </h2>
             <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
-              Ladders scale with deal value — clearly defined, always visible in your dashboard.
+              {sec.subtitle}
             </p>
           </div>
         </Reveal>
 
         <div className="mt-12 grid grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-5 lg:grid-cols-6">
-          {SLABS.map((slab, i) => (
-            <Reveal key={slab.range} variant="scale" delay={i * 60}>
+          {slabs.map((slab, i) => (
+            <Reveal key={`${slab.range}-${i}`} variant="scale" delay={i * 60}>
               <div className="group relative h-full rounded-[1.75rem] bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20 p-[1.2px] transition-transform duration-500 hover:-translate-y-1.5">
                 <div
                   className={`relative flex h-full flex-col items-center justify-center overflow-hidden rounded-[1.7rem] bg-gradient-to-br ${slab.tone} px-3 py-7 text-center shadow-[var(--shadow-soft)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-float)]`}
@@ -1571,24 +1624,26 @@ const FAQS = [
 ];
 
 function FAQ() {
+  const sec = useSection("faq");
+  const faqs = items(sec);
   return (
     <section id="faq" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-3xl">
-        <SectionHeader eyebrow="Frequently Asked" title="Answers, in plain words." />
+        <SectionHeader eyebrow={sec.eyebrow ?? ""} title={sec.title ?? ""} />
         <Reveal variant="up" className="mt-8">
           <div className="glass-card rounded-3xl p-2 shadow-[var(--shadow-soft)] sm:p-4">
             <Accordion type="single" collapsible className="w-full">
-              {FAQS.map((f, i) => (
+              {faqs.map((f, i) => (
                 <AccordionItem
-                  key={f.q}
+                  key={`${f.title}-${i}`}
                   value={`item-${i}`}
                   className="border-b border-border last:border-b-0"
                 >
                   <AccordionTrigger className="px-3 py-4 text-left text-sm font-semibold text-foreground hover:no-underline sm:text-base">
-                    {f.q}
+                    {f.title}
                   </AccordionTrigger>
                   <AccordionContent className="px-3 pb-4 text-sm leading-relaxed text-muted-foreground">
-                    {f.a}
+                    {f.body}
                   </AccordionContent>
                 </AccordionItem>
               ))}
@@ -1603,21 +1658,25 @@ function FAQ() {
 /* ------------------------------ CONTACT ------------------------------ */
 
 function Contact() {
+  const sec = useSection("contact");
+  const details = items(sec);
+  const detailIcons = [Phone, Mail, MapPinned];
   const [sent, setSent] = useState(false);
   return (
     <section id="contact" className="px-5 py-14 sm:px-8">
       <div className="mx-auto max-w-6xl">
-        <SectionHeader
-          eyebrow="Contact"
-          title="Let's build your team on Aawash."
-          subtitle="Reach out — we'll help you onboard leaders, members, and your first project."
-        />
+        <SectionHeader eyebrow={sec.eyebrow ?? ""} title={sec.title ?? ""} subtitle={sec.subtitle} />
         <div className="mt-10 grid gap-5 lg:grid-cols-2">
           <Reveal variant="left">
             <div className="glass-card flex h-full flex-col gap-5 rounded-3xl p-6 shadow-[var(--shadow-soft)]">
-              <ContactRow icon={Phone} label="Phone" value="+91 90000 00000" />
-              <ContactRow icon={Mail} label="Email" value="hello@aawash.app" />
-              <ContactRow icon={MapPinned} label="Office" value="Darbhanga, Bihar — 846004" />
+              {details.map((d, i) => (
+                <ContactRow
+                  key={`${d.title}-${i}`}
+                  icon={detailIcons[i % detailIcons.length]!}
+                  label={d.title}
+                  value={d.body ?? ""}
+                />
+              ))}
               <div className="mt-2 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-primary-soft to-leaf/20">
                 <div className="grid h-full w-full place-items-center text-xs font-semibold text-muted-foreground">
                   Map preview

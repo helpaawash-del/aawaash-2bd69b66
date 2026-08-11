@@ -78,21 +78,21 @@ const projectSchema = z.object({
   price_max: z.coerce.number().nonnegative().nullish(),
   latitude: z.coerce.number().min(-90).max(90).nullish(),
   longitude: z.coerce.number().min(-180).max(180).nullish(),
-  google_map_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
-  thumbnail_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
-  hero_banner_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
-  cover_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
-  logo_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
+  google_map_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
+  thumbnail_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
+  hero_banner_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
+  cover_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
+  logo_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
   launch_date: z.string().nullish().or(z.literal("").transform(() => null)),
   possession_date: z.string().nullish().or(z.literal("").transform(() => null)),
   completion_percent: z.coerce.number().int().min(0).max(100).default(0),
   seo_title: z.string().max(160).nullish(),
   seo_description: z.string().max(320).nullish(),
-  three_d_tour_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
-  virtual_walkthrough_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
+  three_d_tour_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
+  virtual_walkthrough_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
   gallery: z
     .union([
-      z.array(z.string().url().max(1000)).max(12),
+      z.array(z.string().url().max(2000)).max(12),
       z.string().transform((s) => {
         if (!s) return [];
         try {
@@ -104,7 +104,7 @@ const projectSchema = z.object({
     .optional(),
   videos: z
     .union([
-      z.array(z.string().url().max(1000)).max(8),
+      z.array(z.string().url().max(2000)).max(8),
       z.string().transform((s) => {
         if (!s) return [];
         try {
@@ -333,7 +333,7 @@ const buildingSchema = z.object({
   description: z.string().max(500).nullish(),
   total_floors: z.coerce.number().int().min(0).default(0),
   ordering: z.coerce.number().int().min(0).default(0),
-  cover_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
+  cover_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
 });
 
 export const adminUpsertBuilding = createServerFn({ method: "POST" })
@@ -379,7 +379,7 @@ const floorSchema = z.object({
   number: z.coerce.number().int().min(-5).max(200),
   name: z.string().max(60).nullish(),
   ordering: z.coerce.number().int().min(0).default(0),
-  floor_plan_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
+  floor_plan_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
 });
 
 export const adminUpsertFloor = createServerFn({ method: "POST" })
@@ -434,7 +434,7 @@ const flatSchema = z.object({
   facing: z.string().max(40).nullish(),
   price: z.coerce.number().nonnegative().nullish(),
   status: flatStatusEnum.default("available"),
-  floor_plan_url: z.string().url().max(500).nullish().or(z.literal("").transform(() => null)),
+  floor_plan_url: z.string().url().max(2000).nullish().or(z.literal("").transform(() => null)),
   admin_notes: z.string().max(500).nullish(),
 });
 
