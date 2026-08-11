@@ -78,9 +78,12 @@ function ProjectsContent() {
             {projects.map((p) => {
               const pct = p.total_units ? Math.min(100, Math.round((p.sold_units / p.total_units) * 100)) : 0;
               return (
-                <article
+                <Link
                   key={p.id}
-                  className="glass-card overflow-hidden rounded-3xl shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-float)]"
+                  to="/projects/$slug"
+                  params={{ slug: p.slug }}
+                  aria-label={`Open ${p.name}`}
+                  className="glass-card block overflow-hidden rounded-3xl shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-float)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   <div className={`relative aspect-[16/10] bg-gradient-to-br ${p.hero_hue}`}>
                     {p.tag && (
@@ -120,7 +123,7 @@ function ProjectsContent() {
                       />
                     </div>
                   </div>
-                </article>
+                </Link>
               );
             })}
           </div>
