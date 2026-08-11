@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { getHomepageContent } from "@/lib/homepage.functions";
+import { DEFAULT_HOMEPAGE, type HomeItem, type HomepageDoc, type HomeSection } from "@/lib/homepage-content";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -95,6 +99,20 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+/* ---------------------- Admin-editable homepage content ---------------------- */
+
+const HomeContentCtx = createContext<HomepageDoc>(DEFAULT_HOMEPAGE);
+
+/** Section content for `id`, always falling back to the shipped defaults. */
+function useSection(id: string): HomeSection {
+  const doc = useContext(HomeContentCtx);
+  return doc[id] ?? DEFAULT_HOMEPAGE[id] ?? { enabled: true };
+}
+
+function items(sec: HomeSection): HomeItem[] {
+  return sec.items ?? [];
+}
+
 function Landing() {
   // The public homepage is intentionally session-agnostic: signed-in members,
   // team leaders and admins all stay here. Never redirect to a dashboard or
@@ -102,28 +120,39 @@ function Landing() {
   // (admin sessions were bounced to /admin, which requires the passcode gate).
 
 
+  const loadContent = useServerFn(getHomepageContent);
+  const { data: content } = useQuery({
+    queryKey: ["homepage-content"],
+    queryFn: () => loadContent(),
+    initialData: DEFAULT_HOMEPAGE,
+    staleTime: 60_000,
+  });
+  const on = (id: string) => content[id]?.enabled !== false;
+
   return (
-    <div className="relative min-h-screen overflow-x-hidden">
-      <Splash />
-      <AmbientBackground />
-      <LandingNav />
+    <HomeContentCtx.Provider value={content}>
+      <div className="relative min-h-screen overflow-x-hidden">
+        <Splash />
+        <AmbientBackground />
+        <LandingNav />
 
-      <main className="relative overflow-x-hidden">
-        <Hero />
-        <Categories />
-        <Projects />
-        <Commission />
-        <Stats />
-        <Lifestyle />
-        <SmartPanels />
-        <BookVisit />
-        <HowItWorks />
-        <FAQ />
-        <Contact />
-      </main>
+        <main className="relative overflow-x-hidden">
+          {on("hero") && <Hero />}
+          {on("categories") && <Categories />}
+          {on("projects") && <Projects />}
+          {on("commission") && <Commission />}
+          {on("stats") && <Stats />}
+          {on("lifestyle") && <Lifestyle />}
+          {on("smart") && <SmartPanels />}
+          {on("visit") && <BookVisit />}
+          {on("how") && <HowItWorks />}
+          {on("faq") && <FAQ />}
+          {on("contact") && <Contact />}
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </HomeContentCtx.Provider>
   );
 }
 
@@ -214,16 +243,16 @@ function Hero() {
       <div className="relative z-10 mx-auto flex max-w-6xl justify-center">
         <div className="glass-card inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-primary shadow-[var(--shadow-soft)]">
           <Sparkles size={13} className="text-gold" />
-          Curated Luxury Residences · India
+          {hero.eyebrow}
         </div>
       </div>
 
       {/* Headline */}
       <div className="relative z-10 mx-auto mt-8 max-w-3xl text-center">
         <h1 className="text-balance text-[2.6rem] font-extrabold leading-[1.03] tracking-tight text-foreground sm:text-6xl md:text-7xl">
-          Home isn't a place.{" "}
+          {hero.title}{" "}
           <span className="bg-gradient-to-br from-primary via-leaf to-primary bg-clip-text text-transparent">
-            It's a feeling.
+            {hero.accent}
           </span>
         </h1>
         {/* Mobile / tablet: transparent cutout render, no card frame, blends with page */}
@@ -264,8 +293,7 @@ function Hero() {
         {/* Desktop-only: description, search pill, chips, CTAs, trust */}
         <div className="hidden lg:block">
         <p className="mx-auto mt-5 max-w-xl text-balance text-[15px] leading-relaxed text-muted-foreground sm:text-lg">
-          Aawash brings together premium residential projects, a professional team system, and
-          transparent commission tracking — all in one elegant, mobile-first experience.
+          {hero.subtitle}
         </p>
 
         {/* App-style floating search pill */}
@@ -514,9 +542,14 @@ const CATEGORIES: { label: string; icon: typeof Home; hue: string; count: string
 ];
 
 function Categories() {
-  const mobileCats = CATEGORIES.filter((c) =>
-    ["Apartments", "Villas", "Towers", "Plots"].includes(c.label),
-  );
+  const sec = useSection("categories");
+  // Item text is admin-editable; icon/hue styling stays positional from CATEGORIES.
+  const cats = items(sec).map((it, i) => ({
+    ...(CATEGORIES[i % CATEGORIES.length]!),
+    label: it.title,
+    count: it.body ?? "",
+  }));
+  const mobileCats = cats.slice(0, 4);
   return (
     <section aria-labelledby="cats-title" className="relative px-5 py-11 sm:px-8 sm:py-14">
       {/* soft ambient wash */}
@@ -528,20 +561,19 @@ function Categories() {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">
             <div className="glass-card inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
-              <Sparkles size={12} /> Explore
+              <Sparkles size={12} /> {sec.eyebrow}
             </div>
             <h2
               id="cats-title"
               className="mt-4 text-3xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-[2.75rem]"
             >
-              Browse by{" "}
+              {sec.title}{" "}
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
-                category
+                {sec.accent}
               </span>
             </h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Six curated collections — from skyline towers to garden villas. Find the home that
-              fits your lifestyle.
+              {sec.subtitle}
             </p>
           </div>
           <Link
@@ -555,7 +587,7 @@ function Categories() {
         {/* Mobile / tablet: compact 4-icon grid */}
         <ul className="mt-8 grid grid-cols-4 gap-2.5 lg:hidden">
           {mobileCats.map((c, i) => (
-            <li key={c.label}>
+            <li key={`${c.label}-${i}`}>
               <Link
                 to="/projects"
                 aria-label={`Browse ${c.label}`}
@@ -581,8 +613,8 @@ function Categories() {
 
         {/* Desktop: editorial category grid */}
         <ul className="mt-10 hidden gap-5 lg:grid lg:grid-cols-3">
-          {CATEGORIES.map((c, i) => (
-            <li key={c.label}>
+          {cats.map((c, i) => (
+            <li key={`${c.label}-${i}`}>
               <Link
                 to="/projects"
                 aria-label={`Browse ${c.label}`}
