@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Users,
   Wallet,
+  Building2,
   TrendingUp,
   Trophy,
   Bell,
