@@ -16,6 +16,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
+import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { ImageUploadField } from "@/components/aawash/admin/MediaUploaders";
 import { getHomepageContent, saveHomepageContent } from "@/lib/homepage.functions";
@@ -54,6 +55,7 @@ const FIELD_LABELS: Record<FieldKey, string> = {
 };
 
 function AdminHomepageEditor() {
+  const { profile } = useSession();
   const load = useServerFn(getHomepageContent);
   const save = useServerFn(saveHomepageContent);
   const { data, isLoading, refetch } = useQuery({
@@ -95,7 +97,7 @@ function AdminHomepageEditor() {
   }
 
   return (
-    <AdminShell title="Public Homepage" subtitle="Edit every section of the public website homepage">
+    <AdminShell profile={profile}>
       <div className="mx-auto max-w-4xl space-y-5 pb-32">
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border bg-surface p-4 shadow-[var(--shadow-soft)]">
           <div className="flex items-center gap-3">
