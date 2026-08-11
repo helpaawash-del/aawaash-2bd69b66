@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { UploadCloud, X, AlertTriangle, CheckCircle2, Loader2, Image as ImageIcon, Box } from "lucide-react";
 
