@@ -8,7 +8,6 @@ import {
   Compass,
   Layers,
   Ruler,
-  Search,
   Sparkles,
   X,
 } from "lucide-react";
