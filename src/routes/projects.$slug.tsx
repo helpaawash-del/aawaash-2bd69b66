@@ -95,9 +95,6 @@ function ProjectDetailPage() {
   const available = (p.available_flats as number) ?? 0;
   const reserved = (p.reserved_flats as number) ?? 0;
   const sold = (p.sold_flats as number) ?? 0;
-  const buildPct = (p.completion_percent as number) ?? 0;
-  const salesPct = total ? Math.round((sold / total) * 100) : 0;
-  const availPct = total ? Math.round((available / total) * 100) : 0;
 
   const gallery = useMemo<string[]>(() => {
     const raw = p.gallery;
@@ -308,9 +305,6 @@ function ProjectDetailPage() {
             <div id="about" className="mt-6">
               <OverviewPanel
                 p={p}
-                buildPct={buildPct}
-                salesPct={salesPct}
-                availPct={availPct}
                 total={total}
                 available={available}
                 reserved={reserved}
@@ -403,18 +397,12 @@ function ProjectDetailPage() {
 
 function OverviewPanel({
   p,
-  buildPct,
-  salesPct,
-  availPct,
   total,
   available,
   reserved,
   sold,
 }: {
   p: Record<string, unknown>;
-  buildPct: number;
-  salesPct: number;
-  availPct: number;
   total: number;
   available: number;
   reserved: number;
@@ -779,63 +767,6 @@ function MiniStat({ label, value }: { label: string; value: string | number }) {
         {label}
       </div>
       <div className="mt-0.5 truncate text-sm font-extrabold text-foreground">{value}</div>
-    </div>
-  );
-}
-
-function ProgressCard({
-  label,
-  pct,
-  tone,
-}: {
-  label: string;
-  pct: number;
-  tone: "primary" | "gold" | "leaf";
-}) {
-  const stroke =
-    tone === "gold"
-      ? "hsl(var(--gold))"
-      : tone === "leaf"
-      ? "hsl(var(--leaf))"
-      : "hsl(var(--primary))";
-  const r = 32;
-  const c = 2 * Math.PI * r;
-  const off = c - (pct / 100) * c;
-  return (
-    <div className="glass-card flex items-center gap-4 rounded-3xl p-5 shadow-[var(--shadow-soft)]">
-      <svg viewBox="0 0 80 80" className="h-20 w-20">
-        <circle cx="40" cy="40" r={r} strokeWidth="8" fill="none" className="stroke-muted" />
-        <circle
-          cx="40"
-          cy="40"
-          r={r}
-          strokeWidth="8"
-          fill="none"
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={off}
-          style={{
-            stroke,
-            transform: "rotate(-90deg)",
-            transformOrigin: "center",
-            transition: "stroke-dashoffset 700ms",
-          }}
-        />
-        <text
-          x="50%"
-          y="52%"
-          textAnchor="middle"
-          className="fill-foreground text-[15px] font-extrabold"
-        >
-          {pct}%
-        </text>
-      </svg>
-      <div>
-        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {label}
-        </div>
-        <div className="mt-0.5 text-sm font-extrabold text-foreground">{pct}% complete</div>
-      </div>
     </div>
   );
 }
