@@ -121,7 +121,7 @@ function Landing() {
 
 
   const loadContent = useServerFn(getHomepageContent);
-  const { data: content } = useQuery({
+  const { data: contentData } = useQuery({
     queryKey: ["homepage-content"],
     queryFn: () => loadContent(),
     // `placeholderData` (not `initialData`) — initial data would be treated as
@@ -131,6 +131,7 @@ function Landing() {
     refetchOnMount: "always",
     refetchOnWindowFocus: true,
   });
+  const content = contentData ?? DEFAULT_HOMEPAGE;
   const on = (id: string) => content[id]?.enabled !== false;
 
   return (
