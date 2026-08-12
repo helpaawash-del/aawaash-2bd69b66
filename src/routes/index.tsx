@@ -121,12 +121,17 @@ function Landing() {
 
 
   const loadContent = useServerFn(getHomepageContent);
-  const { data: content } = useQuery({
+  const { data: contentData } = useQuery({
     queryKey: ["homepage-content"],
     queryFn: () => loadContent(),
-    initialData: DEFAULT_HOMEPAGE,
-    staleTime: 60_000,
+    // `placeholderData` (not `initialData`) — initial data would be treated as
+    // fresh and suppress the fetch, so saved admin edits never appeared.
+    placeholderData: DEFAULT_HOMEPAGE,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
+  const content = contentData ?? DEFAULT_HOMEPAGE;
   const on = (id: string) => content[id]?.enabled !== false;
 
   return (
@@ -964,6 +969,7 @@ const SAVITRI: ProjectDetail = {
 const PROJECTS: ProjectDetail[] = [SAVITRI];
 
 function Projects() {
+  const sec = useSection("projects");
   const navigate = useNavigate();
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
   const [activeImg, setActiveImg] = useState<Record<string, number>>({});
@@ -985,13 +991,13 @@ function Projects() {
       <div className="relative mx-auto max-w-3xl">
         <div className="flex flex-col items-center text-center">
           <div className="glass-card inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-primary">
-            <Sparkles size={12} className="text-gold" /> Featured Residence
+            <Sparkles size={12} className="text-gold" /> {sec.eyebrow ?? "Featured Residence"}
           </div>
           <h2 className="mt-5 font-serif text-[1.6rem] font-medium leading-[1.15] tracking-[0.015em] text-foreground sm:text-[2.35rem]">
-            A home to{" "}
+            {sec.title ?? "A home to"}{" "}
             <span className="relative inline-block">
               <span className="bg-gradient-to-r from-primary via-leaf to-primary bg-clip-text text-transparent">
-                come home to.
+                {sec.accent ?? "come home to."}
               </span>
               <span
                 aria-hidden
@@ -1007,7 +1013,10 @@ function Projects() {
         <div className="mt-14 flex flex-col gap-16">
           {PROJECTS.map((p, i) => {
             const wished = wishlist.has(p.name);
+            // Admins can replace the card cover from /admin/homepage → Projects.
             const idx = activeImg[p.name] ?? 0;
+            // Admins can replace the card cover from /admin/homepage → Projects.
+            const cover = i === 0 && sec.image ? sec.image : p.images[idx];
             return (
               <Reveal key={p.name} variant="up" delay={i * 100}>
                 <div className="rounded-[2.5rem] bg-gradient-to-br from-primary/25 via-leaf/15 to-gold/20 p-[1.5px] shadow-[var(--shadow-float)]">
@@ -1029,8 +1038,8 @@ function Projects() {
                   {/* Image — clean, no overlaid copy */}
                   <div className="relative m-2 aspect-[4/3] overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary/10 to-leaf/10 sm:m-2.5 sm:aspect-[16/10]">
                     <img
-                      src={p.images[idx]}
-                      alt={`${p.name} — view ${idx + 1}`}
+                      src={cover}
+                      alt={`${p.name} — cover`}
                       loading="lazy"
                       decoding="async"
                       className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.05]"

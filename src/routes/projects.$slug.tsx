@@ -73,7 +73,12 @@ function ProjectDetailPage() {
   const { slug } = Route.useParams();
   const qc = useQueryClient();
   const fetchProject = useServerFn(getPublicProject);
-  const { data: project, isLoading, isError, refetch } = useQuery({
+  const {
+    data: project,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["project", "public", slug],
     queryFn: () => fetchProject({ data: { slug } }),
   });
@@ -82,7 +87,10 @@ function ProjectDetailPage() {
   useRealtimeInvalidate(
     `project-public-${slug}`,
     ["projects", "flats"],
-    [["project", "public", slug], ["project-inventory-public", slug]],
+    [
+      ["project", "public", slug],
+      ["project-inventory-public", slug],
+    ],
     { pollMs: 45_000 },
   );
 
@@ -95,9 +103,6 @@ function ProjectDetailPage() {
   const available = (p.available_flats as number) ?? 0;
   const reserved = (p.reserved_flats as number) ?? 0;
   const sold = (p.sold_flats as number) ?? 0;
-  const buildPct = (p.completion_percent as number) ?? 0;
-  const salesPct = total ? Math.round((sold / total) * 100) : 0;
-  const availPct = total ? Math.round((available / total) * 100) : 0;
 
   const gallery = useMemo<string[]>(() => {
     const raw = p.gallery;
@@ -129,11 +134,23 @@ function ProjectDetailPage() {
     document.head.appendChild(s);
   }, [isGlb]);
 
-  const dockItems: Array<{ id: string; label: string; icon: React.ElementType; href: string; targetId?: string }> = [
+  const dockItems: Array<{
+    id: string;
+    label: string;
+    icon: React.ElementType;
+    href: string;
+    targetId?: string;
+  }> = [
     { id: "home", label: "Home", icon: HomeIcon, href: "/" },
     { id: "gallery", label: "Gallery", icon: Images, href: "#gallery", targetId: "gallery" },
     { id: "flats", label: "Total Flats", icon: Layers, href: "#flats", targetId: "flats" },
-    { id: "availability", label: "Availability", icon: Grid3x3, href: "#availability", targetId: "availability" },
+    {
+      id: "availability",
+      label: "Availability",
+      icon: Grid3x3,
+      href: "#availability",
+      targetId: "availability",
+    },
   ];
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : `/projects/${slug}`;
@@ -168,8 +185,7 @@ function ProjectDetailPage() {
         </button>
       )}
 
-
-      <main className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pb-16 pt-24 sm:px-6 sm:pt-28">
         <Link
           to="/projects"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
@@ -265,25 +281,7 @@ function ProjectDetailPage() {
                     </div>
                   </div>
                 </div>
-
-                {/* Filmstrip */}
-                {heroImages.length > 1 && (
-                  <div className="flex gap-2 overflow-x-auto p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    {heroImages.slice(0, 10).map((src, i) => (
-                      <button
-                        key={`${src}-${i}`}
-                        type="button"
-                        onClick={() => setLightbox(i)}
-                        className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-border/60 transition-all hover:scale-105 hover:border-primary"
-                        aria-label={`Open photo ${i + 1}`}
-                      >
-                        <img src={src} alt="" className="h-full w-full object-cover" />
-                      </button>
-                    ))}
-                  </div>
-                )}
               </section>
-
             </Reveal>
 
             {/* Quick facts row — always visible */}
@@ -295,8 +293,8 @@ function ProjectDetailPage() {
                   p.project_type === "entire_building"
                     ? "Entire Building"
                     : (p.project_type as string) === "villa"
-                    ? "Villa"
-                    : "Flat Inventory"
+                      ? "Villa"
+                      : "Flat Inventory"
                 }
               />
               <QuickCard
@@ -324,9 +322,6 @@ function ProjectDetailPage() {
             <div id="about" className="mt-6">
               <OverviewPanel
                 p={p}
-                buildPct={buildPct}
-                salesPct={salesPct}
-                availPct={availPct}
                 total={total}
                 available={available}
                 reserved={reserved}
@@ -336,7 +331,11 @@ function ProjectDetailPage() {
 
             {/* GALLERY */}
             <section id="gallery" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Images size={16} />} title="Gallery" subtitle="Photos of the project" />
+              <SectionHeader
+                icon={<Images size={16} />}
+                title="Gallery"
+                subtitle="Photos of the project"
+              />
               <div className="mt-4">
                 <GalleryPanel images={heroImages} onOpen={(i) => setLightbox(i)} />
               </div>
@@ -344,7 +343,11 @@ function ProjectDetailPage() {
 
             {/* 3D MODEL */}
             <section id="tour" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Box size={16} />} title="3D Model" subtitle="Explore in immersive detail" />
+              <SectionHeader
+                icon={<Box size={16} />}
+                title="3D Model"
+                subtitle="Explore in immersive detail"
+              />
               <div className="mt-4">
                 <TourPanel modelUrl={modelUrl} isGlb={isGlb} />
               </div>
@@ -352,18 +355,35 @@ function ProjectDetailPage() {
 
             {/* TOTAL FLATS (breakdown) */}
             <section id="flats" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Layers size={16} />} title="Total Flats" subtitle="Inventory at a glance" />
+              <SectionHeader
+                icon={<Layers size={16} />}
+                title="Total Flats"
+                subtitle="Inventory at a glance"
+              />
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <QuickCard icon={<HomeIcon size={14} />} label="Total" value={String(total)} />
-                <QuickCard icon={<Layers size={14} />} label="Available" value={String(available)} accent="emerald" />
-                <QuickCard icon={<Sparkles size={14} />} label="Reserved" value={String(reserved)} />
+                <QuickCard
+                  icon={<Layers size={14} />}
+                  label="Available"
+                  value={String(available)}
+                  accent="emerald"
+                />
+                <QuickCard
+                  icon={<Sparkles size={14} />}
+                  label="Reserved"
+                  value={String(reserved)}
+                />
                 <QuickCard icon={<CheckCircle2 size={14} />} label="Sold" value={String(sold)} />
               </div>
             </section>
 
             {/* AVAILABILITY (seatmap) */}
             <section id="availability" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Grid3x3 size={16} />} title="Availability" subtitle="Live flat seatmap" />
+              <SectionHeader
+                icon={<Grid3x3 size={16} />}
+                title="Availability"
+                subtitle="Live flat seatmap"
+              />
               <div className="mt-4">
                 <Reveal>
                   <FlatInventoryBoard slug={slug} projectName={p.name as string} />
@@ -373,7 +393,11 @@ function ProjectDetailPage() {
 
             {/* LOCATION */}
             <section id="location" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<MapPin size={16} />} title="Location" subtitle="Where you'll live" />
+              <SectionHeader
+                icon={<MapPin size={16} />}
+                title="Location"
+                subtitle="Where you'll live"
+              />
               <div className="mt-4">
                 <LocationPanel p={p} />
               </div>
@@ -401,7 +425,6 @@ function ProjectDetailPage() {
       {/* Project Dock — Home / Gallery / Total Flats / Availability */}
       {project && <ProjectDock items={dockItems} />}
 
-
       {/* Lightbox */}
       {lightbox !== null && heroImages.length > 0 && (
         <Lightbox
@@ -419,18 +442,12 @@ function ProjectDetailPage() {
 
 function OverviewPanel({
   p,
-  buildPct,
-  salesPct,
-  availPct,
   total,
   available,
   reserved,
   sold,
 }: {
   p: Record<string, unknown>;
-  buildPct: number;
-  salesPct: number;
-  availPct: number;
   total: number;
   available: number;
   reserved: number;
@@ -438,13 +455,6 @@ function OverviewPanel({
 }) {
   return (
     <div className="space-y-6">
-      <section className="grid gap-4 sm:grid-cols-3">
-        <ProgressCard label="Construction" pct={buildPct} tone="primary" />
-        <ProgressCard label="Sales" pct={salesPct} tone="gold" />
-        <ProgressCard label="Availability" pct={availPct} tone="leaf" />
-      </section>
-
-
       {(p.amenities as string[] | undefined)?.length ? (
         <Reveal>
           <section className="glass-card rounded-3xl p-6 shadow-[var(--shadow-soft)]">
@@ -465,7 +475,6 @@ function OverviewPanel({
           </section>
         </Reveal>
       ) : null}
-
     </div>
   );
 }
@@ -493,7 +502,15 @@ function GalleryPanel({ images, onOpen }: { images: string[]; onOpen: (i: number
   );
 }
 
-function GalleryTile({ src, index, onOpen }: { src: string; index: number; onOpen: (i: number) => void }) {
+function GalleryTile({
+  src,
+  index,
+  onOpen,
+}: {
+  src: string;
+  index: number;
+  onOpen: (i: number) => void;
+}) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
   return (
@@ -525,13 +542,7 @@ function GalleryTile({ src, index, onOpen }: { src: string; index: number; onOpe
   );
 }
 
-function TourPanel({
-  modelUrl,
-  isGlb,
-}: {
-  modelUrl: string | null;
-  isGlb: boolean;
-}) {
+function TourPanel({ modelUrl, isGlb }: { modelUrl: string | null; isGlb: boolean }) {
   return (
     <div className="space-y-4">
       <Reveal>
@@ -565,8 +576,6 @@ function TourPanel({
     </div>
   );
 }
-
-
 
 function ModelViewerFrame({ src }: { src: string }) {
   const [ready, setReady] = useState(false);
@@ -602,9 +611,15 @@ function ModelViewerFrame({ src }: { src: string }) {
           src={src}
           camera-controls
           auto-rotate
+          auto-rotate-delay="300"
+          rotation-per-second="18deg"
           touch-action="pan-y"
-          shadow-intensity="1"
+          interaction-prompt="none"
+          loading="eager"
+          reveal="auto"
+          shadow-intensity="0"
           exposure="1"
+          power-preference="high-performance"
           onError={() => setErrored(true)}
           style={{ width: "100%", height: "100%", background: "transparent" }}
         />
@@ -653,7 +668,9 @@ function LocationPanel({ p }: { p: Record<string, unknown> }) {
           <div className="text-sm font-bold text-foreground">
             {(p.address as string) || (p.location as string)}
           </div>
-          <div className="text-xs text-muted-foreground">Nearby: schools, hospitals, markets & transit</div>
+          <div className="text-xs text-muted-foreground">
+            Nearby: schools, hospitals, markets & transit
+          </div>
           {map && (
             <a
               href={map}
@@ -758,7 +775,13 @@ function Lightbox({
                   i === index ? "border-white" : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
-                <img src={src} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                <img
+                  src={src}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
               </button>
             ))}
           </div>
@@ -802,63 +825,6 @@ function MiniStat({ label, value }: { label: string; value: string | number }) {
         {label}
       </div>
       <div className="mt-0.5 truncate text-sm font-extrabold text-foreground">{value}</div>
-    </div>
-  );
-}
-
-function ProgressCard({
-  label,
-  pct,
-  tone,
-}: {
-  label: string;
-  pct: number;
-  tone: "primary" | "gold" | "leaf";
-}) {
-  const stroke =
-    tone === "gold"
-      ? "hsl(var(--gold))"
-      : tone === "leaf"
-      ? "hsl(var(--leaf))"
-      : "hsl(var(--primary))";
-  const r = 32;
-  const c = 2 * Math.PI * r;
-  const off = c - (pct / 100) * c;
-  return (
-    <div className="glass-card flex items-center gap-4 rounded-3xl p-5 shadow-[var(--shadow-soft)]">
-      <svg viewBox="0 0 80 80" className="h-20 w-20">
-        <circle cx="40" cy="40" r={r} strokeWidth="8" fill="none" className="stroke-muted" />
-        <circle
-          cx="40"
-          cy="40"
-          r={r}
-          strokeWidth="8"
-          fill="none"
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={off}
-          style={{
-            stroke,
-            transform: "rotate(-90deg)",
-            transformOrigin: "center",
-            transition: "stroke-dashoffset 700ms",
-          }}
-        />
-        <text
-          x="50%"
-          y="52%"
-          textAnchor="middle"
-          className="fill-foreground text-[15px] font-extrabold"
-        >
-          {pct}%
-        </text>
-      </svg>
-      <div>
-        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {label}
-        </div>
-        <div className="mt-0.5 text-sm font-extrabold text-foreground">{pct}% complete</div>
-      </div>
     </div>
   );
 }
@@ -938,12 +904,12 @@ function SectionHeader({
     <div className="flex items-end justify-between gap-3">
       <div>
         <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-          <span className="grid h-6 w-6 place-items-center rounded-full bg-primary-soft">{icon}</span>
+          <span className="grid h-6 w-6 place-items-center rounded-full bg-primary-soft">
+            {icon}
+          </span>
           {title}
         </div>
-        {subtitle ? (
-          <div className="mt-1 text-sm text-muted-foreground">{subtitle}</div>
-        ) : null}
+        {subtitle ? <div className="mt-1 text-sm text-muted-foreground">{subtitle}</div> : null}
       </div>
     </div>
   );
@@ -952,7 +918,13 @@ function SectionHeader({
 function ProjectDock({
   items,
 }: {
-  items: Array<{ id: string; label: string; icon: React.ElementType; href: string; targetId?: string }>;
+  items: Array<{
+    id: string;
+    label: string;
+    icon: React.ElementType;
+    href: string;
+    targetId?: string;
+  }>;
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const targetIds = useMemo(
@@ -1013,9 +985,7 @@ function ProjectDock({
                 aria-label={label}
                 aria-current={isActive ? "page" : undefined}
                 className={`group relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-[24px] px-1 outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary/40 ${
-                  isActive
-                    ? "text-primary"
-                    : "text-slate-600 hover:text-primary"
+                  isActive ? "text-primary" : "text-slate-600 hover:text-primary"
                 }`}
               >
                 {isActive && (

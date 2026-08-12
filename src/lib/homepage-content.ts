@@ -46,7 +46,12 @@ export const SECTION_SPECS: SectionSpec[] = [
     fields: ["eyebrow", "title", "accent", "subtitle"],
     items: { label: "Categories", titleLabel: "Label", bodyLabel: "Caption" },
   },
-  { id: "projects", label: "Projects", hint: "Live project cards (data-driven).", fields: [] },
+  {
+    id: "projects",
+    label: "Projects",
+    hint: "Featured residence heading and the cover photo shown on the project card.",
+    fields: ["eyebrow", "title", "accent", "image"],
+  },
   {
     id: "commission",
     label: "Commission slabs",
@@ -129,7 +134,12 @@ export const DEFAULT_HOMEPAGE: HomepageDoc = {
       { title: "Luxury", body: "42 signature" },
     ],
   },
-  projects: { enabled: true },
+  projects: {
+    enabled: true,
+    eyebrow: "Featured Residence",
+    title: "A home to",
+    accent: "come home to.",
+  },
   commission: {
     enabled: true,
     eyebrow: "Commission Slabs",

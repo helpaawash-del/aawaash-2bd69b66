@@ -22,6 +22,7 @@ import {
   Zap,
 } from "lucide-react";
 
+import { AiBuddy } from "@/components/aawash/dashboard/AiBuddy";
 import { RankRing } from "@/components/aawash/dashboard/RankRing";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
@@ -100,8 +101,7 @@ function MemberContent() {
   const myScore = Number(board.data?.members.find((m) => m.id === myId)?.score ?? 0);
   const topBoard = (board.data?.members ?? []).slice(0, 5);
   const boardTotal = board.data?.members.length ?? 0;
-  const rankPct =
-    rank && boardTotal ? Math.round(((boardTotal - rank + 1) / boardTotal) * 100) : 0;
+  const rankPct = rank && boardTotal ? Math.round(((boardTotal - rank + 1) / boardTotal) * 100) : 0;
 
   const xpGoal = Math.max(100, Math.round(myScore * 1.6) || 100);
 
@@ -112,13 +112,7 @@ function MemberContent() {
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
         </div>
-        <Link
-          to="/member/profile"
-          aria-label="Open your profile"
-          className="mt-1 shrink-0 rounded-full outline-none transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <Avatar name={profile?.full_name} src={profile?.avatar_url} size="clamp(42px,11.5vw,56px)" online />
-        </Link>
+        <AiBuddy className="mt-1" />
       </section>
 
       {/* ---------------- Rank + pods ---------------- */}
@@ -164,9 +158,6 @@ function MemberContent() {
           />
         </div>
       </section>
-
-
-
 
       {/* ---------------- Command bar ---------------- */}
       <section className="mt-4 sm:mt-5">

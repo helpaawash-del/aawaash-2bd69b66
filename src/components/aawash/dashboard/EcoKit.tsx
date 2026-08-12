@@ -8,6 +8,7 @@ import type { AawashProfile } from "@/hooks/useSession";
 import type { AppRole } from "@/lib/auth";
 import { homePathForRole } from "@/lib/auth";
 import { useWelcome, type WelcomeState } from "@/hooks/useWelcome";
+import { BrandMark } from "@/components/aawash/BrandMark";
 import { EcoGreeting } from "@/components/aawash/dashboard/EcoGreeting";
 import { EcoDock } from "@/components/aawash/dashboard/EcoDock";
 import ecoTowerWire from "@/assets/eco-tower-wire.png.asset.json";
@@ -79,14 +80,12 @@ export function EcoShell({
           <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
         </div>
 
-
         <EcoDock role={role} />
 
         <div
           data-testid="dock-content"
           className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-[calc(10.5rem+env(safe-area-inset-bottom))] pt-5 sm:max-w-xl sm:px-6 md:max-w-3xl lg:max-w-6xl lg:pb-40 lg:px-10 xl:max-w-7xl"
         >
-
           <WelcomeHeader role={role} profile={profile} />
           <main id="main-content" className="mt-6 flex-1 sm:mt-9">
             {children}
@@ -108,7 +107,6 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
   const qc = useQueryClient();
   const [signingOut, setSigningOut] = useState(false);
   const base = homePathForRole(role);
-  const roleLabel = role === "team_leader" ? "Team Leader" : role === "member" ? "Member" : "Admin";
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -122,19 +120,25 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
   }
 
   return (
-    <header className="sticky top-0 z-30 -mx-1 mb-1 flex items-center justify-between gap-3 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
-      <div className="min-w-0 pl-2">
-        <div className="truncate text-[15px] font-extrabold leading-tight tracking-tight text-foreground">
+    <header className="sticky top-0 z-30 -mx-1 mb-1 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+      {/* Identity — avatar sits before the name */}
+      <Link
+        to={`${base}/profile` as never}
+        aria-label="Open your profile"
+        className="flex min-w-0 items-center gap-2 rounded-full pl-1 outline-none transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={34} online />
+        <span className="truncate text-[14px] font-extrabold leading-tight tracking-tight text-foreground">
           {profile?.full_name ?? "…"}
-        </div>
-        <div className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-          {roleLabel}
-        </div>
-      </div>
-      <div className="flex shrink-0 items-center gap-1.5">
+        </span>
+      </Link>
 
+      {/* Brand — big, centred */}
+      <Link to={base as never} aria-label="Aawaash home" className="justify-self-center">
+        <BrandMark size="sm" showWordmark={false} />
+      </Link>
 
-
+      <div className="flex shrink-0 items-center justify-end gap-1.5">
         <Link
           to={`${base}/notifications` as never}
           aria-label="Notifications"
@@ -218,7 +222,6 @@ export function Avatar({
     </span>
   );
 }
-
 
 /** Circular progress dial with a soft emerald sweep. */
 export function ProgressRing({
@@ -428,7 +431,9 @@ export function SectionHead({
 }) {
   return (
     <div className="mb-3 flex items-center justify-between gap-3">
-      <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">{title}</h2>
+      <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">
+        {title}
+      </h2>
       {to && (
         <Link
           to={to as never}
@@ -472,7 +477,9 @@ export function DarkPanel({
               <div className="truncate text-[10px] font-medium text-muted-foreground">
                 {s.label}
               </div>
-              {s.hint && <div className="truncate text-[10px] font-semibold text-forest">{s.hint}</div>}
+              {s.hint && (
+                <div className="truncate text-[10px] font-semibold text-forest">{s.hint}</div>
+              )}
             </div>
           ))}
         </div>
@@ -510,8 +517,24 @@ export function Orb({ intensity = 0.6 }: { intensity?: number }) {
       >
         <circle cx="90" cy="90" r="84" fill="none" stroke="var(--forest)" strokeOpacity="0.16" />
         <circle cx="90" cy="90" r="62" fill="none" stroke="var(--forest)" strokeOpacity="0.12" />
-        <ellipse cx="90" cy="90" rx="84" ry="34" fill="none" stroke="var(--forest)" strokeOpacity="0.13" />
-        <ellipse cx="90" cy="90" rx="34" ry="84" fill="none" stroke="var(--forest)" strokeOpacity="0.13" />
+        <ellipse
+          cx="90"
+          cy="90"
+          rx="84"
+          ry="34"
+          fill="none"
+          stroke="var(--forest)"
+          strokeOpacity="0.13"
+        />
+        <ellipse
+          cx="90"
+          cy="90"
+          rx="34"
+          ry="84"
+          fill="none"
+          stroke="var(--forest)"
+          strokeOpacity="0.13"
+        />
         {dots.map((d, i) => (
           <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="var(--forest-deep)" opacity={d.o} />
         ))}
@@ -519,7 +542,6 @@ export function Orb({ intensity = 0.6 }: { intensity?: number }) {
     </div>
   );
 }
-
 
 /** White card with title + rows, matching the "Upcoming Schedule" block. */
 export function LightPanel({

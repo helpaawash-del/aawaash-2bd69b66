@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { UploadCloud, X, AlertTriangle, CheckCircle2, Loader2, Image as ImageIcon, Box } from "lucide-react";
+import {
+  UploadCloud,
+  X,
+  AlertTriangle,
+  CheckCircle2,
+  Loader2,
+  Image as ImageIcon,
+  Box,
+} from "lucide-react";
 
 const BUCKET = "project-media";
 
@@ -83,8 +91,6 @@ export function ImageUploadField({
     notify.current?.(url);
   }, [url]);
 
-
-
   const validate = useCallback((f: File): string | null => {
     if (!IMAGE_MIME.includes(f.type)) {
       return `Unsupported format “${f.type || "unknown"}”. Use JPG, PNG, WebP, AVIF or GIF.`;
@@ -100,7 +106,10 @@ export function ImageUploadField({
     setErr(null);
     setBroken(false);
     const v = validate(f);
-    if (v) { setErr(v); return; }
+    if (v) {
+      setErr(v);
+      return;
+    }
     setBusy(true);
     setProgress(0);
     try {
@@ -136,7 +145,10 @@ export function ImageUploadField({
             {!disabled && (
               <button
                 type="button"
-                onClick={() => { setUrl(""); setBroken(false); }}
+                onClick={() => {
+                  setUrl("");
+                  setBroken(false);
+                }}
                 className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-full bg-black/60 text-white hover:bg-black/80"
                 aria-label="Remove image"
               >
@@ -154,7 +166,9 @@ export function ImageUploadField({
             {broken ? (
               <>
                 <AlertTriangle size={22} className="text-amber-500" />
-                <span className="text-xs font-semibold">Preview failed to load — pick a new image</span>
+                <span className="text-xs font-semibold">
+                  Preview failed to load — pick a new image
+                </span>
               </>
             ) : busy ? (
               <>
@@ -165,7 +179,9 @@ export function ImageUploadField({
               <>
                 <ImageIcon size={22} />
                 <span className="text-xs font-semibold">Click to upload {label.toLowerCase()}</span>
-                <span className="text-[10px]">JPG / PNG / WebP · up to {human(IMAGE_MAX_BYTES)}</span>
+                <span className="text-[10px]">
+                  JPG / PNG / WebP · up to {human(IMAGE_MAX_BYTES)}
+                </span>
               </>
             )}
           </button>
@@ -191,14 +207,22 @@ export function ImageUploadField({
           type="url"
           placeholder="…or paste a public https:// URL"
           value={url}
-          onChange={(e) => { setUrl(e.target.value); setBroken(false); setErr(null); }}
+          onChange={(e) => {
+            setUrl(e.target.value);
+            setBroken(false);
+            setErr(null);
+          }}
           disabled={disabled}
           className="flex-1 rounded-xl border border-border bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
         {url && (
           <button
             type="button"
-            onClick={() => { setUrl(""); setBroken(false); setErr(null); }}
+            onClick={() => {
+              setUrl("");
+              setBroken(false);
+              setErr(null);
+            }}
             className="rounded-xl border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
           >
             Clear
@@ -242,12 +266,21 @@ export function ImageGalleryUploader({
     if (!files || !files.length) return;
     setErr(null);
     const room = max - urls.length;
-    if (room <= 0) { setErr(`Gallery limit reached — max ${max} images.`); return; }
+    if (room <= 0) {
+      setErr(`Gallery limit reached — max ${max} images.`);
+      return;
+    }
     const chosen = Array.from(files).slice(0, room);
 
     for (const f of chosen) {
-      if (!IMAGE_MIME.includes(f.type)) { setErr(`Skipped “${f.name}” — unsupported format.`); continue; }
-      if (f.size > IMAGE_MAX_BYTES) { setErr(`Skipped “${f.name}” — ${human(f.size)} exceeds ${human(IMAGE_MAX_BYTES)}.`); continue; }
+      if (!IMAGE_MIME.includes(f.type)) {
+        setErr(`Skipped “${f.name}” — unsupported format.`);
+        continue;
+      }
+      if (f.size > IMAGE_MAX_BYTES) {
+        setErr(`Skipped “${f.name}” — ${human(f.size)} exceeds ${human(IMAGE_MAX_BYTES)}.`);
+        continue;
+      }
     }
     const valid = chosen.filter((f) => IMAGE_MIME.includes(f.type) && f.size <= IMAGE_MAX_BYTES);
     if (!valid.length) return;
@@ -312,7 +345,12 @@ export function ImageGalleryUploader({
       ) : (
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
           {urls.map((u, i) => (
-            <GalleryThumb key={`${u}-${i}`} url={u} onRemove={() => setUrls((arr) => arr.filter((_, idx) => idx !== i))} disabled={disabled} />
+            <GalleryThumb
+              key={`${u}-${i}`}
+              url={u}
+              onRemove={() => setUrls((arr) => arr.filter((_, idx) => idx !== i))}
+              disabled={disabled}
+            />
           ))}
         </div>
       )}
@@ -320,7 +358,15 @@ export function ImageGalleryUploader({
   );
 }
 
-function GalleryThumb({ url, onRemove, disabled }: { url: string; onRemove: () => void; disabled?: boolean }) {
+function GalleryThumb({
+  url,
+  onRemove,
+  disabled,
+}: {
+  url: string;
+  onRemove: () => void;
+  disabled?: boolean;
+}) {
   const [broken, setBroken] = useState(false);
   return (
     <div className="relative aspect-square overflow-hidden rounded-xl border border-border bg-muted/40">
@@ -331,7 +377,12 @@ function GalleryThumb({ url, onRemove, disabled }: { url: string; onRemove: () =
         </div>
       ) : (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={url} alt="" onError={() => setBroken(true)} className="h-full w-full object-cover" />
+        <img
+          src={url}
+          alt=""
+          onError={() => setBroken(true)}
+          className="h-full w-full object-cover"
+        />
       )}
       {!disabled && (
         <button
@@ -369,6 +420,7 @@ export function Model3DUploadField({
   const [progress, setProgress] = useState(0);
   const [err, setErr] = useState<string | null>(null);
   const [broken, setBroken] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function validate(f: File): string | null {
@@ -377,16 +429,22 @@ export function Model3DUploadField({
     const okMime = !f.type || MODEL_MIME.includes(f.type);
     if (!okExt) return `Unsupported file — use .glb or .gltf (got “${lower.split(".").pop()}”).`;
     if (!okMime) return `Unexpected MIME “${f.type}”. Expected model/gltf-binary.`;
-    if (f.size > MODEL_MAX_BYTES) return `Model is ${human(f.size)} — max ${human(MODEL_MAX_BYTES)}.`;
+    if (f.size > MODEL_MAX_BYTES)
+      return `Model is ${human(f.size)} — max ${human(MODEL_MAX_BYTES)}.`;
     return null;
   }
 
   async function handleFile(f: File | undefined) {
     if (!f) return;
-    setErr(null); setBroken(false);
+    setErr(null);
+    setBroken(false);
     const v = validate(f);
-    if (v) { setErr(v); return; }
-    setBusy(true); setProgress(0);
+    if (v) {
+      setErr(v);
+      return;
+    }
+    setBusy(true);
+    setProgress(0);
     try {
       const { publicUrl } = await uploadToBucket(f, folder, setProgress);
       setUrl(publicUrl);
@@ -404,17 +462,41 @@ export function Model3DUploadField({
     <div>
       <div className="mb-1.5 flex items-center justify-between">
         <span className="text-xs font-semibold text-muted-foreground">{label}</span>
-        {url && !err && !broken && <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600"><CheckCircle2 size={10} /> ready</span>}
+        {url && !err && !broken && (
+          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600">
+            <CheckCircle2 size={10} /> ready
+          </span>
+        )}
       </div>
       <input type="hidden" name={name} value={url} />
 
-      <div className={`overflow-hidden rounded-2xl border ${err ? "border-rose-400" : "border-border"} bg-background`}>
+      <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          if (!disabled) setDragging(true);
+        }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          if (!disabled && !busy) void handleFile(e.dataTransfer.files?.[0]);
+        }}
+        className={`relative overflow-hidden rounded-2xl border ${
+          err
+            ? "border-rose-400"
+            : dragging
+              ? "border-primary ring-2 ring-primary/25"
+              : "border-border"
+        } bg-background`}
+      >
         <div className="grid h-48 w-full place-items-center bg-gradient-to-br from-primary/5 to-primary/10">
           {broken || (url && !isGlb && !isEmbed && !/^https?:\/\//.test(url)) ? (
             <div className="flex flex-col items-center gap-1 text-center">
               <AlertTriangle size={22} className="text-amber-500" />
               <span className="text-xs font-semibold text-amber-700">Preview unavailable</span>
-              <span className="text-[10px] text-muted-foreground">The model failed to load — check the URL or re-upload.</span>
+              <span className="text-[10px] text-muted-foreground">
+                The model failed to load — check the URL or re-upload.
+              </span>
             </div>
           ) : busy ? (
             <div className="flex flex-col items-center gap-2 text-muted-foreground">
@@ -434,7 +516,14 @@ export function Model3DUploadField({
             <div className="flex flex-col items-center gap-2 text-center text-primary">
               <Box size={26} />
               <span className="text-xs font-semibold">GLB model ready</span>
-              <a href={url} target="_blank" rel="noreferrer" className="text-[10px] font-semibold underline">Open in new tab</a>
+              <a
+                href={url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[10px] font-semibold underline"
+              >
+                Open in new tab
+              </a>
             </div>
           ) : (
             <button
@@ -445,7 +534,10 @@ export function Model3DUploadField({
             >
               <Box size={26} />
               <span className="text-xs font-semibold">Upload a .glb / .gltf model</span>
-              <span className="text-[10px]">≤ {human(MODEL_MAX_BYTES)} · or paste a Matterport / Sketchfab / video URL</span>
+              <span className="text-[10px]">
+                Click or drag &amp; drop · ≤ {human(MODEL_MAX_BYTES)} · or paste a Matterport /
+                Sketchfab / video URL
+              </span>
             </button>
           )}
         </div>
@@ -453,6 +545,16 @@ export function Model3DUploadField({
           <div className="h-1 bg-muted">
             <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
           </div>
+        )}
+        {!busy && (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => inputRef.current?.click()}
+            className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold text-primary-foreground shadow-[var(--shadow-soft)] transition hover:brightness-110 disabled:opacity-50"
+          >
+            <UploadCloud size={11} /> {url ? "Replace model" : "Click to upload"}
+          </button>
         )}
       </div>
 
@@ -469,14 +571,22 @@ export function Model3DUploadField({
           type="url"
           placeholder="…or paste a public 3D URL"
           value={url}
-          onChange={(e) => { setUrl(e.target.value); setBroken(false); setErr(null); }}
+          onChange={(e) => {
+            setUrl(e.target.value);
+            setBroken(false);
+            setErr(null);
+          }}
           disabled={disabled}
           className="flex-1 rounded-xl border border-border bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
         {url && (
           <button
             type="button"
-            onClick={() => { setUrl(""); setBroken(false); setErr(null); }}
+            onClick={() => {
+              setUrl("");
+              setBroken(false);
+              setErr(null);
+            }}
             className="rounded-xl border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
           >
             Clear

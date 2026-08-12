@@ -24,6 +24,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
+import { AiBuddy } from "@/components/aawash/dashboard/AiBuddy";
 import { RankRing } from "@/components/aawash/dashboard/RankRing";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
@@ -130,13 +131,7 @@ function LeaderContent() {
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
         </div>
-        <Link
-          to="/leader/profile"
-          aria-label="Open your profile"
-          className="mt-1 shrink-0 rounded-full outline-none transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <Avatar name={profile?.full_name} src={profile?.avatar_url} size="clamp(42px,11.5vw,56px)" online />
-        </Link>
+        <AiBuddy className="mt-1" />
       </section>
 
       {/* ---------------- Team rank + pods ---------------- */}
@@ -176,11 +171,7 @@ function LeaderContent() {
             loading={projects.isLoading}
           />
         </div>
-
       </section>
-
-
-
 
       {/* ---------------- Command bar ---------------- */}
       <section className="mt-4 sm:mt-5">
