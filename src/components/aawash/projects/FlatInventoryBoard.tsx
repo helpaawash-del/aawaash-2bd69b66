@@ -123,141 +123,109 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
   }
 
   return (
-    <div className="glass-card rounded-3xl p-4 shadow-[var(--shadow-soft)] sm:p-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="relative overflow-hidden rounded-[2rem] border border-primary/20 bg-[linear-gradient(160deg,color-mix(in_oklab,var(--foreground)_92%,transparent),color-mix(in_oklab,var(--foreground)_78%,transparent))] p-4 shadow-[var(--shadow-float)] sm:p-6">
+      {/* neon grid + aurora */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.18] [background-image:linear-gradient(color-mix(in_oklab,var(--leaf)_60%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--leaf)_60%,transparent)_1px,transparent_1px)] [background-size:44px_44px]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-primary/30 blur-3xl"
+      />
+
+      <div className="relative flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="inline-flex items-center gap-2 text-lg font-bold text-foreground">
-            <Sparkles size={16} /> Flat Availability
-          </h2>
-          <div className="mt-1 text-xs text-muted-foreground">
-            Tap a tile to view flat details. Live inventory updates automatically.
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/80 backdrop-blur">
+            <Sparkles size={11} /> Live inventory
           </div>
+          <h2 className="mt-3 text-2xl font-black tracking-tight text-white sm:text-3xl">
+            Flat Availability
+          </h2>
+          <p className="mt-1 text-xs text-white/60">
+            Tap any unit to open its detail card — the grid updates in real time.
+          </p>
         </div>
-        <div className="flex flex-wrap gap-2 text-[10px] font-semibold">
+        <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap">
           {(Object.keys(STATUS_META) as FlatStatus[]).map((s) => (
             <span
               key={s}
-              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 ${STATUS_META[s].chip}`}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/12 bg-white/[0.06] px-2.5 py-1.5 text-[10px] font-semibold text-white/80 backdrop-blur"
             >
               <span className={`h-1.5 w-1.5 rounded-full ${STATUS_META[s].dot}`} />
-              {STATUS_META[s].label} · {counts[s] ?? 0}
+              {STATUS_META[s].label}
+              <span className="font-black text-white">{counts[s] ?? 0}</span>
             </span>
           ))}
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto_auto_auto]">
-        <label className="relative">
-          <Search
-            size={14}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-          />
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search flat #, config, facing…"
-            className="h-10 w-full rounded-full border border-input bg-surface pl-9 pr-3 text-xs outline-none focus:border-primary"
-          />
-        </label>
-        <select
-          value={buildingId}
-          onChange={(e) => {
-            setBuildingId(e.target.value as string);
-            setFloorId("all");
-          }}
-          className="h-10 rounded-full border border-input bg-surface px-3 text-xs"
-        >
-          <option value="all">All Buildings</option>
-          {buildings.map((b) => (
-            <option key={b.id} value={b.id}>
-              {b.name}
-            </option>
-          ))}
-        </select>
-        <select
-          value={floorId}
-          onChange={(e) => setFloorId(e.target.value as string)}
-          className="h-10 rounded-full border border-input bg-surface px-3 text-xs"
-        >
-          <option value="all">All Floors</option>
-          {activeFloors.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.name || `Floor ${f.number}`}
-            </option>
-          ))}
-        </select>
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value as FlatStatus | "all")}
-          className="h-10 rounded-full border border-input bg-surface px-3 text-xs"
-        >
-          <option value="all">All Status</option>
-          {(Object.keys(STATUS_META) as FlatStatus[]).map((s) => (
-            <option key={s} value={s}>
-              {STATUS_META[s].label}
-            </option>
-          ))}
-        </select>
-      </div>
-
       {/* Grid grouped by building > floor */}
-      <div className="mt-5 space-y-6">
-        {buildings
-          .filter((b) => buildingId === "all" || b.id === buildingId)
-          .map((b) => {
-            const bFloors = floors
-              .filter((f) => f.building_id === b.id)
-              .filter((f) => floorId === "all" || f.id === floorId);
-            const hasAny = bFloors.some((f) => (grouped.get(f.id) ?? []).length > 0);
-            if (!hasAny) return null;
-            return (
-              <div key={b.id}>
-                <div className="mb-2 flex items-center gap-2 text-sm font-bold text-foreground">
-                  <Building2 size={14} className="text-primary" />
-                  {b.name}
-                  <span className="text-xs font-medium text-muted-foreground">
-                    · {b.total_flats} flats
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  {bFloors.map((fl) => {
-                    const items = grouped.get(fl.id) ?? [];
-                    if (items.length === 0) return null;
-                    return (
-                      <div key={fl.id} className="rounded-2xl border border-border bg-surface/60 p-3">
-                        <div className="mb-2 flex items-center justify-between">
-                          <div className="text-xs font-semibold text-muted-foreground">
-                            <Layers size={12} className="mr-1 inline" />
-                            {fl.name || `Floor ${fl.number}`}
-                          </div>
-                          <div className="text-[10px] text-muted-foreground">
-                            {items.length} unit{items.length === 1 ? "" : "s"}
-                          </div>
+      <div className="relative mt-6 space-y-5">
+        {buildings.map((b) => {
+          const bFloors = floors.filter((f) => f.building_id === b.id);
+          const hasAny = bFloors.some((f) => (grouped.get(f.id) ?? []).length > 0);
+          if (!hasAny) return null;
+          return (
+            <div
+              key={b.id}
+              className="rounded-3xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-xl sm:p-4"
+            >
+              <div className="mb-3 flex items-center gap-2 text-sm font-black tracking-tight text-white">
+                <span className="grid h-7 w-7 place-items-center rounded-xl bg-primary/25 text-primary-foreground">
+                  <Building2 size={13} />
+                </span>
+                {b.name}
+                <span className="text-[11px] font-semibold text-white/50">
+                  · {b.total_flats} flats
+                </span>
+              </div>
+              <div className="space-y-2.5">
+                {bFloors.map((fl) => {
+                  const items = grouped.get(fl.id) ?? [];
+                  if (items.length === 0) return null;
+                  return (
+                    <div
+                      key={fl.id}
+                      className="rounded-2xl border border-white/8 bg-[color-mix(in_oklab,var(--foreground)_60%,transparent)] p-3"
+                    >
+                      <div className="mb-2 flex items-center justify-between">
+                        <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white/60">
+                          <Layers size={11} />
+                          {fl.name || `Floor ${fl.number}`}
                         </div>
-                        <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
-                          {items.map((f) => (
-                            <FlatTile key={f.id} flat={f} onClick={() => setSelected(f)} />
-                          ))}
+                        <div className="text-[10px] font-semibold text-white/40">
+                          {items.length} unit{items.length === 1 ? "" : "s"}
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                      <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
+                        {items.map((f) => (
+                          <FlatTile key={f.id} flat={f} onClick={() => setSelected(f)} />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        {filteredFlats.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-border py-10 text-center text-xs text-muted-foreground">
-            No flats match your filters.
-          </div>
-        )}
+            </div>
+          );
+        })}
       </div>
 
       <FlatModal flat={selected} projectName={projectName} onClose={() => setSelected(null)} />
     </div>
   );
 }
+
+const TILE_TONE: Record<FlatStatus, string> = {
+  available:
+    "border-emerald-400/40 bg-emerald-400/15 text-emerald-100 hover:bg-emerald-400/25 hover:shadow-[0_0_18px_-2px_rgba(16,185,129,0.55)]",
+  reserved:
+    "border-amber-400/40 bg-amber-400/15 text-amber-100 hover:bg-amber-400/25 hover:shadow-[0_0_18px_-2px_rgba(245,158,11,0.5)]",
+  sold: "border-rose-400/40 bg-rose-400/15 text-rose-100 hover:bg-rose-400/25",
+  not_released: "border-white/10 bg-white/[0.04] text-white/40",
+  blocked: "border-slate-400/30 bg-slate-400/10 text-slate-200",
+};
 
 function FlatTile({ flat, onClick }: { flat: PublicFlat; onClick: () => void }) {
   const m = STATUS_META[flat.status];
@@ -267,15 +235,17 @@ function FlatTile({ flat, onClick }: { flat: PublicFlat; onClick: () => void }) 
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`group relative aspect-square rounded-lg border p-1 text-left transition active:scale-95 disabled:cursor-not-allowed ${m.chip} ${
-        disabled ? "opacity-70" : "hover:shadow-md hover:-translate-y-0.5"
-      }`}
+      className={`group relative aspect-square overflow-hidden rounded-xl border p-1.5 text-left backdrop-blur transition-all duration-200 active:scale-95 disabled:cursor-not-allowed ${
+        TILE_TONE[flat.status]
+      } ${disabled ? "" : "hover:-translate-y-0.5"}`}
       aria-label={`Flat ${flat.unit_code} — ${m.label}`}
     >
-      <span className={`absolute right-1 top-1 h-1.5 w-1.5 rounded-full ${m.dot}`} />
-      <div className="text-[10px] font-bold leading-tight">{flat.unit_code}</div>
+      <span className={`absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full ${m.dot}`} />
+      <div className="text-[10px] font-black leading-tight">{flat.unit_code}</div>
       {flat.area_sqft && (
-        <div className="mt-0.5 text-[9px] opacity-80">{Math.round(flat.area_sqft)} ft²</div>
+        <div className="mt-0.5 text-[9px] font-semibold opacity-70">
+          {Math.round(flat.area_sqft)} ft²
+        </div>
       )}
     </button>
   );
