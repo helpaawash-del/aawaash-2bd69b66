@@ -1014,6 +1014,8 @@ function Projects() {
           {PROJECTS.map((p, i) => {
             const wished = wishlist.has(p.name);
             // Admins can replace the card cover from /admin/homepage → Projects.
+            const idx = activeImg[p.name] ?? 0;
+            // Admins can replace the card cover from /admin/homepage → Projects.
             const cover = i === 0 && sec.image ? sec.image : p.images[idx];
             return (
               <Reveal key={p.name} variant="up" delay={i * 100}>
