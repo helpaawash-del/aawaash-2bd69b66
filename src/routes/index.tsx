@@ -124,8 +124,12 @@ function Landing() {
   const { data: content } = useQuery({
     queryKey: ["homepage-content"],
     queryFn: () => loadContent(),
-    initialData: DEFAULT_HOMEPAGE,
-    staleTime: 60_000,
+    // `placeholderData` (not `initialData`) — initial data would be treated as
+    // fresh and suppress the fetch, so saved admin edits never appeared.
+    placeholderData: DEFAULT_HOMEPAGE,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
   const on = (id: string) => content[id]?.enabled !== false;
 
