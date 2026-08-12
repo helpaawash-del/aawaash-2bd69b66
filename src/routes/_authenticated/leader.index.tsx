@@ -24,6 +24,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
+import { AiBuddy } from "@/components/aawash/dashboard/AiBuddy";
 import { RankRing } from "@/components/aawash/dashboard/RankRing";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";

@@ -629,3 +629,13 @@
 @media (prefers-reduced-motion: reduce) {
   .eco-skel { animation: none !important; }
 }
+
+/* AiBuddy — dashboard greeting assistant */
+@keyframes ai-float {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50% { transform: translateY(-6px) rotate(1.5deg); }
+}
+@keyframes ai-aura {
+  0%, 100% { opacity: 0.55; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
