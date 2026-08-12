@@ -48,10 +48,6 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
     queryFn: () => fetchInv({ data: { slug } }),
   });
 
-  const [buildingId, setBuildingId] = useState<string | "all">("all");
-  const [floorId, setFloorId] = useState<string | "all">("all");
-  const [status, setStatus] = useState<FlatStatus | "all">("all");
-  const [q, setQ] = useState("");
   const [selected, setSelected] = useState<PublicFlat | null>(null);
 
   // Realtime — refresh when any flat in this project changes.
@@ -74,24 +70,7 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
   const floors = data?.floors ?? [];
   const flats = data?.flats ?? [];
 
-  const activeFloors = useMemo(
-    () => (buildingId === "all" ? floors : floors.filter((f) => f.building_id === buildingId)),
-    [floors, buildingId],
-  );
-
-  const filteredFlats = useMemo(() => {
-    const needle = q.trim().toLowerCase();
-    return flats.filter((f) => {
-      if (buildingId !== "all" && f.building_id !== buildingId) return false;
-      if (floorId !== "all" && f.floor_id !== floorId) return false;
-      if (status !== "all" && f.status !== status) return false;
-      if (needle) {
-        const hay = `${f.unit_code} ${f.configuration ?? ""} ${f.facing ?? ""}`.toLowerCase();
-        if (!hay.includes(needle)) return false;
-      }
-      return true;
-    });
-  }, [flats, buildingId, floorId, status, q]);
+  const filteredFlats = flats;
 
   const counts = useMemo(() => {
     const acc: Record<FlatStatus, number> = {
@@ -108,7 +87,7 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
   // Group by floor for display
   const grouped = useMemo(() => {
     const map = new Map<string, PublicFlat[]>();
-    for (const f of filteredFlats) {
+    for (const f of flats) {
       const list = map.get(f.floor_id) ?? [];
       list.push(f);
       map.set(f.floor_id, list);
