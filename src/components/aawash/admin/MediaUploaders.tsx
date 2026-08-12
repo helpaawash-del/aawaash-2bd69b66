@@ -369,6 +369,7 @@ export function Model3DUploadField({
   const [progress, setProgress] = useState(0);
   const [err, setErr] = useState<string | null>(null);
   const [broken, setBroken] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function validate(f: File): string | null {
@@ -408,7 +409,18 @@ export function Model3DUploadField({
       </div>
       <input type="hidden" name={name} value={url} />
 
-      <div className={`overflow-hidden rounded-2xl border ${err ? "border-rose-400" : "border-border"} bg-background`}>
+      <div
+        onDragOver={(e) => { e.preventDefault(); if (!disabled) setDragging(true); }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          if (!disabled && !busy) void handleFile(e.dataTransfer.files?.[0]);
+        }}
+        className={`relative overflow-hidden rounded-2xl border ${
+          err ? "border-rose-400" : dragging ? "border-primary ring-2 ring-primary/25" : "border-border"
+        } bg-background`}
+      >
         <div className="grid h-48 w-full place-items-center bg-gradient-to-br from-primary/5 to-primary/10">
           {broken || (url && !isGlb && !isEmbed && !/^https?:\/\//.test(url)) ? (
             <div className="flex flex-col items-center gap-1 text-center">
@@ -445,7 +457,7 @@ export function Model3DUploadField({
             >
               <Box size={26} />
               <span className="text-xs font-semibold">Upload a .glb / .gltf model</span>
-              <span className="text-[10px]">≤ {human(MODEL_MAX_BYTES)} · or paste a Matterport / Sketchfab / video URL</span>
+              <span className="text-[10px]">Click or drag &amp; drop · ≤ {human(MODEL_MAX_BYTES)} · or paste a Matterport / Sketchfab / video URL</span>
             </button>
           )}
         </div>
@@ -453,6 +465,16 @@ export function Model3DUploadField({
           <div className="h-1 bg-muted">
             <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
           </div>
+        )}
+        {!busy && (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => inputRef.current?.click()}
+            className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold text-primary-foreground shadow-[var(--shadow-soft)] transition hover:brightness-110 disabled:opacity-50"
+          >
+            <Upload size={11} /> {url ? "Replace model" : "Click to upload"}
+          </button>
         )}
       </div>
 
