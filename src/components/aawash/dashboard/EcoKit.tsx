@@ -109,7 +109,6 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
   const qc = useQueryClient();
   const [signingOut, setSigningOut] = useState(false);
   const base = homePathForRole(role);
-  const roleLabel = role === "team_leader" ? "Team Leader" : role === "member" ? "Member" : "Admin";
 
   async function handleSignOut() {
     setSigningOut(true);
