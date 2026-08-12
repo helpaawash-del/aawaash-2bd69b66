@@ -122,16 +122,26 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
   }
 
   return (
-    <header className="sticky top-0 z-30 -mx-1 mb-1 flex items-center justify-between gap-3 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
-      <div className="min-w-0 pl-2">
-        <div className="truncate text-[15px] font-extrabold leading-tight tracking-tight text-foreground">
+    <header className="sticky top-0 z-30 -mx-1 mb-1 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 rounded-[26px] border border-border/60 bg-[color-mix(in_oklab,var(--surface)_78%,transparent)] px-2.5 py-2 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+      {/* Identity — avatar sits before the name */}
+      <Link
+        to={`${base}/profile` as never}
+        aria-label="Open your profile"
+        className="flex min-w-0 items-center gap-2 rounded-full pl-1 outline-none transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Avatar name={profile?.full_name} src={profile?.avatar_url} size={34} online />
+        <span className="truncate text-[14px] font-extrabold leading-tight tracking-tight text-foreground">
           {profile?.full_name ?? "…"}
-        </div>
-        <div className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-          {roleLabel}
-        </div>
-      </div>
-      <div className="flex shrink-0 items-center gap-1.5">
+        </span>
+      </Link>
+
+      {/* Brand — big, centred */}
+      <Link to={base as never} aria-label="Aawaash home" className="justify-self-center">
+        <BrandMark size="sm" showWordmark={false} />
+      </Link>
+
+      <div className="flex shrink-0 items-center justify-end gap-1.5">
+
 
 
 
