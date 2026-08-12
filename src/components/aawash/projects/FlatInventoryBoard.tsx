@@ -67,9 +67,7 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
 
   const buildings = data?.buildings ?? [];
   const floors = data?.floors ?? [];
-  const flats = data?.flats ?? [];
-
-  const filteredFlats = flats;
+  const flats = useMemo(() => data?.flats ?? [], [data?.flats]);
 
   const counts = useMemo(() => {
     const acc: Record<FlatStatus, number> = {
@@ -92,7 +90,7 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
       map.set(f.floor_id, list);
     }
     return map;
-  }, [filteredFlats]);
+  }, [flats]);
 
   if (isLoading) {
     return (
