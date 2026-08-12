@@ -8,6 +8,7 @@ import type { AawashProfile } from "@/hooks/useSession";
 import type { AppRole } from "@/lib/auth";
 import { homePathForRole } from "@/lib/auth";
 import { useWelcome, type WelcomeState } from "@/hooks/useWelcome";
+import { BrandMark } from "@/components/aawash/BrandMark";
 import { EcoGreeting } from "@/components/aawash/dashboard/EcoGreeting";
 import { EcoDock } from "@/components/aawash/dashboard/EcoDock";
 import ecoTowerWire from "@/assets/eco-tower-wire.png.asset.json";
