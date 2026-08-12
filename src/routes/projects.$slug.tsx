@@ -169,7 +169,7 @@ function ProjectDetailPage() {
       )}
 
 
-      <main className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pb-16 pt-24 sm:px-6 sm:pt-28">
         <Link
           to="/projects"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
@@ -266,22 +266,6 @@ function ProjectDetailPage() {
                   </div>
                 </div>
 
-                {/* Filmstrip */}
-                {heroImages.length > 1 && (
-                  <div className="flex gap-2 overflow-x-auto p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    {heroImages.slice(0, 10).map((src, i) => (
-                      <button
-                        key={`${src}-${i}`}
-                        type="button"
-                        onClick={() => setLightbox(i)}
-                        className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-border/60 transition-all hover:scale-105 hover:border-primary"
-                        aria-label={`Open photo ${i + 1}`}
-                      >
-                        <img src={src} alt="" className="h-full w-full object-cover" />
-                      </button>
-                    ))}
-                  </div>
-                )}
               </section>
 
             </Reveal>
@@ -438,13 +422,6 @@ function OverviewPanel({
 }) {
   return (
     <div className="space-y-6">
-      <section className="grid gap-4 sm:grid-cols-3">
-        <ProgressCard label="Construction" pct={buildPct} tone="primary" />
-        <ProgressCard label="Sales" pct={salesPct} tone="gold" />
-        <ProgressCard label="Availability" pct={availPct} tone="leaf" />
-      </section>
-
-
       {(p.amenities as string[] | undefined)?.length ? (
         <Reveal>
           <section className="glass-card rounded-3xl p-6 shadow-[var(--shadow-soft)]">
