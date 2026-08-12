@@ -101,8 +101,7 @@ function MemberContent() {
   const myScore = Number(board.data?.members.find((m) => m.id === myId)?.score ?? 0);
   const topBoard = (board.data?.members ?? []).slice(0, 5);
   const boardTotal = board.data?.members.length ?? 0;
-  const rankPct =
-    rank && boardTotal ? Math.round(((boardTotal - rank + 1) / boardTotal) * 100) : 0;
+  const rankPct = rank && boardTotal ? Math.round(((boardTotal - rank + 1) / boardTotal) * 100) : 0;
 
   const xpGoal = Math.max(100, Math.round(myScore * 1.6) || 100);
 
@@ -159,9 +158,6 @@ function MemberContent() {
           />
         </div>
       </section>
-
-
-
 
       {/* ---------------- Command bar ---------------- */}
       <section className="mt-4 sm:mt-5">

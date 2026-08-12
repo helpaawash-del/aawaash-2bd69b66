@@ -171,11 +171,7 @@ function LeaderContent() {
             loading={projects.isLoading}
           />
         </div>
-
       </section>
-
-
-
 
       {/* ---------------- Command bar ---------------- */}
       <section className="mt-4 sm:mt-5">

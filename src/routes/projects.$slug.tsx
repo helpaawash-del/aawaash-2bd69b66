@@ -73,7 +73,12 @@ function ProjectDetailPage() {
   const { slug } = Route.useParams();
   const qc = useQueryClient();
   const fetchProject = useServerFn(getPublicProject);
-  const { data: project, isLoading, isError, refetch } = useQuery({
+  const {
+    data: project,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["project", "public", slug],
     queryFn: () => fetchProject({ data: { slug } }),
   });
@@ -82,7 +87,10 @@ function ProjectDetailPage() {
   useRealtimeInvalidate(
     `project-public-${slug}`,
     ["projects", "flats"],
-    [["project", "public", slug], ["project-inventory-public", slug]],
+    [
+      ["project", "public", slug],
+      ["project-inventory-public", slug],
+    ],
     { pollMs: 45_000 },
   );
 
@@ -126,11 +134,23 @@ function ProjectDetailPage() {
     document.head.appendChild(s);
   }, [isGlb]);
 
-  const dockItems: Array<{ id: string; label: string; icon: React.ElementType; href: string; targetId?: string }> = [
+  const dockItems: Array<{
+    id: string;
+    label: string;
+    icon: React.ElementType;
+    href: string;
+    targetId?: string;
+  }> = [
     { id: "home", label: "Home", icon: HomeIcon, href: "/" },
     { id: "gallery", label: "Gallery", icon: Images, href: "#gallery", targetId: "gallery" },
     { id: "flats", label: "Total Flats", icon: Layers, href: "#flats", targetId: "flats" },
-    { id: "availability", label: "Availability", icon: Grid3x3, href: "#availability", targetId: "availability" },
+    {
+      id: "availability",
+      label: "Availability",
+      icon: Grid3x3,
+      href: "#availability",
+      targetId: "availability",
+    },
   ];
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : `/projects/${slug}`;
@@ -164,7 +184,6 @@ function ProjectDetailPage() {
           <Share2 size={14} />
         </button>
       )}
-
 
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-24 sm:px-6 sm:pt-28">
         <Link
@@ -262,9 +281,7 @@ function ProjectDetailPage() {
                     </div>
                   </div>
                 </div>
-
               </section>
-
             </Reveal>
 
             {/* Quick facts row — always visible */}
@@ -276,8 +293,8 @@ function ProjectDetailPage() {
                   p.project_type === "entire_building"
                     ? "Entire Building"
                     : (p.project_type as string) === "villa"
-                    ? "Villa"
-                    : "Flat Inventory"
+                      ? "Villa"
+                      : "Flat Inventory"
                 }
               />
               <QuickCard
@@ -314,7 +331,11 @@ function ProjectDetailPage() {
 
             {/* GALLERY */}
             <section id="gallery" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Images size={16} />} title="Gallery" subtitle="Photos of the project" />
+              <SectionHeader
+                icon={<Images size={16} />}
+                title="Gallery"
+                subtitle="Photos of the project"
+              />
               <div className="mt-4">
                 <GalleryPanel images={heroImages} onOpen={(i) => setLightbox(i)} />
               </div>
@@ -322,7 +343,11 @@ function ProjectDetailPage() {
 
             {/* 3D MODEL */}
             <section id="tour" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Box size={16} />} title="3D Model" subtitle="Explore in immersive detail" />
+              <SectionHeader
+                icon={<Box size={16} />}
+                title="3D Model"
+                subtitle="Explore in immersive detail"
+              />
               <div className="mt-4">
                 <TourPanel modelUrl={modelUrl} isGlb={isGlb} />
               </div>
@@ -330,18 +355,35 @@ function ProjectDetailPage() {
 
             {/* TOTAL FLATS (breakdown) */}
             <section id="flats" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Layers size={16} />} title="Total Flats" subtitle="Inventory at a glance" />
+              <SectionHeader
+                icon={<Layers size={16} />}
+                title="Total Flats"
+                subtitle="Inventory at a glance"
+              />
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <QuickCard icon={<HomeIcon size={14} />} label="Total" value={String(total)} />
-                <QuickCard icon={<Layers size={14} />} label="Available" value={String(available)} accent="emerald" />
-                <QuickCard icon={<Sparkles size={14} />} label="Reserved" value={String(reserved)} />
+                <QuickCard
+                  icon={<Layers size={14} />}
+                  label="Available"
+                  value={String(available)}
+                  accent="emerald"
+                />
+                <QuickCard
+                  icon={<Sparkles size={14} />}
+                  label="Reserved"
+                  value={String(reserved)}
+                />
                 <QuickCard icon={<CheckCircle2 size={14} />} label="Sold" value={String(sold)} />
               </div>
             </section>
 
             {/* AVAILABILITY (seatmap) */}
             <section id="availability" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<Grid3x3 size={16} />} title="Availability" subtitle="Live flat seatmap" />
+              <SectionHeader
+                icon={<Grid3x3 size={16} />}
+                title="Availability"
+                subtitle="Live flat seatmap"
+              />
               <div className="mt-4">
                 <Reveal>
                   <FlatInventoryBoard slug={slug} projectName={p.name as string} />
@@ -351,7 +393,11 @@ function ProjectDetailPage() {
 
             {/* LOCATION */}
             <section id="location" className="mt-8 scroll-mt-24">
-              <SectionHeader icon={<MapPin size={16} />} title="Location" subtitle="Where you'll live" />
+              <SectionHeader
+                icon={<MapPin size={16} />}
+                title="Location"
+                subtitle="Where you'll live"
+              />
               <div className="mt-4">
                 <LocationPanel p={p} />
               </div>
@@ -378,7 +424,6 @@ function ProjectDetailPage() {
 
       {/* Project Dock — Home / Gallery / Total Flats / Availability */}
       {project && <ProjectDock items={dockItems} />}
-
 
       {/* Lightbox */}
       {lightbox !== null && heroImages.length > 0 && (
@@ -430,7 +475,6 @@ function OverviewPanel({
           </section>
         </Reveal>
       ) : null}
-
     </div>
   );
 }
@@ -458,7 +502,15 @@ function GalleryPanel({ images, onOpen }: { images: string[]; onOpen: (i: number
   );
 }
 
-function GalleryTile({ src, index, onOpen }: { src: string; index: number; onOpen: (i: number) => void }) {
+function GalleryTile({
+  src,
+  index,
+  onOpen,
+}: {
+  src: string;
+  index: number;
+  onOpen: (i: number) => void;
+}) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
   return (
@@ -490,13 +542,7 @@ function GalleryTile({ src, index, onOpen }: { src: string; index: number; onOpe
   );
 }
 
-function TourPanel({
-  modelUrl,
-  isGlb,
-}: {
-  modelUrl: string | null;
-  isGlb: boolean;
-}) {
+function TourPanel({ modelUrl, isGlb }: { modelUrl: string | null; isGlb: boolean }) {
   return (
     <div className="space-y-4">
       <Reveal>
@@ -530,8 +576,6 @@ function TourPanel({
     </div>
   );
 }
-
-
 
 function ModelViewerFrame({ src }: { src: string }) {
   const [ready, setReady] = useState(false);
@@ -624,7 +668,9 @@ function LocationPanel({ p }: { p: Record<string, unknown> }) {
           <div className="text-sm font-bold text-foreground">
             {(p.address as string) || (p.location as string)}
           </div>
-          <div className="text-xs text-muted-foreground">Nearby: schools, hospitals, markets & transit</div>
+          <div className="text-xs text-muted-foreground">
+            Nearby: schools, hospitals, markets & transit
+          </div>
           {map && (
             <a
               href={map}
@@ -729,7 +775,13 @@ function Lightbox({
                   i === index ? "border-white" : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
-                <img src={src} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                <img
+                  src={src}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
               </button>
             ))}
           </div>
@@ -852,12 +904,12 @@ function SectionHeader({
     <div className="flex items-end justify-between gap-3">
       <div>
         <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-          <span className="grid h-6 w-6 place-items-center rounded-full bg-primary-soft">{icon}</span>
+          <span className="grid h-6 w-6 place-items-center rounded-full bg-primary-soft">
+            {icon}
+          </span>
           {title}
         </div>
-        {subtitle ? (
-          <div className="mt-1 text-sm text-muted-foreground">{subtitle}</div>
-        ) : null}
+        {subtitle ? <div className="mt-1 text-sm text-muted-foreground">{subtitle}</div> : null}
       </div>
     </div>
   );
@@ -866,7 +918,13 @@ function SectionHeader({
 function ProjectDock({
   items,
 }: {
-  items: Array<{ id: string; label: string; icon: React.ElementType; href: string; targetId?: string }>;
+  items: Array<{
+    id: string;
+    label: string;
+    icon: React.ElementType;
+    href: string;
+    targetId?: string;
+  }>;
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const targetIds = useMemo(
@@ -927,9 +985,7 @@ function ProjectDock({
                 aria-label={label}
                 aria-current={isActive ? "page" : undefined}
                 className={`group relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 rounded-[24px] px-1 outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary/40 ${
-                  isActive
-                    ? "text-primary"
-                    : "text-slate-600 hover:text-primary"
+                  isActive ? "text-primary" : "text-slate-600 hover:text-primary"
                 }`}
               >
                 {isActive && (

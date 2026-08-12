@@ -80,14 +80,12 @@ export function EcoShell({
           <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
         </div>
 
-
         <EcoDock role={role} />
 
         <div
           data-testid="dock-content"
           className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 pb-[calc(10.5rem+env(safe-area-inset-bottom))] pt-5 sm:max-w-xl sm:px-6 md:max-w-3xl lg:max-w-6xl lg:pb-40 lg:px-10 xl:max-w-7xl"
         >
-
           <WelcomeHeader role={role} profile={profile} />
           <main id="main-content" className="mt-6 flex-1 sm:mt-9">
             {children}
@@ -141,10 +139,6 @@ function WelcomeHeader({ role, profile }: { role: AppRole; profile: AawashProfil
       </Link>
 
       <div className="flex shrink-0 items-center justify-end gap-1.5">
-
-
-
-
         <Link
           to={`${base}/notifications` as never}
           aria-label="Notifications"
@@ -228,7 +222,6 @@ export function Avatar({
     </span>
   );
 }
-
 
 /** Circular progress dial with a soft emerald sweep. */
 export function ProgressRing({
@@ -438,7 +431,9 @@ export function SectionHead({
 }) {
   return (
     <div className="mb-3 flex items-center justify-between gap-3">
-      <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">{title}</h2>
+      <h2 className="truncate text-[14.5px] font-bold tracking-[-0.01em] text-foreground sm:text-[15px]">
+        {title}
+      </h2>
       {to && (
         <Link
           to={to as never}
@@ -482,7 +477,9 @@ export function DarkPanel({
               <div className="truncate text-[10px] font-medium text-muted-foreground">
                 {s.label}
               </div>
-              {s.hint && <div className="truncate text-[10px] font-semibold text-forest">{s.hint}</div>}
+              {s.hint && (
+                <div className="truncate text-[10px] font-semibold text-forest">{s.hint}</div>
+              )}
             </div>
           ))}
         </div>
@@ -520,8 +517,24 @@ export function Orb({ intensity = 0.6 }: { intensity?: number }) {
       >
         <circle cx="90" cy="90" r="84" fill="none" stroke="var(--forest)" strokeOpacity="0.16" />
         <circle cx="90" cy="90" r="62" fill="none" stroke="var(--forest)" strokeOpacity="0.12" />
-        <ellipse cx="90" cy="90" rx="84" ry="34" fill="none" stroke="var(--forest)" strokeOpacity="0.13" />
-        <ellipse cx="90" cy="90" rx="34" ry="84" fill="none" stroke="var(--forest)" strokeOpacity="0.13" />
+        <ellipse
+          cx="90"
+          cy="90"
+          rx="84"
+          ry="34"
+          fill="none"
+          stroke="var(--forest)"
+          strokeOpacity="0.13"
+        />
+        <ellipse
+          cx="90"
+          cy="90"
+          rx="34"
+          ry="84"
+          fill="none"
+          stroke="var(--forest)"
+          strokeOpacity="0.13"
+        />
         {dots.map((d, i) => (
           <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="var(--forest-deep)" opacity={d.o} />
         ))}
@@ -529,7 +542,6 @@ export function Orb({ intensity = 0.6 }: { intensity?: number }) {
     </div>
   );
 }
-
 
 /** White card with title + rows, matching the "Upcoming Schedule" block. */
 export function LightPanel({

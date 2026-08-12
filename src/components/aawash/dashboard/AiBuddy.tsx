@@ -31,36 +31,79 @@ export function AiBuddy({ className = "" }: { className?: string }) {
           </linearGradient>
         </defs>
         {/* antenna */}
-        <line x1="32" y1="8" x2="32" y2="16" stroke="var(--primary)" strokeWidth="2.4" strokeLinecap="round" />
+        <line
+          x1="32"
+          y1="8"
+          x2="32"
+          y2="16"
+          stroke="var(--primary)"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        />
         <circle cx="32" cy="6.5" r="3.2" fill="var(--primary)">
           {!reduced && (
-            <animate attributeName="opacity" values="1;0.35;1" dur="1.8s" repeatCount="indefinite" />
+            <animate
+              attributeName="opacity"
+              values="1;0.35;1"
+              dur="1.8s"
+              repeatCount="indefinite"
+            />
           )}
         </circle>
         {/* head */}
         <rect x="12" y="16" width="40" height="30" rx="13" fill="url(#aiBody)" />
         {/* visor */}
-        <rect x="18" y="23" width="28" height="16" rx="8" fill="color-mix(in oklab, var(--foreground) 88%, transparent)" />
+        <rect
+          x="18"
+          y="23"
+          width="28"
+          height="16"
+          rx="8"
+          fill="color-mix(in oklab, var(--foreground) 88%, transparent)"
+        />
         {/* eyes */}
         <g fill="color-mix(in oklab, var(--primary) 35%, white)">
           <ellipse cx="26.5" cy="31" rx="3.1" ry="3.4">
             {!reduced && (
-              <animate attributeName="ry" values="3.4;0.4;3.4;3.4;3.4" dur="4.6s" repeatCount="indefinite" />
+              <animate
+                attributeName="ry"
+                values="3.4;0.4;3.4;3.4;3.4"
+                dur="4.6s"
+                repeatCount="indefinite"
+              />
             )}
           </ellipse>
           <ellipse cx="37.5" cy="31" rx="3.1" ry="3.4">
             {!reduced && (
-              <animate attributeName="ry" values="3.4;0.4;3.4;3.4;3.4" dur="4.6s" repeatCount="indefinite" />
+              <animate
+                attributeName="ry"
+                values="3.4;0.4;3.4;3.4;3.4"
+                dur="4.6s"
+                repeatCount="indefinite"
+              />
             )}
           </ellipse>
         </g>
         {/* smile */}
-        <path d="M28 37.5c1.6 1.4 6.4 1.4 8 0" stroke="color-mix(in oklab, var(--primary) 55%, white)" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+        <path
+          d="M28 37.5c1.6 1.4 6.4 1.4 8 0"
+          stroke="color-mix(in oklab, var(--primary) 55%, white)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          fill="none"
+        />
         {/* ears */}
         <rect x="7.5" y="26" width="4" height="10" rx="2" fill="var(--primary)" opacity="0.75" />
         <rect x="52.5" y="26" width="4" height="10" rx="2" fill="var(--primary)" opacity="0.75" />
         {/* body base */}
-        <rect x="20" y="47" width="24" height="8" rx="4" fill="color-mix(in oklab, var(--primary) 45%, white)" />
+        <rect
+          x="20"
+          y="47"
+          width="24"
+          height="8"
+          rx="4"
+          fill="color-mix(in oklab, var(--primary) 45%, white)"
+        />
         <ellipse cx="32" cy="58" rx="13" ry="2.6" fill="var(--foreground)" opacity="0.08" />
       </svg>
     </div>

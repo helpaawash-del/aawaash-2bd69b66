@@ -1,16 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Bath,
-  BedDouble,
-  Building2,
-  Compass,
-  Layers,
-  Ruler,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { Bath, BedDouble, Building2, Compass, Layers, Ruler, Sparkles, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getProjectInventory, type FlatStatus, type PublicFlat } from "@/lib/inventory.functions";
 import { formatINR } from "@/components/aawash/dashboard-kit";
@@ -26,7 +17,11 @@ const STATUS_META: Record<FlatStatus, { label: string; dot: string; chip: string
     dot: "bg-amber-500",
     chip: "bg-amber-500/15 text-amber-700 border-amber-500/30",
   },
-  sold: { label: "Sold", dot: "bg-rose-500", chip: "bg-rose-500/15 text-rose-700 border-rose-500/30" },
+  sold: {
+    label: "Sold",
+    dot: "bg-rose-500",
+    chip: "bg-rose-500/15 text-rose-700 border-rose-500/30",
+  },
   not_released: {
     label: "Not Released",
     dot: "bg-muted-foreground/40",
@@ -56,7 +51,12 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
       .channel(`inv-${data.project_id}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "flats", filter: `project_id=eq.${data.project_id}` },
+        {
+          event: "*",
+          schema: "public",
+          table: "flats",
+          filter: `project_id=eq.${data.project_id}`,
+        },
         () => qc.invalidateQueries({ queryKey: ["inventory", slug] }),
       )
       .subscribe();
@@ -111,9 +111,7 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
     return (
       <div className="glass-card rounded-3xl p-8 text-center shadow-[var(--shadow-soft)]">
         <Building2 className="mx-auto text-muted-foreground" />
-        <div className="mt-3 text-sm font-semibold text-foreground">
-          Inventory coming soon
-        </div>
+        <div className="mt-3 text-sm font-semibold text-foreground">Inventory coming soon</div>
         <div className="mt-1 text-xs text-muted-foreground">
           Flat availability for {projectName} will appear here once released.
         </div>
@@ -296,7 +294,9 @@ function FlatModal({
         </div>
         <div className="mt-1 flex items-center gap-2">
           <h3 className="text-2xl font-extrabold text-foreground">Flat {flat.unit_code}</h3>
-          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${m.chip}`}>
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${m.chip}`}
+          >
             <span className={`h-1.5 w-1.5 rounded-full ${m.dot}`} /> {m.label}
           </span>
         </div>
@@ -305,7 +305,11 @@ function FlatModal({
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <MiniSpec icon={<Ruler size={14} />} label="Area" value={flat.area_sqft ? `${Math.round(flat.area_sqft)} ft²` : "—"} />
+          <MiniSpec
+            icon={<Ruler size={14} />}
+            label="Area"
+            value={flat.area_sqft ? `${Math.round(flat.area_sqft)} ft²` : "—"}
+          />
           <MiniSpec icon={<BedDouble size={14} />} label="Bedrooms" value={String(flat.bedrooms)} />
           <MiniSpec icon={<Bath size={14} />} label="Bathrooms" value={String(flat.bathrooms)} />
           <MiniSpec icon={<Compass size={14} />} label="Facing" value={flat.facing ?? "—"} />
@@ -354,7 +358,6 @@ function FlatModal({
           </div>
         )}
 
-
         <div className="mt-4 rounded-2xl bg-primary-soft p-4">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
             Price
@@ -390,15 +393,7 @@ function FlatModal({
   );
 }
 
-function MiniSpec({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
+function MiniSpec({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-border bg-surface/60 p-3">
       <div className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
