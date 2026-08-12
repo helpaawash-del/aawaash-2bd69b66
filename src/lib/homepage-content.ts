@@ -134,7 +134,12 @@ export const DEFAULT_HOMEPAGE: HomepageDoc = {
       { title: "Luxury", body: "42 signature" },
     ],
   },
-  projects: { enabled: true },
+  projects: {
+    enabled: true,
+    eyebrow: "Featured Residence",
+    title: "A home to",
+    accent: "come home to.",
+  },
   commission: {
     enabled: true,
     eyebrow: "Commission Slabs",
