@@ -473,7 +473,7 @@ export function Model3DUploadField({
             onClick={() => inputRef.current?.click()}
             className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold text-primary-foreground shadow-[var(--shadow-soft)] transition hover:brightness-110 disabled:opacity-50"
           >
-            <Upload size={11} /> {url ? "Replace model" : "Click to upload"}
+            <UploadCloud size={11} /> {url ? "Replace model" : "Click to upload"}
           </button>
         )}
       </div>
