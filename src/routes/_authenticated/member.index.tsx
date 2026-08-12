@@ -113,13 +113,7 @@ function MemberContent() {
         <div className="min-w-0">
           <EcoHeroGreeting name={displayName} />
         </div>
-        <Link
-          to="/member/profile"
-          aria-label="Open your profile"
-          className="mt-1 shrink-0 rounded-full outline-none transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <Avatar name={profile?.full_name} src={profile?.avatar_url} size="clamp(42px,11.5vw,56px)" online />
-        </Link>
+        <AiBuddy className="mt-1" />
       </section>
 
       {/* ---------------- Rank + pods ---------------- */}
