@@ -567,9 +567,15 @@ function ModelViewerFrame({ src }: { src: string }) {
           src={src}
           camera-controls
           auto-rotate
+          auto-rotate-delay="300"
+          rotation-per-second="18deg"
           touch-action="pan-y"
-          shadow-intensity="1"
+          interaction-prompt="none"
+          loading="eager"
+          reveal="auto"
+          shadow-intensity="0"
           exposure="1"
+          power-preference="high-performance"
           onError={() => setErrored(true)}
           style={{ width: "100%", height: "100%", background: "transparent" }}
         />
