@@ -118,26 +118,16 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
   }
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-primary/20 bg-[linear-gradient(160deg,color-mix(in_oklab,var(--foreground)_92%,transparent),color-mix(in_oklab,var(--foreground)_78%,transparent))] p-4 shadow-[var(--shadow-float)] sm:p-6">
-      {/* neon grid + aurora */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.18] [background-image:linear-gradient(color-mix(in_oklab,var(--leaf)_60%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--leaf)_60%,transparent)_1px,transparent_1px)] [background-size:44px_44px]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-primary/30 blur-3xl"
-      />
-
+    <div className="relative overflow-hidden rounded-[2rem] border border-border bg-surface p-4 shadow-[var(--shadow-soft)] sm:p-6">
       <div className="relative flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/80 backdrop-blur">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-soft px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
             <Sparkles size={11} /> Live inventory
           </div>
-          <h2 className="mt-3 text-2xl font-black tracking-tight text-white sm:text-3xl">
+          <h2 className="mt-3 text-2xl font-black tracking-tight text-foreground sm:text-3xl">
             Flat Availability
           </h2>
-          <p className="mt-1 text-xs text-white/60">
+          <p className="mt-1 text-xs text-muted-foreground">
             Tap any unit to open its detail card — the grid updates in real time.
           </p>
         </div>
@@ -145,7 +135,7 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
           {(Object.keys(STATUS_META) as FlatStatus[]).map((s) => (
             <span
               key={s}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/12 bg-white/[0.06] px-2.5 py-1.5 text-[10px] font-semibold text-white/80 backdrop-blur"
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1.5 text-[10px] font-semibold ${STATUS_META[s].chip}`}
             >
               <span className={`h-1.5 w-1.5 rounded-full ${STATUS_META[s].dot}`} />
               {STATUS_META[s].label}
@@ -162,16 +152,16 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
           const hasAny = bFloors.some((f) => (grouped.get(f.id) ?? []).length > 0);
           if (!hasAny) return null;
           return (
-            <div
+              <div
               key={b.id}
-              className="rounded-3xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-xl sm:p-4"
+              className="rounded-3xl border border-border bg-background p-3 sm:p-4"
             >
-              <div className="mb-3 flex items-center gap-2 text-sm font-black tracking-tight text-white">
-                <span className="grid h-7 w-7 place-items-center rounded-xl bg-primary/25 text-primary-foreground">
+              <div className="mb-3 flex items-center gap-2 text-sm font-black tracking-tight text-foreground">
+                <span className="grid h-7 w-7 place-items-center rounded-xl bg-primary-soft text-primary">
                   <Building2 size={13} />
                 </span>
                 {b.name}
-                <span className="text-[11px] font-semibold text-white/50">
+                <span className="text-[11px] font-semibold text-muted-foreground">
                   · {b.total_flats} flats
                 </span>
               </div>
@@ -182,14 +172,14 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
                   return (
                     <div
                       key={fl.id}
-                      className="rounded-2xl border border-white/8 bg-[color-mix(in_oklab,var(--foreground)_60%,transparent)] p-3"
+                      className="rounded-2xl border border-border/70 bg-surface p-3"
                     >
                       <div className="mb-2 flex items-center justify-between">
-                        <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white/60">
+                        <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                           <Layers size={11} />
                           {fl.name || `Floor ${fl.number}`}
                         </div>
-                        <div className="text-[10px] font-semibold text-white/40">
+                        <div className="text-[10px] font-semibold text-muted-foreground">
                           {items.length} unit{items.length === 1 ? "" : "s"}
                         </div>
                       </div>
@@ -214,12 +204,12 @@ export function FlatInventoryBoard({ slug, projectName }: { slug: string; projec
 
 const TILE_TONE: Record<FlatStatus, string> = {
   available:
-    "border-emerald-400/40 bg-emerald-400/15 text-emerald-100 hover:bg-emerald-400/25 hover:shadow-[0_0_18px_-2px_rgba(16,185,129,0.55)]",
+    "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20",
   reserved:
-    "border-amber-400/40 bg-amber-400/15 text-amber-100 hover:bg-amber-400/25 hover:shadow-[0_0_18px_-2px_rgba(245,158,11,0.5)]",
-  sold: "border-rose-400/40 bg-rose-400/15 text-rose-100 hover:bg-rose-400/25",
-  not_released: "border-white/10 bg-white/[0.04] text-white/40",
-  blocked: "border-slate-400/30 bg-slate-400/10 text-slate-200",
+    "border-amber-500/30 bg-amber-500/10 text-amber-700 hover:bg-amber-500/20",
+  sold: "border-rose-500/30 bg-rose-500/10 text-rose-700 hover:bg-rose-500/20",
+  not_released: "border-border bg-muted text-muted-foreground",
+  blocked: "border-slate-400/30 bg-slate-500/10 text-slate-700",
 };
 
 function FlatTile({ flat, onClick }: { flat: PublicFlat; onClick: () => void }) {

@@ -31,6 +31,7 @@ import { formatINR, SkeletonBlock } from "@/components/aawash/dashboard-kit";
 import { FlatInventoryBoard } from "@/components/aawash/projects/FlatInventoryBoard";
 import { getPublicProject } from "@/lib/projects.functions";
 import { useRealtimeInvalidate } from "@/hooks/useRealtimeInvalidate";
+import { getProjectFlats } from "@/lib/project-flats";
 
 const STATUS_LABELS: Record<string, string> = {
   planning: "Planning",
@@ -329,6 +330,20 @@ function ProjectDetailPage() {
               />
             </div>
 
+            {/* AVAILABILITY (seatmap) */}
+            <section id="availability" className="mt-8 scroll-mt-24">
+              <SectionHeader
+                icon={<Grid3x3 size={16} />}
+                title="Availability"
+                subtitle="Live flat seatmap"
+              />
+              <div className="mt-4">
+                <Reveal>
+                  <FlatInventoryBoard slug={slug} projectName={p.name as string} />
+                </Reveal>
+              </div>
+            </section>
+
             {/* GALLERY */}
             <section id="gallery" className="mt-8 scroll-mt-24">
               <SectionHeader
@@ -350,44 +365,6 @@ function ProjectDetailPage() {
               />
               <div className="mt-4">
                 <TourPanel modelUrl={modelUrl} isGlb={isGlb} />
-              </div>
-            </section>
-
-            {/* TOTAL FLATS (breakdown) */}
-            <section id="flats" className="mt-8 scroll-mt-24">
-              <SectionHeader
-                icon={<Layers size={16} />}
-                title="Total Flats"
-                subtitle="Inventory at a glance"
-              />
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <QuickCard icon={<HomeIcon size={14} />} label="Total" value={String(total)} />
-                <QuickCard
-                  icon={<Layers size={14} />}
-                  label="Available"
-                  value={String(available)}
-                  accent="emerald"
-                />
-                <QuickCard
-                  icon={<Sparkles size={14} />}
-                  label="Reserved"
-                  value={String(reserved)}
-                />
-                <QuickCard icon={<CheckCircle2 size={14} />} label="Sold" value={String(sold)} />
-              </div>
-            </section>
-
-            {/* AVAILABILITY (seatmap) */}
-            <section id="availability" className="mt-8 scroll-mt-24">
-              <SectionHeader
-                icon={<Grid3x3 size={16} />}
-                title="Availability"
-                subtitle="Live flat seatmap"
-              />
-              <div className="mt-4">
-                <Reveal>
-                  <FlatInventoryBoard slug={slug} projectName={p.name as string} />
-                </Reveal>
               </div>
             </section>
 
