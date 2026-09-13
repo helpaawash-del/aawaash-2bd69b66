@@ -1,0 +1,5 @@
+- [ ] Add editable project Flats content with three swipeable unit cards.
+- [ ] Reorder project detail sections and redesign live availability.
+- [ ] Add admin project editor controls and persistence for Flats content.
+- [ ] Add authenticated homepage edit and image persistence E2E coverage.
+- [ ] Run typecheck, production build smoke test, and focused verification.

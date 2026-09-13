@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { getProjectFlats } from "@/lib/project-flats";
 
 /**
  * Enterprise Project Management Console — admin CRUD for
@@ -114,6 +115,21 @@ const projectSchema = z.object({
       }),
     ])
     .optional(),
+  extra: z
+    .union([
+      z.record(z.string(), z.unknown()),
+      z.string().transform((value) => {
+        if (!value.trim()) return {};
+        try {
+          const parsed: unknown = JSON.parse(value);
+          return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+        } catch {
+          return {};
+        }
+      }),
+    ])
+    .optional()
+    .default({}),
   total_flats: z.coerce.number().int().min(0).max(100000).optional(),
   available_flats: z.coerce.number().int().min(0).max(100000).optional(),
   reserved_flats: z.coerce.number().int().min(0).max(100000).optional(),
@@ -153,7 +169,11 @@ export const adminUpsertProject = createServerFn({ method: "POST" })
       }
       normalised[k] = v;
     }
-    return projectSchema.parse(normalised);
+    const parsed = projectSchema.parse(normalised);
+    return {
+      ...parsed,
+      extra: { ...parsed.extra, flats: getProjectFlats(parsed.extra) },
+    };
   })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
