@@ -77,6 +77,56 @@ test.describe("Admin — project lifecycle", () => {
     await page.getByRole("button", { name: /save changes/i }).click();
     await expect(page.getByText(/saved/i)).toBeVisible();
   });
+
+  test("homepage edit persists and renders publicly", async ({ page }) => {
+    await loginAs(page, ADMIN_EMAIL!, ADMIN_PASSWORD!);
+    await page.goto(`${BASE}/admin/homepage`);
+
+    const hero = page.locator("section", { hasText: "Hero" }).first();
+    await hero.getByRole("button").first().click();
+    const heading = hero.locator("input").nth(1);
+    const original = await heading.inputValue();
+    const marker = `E2E ${Date.now()}`;
+    await heading.fill(marker);
+    await page.getByRole("button", { name: /save changes/i }).click();
+    await expect(page.getByText(/homepage updated/i)).toBeVisible();
+
+    await page.goto(BASE);
+    await expect(page.getByText(marker, { exact: false })).toBeVisible();
+    await page.reload();
+    await expect(page.getByText(marker, { exact: false })).toBeVisible();
+
+    await page.goto(`${BASE}/admin/homepage`);
+    const restoredHero = page.locator("section", { hasText: "Hero" }).first();
+    await restoredHero.getByRole("button").first().click();
+    await restoredHero.locator("input").nth(1).fill(original);
+    await page.getByRole("button", { name: /save changes/i }).click();
+  });
+
+  test("project cover URL persists through admin save and public rendering", async ({ page }) => {
+    await loginAs(page, ADMIN_EMAIL!, ADMIN_PASSWORD!);
+    await page.goto(`${BASE}/admin/projects`);
+    const projectLink = page.locator('a[href^="/admin/projects/"]').first();
+    await expect(projectLink).toBeVisible();
+    await projectLink.click();
+    await page.getByRole("button", { name: /^media$/i }).click();
+
+    const cover = page.getByLabel(/cover/i).last();
+    const original = await cover.inputValue();
+    const marker = `https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80`;
+    await cover.fill(marker);
+    await page.getByRole("button", { name: /save media/i }).click();
+    await expect(page.getByText(/^saved\.?$/i)).toBeVisible();
+
+    const publicLink = page.getByRole("link", { name: /view public page/i });
+    await publicLink.click();
+    await expect(page.locator(`img[src*="photo-1600607687920-4e2a09cf159d"]`).first()).toBeVisible();
+
+    await page.goBack();
+    await page.getByRole("button", { name: /^media$/i }).click();
+    await page.getByLabel(/cover/i).last().fill(original);
+    await page.getByRole("button", { name: /save media/i }).click();
+  });
 });
 
 test.describe("Admin — team leader & member manage flow", () => {
