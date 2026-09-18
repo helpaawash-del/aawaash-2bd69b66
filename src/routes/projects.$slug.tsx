@@ -452,7 +452,131 @@ function OverviewPanel({
           </section>
         </Reveal>
       ) : null}
+      <FlatShowcase flats={getProjectFlats(p.extra)} />
     </div>
+  );
+}
+
+function FlatShowcase({ flats }: { flats: ReturnType<typeof getProjectFlats> }) {
+  const [active, setActive] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const goTo = (next: number) => setActive((next + flats.length) % flats.length);
+  const move = (direction: -1 | 1) => goTo(active + direction);
+  const swipe = () => {
+    if (touchStart === null || touchEnd === null) return;
+    const distance = touchStart - touchEnd;
+    if (Math.abs(distance) > 45) move(distance > 0 ? 1 : -1);
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
+  if (!flats.length) return null;
+
+  return (
+    <Reveal>
+      <section
+        aria-label="Available flat types"
+        className="glass-card overflow-hidden rounded-3xl p-5 shadow-[var(--shadow-soft)] sm:p-6"
+        onKeyDown={(event) => {
+          if (event.key === "ArrowRight") move(1);
+          if (event.key === "ArrowLeft") move(-1);
+        }}
+        tabIndex={0}
+        onTouchStart={(event) => setTouchStart(event.changedTouches[0]?.clientX ?? null)}
+        onTouchMove={(event) => setTouchEnd(event.changedTouches[0]?.clientX ?? null)}
+        onTouchEnd={swipe}
+      >
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Choose your plan</div>
+            <h2 className="mt-1 text-lg font-bold text-foreground">Flats for every kind of living</h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              aria-label="Previous flat type"
+              onClick={() => move(-1)}
+              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-foreground transition hover:border-primary hover:text-primary"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              type="button"
+              aria-label="Next flat type"
+              onClick={() => move(1)}
+              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-foreground transition hover:border-primary hover:text-primary"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-4 overflow-hidden rounded-2xl">
+          <div
+            className="flex transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(-${active * 100}%)` }}
+          >
+            {flats.map((flat) => (
+              <article key={flat.title} className="w-full shrink-0" aria-label={flat.title}>
+                <div className="grid overflow-hidden rounded-2xl border border-border bg-background sm:grid-cols-[minmax(220px,0.9fr)_1.1fr]">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-primary-soft sm:aspect-auto sm:min-h-64">
+                    {flat.image ? (
+                      <img src={flat.image} alt={`${flat.title} interior`} className="h-full w-full object-cover" loading="lazy" />
+                    ) : (
+                      <div className="grid h-full min-h-48 place-items-center p-6 text-center text-primary">
+                        <div>
+                          <HomeIcon className="mx-auto" size={28} />
+                          <p className="mt-2 text-xs font-bold uppercase tracking-wider">Image coming soon</p>
+                        </div>
+                      </div>
+                    )}
+                    <div className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                      {flat.title}
+                    </div>
+                  </div>
+                  <div className="p-5 sm:p-6">
+                    <div className="flex flex-wrap items-end justify-between gap-3">
+                      <div>
+                        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Configuration</div>
+                        <h3 className="mt-1 text-2xl font-extrabold text-foreground">{flat.title}</h3>
+                      </div>
+                      <div className="rounded-xl bg-primary-soft px-3 py-2 text-right">
+                        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Area</div>
+                        <div className="text-sm font-extrabold text-primary">{flat.area}</div>
+                      </div>
+                    </div>
+                    <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {flat.amenities.map((amenity) => (
+                        <div key={amenity} className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                          <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary-soft text-primary">
+                            <Check size={12} />
+                          </span>
+                          <span className="truncate">{amenity}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+        <div className="mt-4 flex items-center justify-center gap-1.5" aria-label="Flat type pages">
+          {flats.map((flat, index) => (
+            <button
+              key={flat.title}
+              type="button"
+              aria-label={`Show ${flat.title}`}
+              aria-current={index === active}
+              onClick={() => goTo(index)}
+              className={`h-1.5 rounded-full transition-all ${index === active ? "w-7 bg-primary" : "w-1.5 bg-border"}`}
+            />
+          ))}
+        </div>
+      </section>
+    </Reveal>
   );
 }
 
