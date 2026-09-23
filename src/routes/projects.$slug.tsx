@@ -124,17 +124,6 @@ function ProjectDetailPage() {
   const modelUrl = (p.three_d_tour_url as string | null) ?? null;
   const isGlb = !!modelUrl && /\.(glb|gltf)(\?|$)/i.test(modelUrl);
 
-  // Load model-viewer web component when needed
-  useEffect(() => {
-    if (!isGlb) return;
-    if (customElements.get("model-viewer")) return;
-    const s = document.createElement("script");
-    s.type = "module";
-    s.src = "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js";
-    s.async = true;
-    document.head.appendChild(s);
-  }, [isGlb]);
-
   const dockItems: Array<{
     id: string;
     label: string;
@@ -711,6 +700,14 @@ function ModelViewerFrame({ src }: { src: string }) {
   useEffect(() => {
     if (!inView) return;
     let cancelled = false;
+    if (!customElements.get("model-viewer") && !document.querySelector('script[data-model-viewer]')) {
+      const script = document.createElement("script");
+      script.type = "module";
+      script.async = true;
+      script.dataset.modelViewer = "true";
+      script.src = "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js";
+      document.head.appendChild(script);
+    }
     if (customElements.get("model-viewer")) {
       setReady(true);
       return;
