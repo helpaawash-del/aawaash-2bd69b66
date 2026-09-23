@@ -763,6 +763,7 @@ function ModelViewerFrame({ src }: { src: string }) {
         </>
       )}
     </div>
+  );
 }
 
 function IframeFrame({ src, title }: { src: string; title: string }) {
