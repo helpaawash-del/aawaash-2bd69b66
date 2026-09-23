@@ -231,7 +231,7 @@ export const listProjects = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data } = await context.supabase
       .from("projects")
-      .select("id, name, slug, location, price_from, total_units, sold_units, hero_hue, tag, description, status")
+      .select("id, name, slug, location, price_from, total_units, sold_units, total_flats, available_flats, reserved_flats, sold_flats, extra, hero_hue, tag, description, status")
       .eq("is_deleted", false)
       .order("created_at", { ascending: false });
     return data ?? [];
