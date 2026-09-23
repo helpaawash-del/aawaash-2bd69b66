@@ -42,6 +42,7 @@ import {
 } from "@/components/aawash/dashboard/EcoKit";
 import { getMemberOverview, getMyActivity, getMyTeamLeaderboard } from "@/lib/member.functions";
 import { listMyNotifications, listProjects } from "@/lib/leader.functions";
+import { ProjectFlatsSnapshot } from "@/components/aawash/dashboard/ProjectFlatsSnapshot";
 
 export const Route = createFileRoute("/_authenticated/member/")({
   component: MemberHome,
@@ -315,6 +316,15 @@ function MemberContent() {
               <IndianRupee size={14} /> Commissions
             </Link>
           </div>
+        </LightPanel>
+      </section>
+
+      <section className="mt-4 sm:mt-5">
+        <LightPanel
+          title="Flats at a glance"
+          action={<Link to="/projects" className="text-[12px] font-semibold text-primary">Explore projects</Link>}
+        >
+          <ProjectFlatsSnapshot projects={projects.data ?? []} />
         </LightPanel>
       </section>
 

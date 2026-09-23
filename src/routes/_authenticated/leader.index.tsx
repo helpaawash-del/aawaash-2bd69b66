@@ -54,6 +54,7 @@ import {
   listMyNotifications,
 } from "@/lib/leader.functions";
 import { listMyTeamMembers } from "@/lib/admin.functions";
+import { ProjectFlatsSnapshot } from "@/components/aawash/dashboard/ProjectFlatsSnapshot";
 
 export const Route = createFileRoute("/_authenticated/leader/")({
   component: LeaderHome,
@@ -332,6 +333,15 @@ function LeaderContent() {
           >
             <ArrowDownToLine size={15} /> Request withdrawal
           </Link>
+        </LightPanel>
+      </section>
+
+      <section className="mt-4 sm:mt-5">
+        <LightPanel
+          title="Flats at a glance"
+          action={<Link to="/leader/projects" className="text-[12px] font-semibold text-primary">Open inventory</Link>}
+        >
+          <ProjectFlatsSnapshot projects={projects.data ?? []} />
         </LightPanel>
       </section>
 

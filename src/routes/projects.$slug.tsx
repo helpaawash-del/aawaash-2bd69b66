@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import {
   ArrowLeft,
   Box,
@@ -124,17 +124,6 @@ function ProjectDetailPage() {
   const modelUrl = (p.three_d_tour_url as string | null) ?? null;
   const isGlb = !!modelUrl && /\.(glb|gltf)(\?|$)/i.test(modelUrl);
 
-  // Load model-viewer web component when needed
-  useEffect(() => {
-    if (!isGlb) return;
-    if (customElements.get("model-viewer")) return;
-    const s = document.createElement("script");
-    s.type = "module";
-    s.src = "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js";
-    s.async = true;
-    document.head.appendChild(s);
-  }, [isGlb]);
-
   const dockItems: Array<{
     id: string;
     label: string;
@@ -236,6 +225,9 @@ function ProjectDetailPage() {
                         src={heroImages[0]}
                         alt={p.name as string}
                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                        loading="eager"
+                        fetchPriority="high"
+                        decoding="async"
                       />
                     </button>
                   ) : (
@@ -679,10 +671,47 @@ function TourPanel({ modelUrl, isGlb }: { modelUrl: string | null; isGlb: boolea
 }
 
 function ModelViewerFrame({ src }: { src: string }) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
   const [ready, setReady] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
+
   useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame) return;
+    if (!("IntersectionObserver" in window)) {
+      setInView(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "240px 0px" },
+    );
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
     let cancelled = false;
+    if (!customElements.get("model-viewer") && !document.querySelector('script[data-model-viewer]')) {
+      const script = document.createElement("script");
+      script.type = "module";
+      script.async = true;
+      script.dataset.modelViewer = "true";
+      script.src = "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js";
+      document.head.appendChild(script);
+    }
+    if (customElements.get("model-viewer")) {
+      setReady(true);
+      return;
+    }
     const check = () => {
       if (cancelled) return;
       if (customElements.get("model-viewer")) setReady(true);
@@ -692,40 +721,45 @@ function ModelViewerFrame({ src }: { src: string }) {
     return () => {
       cancelled = true;
     };
-  }, []);
-  if (errored) {
-    return <EmptyTile icon={<Box size={22} />} label="Couldn't load 3D model" />;
-  }
+  }, [inView]);
+
   return (
-    <>
-      {!ready && (
-        <div className="absolute inset-0 grid animate-pulse place-items-center text-muted-foreground">
-          <div className="flex flex-col items-center gap-2">
-            <Box size={22} />
-            <span className="text-xs font-semibold">Loading 3D model…</span>
-          </div>
-        </div>
+    <div ref={frameRef} className="relative h-full w-full">
+      {errored ? (
+        <EmptyTile icon={<Box size={22} />} label="Couldn't load 3D model" />
+      ) : (
+        <>
+          {(!inView || !ready || !loaded) && (
+            <div className="absolute inset-0 z-10 grid place-items-center bg-background/70 text-muted-foreground backdrop-blur-sm">
+              <div className="flex flex-col items-center gap-2">
+                <Box size={22} />
+                <span className="text-xs font-semibold">{inView ? "Loading 3D model…" : "3D model ready when you are"}</span>
+              </div>
+            </div>
+          )}
+          {ready && (
+            // @ts-expect-error - custom element
+            <model-viewer
+              src={src}
+              camera-controls
+              auto-rotate
+              auto-rotate-delay="300"
+              rotation-per-second="18deg"
+              touch-action="pan-y"
+              interaction-prompt="none"
+              loading="lazy"
+              reveal="auto"
+              shadow-intensity="0"
+              exposure="1"
+              power-preference="high-performance"
+              onLoad={() => setLoaded(true)}
+              onError={() => setErrored(true)}
+              style={{ width: "100%", height: "100%", background: "transparent" }}
+            />
+          )}
+        </>
       )}
-      {ready && (
-        // @ts-expect-error - custom element
-        <model-viewer
-          src={src}
-          camera-controls
-          auto-rotate
-          auto-rotate-delay="300"
-          rotation-per-second="18deg"
-          touch-action="pan-y"
-          interaction-prompt="none"
-          loading="eager"
-          reveal="auto"
-          shadow-intensity="0"
-          exposure="1"
-          power-preference="high-performance"
-          onError={() => setErrored(true)}
-          style={{ width: "100%", height: "100%", background: "transparent" }}
-        />
-      )}
-    </>
+    </div>
   );
 }
 
