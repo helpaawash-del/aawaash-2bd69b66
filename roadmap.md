@@ -2,4 +2,5 @@
 - [x] Reorder project detail sections and redesign live availability.
 - [x] Add admin project editor controls and persistence for Flats content.
 - [x] Add authenticated homepage edit and image persistence E2E coverage.
-- [ ] Run typecheck, production build smoke test, and focused verification.
+- [x] Run typecheck, production build smoke test, and focused public verification.
+- [ ] Run authenticated homepage, Flats upload/save, and database persistence E2E coverage when a preview account is available.
