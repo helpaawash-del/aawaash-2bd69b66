@@ -39,7 +39,7 @@ Default enterprise slabs (₹0 → ₹10Cr+). Slab match is `deal_value BETWEEN 
 
 ## Team Limits
 - Max active team leaders: 3 (configurable).
-- Max active members per leader: 10 (configurable).
+- Members per team: unlimited. A team must have a Team Leader before members can be assigned.
 - Enforced in `createTeamLeaderFull` and `createMemberFull`.
 
 ## Customer Access

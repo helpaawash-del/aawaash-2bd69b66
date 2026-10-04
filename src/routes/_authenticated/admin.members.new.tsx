@@ -8,7 +8,6 @@ import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { createMemberFull, listAllMembers } from "@/lib/members-admin.functions";
-import { getTeamLimits } from "@/lib/team-leaders.functions";
 
 const searchSchema = z.object({ leaderId: z.string().uuid().optional() });
 
@@ -33,19 +32,12 @@ function Content() {
   const { leaderId } = Route.useSearch();
   const createFn = useServerFn(createMemberFull);
   const listFn = useServerFn(listAllMembers);
-  const limitsFn = useServerFn(getTeamLimits);
 
   const { data } = useQuery({ queryKey: ["admin", "members"], queryFn: () => listFn() });
-  const { data: limits } = useQuery({ queryKey: ["admin", "team-limits"], queryFn: () => limitsFn() });
-
-  const cap = limits?.maxMembersPerTeam ?? 10;
 
   const availableTeams = useMemo(
-    () =>
-      (data?.leaders ?? []).filter(
-        (t) => t.leader_id && t.member_count < cap,
-      ),
-    [data, cap],
+    () => (data?.leaders ?? []).filter((t) => t.leader_id),
+    [data],
   );
 
   // Resolve leader → team (may include a full team even without spare slots,
@@ -55,8 +47,7 @@ function Content() {
     if (!leaderId) return null;
     return (data?.leaders ?? []).find((t) => t.leader_id === leaderId) ?? null;
   }, [data, leaderId]);
-  const lockedTeamHasSpace = lockedTeam ? lockedTeam.member_count < cap : false;
-  const lockedFromLeader = Boolean(lockedTeam && lockedTeamHasSpace);
+  const lockedFromLeader = Boolean(lockedTeam?.leader_id);
 
   const [fullName, setFullName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -186,7 +177,7 @@ function Content() {
         <div>
           <div className="glass-card inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-foreground">
             <Sparkles size={12} className="text-gold" />
-            Up to {cap} members per team
+            Unlimited members per team
           </div>
           <h1 className="mt-2 text-3xl font-extrabold text-foreground">Add a Member</h1>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -199,10 +190,9 @@ function Content() {
         <div className="mb-6 flex items-start gap-3 rounded-3xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-900">
           <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
           <div>
-            <div className="font-bold">No teams have space</div>
+            <div className="font-bold">No teams are ready</div>
             <div className="text-xs">
-              Every team is either at capacity or missing a Team Leader. Increase the limit in Team
-              Leaders → Limits, or add a leader first.
+              Add a Team Leader before assigning members to a team.
             </div>
           </div>
         </div>
@@ -290,7 +280,7 @@ function Content() {
               <option value="">— Choose a team —</option>
               {availableTeams.map((t) => (
                 <option key={t.team_id} value={t.team_id}>
-                  Team {t.letter} · {t.name} ({t.member_count}/{cap})
+                  Team {t.letter} · {t.name} ({t.member_count} members)
                 </option>
               ))}
             </select>
@@ -302,8 +292,7 @@ function Content() {
             )}
             {leaderId && !lockedFromLeader && (
               <span className="mt-1 block text-[11px] font-semibold text-amber-700">
-                That leader's team is at capacity ({lockedTeam?.member_count ?? 0}/{cap}) — raise
-                the member limit or pick another team below.
+                That leader is not assigned to an active team. Pick another team below.
               </span>
             )}
           </label>

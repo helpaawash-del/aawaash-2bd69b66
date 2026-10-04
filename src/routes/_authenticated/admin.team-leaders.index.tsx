@@ -10,7 +10,6 @@ import {
   Users,
   TrendingUp,
   Wallet,
-  Settings2,
   ArrowRight,
   Circle,
   Trash2,
@@ -19,7 +18,7 @@ import {
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
-import { listTeamLeaders, getTeamLimits, updateTeamLimits } from "@/lib/team-leaders.functions";
+import { listTeamLeaders, getTeamLimits } from "@/lib/team-leaders.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
 import { WalletEditButton } from "@/components/aawash/admin/WalletAdjustDialog";
 import {
@@ -62,11 +61,9 @@ function Content() {
   const { profile } = useSession();
   const listFn = useServerFn(listTeamLeaders);
   const limitsFn = useServerFn(getTeamLimits);
-  const updateLimitsFn = useServerFn(updateTeamLimits);
 
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<"all" | "active" | "suspended">("all");
-  const [showLimits, setShowLimits] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [metricsFor, setMetricsFor] = useState<LeaderMetrics | null>(null);
   const [deleteFor, setDeleteFor] = useState<{ id: string; full_name: string } | null>(null);
@@ -125,13 +122,6 @@ function Content() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowLimits(true)}
-              className="glass-card inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-foreground shadow-[var(--shadow-soft)]"
-            >
-              <Settings2 size={14} />
-              Limits
-            </button>
             {canAdd ? (
               <button
                 type="button"
@@ -391,79 +381,3 @@ function StatBox({ label, value }: { label: string; value: number | string }) {
   );
 }
 
-function LimitsDialog({
-  initial,
-  onClose,
-  onSave,
-}: {
-  initial: { maxTeamLeaders: number; maxMembersPerTeam: number } | undefined;
-  onClose: () => void;
-  onSave: (p: { maxTeamLeaders: number; maxMembersPerTeam: number }) => Promise<void>;
-}) {
-  const [maxLeaders, setMaxLeaders] = useState(initial?.maxTeamLeaders ?? 3);
-  const [maxMembers, setMaxMembers] = useState(initial?.maxMembersPerTeam ?? 10);
-  const [saving, setSaving] = useState(false);
-
-  return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 backdrop-blur-sm"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="glass-card w-[min(92vw,420px)] rounded-3xl p-6 shadow-[var(--shadow-float)]"
-      >
-        <h3 className="text-lg font-bold text-foreground">Team & Member limits</h3>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Configurable business caps. Applied instantly across the platform.
-        </p>
-        <div className="mt-5 space-y-4">
-          <label className="block text-sm">
-            <span className="text-xs font-semibold text-muted-foreground">Max Team Leaders</span>
-            <input
-              type="number"
-              min={1}
-              max={200}
-              value={maxLeaders}
-              onChange={(e) => setMaxLeaders(Number(e.target.value))}
-              className="mt-1 block w-full rounded-2xl border border-border bg-surface px-3 py-2 text-sm font-semibold outline-none focus:border-primary"
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="text-xs font-semibold text-muted-foreground">Max Members per Team</span>
-            <input
-              type="number"
-              min={0}
-              max={500}
-              value={maxMembers}
-              onChange={(e) => setMaxMembers(Number(e.target.value))}
-              className="mt-1 block w-full rounded-2xl border border-border bg-surface px-3 py-2 text-sm font-semibold outline-none focus:border-primary"
-            />
-          </label>
-        </div>
-        <div className="mt-6 flex items-center justify-end gap-2">
-          <button
-            onClick={onClose}
-            className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-semibold text-foreground"
-          >
-            Cancel
-          </button>
-          <button
-            disabled={saving}
-            onClick={async () => {
-              setSaving(true);
-              try {
-                await onSave({ maxTeamLeaders: maxLeaders, maxMembersPerTeam: maxMembers });
-              } finally {
-                setSaving(false);
-              }
-            }}
-            className="rounded-full bg-primary px-5 py-2 text-xs font-bold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-50"
-          >
-            {saving ? "Saving…" : "Save limits"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}

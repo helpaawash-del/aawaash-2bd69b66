@@ -30,13 +30,6 @@ async function assertSuperAdmin(ctx: Ctx) {
   if (!data) throw new Error("Forbidden: Super Admin only");
 }
 
-async function readMemberLimit(admin: import("@supabase/supabase-js").SupabaseClient) {
-  const { data } = await admin.from("system_settings").select("extra").eq("id", 1).maybeSingle();
-  const extra = (data?.extra ?? {}) as Record<string, unknown>;
-  const n = Number(extra.max_members_per_team ?? 10);
-  return Number.isFinite(n) && n > 0 ? n : 10;
-}
-
 /* ================================================================== */
 /* List Members                                                        */
 /* ================================================================== */
@@ -168,20 +161,6 @@ export const createMemberFull = createServerFn({ method: "POST" })
     if (!team || team.is_deleted) throw new Error("Selected team no longer exists.");
     if (!team.leader_id)
       throw new Error(`Team ${team.letter} has no Team Leader yet. Assign a leader first.`);
-
-    // Configurable member cap (excludes leader)
-    const maxMembers = await readMemberLimit(supabaseAdmin);
-    const { data: currentMembers } = await supabaseAdmin
-      .from("profiles")
-      .select("id")
-      .eq("team_id", team.id)
-      .eq("is_deleted", false);
-    const memberCount = (currentMembers ?? []).filter((m) => m.id !== team.leader_id).length;
-    if (memberCount >= maxMembers) {
-      throw new Error(
-        `Team ${team.letter} is full (${maxMembers} members). Increase the limit in System Settings first.`,
-      );
-    }
 
     const loginId = `${team.letter}${data.mobile}`;
 
@@ -331,18 +310,6 @@ export const changeMemberTeam = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!team || team.is_deleted) throw new Error("Selected team does not exist.");
     if (!team.leader_id) throw new Error(`Team ${team.letter} has no Team Leader yet.`);
-
-    // Cap check
-    const maxMembers = await readMemberLimit(supabaseAdmin);
-    const { data: existing } = await supabaseAdmin
-      .from("profiles")
-      .select("id")
-      .eq("team_id", team.id)
-      .eq("is_deleted", false);
-    const memberCount = (existing ?? []).filter((m) => m.id !== team.leader_id).length;
-    if (memberCount >= maxMembers) {
-      throw new Error(`Team ${team.letter} is full (${maxMembers} members).`);
-    }
 
     const newLoginId = `${team.letter}${profile.mobile_number}`;
 

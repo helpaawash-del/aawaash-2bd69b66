@@ -32,14 +32,8 @@ async function assertSuperAdmin(ctx: Ctx) {
 }
 
 async function readLimits(admin: import("@supabase/supabase-js").SupabaseClient) {
-  const { data } = await admin.from("system_settings").select("extra").eq("id", 1).maybeSingle();
-  const extra = (data?.extra ?? {}) as Record<string, unknown>;
-  const maxLeaders = Number(extra.max_team_leaders ?? 3);
-  const maxMembers = Number(extra.max_members_per_team ?? 10);
-  return {
-    maxTeamLeaders: Number.isFinite(maxLeaders) && maxLeaders > 0 ? maxLeaders : 3,
-    maxMembersPerTeam: Number.isFinite(maxMembers) && maxMembers > 0 ? maxMembers : 10,
-  };
+  void admin;
+  return { maxTeamLeaders: 3 } as const;
 }
 
 /* ================================================================== */
@@ -57,42 +51,6 @@ export const getTeamLimits = createServerFn({ method: "GET" })
       .select("*", { count: "exact", head: true })
       .eq("role", "team_leader");
     return { ...limits, currentTeamLeaders: leadersCount ?? 0 };
-  });
-
-const updateLimitsSchema = z.object({
-  maxTeamLeaders: z.number().int().min(1).max(200).optional(),
-  maxMembersPerTeam: z.number().int().min(0).max(500).optional(),
-});
-
-export const updateTeamLimits = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => updateLimitsSchema.parse(d))
-  .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const current = await readLimits(supabaseAdmin);
-    const next = {
-      max_team_leaders: data.maxTeamLeaders ?? current.maxTeamLeaders,
-      max_members_per_team: data.maxMembersPerTeam ?? current.maxMembersPerTeam,
-    };
-    const { data: row } = await supabaseAdmin
-      .from("system_settings")
-      .select("extra")
-      .eq("id", 1)
-      .maybeSingle();
-    const merged = { ...(row?.extra as object | null ?? {}), ...next };
-    const { error } = await supabaseAdmin
-      .from("system_settings")
-      .update({ extra: merged, updated_by: context.userId } as never)
-      .eq("id", 1);
-    if (error) throw new Error(error.message);
-    await supabaseAdmin.from("audit_logs").insert({
-      actor_id: context.userId,
-      action: "update_team_limits",
-      entity_type: "system_settings",
-      new_value: next,
-    });
-    return { ok: true as const, ...next };
   });
 
 /* ================================================================== */

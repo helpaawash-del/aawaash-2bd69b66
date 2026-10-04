@@ -15,7 +15,7 @@ KPIs (revenue, sales, active members, pending withdrawals), sales trend chart, s
 - **Create**: `+ New Team Leader` → auto-generates Login ID from mobile + team identifier. Sets initial password; leader must change on first login.
 - **Edit**: Inline in detail page (Overview tab).
 - **Reset password**: Detail page → Overview → Reset action.
-- **Limits**: Header dialog to change global cap (default 3 leaders, 10 members/leader).
+- **Team leaders**: Exactly three leader slots are available. Member accounts have no per-team cap.
 
 ### Members (`/admin/members`)
 - **Create**: `+ New Member` → pick team → mobile → auto Login ID `[TEAM][MOBILE]`.
