@@ -284,7 +284,6 @@ function AdminContent() {
 
         <MemberCreatePanel
           teams={members.data?.leaders ?? []}
-          cap={limits.data?.maxMembersPerTeam ?? 10}
           onCreate={async (input) => {
             await createMemberFn({ data: input });
             await invalidateAdmin(qc, "member");
@@ -483,14 +482,12 @@ type MemberTeam = { team_id?: string | null; letter?: string | null; name?: stri
 
 function MemberCreatePanel({
   teams,
-  cap,
   onCreate,
 }: {
   teams: MemberTeam[];
-  cap: number;
   onCreate: (input: { fullName: string; mobile: string; password: string; teamId: string }) => Promise<void>;
 }) {
-  const availableTeams = teams.filter((t) => t.leader_id && (t.member_count ?? 0) < cap);
+  const availableTeams = teams.filter((t) => t.leader_id);
   const [fullName, setFullName] = useState("");
   const [teamId, setTeamId] = useState("");
   const [mobile, setMobile] = useState("");
@@ -537,7 +534,7 @@ function MemberCreatePanel({
           <select value={teamId} onChange={(e) => setTeamId(e.target.value)} className="mt-1 block w-full rounded-2xl border border-border bg-background px-3 py-2.5 text-sm font-semibold text-foreground outline-none focus:border-primary">
             <option value="">Choose team</option>
             {availableTeams.map((team) => (
-              <option key={team.team_id} value={team.team_id ?? ""}>Team {team.letter} · {team.leader_name ?? team.name} ({team.member_count}/{cap})</option>
+              <option key={team.team_id} value={team.team_id ?? ""}>Team {team.letter} · {team.leader_name ?? team.name} ({team.member_count} members)</option>
             ))}
           </select>
         </label>
