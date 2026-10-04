@@ -1,15 +1,16 @@
-# Project details and homepage editing upgrade
+# Fern theme and unlimited member management
 
 ## Scope
-- Store project-specific Flats presentation data in the existing `projects.extra` JSON field, avoiding a new table and keeping public reads within the existing RLS-protected project record.
-- Add three editable unit cards for 1 BHK, 2 BHK, and 3 BHK. Each card supports an image, title, area label, and four amenity points.
-- Render the Flats cards after Amenities as a touch-friendly swipe carousel with buttons and keyboard support.
-- Reorder project detail content to Availability, Gallery, then 3D Model, and restyle Availability as a light, minimal app-like inventory board.
-- Add project-admin controls for editing Flats cards and image uploads, then save through the existing admin project function with strict persistence checks.
-- Add skipped authenticated Playwright coverage for homepage text editing and Projects cover-image replacement, including public rendering and database persistence through the existing authenticated client/session.
+- Replace the current white/forest palette with a white and Fern green system anchored to `#4F7942`, plus darker Fern shades for text, navigation, active states, charts, shadows, and focus rings across public pages, role dashboards, and admin pages.
+- Keep all existing layouts and functionality while making transitions and interactions feel faster through shorter, restrained motion and consistent app-style surfaces.
+- Remove the member-per-team setting and every capacity check from member creation and team reassignment. Teams with a leader can accept any number of members.
+- Keep the global team-leader cap fixed at three and continue enforcing it server-side.
+- Update member administration to show actual counts rather than capacity percentages, preserve search/team/status filters, and paginate large member lists so 50+ accounts remain fast and manageable.
+- Update dashboard counts and team summaries to use complete database counts without truncation or capacity assumptions.
+- Update business documentation and tests to state unlimited members and exactly three team leaders.
 
 ## Technical details
-- Extend public/admin project selects and the admin Zod schema to preserve `extra`.
-- Normalize `extra` before validation so form submissions remain reliable and do not send malformed string values.
-- Keep existing realtime invalidation for project and flat changes.
-- Verify TypeScript, production build, and focused E2E tests after implementation.
+- Centralize the Fern palette in semantic CSS tokens so existing public, dashboard, and admin components inherit the new theme without hardcoded page colors.
+- Remove `max_members_per_team` from server validation and admin limits controls; ignore any legacy stored value while leaving historical settings data harmless.
+- Add server-side pagination inputs and a total count to the admin member list while keeping unpaginated lightweight team totals for selectors and dashboard summaries.
+- Add focused tests for unlimited member creation/reassignment behavior and the three-team-leader rule, then run the relevant tests and confirm the preview build is healthy.
