@@ -2,12 +2,11 @@ import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Users, Plus, Search, ShieldCheck, TrendingUp, Wallet, ArrowRight, Circle } from "lucide-react";
+import { Users, Plus, Search, ShieldCheck, TrendingUp, Wallet, ArrowRight, Circle, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSession } from "@/hooks/useSession";
 import { RoleGuard } from "@/components/aawash/AuthGuard";
 import { AdminShell } from "@/components/aawash/admin/AdminShell";
 import { listAllMembers } from "@/lib/members-admin.functions";
-import { getTeamLimits } from "@/lib/team-leaders.functions";
 import { formatINR, initials } from "@/components/aawash/dashboard-kit";
 import { WalletEditButton } from "@/components/aawash/admin/WalletAdjustDialog";
 
@@ -34,22 +33,17 @@ const STATUS_TINTS: Record<string, string> = {
 function Content() {
   const { profile } = useSession();
   const listFn = useServerFn(listAllMembers);
-  const limitsFn = useServerFn(getTeamLimits);
-
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<"all" | "active" | "suspended">("all");
   const [teamFilter, setTeamFilter] = useState<string>("all");
   const [grouped, setGrouped] = useState<boolean>(true);
+  const [page, setPage] = useState(1);
+  const pageSize = 25;
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "members"],
     queryFn: () => listFn(),
   });
-  const { data: limits } = useQuery({
-    queryKey: ["admin", "team-limits"],
-    queryFn: () => limitsFn(),
-  });
-
   const filtered = useMemo(() => {
     const rows = data?.members ?? [];
     return rows.filter((r) => {
@@ -69,7 +63,13 @@ function Content() {
     });
   }, [data, q, status, teamFilter]);
 
-  const cap = limits?.maxMembersPerTeam ?? 10;
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const visible = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  function resetPage() {
+    setPage(1);
+  }
 
   return (
     <AdminShell profile={profile}>
@@ -98,11 +98,9 @@ function Content() {
         </div>
       </section>
 
-      {/* Team capacity strip */}
+      {/* Team totals */}
       <section className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {(data?.leaders ?? []).map((t) => {
-          const pct = Math.min(100, Math.round((t.member_count / cap) * 100));
-          return (
+        {(data?.leaders ?? []).map((t) => (
             <div key={t.team_id} className="glass-card rounded-3xl p-4 shadow-[var(--shadow-soft)]">
               <div className="flex items-center justify-between">
                 <div>
@@ -117,19 +115,13 @@ function Content() {
                 <div className="text-right">
                   <div className="text-2xl font-extrabold text-foreground">
                     {t.member_count}
-                    <span className="ml-1 text-sm font-semibold text-muted-foreground">/{cap}</span>
+                    <span className="ml-1 text-sm font-semibold text-muted-foreground">members</span>
                   </div>
                 </div>
               </div>
-              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted">
-                <div
-                  className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
+              <div className="mt-3 text-[11px] font-semibold text-primary">Unlimited team capacity</div>
             </div>
-          );
-        })}
+        ))}
       </section>
 
       {/* Filters */}
@@ -142,14 +134,14 @@ function Content() {
             />
             <input
               value={q}
-              onChange={(e) => setQ(e.target.value)}
+              onChange={(e) => { setQ(e.target.value); resetPage(); }}
               placeholder="Search by name, mobile, login ID, team, or leader…"
               className="w-full rounded-2xl border border-border bg-surface py-2.5 pl-9 pr-3 text-sm text-foreground outline-none focus:border-primary"
             />
           </div>
           <select
             value={teamFilter}
-            onChange={(e) => setTeamFilter(e.target.value)}
+            onChange={(e) => { setTeamFilter(e.target.value); resetPage(); }}
             className="rounded-2xl border border-border bg-surface px-3 py-2.5 text-sm font-semibold text-foreground outline-none focus:border-primary"
           >
             <option value="all">All teams</option>
@@ -163,7 +155,7 @@ function Content() {
             {(["all", "active", "suspended"] as const).map((s) => (
               <button
                 key={s}
-                onClick={() => setStatus(s)}
+                onClick={() => { setStatus(s); resetPage(); }}
                 className={`px-3 py-1.5 text-xs font-semibold capitalize ${
                   status === s ? "bg-primary text-primary-foreground" : "text-foreground"
                 }`}
@@ -176,7 +168,7 @@ function Content() {
             {([[true, "Group by team"], [false, "Flat list"]] as const).map(([v, l]) => (
               <button
                 key={String(v)}
-                onClick={() => setGrouped(v)}
+                onClick={() => { setGrouped(v); resetPage(); }}
                 className={`px-3 py-1.5 text-xs font-semibold ${
                   grouped === v ? "bg-primary text-primary-foreground" : "text-foreground"
                 }`}
@@ -205,7 +197,7 @@ function Content() {
         ) : grouped ? (
           <div className="divide-y divide-border">
             {(data?.teams ?? []).map((t) => {
-              const rows = filtered.filter((r) => r.team_id === t.id);
+              const rows = visible.filter((r) => r.team_id === t.id);
               if (rows.length === 0) return null;
               return (
                 <div key={t.id}>
@@ -227,7 +219,7 @@ function Content() {
               );
             })}
             {(() => {
-              const unassigned = filtered.filter((r) => !r.team_id);
+              const unassigned = visible.filter((r) => !r.team_id);
               if (unassigned.length === 0) return null;
               return (
                 <div>
@@ -243,10 +235,26 @@ function Content() {
           </div>
         ) : (
           <div className="divide-y divide-border">
-            {filtered.map((m) => <MemberRow key={m.id} m={m} />)}
+            {visible.map((m) => <MemberRow key={m.id} m={m} />)}
           </div>
         )}
       </section>
+      {filtered.length > pageSize && (
+        <nav aria-label="Member list pages" className="mt-4 flex items-center justify-between gap-3">
+          <span className="text-xs text-muted-foreground">
+            Showing {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, filtered.length)} of {filtered.length}
+          </span>
+          <div className="flex items-center gap-2">
+            <button type="button" aria-label="Previous page" disabled={currentPage === 1} onClick={() => setPage((value) => Math.max(1, value - 1))} className="grid h-9 w-9 place-items-center rounded-xl border border-border bg-surface text-foreground disabled:opacity-40">
+              <ChevronLeft size={16} />
+            </button>
+            <span className="min-w-16 text-center text-xs font-bold text-foreground">{currentPage} / {pageCount}</span>
+            <button type="button" aria-label="Next page" disabled={currentPage === pageCount} onClick={() => setPage((value) => Math.min(pageCount, value + 1))} className="grid h-9 w-9 place-items-center rounded-xl border border-border bg-surface text-foreground disabled:opacity-40">
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </nav>
+      )}
     </AdminShell>
   );
 }

@@ -6,4 +6,4 @@
 - [ ] Run authenticated homepage, Flats upload/save, and database persistence E2E coverage when a preview account is available.
 - [x] Apply the white and Fern green theme across public, dashboard, and admin surfaces.
 - [x] Remove member-per-team limits while keeping exactly three Team Leader slots.
-- [ ] Verify large member lists, pagination, and counts after the unlimited-member update.
+- [x] Verify large member lists, pagination, and counts after the unlimited-member update.

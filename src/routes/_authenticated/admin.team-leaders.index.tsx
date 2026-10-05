@@ -75,7 +75,7 @@ function Content() {
     refetchOnMount: "always",
     refetchOnWindowFocus: true,
   });
-  const { data: limits, refetch: refetchLimits } = useQuery({
+  const { data: limits } = useQuery({
     queryKey: ["admin", "team-limits"],
     queryFn: () => limitsFn(),
     staleTime: 0,
@@ -311,18 +311,6 @@ function Content() {
             </div>
           ))}
         </div>
-      )}
-
-      {showLimits && (
-        <LimitsDialog
-          initial={limits}
-          onClose={() => setShowLimits(false)}
-          onSave={async (payload) => {
-            await updateLimitsFn({ data: payload });
-            await Promise.all([refetch(), refetchLimits()]);
-            setShowLimits(false);
-          }}
-        />
       )}
 
       {showAdd && (

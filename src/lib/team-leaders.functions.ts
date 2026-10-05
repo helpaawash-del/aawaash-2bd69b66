@@ -16,6 +16,7 @@ import { z } from "zod";
 import { hasUsableFirstName, normalizeFullName } from "@/lib/greeting";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AAWASH_AUTH_EMAIL_DOMAIN } from "@/lib/auth";
+import { TEAM_LEADER_LIMIT } from "@/lib/team-policy";
 
 type Ctx = {
   supabase: import("@supabase/supabase-js").SupabaseClient;
@@ -33,7 +34,7 @@ async function assertSuperAdmin(ctx: Ctx) {
 
 async function readLimits(admin: import("@supabase/supabase-js").SupabaseClient) {
   void admin;
-  return { maxTeamLeaders: 3 } as const;
+  return { maxTeamLeaders: TEAM_LEADER_LIMIT } as const;
 }
 
 /* ================================================================== */
