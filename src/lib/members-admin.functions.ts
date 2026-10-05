@@ -15,6 +15,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AAWASH_AUTH_EMAIL_DOMAIN } from "@/lib/auth";
+import { canAssignMemberToTeam } from "@/lib/team-policy";
 
 type Ctx = {
   supabase: import("@supabase/supabase-js").SupabaseClient;
@@ -159,7 +160,7 @@ export const createMemberFull = createServerFn({ method: "POST" })
       .maybeSingle();
     if (teamErr) throw new Error(teamErr.message);
     if (!team || team.is_deleted) throw new Error("Selected team no longer exists.");
-    if (!team.leader_id)
+    if (!canAssignMemberToTeam(Boolean(team.leader_id)))
       throw new Error(`Team ${team.letter} has no Team Leader yet. Assign a leader first.`);
 
     const loginId = `${team.letter}${data.mobile}`;
@@ -309,7 +310,9 @@ export const changeMemberTeam = createServerFn({ method: "POST" })
       .eq("id", data.teamId)
       .maybeSingle();
     if (!team || team.is_deleted) throw new Error("Selected team does not exist.");
-    if (!team.leader_id) throw new Error(`Team ${team.letter} has no Team Leader yet.`);
+    if (!canAssignMemberToTeam(Boolean(team.leader_id))) {
+      throw new Error(`Team ${team.letter} has no Team Leader yet.`);
+    }
 
     const newLoginId = `${team.letter}${profile.mobile_number}`;
 
