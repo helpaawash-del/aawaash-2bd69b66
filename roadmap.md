@@ -7,3 +7,7 @@
 - [x] Apply the white and Fern green theme across public, dashboard, and admin surfaces.
 - [x] Remove member-per-team limits while keeping exactly three Team Leader slots.
 - [x] Verify large member lists, pagination, and counts after the unlimited-member update.
+- [x] Replace the homepage hero building with a transparent photoreal Savitri Enclave façade.
+- [x] Prevent project tab saves from resetting fields owned by other tabs.
+- [x] Remove the non-persisting walkthrough poster upload control.
+- [ ] Complete authenticated admin save/upload/public persistence checks when an admin preview session is available.
