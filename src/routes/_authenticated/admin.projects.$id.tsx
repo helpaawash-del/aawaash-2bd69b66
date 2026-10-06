@@ -1112,13 +1112,6 @@ function MediaTab({ project, onSaved }: { project: Record<string, unknown>; onSa
             folder={`projects/${projectId}/models`}
             disabled={!mayEdit3D}
           />
-          <ImageUploadField
-            label="Walkthrough Poster (video URL below)"
-            name="_walkthrough_poster"
-            value={null}
-            folder={`projects/${projectId}/walkthrough`}
-            disabled={!mayEdit3D}
-          />
           <label className="md:col-span-2 block">
             <span className="mb-1.5 block text-xs font-semibold text-muted-foreground">Virtual Walkthrough (YouTube / Vimeo)</span>
             <input

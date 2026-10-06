@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep the Team Leader cap fixed at three while allowing unlimited members per team, because this is a core business rule.
+- Treat project editor tabs as partial updates so saving one tab never resets fields owned by another tab.

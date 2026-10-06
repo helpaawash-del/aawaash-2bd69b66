@@ -170,10 +170,24 @@ export const adminUpsertProject = createServerFn({ method: "POST" })
       normalised[k] = v;
     }
     const parsed = projectSchema.parse(normalised);
-    return {
-      ...parsed,
-      extra: { ...parsed.extra, flats: getProjectFlats(parsed.extra) },
-    };
+    if (!parsed.id) {
+      return {
+        ...parsed,
+        extra: { ...parsed.extra, flats: getProjectFlats(parsed.extra) },
+      };
+    }
+
+    // Project tabs submit partial forms. Keep only fields the tab actually
+    // sent so schema defaults cannot overwrite pricing, dates, visibility,
+    // priority, or flat-card content owned by another tab.
+    const partial: Record<string, unknown> = { id: parsed.id };
+    for (const key of Object.keys(normalised)) {
+      if (key in parsed) partial[key] = parsed[key as keyof typeof parsed];
+    }
+    if (Object.hasOwn(normalised, "extra")) {
+      partial.extra = { ...parsed.extra, flats: getProjectFlats(parsed.extra) };
+    }
+    return partial as typeof parsed;
   })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
